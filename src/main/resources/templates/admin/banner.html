@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="ko" 
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorator="layout/default-admin">
+
+            <!--contents_layout 시작-->
+            <div id="contents_layout" layout:fragment="content">
+                <!--head 시작-->
+                <div class="head">
+                    <h2>배너관리</h2>
+                </div>
+                <!--head 끝-->
+                <!--body 시작-->
+                <div class="body">
+                    <div class="option_wrap type2">
+                        <div class="content">
+                    	<form id="frmBase" name="frmBase">
+                    		<input type="hidden" id="page" name="page" value="1">
+                            <dl>
+                                <dt>
+                                    <label for="option3_1">배너명</label>
+                                </dt>
+                                <dd>
+                                    <input id="option3_1" name="title" type="text">
+                                </dd>
+                            </dl>
+                            <dl>
+                                <dt>
+                                    <label for="option3_2">Link URL</label>
+                                </dt>
+                                <dd>
+                                    <input id="option3_2" name="linkUrl" type="text">
+                                </dd>
+                            </dl>
+                            <dl>
+                                <dt>
+                                    배너이미지
+                                </dt>
+                                <dd class="file">
+                                    <input id="option3_3" name="imageFile" type="file">
+                                    <input type="text" name="imagePath" readonly>
+                                    <label for="option3_3">찾아보기</label>
+                                </dd>
+                            </dl>
+                        </div>
+                        <div class="btn">
+                            <a href="#" class="save">등록</a>
+                        </div>
+                    </div>
+                    <div class="innr flex_end">
+                        <div class="btn">
+                            <a href="#" class="delete">삭제</a>
+                            <a href="#" class="hide">비노출</a>
+                            <a href="#" class="show">노출</a>
+                        </div>
+                    </div>
+                    <div class="bbsList">
+                        <table>
+                            <colgroup>
+                                <col style="width:20%;"/>
+                                <col style="width:auto;"/>
+                                <col style="width:35%;"/>
+                                <col style="width:100px;"/>
+                                <col style="width:80px;"/>
+                            </colgroup>
+                            <tbody>
+                                <tr th:each="item : ${list}">
+                                    <td th:text="${#temporals.format(item.createDtm, 'yyyy-MM-dd')}">2019-10-10</td>
+                                    <td><img th:src="${item.imagePath}" style="max-height: 50px;" /></td>
+                                    <td th:text="${item.title}">12월 3일 이벤트 배너</td>
+                                    <td th:text="${item.displayYn=='N'}? '비노출' : '노출'">노출</td>
+                                    <td class="check">
+                                        <input th:id="${'bannerCk_'+item.bid}" type="checkbox" name="chk" th:value="${item.bid}" />
+                                        <label th:for="${'bannerCk_'+item.bid}">선택</label>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="bbsPaging">
+                    	<script th:inline="javascript">printPageList(/*[(${form.totalCount})]*/ 0, /*[(${form.page})]*/ 0, /*[(${form.rows})]*/ 0);</script>
+                    </div>
+                    </form>
+                </div>
+                <!--body 끝-->
+			    
+			    <script th:inline="javascript">
+			    	$(document).ready(function() {
+			    		$('a.search').click(function() {
+			    			$('#frmSearch').submit();
+			    		});
+
+						$('a.save').click(function() {
+							var form = $('#frmBase');
+							
+					    	//필수값 체크.
+					    	form.validate({
+					    		errorElement: 'span',
+								rules: {
+									title: 'required',
+									linkUrl: 'required',
+									imagePath: 'required'
+								}
+					    	});
+
+							if( !form.valid() ) return;
+
+				    		if( !confirm('저장하시겠습니까?') ) return;
+							
+							var form = form[0];
+							var formdata = new FormData(form);
+							
+							$.ajax({
+								type: 'POST',
+								enctype: 'multipart/form-data',
+								url: '/board/banner/rest/save',
+								data: formdata,
+								processData: false,
+								contentType: false,
+								cache: false,
+								timeout: 600000,
+								success: function(result) {
+					    			alert(result.message);
+					    			if(result.code == 0) {
+					    				location.reload();
+					    			}
+								}
+							});	
+						});	//End-of-$('a.save').click(function() {
+			    		
+			    		$('a.delete').click(function() {
+			    			var form = $('#frmBase');
+							var formdata = form.serializeObject();
+
+							if( !formdata.chk ) {
+								alert('삭제할 목록을 선택하세요.'); return;
+							}
+							
+							formdata.selList = (typeof(formdata.chk)=='string')? formdata.chk : formdata.chk.join(',');
+							//alert(JSON.stringify(formdata));
+
+					    	if( !confirm('삭제하시겠습니까?') ) return;
+
+							$.post('/board/banner/rest/delete', formdata, function(result) {
+								alert(result.message);
+								if(result.code==0) location.reload();
+							}).error(function() {
+								alert('처리중 오류가 발생하였습니다.');
+							})
+			    		});	//End-of-$('a.delete').click(function() {
+			    		
+			    		$('a.show, a.hide').click(function() {
+			    			var form = $('#frmBase');
+							var formdata = form.serializeObject();
+							
+							var showHideMsg = $(this).hasClass('show')? '노출' : '비노출';
+							var displayYn = $(this).hasClass('show')? 'Y' : 'N';
+
+							if( !formdata.chk ) {
+								alert( showHideMsg + '할 목록을 선택하세요.'); return;
+							}
+							
+							formdata.displayYn = displayYn;
+							formdata.selList = (typeof(formdata.chk)=='string')? formdata.chk : formdata.chk.join(',');
+							//alert(JSON.stringify(formdata));
+
+					    	if( !confirm( showHideMsg + '하시겠습니까?') ) return;
+
+							$.post('/board/banner/rest/display', formdata, function(result) {
+								alert(result.message);
+								if(result.code==0) location.reload();
+							}).error(function() {
+								alert('처리중 오류가 발생하였습니다.');
+							})
+			    		});	//End-of-$('a.delete').click(function() {
+			    		
+			    	});
+			    	
+			    </script>
+                
+            </div>
+            <!--contents_layout 끝-->
+
+</html>

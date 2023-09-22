@@ -1,0 +1,174 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+    
+<mapper namespace="com.regroup.rsunny.board.mapper.BoardMapper">
+
+    <select id="getList" parameterType="com.regroup.rsunny.board.model.BoardDTO" resultType="com.regroup.rsunny.board.model.BoardDTO">
+    	WITH LT AS (
+			SELECT 
+				  bd.*
+				, cd.nm					AS status_nm
+				, count(*) over() 								AS total_count
+				, row_number() over(ORDER BY bd.bid desc)	AS rnk
+			FROM board bd
+				LEFT OUTER JOIN code cd ON cd.grp = 'BOARD_STATUS' AND ifnull(bd.status,'00') = cd.cd
+			WHERE btype		= #{btype}
+			<if test="displayYn != null and displayYn != ''">
+				AND display_yn = #{displayYn}
+			</if>
+			<if test="schWord != null and schWord != ''">
+				AND (
+					bd.title LIKE concat('%', #{schWord}, '%') 
+					OR
+					bd.contents LIKE concat('%', #{schWord}, '%') 
+					OR
+					bd.name LIKE concat('%', #{schWord}, '%') 
+					OR
+					bd.phone LIKE concat('%', #{schWord}, '%') 
+					OR
+					bd.email LIKE concat('%', #{schWord}, '%') 
+				)
+			</if>
+    	)
+    	SELECT LT.*
+    		, replace(contents, '\n', '&lt;br&gt;')		as contents_html
+    		, (total_count - rnk + 1)		AS seq
+    	FROM LT
+		WHERE rnk BETWEEN #{frRow} AND #{toRow}
+    	ORDER BY rnk
+    </select>
+
+    <select id="getBoard" resultType="com.regroup.rsunny.board.model.BoardDTO">
+		SELECT 
+			  bd.bid
+			, bd.btype
+			, bd.title
+			, bd.contents
+    		, replace(contents, '\n', '&lt;br&gt;')		as contents_html
+			, bd.answer
+			, bd.link_url
+			, bd.image_path
+			, bd.name
+			, bd.email
+			, bd.phone
+			, bd.status
+			, cd.nm					AS status_nm
+			, bd.display_yn
+			, bd.view_count
+			, bd.create_dtm
+			, bd.create_id
+			, bd.update_dtm
+			, bd.update_id
+		FROM board bd
+			LEFT OUTER JOIN code cd ON cd.grp = 'BOARD_STATUS' AND ifnull(bd.status,'00') = cd.cd
+		WHERE bid = #{bid}
+    </select>
+
+    <insert id="insertBoard" parameterType="com.regroup.rsunny.board.model.BoardDTO">
+		INSERT INTO board (
+			  bid
+			, btype
+			, title
+			, contents
+			, answer
+			, link_url
+			, image_path
+			, name
+			, email
+			, phone
+			, status
+			, display_yn
+			, view_count
+			, create_dtm
+			, create_id
+			, update_dtm
+			, update_id
+		) VALUES (
+			  #{bid}
+			, #{btype}
+			, #{title}
+			, #{contents}
+			, #{answer}
+			, #{linkUrl}
+			, #{imagePath}
+			, #{name}
+			, #{email}
+			, #{phone}
+			, #{status}
+			, 'Y'
+			, 0
+			, now()
+			, #{sessionId}
+			, now()
+			, #{sessionId}
+		)
+    </insert>
+
+    <update id="updateBoard" parameterType="com.regroup.rsunny.board.model.BoardDTO">
+		UPDATE board SET
+			  bid				= #{bid}
+			, btype				= #{btype}
+			, title				= #{title}
+			, contents			= #{contents}
+			, answer			= #{answer}
+			, link_url			= #{linkUrl}
+			, image_path		= #{imagePath}
+			, name				= #{name}
+			, email				= #{email}
+			, phone				= #{phone}
+			, status			= #{status}
+			, view_count		= #{viewCount}
+			, update_dtm		= now()
+			, update_id			= #{sessionId}
+		WHERE bid				= #{bid}
+		  AND btype = #{btype}
+    </update>
+
+    <update id="updateAnswer" parameterType="com.regroup.rsunny.board.model.BoardDTO">
+		UPDATE board SET
+			  status			= #{status}
+			, answer			= #{answer}
+			, update_dtm		= now()
+			, update_id			= #{sessionId}
+		WHERE bid = #{bid}
+		  AND btype = #{btype}
+    </update>
+
+    <update id="updateStatus" parameterType="com.regroup.rsunny.board.model.BoardDTO">
+		UPDATE board SET
+			  status			= #{status}
+			, update_dtm		= now()
+			, update_id			= #{sessionId}
+		WHERE bid = #{bid}
+		  AND btype = #{btype}
+    </update>
+
+    <update id="updateViewCount" parameterType="com.regroup.rsunny.board.model.BoardDTO">
+		UPDATE board SET
+			  view_count = ifnull(view_count, 0) + 1
+		WHERE bid = #{bid}
+    </update>
+
+    <delete id="deleteBoard" parameterType="com.regroup.rsunny.board.model.BoardDTO">
+		DELETE
+		FROM board
+		WHERE bid IN
+		  <foreach item="item" index="index" collection="itemList" open="(" separator="," close=")">
+		        #{item}
+		  </foreach>
+		  AND btype = #{btype}
+    </delete>
+
+    <update id="updateDisplayYn" parameterType="com.regroup.rsunny.board.model.BoardDTO">
+		UPDATE board SET
+			  display_yn		= #{displayYn}
+			, update_dtm		= now()
+			, update_id			= #{sessionId}
+		WHERE bid IN
+		  <foreach item="item" index="index" collection="itemList" open="(" separator="," close=")">
+		        #{item}
+		  </foreach>
+		  AND btype = #{btype}
+    </update>
+
+</mapper>

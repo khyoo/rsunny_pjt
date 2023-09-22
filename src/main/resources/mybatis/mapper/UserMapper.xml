@@ -1,0 +1,368 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+    
+<mapper namespace="com.regroup.rsunny.system.mapper.UserMapper">
+
+    <select id="getList" parameterType="com.regroup.rsunny.system.model.UserDTO" resultType="com.regroup.rsunny.system.model.UserDTO">
+    	WITH LT AS (
+			SELECT 
+				  ur.*
+				, cd.nm						AS user_type_nm
+				, cs.nm						AS status_nm
+				, count(*) over() 								AS total_count
+				, row_number() over(ORDER BY create_dtm desc, usernm, userid)	AS rnk
+			FROM user ur
+				LEFT OUTER JOIN code cd ON cd.grp = 'USER_TYPE' AND ur.user_type = cd.cd
+				LEFT OUTER JOIN code cs ON cs.grp = 'USER_STATUS' AND ifnull(ur.status,'00') = cs.cd
+			WHERE ifnull(ur.status, '00') != '99'
+			<if test="userType != null and userType != ''">
+				AND ur.user_type = #{userType}
+			</if>
+			<choose>
+				<when test=" pageType == 'manager' ">
+					AND ur.user_type IN ('SU', 'RM', 'BM')
+				</when>
+				<when test=" pageType == 'broker' ">
+					AND ur.user_type IN ('AA')
+				</when>
+				<when test=" pageType == 'rental' ">
+					AND ur.user_type IN ('RA')
+				</when>
+				<when test=" pageType == 'member' ">
+					AND ur.user_type IN ('NM')
+				</when>
+				<when test=" pageType == 'branch' ">
+					AND ur.user_type IN ('BM')
+				</when>
+				<otherwise>
+					AND ur.user_type IN ('BM')
+				</otherwise>
+			</choose>
+			<if test="schWord != null and schWord != ''">
+				AND (
+					ur.usernm LIKE concat('%', #{schWord}, '%') 
+					OR
+					ur.userid LIKE concat('%', #{schWord}, '%') 
+					OR
+					ur.phone LIKE concat('%', #{schWord}, '%') 
+					OR
+					ur.email LIKE concat('%', #{schWord}, '%') 
+				)
+			</if>
+    	)
+    	SELECT LT.*
+    		, (total_count - rnk + 1)				AS seq
+    		, get_sales_cnt(userid)					AS sales_cnt
+    		, get_use_avail_point(userid)			AS point
+    		, get_use_avail_point(userid)			AS use_avail_point
+    		, get_withdrawal_avail_point(userid)	AS withdrawal_avail_point
+    		, get_avail_item(userid)				AS use_avail_item
+    		, get_open_cnt(userid)					AS open_cnt
+    		, get_linked_agent_cnt(userid)			AS agent_cnt
+    	FROM LT
+		WHERE rnk BETWEEN #{frRow} AND #{toRow}
+    	ORDER BY rnk
+    </select>
+
+    <select id="getLinkedAgentList" resultType="com.regroup.rsunny.system.model.UserDTO">
+    	WITH LT AS (
+			SELECT 
+				  ur.*
+				, cd.nm						AS user_type_nm
+				, cs.nm						AS status_nm
+				, count(*) over() 								AS total_count
+				, row_number() over(ORDER BY create_dtm desc, usernm, userid)	AS rnk
+			FROM user ur
+				LEFT OUTER JOIN code cd ON cd.grp = 'USER_TYPE' AND ur.user_type = cd.cd
+				LEFT OUTER JOIN code cs ON cs.grp = 'USER_STATUS' AND ifnull(ur.status,'00') = cs.cd
+			WHERE recommand_id = #{userid}
+    	)
+    	SELECT LT.*
+    		, (total_count - rnk + 1)				AS seq
+    	FROM LT
+		WHERE rnk BETWEEN #{frRow} AND #{toRow}
+    	ORDER BY rnk
+    </select>
+
+    <select id="getUser" resultType="com.regroup.rsunny.system.model.UserDTO">
+		SELECT 
+			  ur.userid
+			, ur.usernm
+			, ur.passwd
+			, ur.user_type
+			, ur.auth_type
+			, ur.phone
+			, ur.email
+			, ur.bank_nm
+			, ur.account_no
+			, ur.biz_nm
+			, ur.ceo_nm
+			, ur.addr1
+			, ur.addr2
+			, ur.manager_nm
+			, ur.manager_phone
+			, ur.biz_path
+			, ur.license_path
+			, ur.open_path
+			, ur.deductible_path
+			, ur.outside_path
+			, ur.inside_path
+			, ur.additional_path
+			, ur.recommand_id
+			, (case when uu.userid is null then 'N' else 'Y' end)	AS recommand_exist_yn
+			, ur.belong_branch
+			, ur.last_login_dtm
+			, ur.status
+			, ur.stop_fr_date
+			, ur.stop_to_date
+			, ur.create_dtm
+			, ur.create_id
+			, ur.update_dtm
+			, ur.update_id
+    		, get_sales_cnt(ur.userid)					AS sales_cnt
+    		, get_use_avail_point(ur.userid)			AS point
+    		, get_use_avail_point(ur.userid)			AS use_avail_point
+    		, get_withdrawal_avail_point(ur.userid)		AS withdrawal_avail_point
+    		, get_avail_item(ur.userid)					AS use_avail_item
+		FROM user ur
+			LEFT OUTER JOIN user uu ON ur.recommand_id = uu.userid
+		WHERE ur.userid = #{userid}
+    </select>
+
+    <select id="getBranchList" resultType="com.regroup.rsunny.system.model.UserDTO">
+		SELECT distinct belong_branch
+		FROM user
+		WHERE user_type = 'BM'
+		  AND belong_branch is not null
+		ORDER BY belong_branch
+    </select>
+
+    <insert id="insertUser" parameterType="com.regroup.rsunny.system.model.UserDTO">
+		INSERT INTO user (
+			  userid
+			, usernm
+			, passwd
+			, user_type
+			, auth_type
+			, phone
+			, email
+			, bank_nm
+			, account_no
+			, biz_nm
+			, ceo_nm
+			, addr1
+			, addr2
+			, jibun_addr
+			, sido
+			, sigungu
+			, dong
+			, hdong
+			, bcode
+			, hcode
+			, pos_x
+			, pos_y
+			, manager_nm
+			, manager_phone
+			, biz_path
+			, license_path
+			, open_path
+			, deductible_path
+			, outside_path
+			, inside_path
+			, additional_path
+			, recommand_id
+			, belong_branch
+			, last_login_dtm
+			, status
+			, stop_fr_date
+			, stop_to_date
+			, private_provision_yn
+			, create_dtm
+			, create_id
+			, update_dtm
+			, update_id
+		) VALUES (
+			  #{userid}
+			, (case when #{userType} = 'AA' then #{bizNm}
+					when #{userType} = 'RA' then #{ceoNm}
+					else #{usernm}
+				end)
+			, #{passwd}
+			, #{userType}
+			, #{authType}
+			, #{phone}
+			, #{email}
+			, #{bankNm}
+			, #{accountNo}
+			, #{bizNm}
+			, #{ceoNm}
+			, #{addr1}
+			, #{addr2}
+			, #{jibunAddr}
+			, #{sido}
+			, #{sigungu}
+			, #{dong}
+			, #{hdong}
+			, #{bcode}
+			, #{hcode}
+			, #{posX}
+			, #{posY}
+			, #{managerNm}
+			, #{managerPhone}
+			, #{bizPath}
+			, #{licensePath}
+			, #{openPath}
+			, #{deductiblePath}
+			, #{outsidePath}
+			, #{insidePath}
+			, #{additionalPath}
+			, #{recommandId}
+			, #{belongBranch}
+			, #{lastLoginDtm}
+			, (case when #{status} is null and #{userType} = 'AA' then '00'
+					when #{status} is null and #{userType} = 'RA' then '00'
+					when #{status} is null then '90'
+					else #{status}
+				end)
+			, #{stopFrDate}
+			, #{stopToDate}
+			, #{privateProvisionYn}
+			, now()
+			, #{sessionId}
+			, now()
+			, #{sessionId}
+		)
+    </insert>
+
+    <update id="updateUser" parameterType="com.regroup.rsunny.system.model.UserDTO">
+		UPDATE user SET
+			  usernm			= (case when #{userType} = 'AA' then #{bizNm}
+										when #{userType} = 'RA' then #{ceoNm}
+										else #{usernm}
+									end)
+			, passwd			= #{passwd}
+			, auth_type			= #{authType}
+			, phone				= #{phone}
+			, email				= #{email}
+			<if test="bankUpdateYn != null and bankUpdateYn=='Y'.toString()">
+				, bank_nm			= #{bankNm}
+				, account_no		= #{accountNo}
+			</if>
+			, addr1				= #{addr1}
+			, addr2				= #{addr2}
+			, jibun_addr		= #{jibunAddr}
+			, sido				= #{sido}
+			, sigungu			= #{sigungu}
+			, dong				= #{dong}
+			, hdong				= #{hdong}
+			, bcode				= #{bcode}
+			, hcode				= #{hcode}
+			, pos_x				= #{posX}
+			, pos_y				= #{posY}
+			, manager_nm		= #{managerNm}
+			, manager_phone		= #{managerPhone}
+			, biz_path			= #{bizPath}
+			, license_path		= #{licensePath}
+			, open_path			= #{openPath}
+			, deductible_path	= #{deductiblePath}
+			, outside_path		= #{outsidePath}
+			, inside_path		= #{insidePath}
+			, additional_path	= #{additionalPath}
+			, recommand_id		= #{recommandId}
+			, belong_branch		= #{belongBranch}
+			, update_dtm		= now()
+			, update_id			= #{sessionId}
+		WHERE userid			= #{userid}
+    </update>
+
+    <update id="updateAgentUser" parameterType="com.regroup.rsunny.system.model.UserDTO">
+		UPDATE user SET
+			  usernm			= (case when #{userType} = 'AA' then #{bizNm}
+										when #{userType} = 'RA' then #{ceoNm}
+										else #{usernm}
+									end)
+			, passwd			= #{passwd}
+			, ceo_nm			= #{ceoNm}
+			, phone				= #{phone}
+			, email				= #{email}
+			<if test="bankUpdateYn != null and bankUpdateYn=='Y'.toString()">
+				, bank_nm			= #{bankNm}
+				, account_no		= #{accountNo}
+			</if>
+			, manager_nm		= #{managerNm}
+			, manager_phone		= #{managerPhone}
+			, update_dtm		= now()
+			, update_id			= #{sessionId}
+		WHERE userid			= #{userid}
+    </update>
+
+    <update id="updateLastLogin" parameterType="com.regroup.rsunny.system.model.UserDTO">
+		UPDATE user SET
+			  last_login_dtm	= now()
+		WHERE userid			= #{userid}
+    </update>
+
+    <update id="updateStatus" parameterType="com.regroup.rsunny.system.model.UserDTO">
+		UPDATE user SET
+			  usernm			= (case when #{status} = '99' then null else usernm end)
+			, phone				= (case when #{status} = '99' then null else phone end)
+			, email				= (case when #{status} = '99' then null else email end)
+			, status			= #{status}
+			, stop_fr_date		= #{stopFrDate}
+			, stop_to_date		= #{stopToDate}
+			, update_dtm		= now()
+			, update_id			= #{sessionId}
+		WHERE userid			= #{userid}
+    </update>
+
+    <update id="updateUserType" parameterType="com.regroup.rsunny.system.model.UserDTO">
+		UPDATE user SET
+			  user_type			= #{userType}
+			, belong_branch		= #{belongBranch}
+			, update_dtm		= now()
+			, update_id			= #{sessionId}
+		WHERE userid			= #{userid}
+    </update>
+
+    <update id="deleteUser" parameterType="com.regroup.rsunny.system.model.UserDTO">
+		DELETE
+		FROM user
+		WHERE userid			= #{userid}
+    </update>
+
+    <select id="getListByEmail" resultType="com.regroup.rsunny.system.model.UserDTO">
+		SELECT 
+			  ur.*
+			, cd.nm						AS user_type_nm
+			, cs.nm						AS status_nm
+		FROM user ur
+			LEFT OUTER JOIN code cd ON cd.grp = 'USER_TYPE' AND ur.user_type = cd.cd
+			LEFT OUTER JOIN code cs ON cs.grp = 'USER_STATUS' AND ifnull(ur.status,'00') = cs.cd
+		WHERE email = #{email}
+		  AND status != '99'
+    </select>
+
+    <update id="updatePasswd" parameterType="com.regroup.rsunny.system.model.UserDTO">
+		UPDATE user SET
+			  passwd			= #{passwd}
+			, update_dtm		= now()
+			, update_id			= #{sessionId}
+		WHERE userid			= #{userid}
+    </update>
+
+    <insert id="insertLogs" parameterType="com.regroup.rsunny.system.model.LogDTO">
+		INSERT INTO logs (
+			userid, log_type, log_data, log_dtm
+		) VALUES (
+			#{userid}, #{logType}, #{logData}, now()
+		)
+    </insert>
+
+    <select id="getUserLogs" resultType="com.regroup.rsunny.system.model.LogDTO">
+		SELECT lg.*
+		FROM logs	lg
+		WHERE userid = #{userid}
+		  AND log_type = 'user-delete'
+    </select>
+
+</mapper>

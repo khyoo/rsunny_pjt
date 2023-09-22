@@ -1,0 +1,85 @@
+                <div class="tit">
+                    <div class="dropDown">
+                        <a href="#" onclick="dropDown(this)">
+                            <h2><span th:remove="tag" th:text="${saleTypeNm}">원룸ㆍ투룸</span> <span>▼</span></h2>
+                        </a>
+                        <ul>
+                            <li><a href="/02la01?t=r">원룸ㆍ투룸</a></li>
+                            <li><a href="/02la01?t=a">아파트ㆍ오피스텔</a></li>
+                            <li><a href="/02la01?t=h">주택ㆍ빌라</a></li>
+                            <li><a href="/02la01?t=s">상가ㆍ사무실</a></li>
+                            <li><a href="/02la01?t=l">토지ㆍ건물</a></li>
+                        </ul>
+                    </div>
+                    <span><em th:text="${form.totalCount}">25</em>건 매물</span>
+                </div>
+                <ul class="list myList" th:if="${#lists.size(list) > 0}">
+                    <li class="ad" th:each="item : ${list}" th:attr="data-rid=${item.rid},data-status=${item.status}" >
+                        <a class="menu" href="#" th:attr="data-rid=${item.rid}">
+                            <span class="thumb">
+                                <img th:src="@{${item.firstPicturePath}}" height="81" />
+                            </span>
+                            <span class="info">
+                                <span class="won">
+                                    <em th:text="${item.tradeTypeNm}">매매</em>
+                                    <span th:remove="tag" th:text="${item.priceWon}">9억 4000만원</span>
+                                </span>
+                                <span class="txt" th:text="${item.forsaleIntro}">아늑하고 넓은 투룸 ~</span>
+                                <span class="address" th:text="${item.addr1}">전남 여수시 미평동 | <span th:remove="tag" th:text="${item.saleDetailTypeNm}">아파트</span><span th:remove="tag" th:text="${item.tradeTypeNm}">매매</span></span>
+                                <span class="detail" th:unless="${item.saleType=='l'}">[[${item.supplyAreaWithPy}]] | [[${item.privateAreaWithPy}]]</span>
+                                <span class="detail" th:if="${item.saleType=='l'}">[[${item.landAreaWithPy}]] | [[${item.buildingAreaWithPy}]]</span>
+                            </span>
+                        </a>
+                        <div th:if="${item.ownerYn=='Y'}" class="util" style="z-index:1;"><!-- 매물 등록자인 경우 -->
+                            <a href="#">메뉴열기</a>
+                            <div class="util_list">
+                                <a href="#" class="lp_open" data-lp="02la02p01">광고설정</a>
+                                <a href="#" class="toggleShow">노출/비노출</a>
+                                <a th:href="@{${item.editUrl}}">편집</a>
+                            </div>
+                        </div>
+                        <p th:if="${item.ownerYn=='N'}" class="reading">열람</p><!-- 매물 등록자가 아닌 경우(열람 매물) -->
+                    </li>
+                </ul>
+                <ul class="paging" th:utext="${form.pagingHtml}" th:if="${#lists.size(list) > 0}">
+                	<ul></ul>
+                </ul>
+                <p class="noList" th:if="${#lists.size(list)==0}">등록된 매물이 존재하지 않습니다.</p>
+				
+<script>
+	function movePageTab2(page) {
+		//등록매물
+		var formdata = {saleType: $('#frmFilter').find('#saleType').val()};
+		formdata.page = page;
+		$.get('/forsale/tab2', formdata, function(result) {
+			$('div.tab2').html(result);
+			imgResizeOut(".tabCon_wrap .thumb img");
+		});
+	}
+</script>                
+    
+<script th:inline="javascript">
+    $(document).ready(function() {
+    	$('body').on('click', 'a.toggleShow', function() {
+    		var rid = $(this).closest('li').data('rid');
+    		var status = $(this).closest('li').data('status');
+    		//alert( rid );
+    		var msg = (status=='00')? '비노출 처리하시겠습니까?' : '노출 처리하시겠습니까?';
+    		if( !confirm(msg) ) return;
+    		
+    		var newstatus = (status=='00')? '99' : '00';
+    		var formdata = {rid: rid, status: newstatus}
+			
+			$.post('/forsale/rest/toggleStatus', formdata, function(result) {
+				alert(result.message);
+				if(result.code==0) {
+					//location.href = '[(${prevPage})]';
+					$('a.lp_close').trigger('click');
+					location.reload();
+				}
+			}).fail(function() {
+				alert('저장중 오류가 발생하였습니다.');
+			})
+    	});
+    });	//End-of-$(document).ready
+</script>

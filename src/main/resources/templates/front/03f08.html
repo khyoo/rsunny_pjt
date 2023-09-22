@@ -1,0 +1,89 @@
+<!DOCTYPE HTML>
+<html lang="ko">
+<head>
+	<th:block th:replace="layout/fragments/front/head :: headFragment"></th:block>
+	<!-- Global site tag (gtag.js) - Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-6EHV3KH3XT"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-6EHV3KH3XT');
+</script>
+</head>
+<body>
+    <!--top_layout-->
+    <div id="top_layout" class="type2">
+		<th:block th:replace="layout/fragments/front/header :: headerFragment"></th:block>
+    </div>
+    <!--//top_layout-->
+    <!--body_layout-->
+    <div id="body_layout">
+        <!--visual_wrap-->
+        <div class="visual_wrap">
+            <div class="inner type3">
+                <h2><strong>알써니</strong> 매물 관리</h2>
+                <p>내가 등록하고 누적 포인트는 수익금으로<br>진정한 거래의 기본, 알써니!</p>
+            </div>
+        </div>
+        <!--//visual_wrap-->
+        <!--step_wrap-->
+        <div class="step_wrap type2">
+            <div class="inner type3">
+                <dl class="end">
+                    <dt>1</dt>
+                    <dd>매물 기본정보</dd>
+                </dl>
+                <dl class="end">
+                    <dt>2</dt>
+                    <dd>매물 상세/옵션</dd>
+                </dl>
+                <dl class="end">
+                    <dt>3</dt>
+                    <dd>사진/개인정보</dd>
+                </dl>
+                <dl class="on">
+                    <dt>4</dt>
+                    <dd>매물 등록완료</dd>
+                </dl>
+            </div>
+        </div>
+        <!--//step_wrap-->
+        <!--complete_wrap-->
+        <div class="complete_wrap type2">
+            <div class="inner type3">
+                <p>
+                    <strong>알써니 매물 수정이</strong>
+                    완료되었습니다!
+                </p>
+                <div class="info">
+                    <div class="thumb">
+                        <img src="/img/sub/visual_img_1.png" />
+                    </div>
+                    <ul class="txt">
+                        <li class="saleNum">매물번호<span>No. N00232A9</span></li>
+                        <li class="won"><span>매매</span> 3,400만원</li>
+                        <li class="intro">아늑하고 넓은 원룸 ~~</li>
+                        <li class="address">전남 여수시 미평동  |  아파트매매</li>
+                        <li class="detail">공 84㎡ (25평) | 3/3층 | 침실2, 욕실 1</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <!--//complete_wrap-->
+
+        <!--btn_wrap-->
+        <div class="btn_wrap">
+            <a href="#" class="type1">최종수정완료</a>
+        </div>
+        <!--//btn_wrap-->
+    </div>
+    <!--//body_layout-->
+    <!--foot_layout-->
+    <div id="foot_layout">
+		<th:block th:replace="layout/fragments/front/footer :: footerFragment"></th:block>
+    </div>
+    <!--//foot_layout-->
+</body>
+</html>

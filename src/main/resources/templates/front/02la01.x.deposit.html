@@ -1,0 +1,160 @@
+<!-- 레이어팝업 lp_02lb04p04 시작 -->
+	        <div id="lp_02lb04p04" class="lp_wrap type2">
+	            <div class="head">
+	                <h2>포인트 충전 신청</h2>
+	            </div>
+	            <div class="body">
+	                <div class="stepBox">
+	                    <h3>알써니 포인트 충전 절차</h3>
+	                    <ul>
+	                        <li>
+	                            <span>1</span>
+	                            <p>충전 포인트<br>결정</p>
+	                        </li>
+	                        <li>
+	                            <span>2</span>
+	                            <p>아래 계좌로<br>송금 진행</p>
+	                        </li>
+	                        <li>
+	                            <span>3</span>
+	                            <p>입금 정보 입력<br>신청하기</p>
+	                        </li>
+	                        <li>
+	                            <span>4</span>
+	                            <p>알써니 확인 후<br>충전 완료</p>
+	                        </li>
+	                    </ul>
+	                </div>
+	                <div class="rowBox type2">
+	                    <dl>
+	                        <dt>입금계좌</dt>
+	                        <dd>하나은행 7209-1000-8518-04</dd>
+	                    </dl>
+	                    <dl>
+	                        <dt>예금주</dt>
+	                        <dd>주식회사 알써니</dd>
+	                    </dl>
+	                    <p>신청 시 24시간 내 무통장 입금 확인하여 포인트 충전이 완료 됩니다.</p>
+	                </div>
+	                <div class="inputBox">
+	                	<form id="frmDeposit" name="frmDeposit" method="post">
+	                    <ul>
+	                        <li>
+	                            <label for="02lb04p04_1">충전포인트</label>
+	                            <div class="selectBox">
+	                                <select id="02lb04p04_1" name="point" required>
+	                                    <option value="">-선택-</option>
+	                                    <option value="50000" > 55,000원(실 충전액 :  50,000원)</option>
+	                                    <option value="100000">110,000원(실 충전액 : 100,000원)</option>
+	                                    <option value="200000">220,000원(실 충전액 : 200,000원)</option>
+	                                    <option value="500000">550,000원(실 충전액 : 500,000원)</option>
+	                                </select>
+	                            </div>
+	                        </li>
+	                        <li>
+	                            <label for="bankNm">입금은행</label>
+	                            <div class="selectBox">
+	                                <select id="bankNm" name="bankNm">
+	                                    <option value="">-선택-</option>
+										<option value="경남은행">경남은행</option>
+										<option value="국민은행">국민은행</option>
+										<option value="광주은행">광주은행</option>
+										<option value="기업은행">기업은행</option>
+										<option value="농협중앙회">농협중앙회</option>
+										<option value="단위농협(축협)">단위농협(축협)</option>
+										<option value="대구은행">대구은행</option>
+										<option value="대화은행">대화은행</option>
+										<option value="부산은행">부산은행</option>
+										<option value="산업은행">산업은행</option>
+										<option value="상호저축은행">상호저축은행</option>
+										<option value="새마을금고">새마을금고</option>
+										<option value="수출입은행">수출입은행</option>
+										<option value="수협">수협</option>
+										<option value="신한은행">신한은행</option>
+										<option value="신협">신협</option>
+										<option value="씨티은행">씨티은행</option>
+										<option value="우리은행">우리은행</option>
+										<option value="우체국">우체국</option>
+										<option value="외환은행">외환은행</option>
+										<option value="전북은행">전북은행</option>
+										<option value="제주은행">제주은행</option>
+										<option value="카카오뱅크">카카오뱅크</option>
+										<option value="케이뱅크">케이뱅크</option>
+										<option value="한국은행">한국은행</option>
+										<option value="하나은행">하나은행</option>
+										<option value="SC제일은행">SC제일은행</option>
+	                                </select>
+	                            </div>
+	                        </li>
+	                        <!-- <li>
+	                            <label for="02la04p02_3">입금계좌</label>
+	                            <input id="02la04p02_3" type="text" name="accountNo" maxlength="30" placeholder="“-” 없이 입력해 주세요." />
+	                        </li>-->
+	                        <li>
+	                            <label for="02la04p02_4">입금자명</label>
+	                            <input id="02la04p02_4" type="text" name="accountOwner" placeholder="실 예금주명 입력" />
+	                        </li>
+	                    </ul>
+	                    </form>
+	                </div>
+	                <ul class="ul_list type2">
+	                    <li>입금 후 최종신청 해주세요.</li>
+	                    <li>포인트는 현금과 동일하게 사용되면 소멸되지 않습니다.</li>
+	                </ul>
+	                <div class="btn">
+	                    <a href="#" class="type1 deposit">신청</a>
+	                </div>
+	            </div>
+	            <a class="lp_close" href="#">닫기</a>
+	        </div>
+	        <!-- 레이어팝업 lp_02lb04p04 끝 -->
+
+			<script th:inline="javascript">
+			    $(document).ready(function() {
+					$('a.deposit').click(function() {
+						var form = $('#frmDeposit');
+
+						//필수값 체크.
+				    	form.validate({
+				    		wrapper: 'div',
+							rules: {
+								point: 'required',
+								bankNm: 'required',
+								accountNo: 'optional',
+								accountOwner: 'required'
+							}
+				    	});
+
+						var formdata = form.serializeObject();
+						formdata.remark = $('select[name=point]').find('option:selected').text();
+
+						if(formdata.point=='') {
+							alert('충전포인트를 선택하세요.'); return;
+						}
+						if(formdata.bankNm=='') {
+							alert('입금은행을 선택하세요.'); return;
+						}
+						/*
+						*/
+
+						if( !form.valid() ) return;
+
+			    		if( !confirm('신청하시겠습니까?') ) return;
+
+						$.post('/point/rest/deposit', formdata, function(result) {
+							alert(result.message);
+							if(result.code==0) {
+								//location.href = '[(${prevPage})]';
+								$('a.lp_close').trigger('click');
+								//포인트 목록.
+								$.get('/forsale/tab4', formdata, function(result) {
+									$('div.pointList_wrap').html(result);
+									$( ".selectBox select" ).selectmenu();
+								});
+							}
+						}).fail(function() {
+							alert('저장중 오류가 발생하였습니다.');
+						})
+					})
+			    });	//End-of-$(document).ready
+			</script>

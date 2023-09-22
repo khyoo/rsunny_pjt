@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html 	lang="ko"
+     	xmlns:th="http://www.thymeleaf.org">
+
+    <!--top_layout-->
+    <div th:fragment="headerFragment" th:remove="tag">
+        <header>
+            <h1 class="logo">
+                <a href="/">
+                    <img src="/img/header/logo.svg">
+                </a>
+            </h1>
+            <ul class="moBtn">
+                <li class="filter_open"><a href="#"><span>필터</span></a></li>
+                <li class="gnb_open"><a href="#"><span>모바일 메뉴</span></a></li>
+            </ul>
+        </header>
+        <nav id="gnb_layout">
+            <div class="gnb_wrap">
+                <ul class="util">
+                    <li class="login" sec:authorize="isAnonymous()"><a href="#" class="lp_open" data-lp="04l01p">로그인</a></li>
+                    <li class="point" sec:authorize="isAuthenticated()"><a href="/02la01?t=r&active=tab4">ㆍMY알써니 <span class="session_point">[[${#numbers.formatDecimal( USE_AVAIL_POINT, 0, 'COMMA', 0, 'POINT')}]]</span></a></li>
+                    <li class="mypage" sec:authorize="isAuthenticated()"><a href="/02la01?t=r&active=tab4">MYPAGE</a></li>
+                    <li class="sale"><b><a href="/register/03f01">매물등록</a></b></li>
+                </ul>
+                <ul class="gnb">
+                    <li><b><a href="/02la01?t=r" th:style="${saleTypeCd == 'r' ? 'color:#fff': ''}">원룸ㆍ투룸+</a></b></li>
+                    <li><b><a href="/02la01?t=a" th:style="${saleTypeCd == 'a' ? 'color:#fff': ''}">아파트ㆍ오피스텔</a></b></li>
+                    <li><b><a href="/02la01?t=h" th:style="${saleTypeCd == 'h' ? 'color:#fff': ''}">주택ㆍ빌라</a></b></li>
+                    <li><b><a href="/02la01?t=s" th:style="${saleTypeCd == 's' ? 'color:#fff': ''}">상가ㆍ사무실</a></b></li>
+                    <li><b><a href="/02la01?t=l" th:style="${saleTypeCd == 'l' ? 'color:#fff': ''}">토지ㆍ건물</a></b></li>
+                </ul>
+                <dl class="gnb_bottom">
+                    <dt>알써니</dt>
+                    <dd class="n1"><a href="/06u0201">고객센터</a></dd>
+                    <dd class="n2"><a href="/06u0203">이용약관</a></dd>
+                    <dd class="n3" sec:authorize="hasRole('ROLE_ADMIN')"><a href="/siteadmin/">관리자모드</a></dd>
+                    <dd class="n4" sec:authorize="isAuthenticated()"><a href="javascript:void(0);" class="LOGOUT">로그아웃</a></dd>
+                </dl>
+                <a class="gnb_close" href="#">닫기</a>
+            </div>
+        </nav>
+        
+        <nav id="gnb_tool_layout">
+            <div class="gnb_tool_wrap">
+            	<a class="gnb_tool_close" href="#">닫기</a>                
+                <div class="mo_tool_group">
+					<!-- 
+					<div class="mo_tool_container" id="map-layer1" data-selection="true">
+						<div class="map-layer-icon map-layer-icon1" style="margin-right:22px;"></div>
+						<div class="map-layer-text">일반지도</div>
+					</div>
+					 -->
+					<div class="mo_tool_container" id="map-layer2" style="margin-top:14px;" data-selection="false">
+						<div class="map-layer-icon map-layer-icon2" style="margin-right:22px;"></div>
+						<div class="map-layer-text">위성지도</div>
+					</div>
+				</div>                
+				
+				<div class="mo_tool_divider"></div>
+				
+				<div class="mo_tool_group">
+					<div class="mo_tool_container" id="map-layer3" data-selection="true">
+						<div class="map-layer-icon map-layer-icon3" style="margin-right:22px;"></div>
+						<div class="map-layer-text">지형도</div>
+					</div>
+					<div class="mo_tool_container" id="map-layer4" style="margin-top:14px;" data-selection="false">
+						<div class="map-layer-icon map-layer-icon4" style="margin-right:22px;"></div>
+						<div class="map-layer-text">지적도</div>
+					</div>
+				</div>
+				
+				<div class="mo_tool_divider"></div>
+				
+				<div class="mo_tool_group">
+					<div class="mo_tool_btn_group">
+						<div class="mo_tool_btn" id="mo-catAreaSub1">
+							평
+						</div>
+						<div class="mo_tool_btn" id="mo-catAreaSub2">
+							㎡
+						</div>
+					 </div>
+					 <div class="mo_tool_btn_group" style="margin-top:10px;">
+						<div class="mo_tool_btn" id="mo-catPriceSub1">				
+							총액
+						</div>
+						<div class="mo_tool_btn" id="mo-catPriceSub2">
+							단가
+						</div>
+					</div>
+				</div>
+				
+				<div class="mo_tool_divider"></div>
+				
+				<div class="mo_tool_group">
+					<div class="mo_tool_container" id="map-around" data-selection="true">						
+						<div class="map-layer-icon map-around-icon1" style="margin-right:22px;"></div>
+						<div class="map-layer-text">주변시설</div>
+					</div>
+				</div>
+					 
+				<div class="mo_tool_divider"></div>
+				
+				<div class="mo_tool_group">
+					<div class="mo_tool_container" id="map-measure1" data-selection="true">
+						<div class="map-layer-icon map-measure-icon1" style="margin-right:22px;"></div>
+						<div class="map-layer-text">거리/면적 측정</div>
+					</div>					
+				</div>
+				
+            </div>
+        </nav>
+
+         <script>
+        	if(location.pathname.length > 1) {
+            	//var path = '/' + location.pathname.split('/')[1];
+            	//alert(path);
+            	//var expr = $.validator.format('a[href^="{0}"]', path);
+            	//var link = $(expr);
+            	//if(link.length > 0) link.parent().addClass('active');
+        	}
+
+        	$(document).ready(function() {
+        		$('a.pointtab').click(function() {
+        			//alert(location.pathname);
+        		});
+        	});
+        </script>
+
+	    <!-- 레이어팝업 시작 -->
+	    <div id="lp_layout" th:unless="${CURRENT_PAGE=='/02la01'}">
+			<th:block th:include="front/common/login"></th:block>
+			<th:block th:include="front/common/message"></th:block>
+	 	</div>
+	    <div id="lp_layout" th:if="${CURRENT_PAGE=='/02la01'}">
+			<th:block th:include="front/common/login"></th:block>
+			<th:block th:include="front/common/message"></th:block>
+
+			<th:block th:include="front/common/myinfo_general" th:if="${USER_TYPE=='NM' or USER_TYPE=='BM'}"></th:block>
+			<th:block th:include="front/common/myinfo_agent" th:if="${USER_TYPE=='AA' or USER_TYPE=='RA'}"></th:block>
+
+			<th:block th:include="front/02la01.x.deposit"></th:block>
+			<th:block th:include="front/02la01.x.withdrawal"></th:block>
+			<th:block th:include="front/02la01.x.item-use"></th:block>
+			<th:block th:include="front/02la01.x.dooffer"></th:block>
+			<th:block th:include="front/02la01.x.agent"></th:block>
+	 	</div>
+
+    </div>
+
+</html>

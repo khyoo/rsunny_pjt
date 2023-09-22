@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="ko" 
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorator="layout/default-admin">
+
+            <!--contents_layout 시작-->
+            <div id="contents_layout" layout:fragment="content">
+                <!--head 시작-->
+                <div class="head">
+                    <h2>FAQ 관리</h2>
+                </div>
+                <!--head 끝-->
+                <!--body 시작-->
+                <div class="body">
+                   	<form id="frmBase" name="frmBase">
+                   		<input type="hidden" id="page" name="page" value="1">
+                    <div class="option_wrap type2">
+                        <div class="content">
+                            <dl>
+                                <dt>
+                                    <label for="option4_1">제목</label>
+                                </dt>
+                                <dd>
+                                    <input id="title" name="title" type="text">
+                                </dd>
+                            </dl>
+                            <dl>
+                                <dt>
+                                    <label for="option4_2">답변</label>
+                                </dt>
+                                <dd>
+                                    <textarea id="contents" name="contents"></textarea>
+                                </dd>
+                            </dl>
+                        </div>
+                        <div class="btn">
+                            <a href="javascript:void(0);" class="save">등록</a>
+                        </div>
+                    </div>
+                    <div class="innr flex_end">
+                        <div class="btn">
+                            <a href="#" class="delete">선택 삭제</a>
+                        </div>
+                    </div>
+                    <div class="bbsList">
+                        <ul class="acco_wrap">
+                            <li th:each="item, stat : ${list}">
+                                <div class="acco_btn">
+                                    <a href="#" th:text="${item.title}">질문</a>
+                                    <div class="check">
+                                        <input th:id="${'accoCk_'+stat.index}" type="checkbox" name="chk" th:value="${item.bid}" />
+                                        <label th:for="${'accoCk_'+stat.index}">선택</label>
+                                    </div>
+                                </div>
+                                <div class="acco_con" th:utext="${item.contentsHtml}">
+                                    답변
+                                </div>
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="bbsPaging">
+                    	<script th:inline="javascript">printPageList(/*[(${form.totalCount})]*/ 0, /*[(${form.page})]*/ 0, /*[(${form.rows})]*/ 0);</script>
+                    </div>
+                    </form>
+                </div>
+                <!--body 끝-->
+			    
+			    <script th:inline="javascript">
+			    	$(document).ready(function() {
+			    		$('a.search').click(function() {
+			    			$('#frmSearch').submit();
+			    		});
+			    		
+			    		$('a.save').click(function() {
+			    			var form = $('#frmBase');
+			    			
+					    	//필수값 체크.
+					    	form.validate({
+					    		errorElement: 'span',
+								rules: {
+									title: 'required',
+									contents: 'required'
+								}
+					    	});
+
+					    	if( !form.valid() ) return;
+					    	
+					    	if( !confirm('저장하시겠습니까?') ) return;
+
+							var formdata = form.serializeObject();
+							$.post('/board/faq/rest/save', formdata, function(result) {
+								alert(result.message);
+								if(result.code==0) location.reload();
+							}).error(function() {
+								alert('처리중 오류가 발생하였습니다.');
+							})
+			    		});
+			    		
+			    		$('a.delete').click(function() {
+			    			var form = $('#frmBase');
+							var formdata = form.serializeObject();
+
+							if( !formdata.chk ) {
+								alert('삭제할 목록을 선택하세요.'); return;
+							}
+							
+							formdata.selList = (typeof(formdata.chk)=='string')? formdata.chk : formdata.chk.join(',');
+							//alert(JSON.stringify(formdata));
+
+					    	if( !confirm('삭제하시겠습니까?') ) return;
+
+							$.post('/board/faq/rest/delete', formdata, function(result) {
+								alert(result.message);
+								if(result.code==0) location.reload();
+							}).error(function() {
+								alert('처리중 오류가 발생하였습니다.');
+							})
+			    		});
+			    		
+			    	});
+			    	
+			    </script>
+                
+            </div>
+            <!--contents_layout 끝-->
+
+</html>
+

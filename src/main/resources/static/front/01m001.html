@@ -1,0 +1,290 @@
+<!DOCTYPE HTML>
+<html lang="ko"> 
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge"><!-- IE에서만 -->
+    <meta name="viewport" content="width=device-width,initial-scale=1.0,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no">
+    <title>R.sunny</title>
+    <script type="text/javascript" src="../js/jquery-1.11.2.min.js"></script>
+    <script type="text/javascript" src="../js/jquery-ui.js"></script>
+    <script type="text/javascript" src="../js/stateScrollObj.js"></script>
+    <script type="text/javascript" src="../js/common.js"></script>
+    <script type="text/javascript" src="../js/main.js"></script>
+    <link rel="stylesheet" type="text/css" href="../css/jquery-ui.css">
+    <link rel="stylesheet" type="text/css" href="../css/common.css">
+    <link rel="stylesheet" type="text/css" href="../css/layout.css">
+    <link rel="stylesheet" type="text/css" href="../css/main.css">
+</head>
+<body>
+    <!--top_layout-->
+    <div id="top_layout">
+        <header>
+            <h1 class="logo">
+                <a href="#">알써니</a>
+            </h1>
+            <ul class="moBtn">
+                <li class="filter_open"><a href="#"><span>필터</span></a></li>
+                <li class="gnb_open"><a href="#"><span>모바일 메뉴</span></a></li>
+            </ul>
+        </header>
+        <nav id="gnb_layout">
+            <div class="gnb_wrap">
+                <ul class="util">
+                    <li class="login"><a href="#">로그인</a></li>
+                    <li class="point"><a href="#">ㆍ보유포인트 <span>15,000</span></a></li>
+                    <li class="mypage"><a href="#">MYPAGE</a></li>
+                    <li class="sale"><a href="#">매물 내놓기</a></li>
+                </ul>
+                <ul class="gnb">
+                    <li><a href="#">원룸ㆍ투룸+</a></li>
+                    <li><a href="#">아파트ㆍ오피스텔</a></li>
+                    <li><a href="#">주택ㆍ빌라</a></li>
+                    <li><a href="#">상가ㆍ사무실</a></li>
+                    <li><a href="#">토지ㆍ건물</a></li>
+                </ul>
+                <dl class="gnb_bottom">
+                    <dt>알써니</dt>
+                    <dd class="n1"><a href="#">고객센터</a></dd>
+                    <dd class="n2"><a href="#">이용약관</a></dd>
+                    <dd class="n3"><a href="#">관리자 모드</a></dd>
+                    <dd class="n4"><a href="#">로그아웃</a></dd>
+                </dl>
+                <a class="gnb_close" href="#">닫기</a>
+            </div>
+        </nav>
+    </div>
+    <!--//top_layout-->
+    <!--body_layout-->
+    <div id="body_layout">
+        <!--search_wrap-->
+        <div class="search_wrap">
+            <div class="inner">
+                <p>매물등록부터 매물거래까지<br>모두에게 이익 되는 정직한 거래</p>
+                <div class="searchBox">
+                    <div class="selectBox">
+                        <select>
+                            <option>매물유형</option>
+                            <option>원룸, 투룸</option>
+                            <option>아파트, 오피스텔</option>
+                            <option>주택, 빌라</option>
+                            <option>상가, 사무실</option>
+                            <option>토지, 건물</option>
+                        </select>
+                    </div>
+                    <input type="text" placeholder="지역명, 지하철역명, 학교명 검색" />
+                    <a href="#">검색</a>
+                </div>
+            </div>
+        </div>
+        <!--//search_wrap-->
+        <!--ads_wrap-->
+        <div id="slide_ads" class="ads_wrap">
+            <div class="inner">
+                <h2>오늘은 어떤 매물이 인기 있을까요?</h2>
+                <div class="grap">
+                    <ul class="obj">
+                        <li class="item">
+                            <a href="#">
+                                <sapn class="thumb"><img src="../img/main/ads_sample_img.png" /></sapn>
+                                <span class="info">
+                                    1원룸
+                                    <em>면적 33㎡</em>
+                                    <em>서울시 강남구 삼성동</em>
+                                </span>
+                                <span class="won">
+                                    200/35<em>월세</em>
+                                </span>
+                            </a>
+                        </li>
+                        <li class="item">
+                            <a href="#">
+                                <sapn class="thumb"><img src="../img/main/ads_sample_img.png" /></sapn>
+                                <span class="info">
+                                    2투룸
+                                    <em>면적 33㎡</em>
+                                    <em>서울시 강남구 삼성동</em>
+                                </span>
+                                <span class="won">
+                                    9억 6000<em>매매</em>
+                                </span>
+                            </a>
+                        </li>
+                        <li class="item">
+                            <a href="#">
+                                <sapn class="thumb"><img src="../img/main/ads_sample_img.png" /></sapn>
+                                <span class="info">
+                                    3원룸
+                                    <em>면적 33㎡</em>
+                                    <em>서울시 강남구 삼성동</em>
+                                </span>
+                                <span class="won">
+                                    3억 2500<em>전세</em>
+                                </span>
+                            </a>
+                        </li>
+                        <li class="item">
+                            <a href="#">
+                                <sapn class="thumb"><img src="../img/main/ads_sample_img.png" /></sapn>
+                                <span class="info">
+                                    4쓰리룸
+                                    <em>면적 33㎡</em>
+                                    <em>서울시 강남구 삼성동</em>
+                                </span>
+                                <span class="won">
+                                    3억 9600/192<em>월세</em>
+                                </span>
+                            </a>
+                        </li>
+                        <li class="item">
+                            <a href="#">
+                                <sapn class="thumb"><img src="../img/main/ads_sample_img.png" /></sapn>
+                                <span class="info">
+                                    5원룸
+                                    <em>면적 33㎡</em>
+                                    <em>서울시 강남구 삼성동</em>
+                                </span>
+                                <span class="won">
+                                    200/35<em>월세</em>
+                                </span>
+                            </a>
+                        </li>
+                        <li class="item">
+                            <a href="#">
+                                <sapn class="thumb"><img src="../img/main/ads_sample_img.png" /></sapn>
+                                <span class="info">
+                                    6투룸
+                                    <em>면적 33㎡</em>
+                                    <em>서울시 강남구 삼성동</em>
+                                </span>
+                                <span class="won">
+                                    9억 6000<em>매매</em>
+                                </span>
+                            </a>
+                        </li>
+                        <li class="item">
+                            <a href="#">
+                                <sapn class="thumb"><img src="../img/main/ads_sample_img.png" /></sapn>
+                                <span class="info">
+                                    7원룸
+                                    <em>면적 33㎡</em>
+                                    <em>서울시 강남구 삼성동</em>
+                                </span>
+                                <span class="won">
+                                    3억 2500<em>전세</em>
+                                </span>
+                            </a>
+                        </li>
+                        <li class="item">
+                            <a href="#">
+                                <sapn class="thumb"><img src="../img/main/ads_sample_img.png" /></sapn>
+                                <span class="info">
+                                    8쓰리룸
+                                    <em>면적 33㎡</em>
+                                    <em>서울시 강남구 삼성동</em>
+                                </span>
+                                <span class="won">
+                                    3억 9600/192<em>월세</em>
+                                </span>
+                            </a>
+                        </li>
+                        <li class="item">
+                            <a href="#">
+                                <sapn class="thumb"><img src="../img/main/ads_sample_img.png" /></sapn>
+                                <span class="info">
+                                    9원룸
+                                    <em>면적 33㎡</em>
+                                    <em>서울시 강남구 삼성동</em>
+                                </span>
+                                <span class="won">
+                                    3억 2500<em>전세</em>
+                                </span>
+                            </a>
+                        </li>
+                        <li class="item">
+                            <a href="#">
+                                <sapn class="thumb"><img src="../img/main/ads_sample_img.png" /></sapn>
+                                <span class="info">
+                                    10쓰리룸
+                                    <em>면적 33㎡</em>
+                                    <em>서울시 강남구 삼성동</em>
+                                </span>
+                                <span class="won">
+                                    3억 9600/192<em>월세</em>
+                                </span>
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+                <div class="control">
+                    <button type="button" data-control="prev" class="btn_prev">이전</button>
+                    <button type="button" data-control="next" class="btn_next">다음</button>
+                </div>
+            </div>
+        </div>
+        <!--//ads_wrap-->
+        <!--tip_wrap-->
+        <div class="tip_wrap">
+            <div class="inner">
+                <a href="#">신속하고, 정확하게, 그리고 안전하게 <span>거래하는 TIP</span></a>
+            </div>
+        </div>
+        <!--//tip_wrap-->
+        <!--manual_wrap-->
+        <div class="manual_wrap">
+            <div class="inner">
+                <ul>
+                    <li>
+                        <dl>
+                            <dt><span>01</span>알써니에게 매물을 접수해보세요.</dt>
+                            <dd>검증된 여러 중개업소에 즉시 연결됩니다.<br>이제 신속·정확하게 좋은 가격에 매도하세요.</dd>
+                        </dl>
+                        <div class="thumb"><img src="../img/main/manual_sample_img.png" /></div>
+                    </li>
+                    <li>
+                        <dl>
+                            <dt><span>02</span>원하는 매물 유형을 설정하세요.</dt>
+                            <dd>검증된 여러 중개업소에 즉시 연결됩니다.<br>이제 신속·정확하게 좋은 가격에 매도하세요.</dd>
+                        </dl>
+                        <div class="thumb"><img src="../img/main/manual_sample_img.png" /></div>
+                    </li>
+                    <li>
+                        <dl>
+                            <dt><span>03</span>지도의 검색바를 세팅해주세요.</dt>
+                            <dd>검증된 여러 중개업소에 즉시 연결됩니다.<br>이제 신속·정확하게 좋은 가격에 매도하세요.</dd>
+                        </dl>
+                        <div class="thumb"><img src="../img/main/manual_sample_img.png" /></div>
+                    </li>
+                </ul>
+                <p>매물 등록만 해도 코인처럼 수익이 들어와요</p>
+            </div>
+        </div>
+        <!--//manual_wrap-->
+    </div>
+    <!--//body_layout-->
+    <!--foot_layout-->
+    <div id="foot_layout">
+        <div class="inner">
+            <div class="util">
+                <h2>알써니</h2>
+                <ul>
+                    <li><a href="#">고객센터</a></li>
+                    <li><a href="#">이용약관</a></li>
+                    <li><a href="#">관리자모드</a></li>
+                    <li><a href="#">로그아웃</a></li>
+                </ul>
+            </div>
+            <address>
+                <p>
+                    <span>(주)알플니폼</span>
+                    <span>대표자</span> OOO
+                    <span>주소</span> 서울시 서초구 서초대로 서초빌딩 10층
+                    <span>사업자등록번호</span> 119-86-91245
+                </p>
+            </address>
+            <p class="copy">Copyright(c) 2020, All rights reserved</p>
+        </div>
+    </div>
+    <!--//foot_layout-->
+</body>
+</html>
+

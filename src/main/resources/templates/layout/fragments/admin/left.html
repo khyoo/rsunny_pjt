@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html 	lang="ko"
+     	xmlns:th="http://www.thymeleaf.org">
+
+	<div id="lnb_layout" th:fragment="leftFragment">
+	    <ul class="depth_1">
+	        <li>
+	            <a href="/siteadmin/user/manager">관리자관리</a>
+	        </li>
+	        <li>
+	            <a href="/siteadmin/user/broker">공인중개사</a>
+	        </li>
+	        <li>
+	            <a href="/siteadmin/user/rental">임대관리사</a>
+	        </li>
+	        <li>
+	            <a href="/siteadmin/user/branch">지점매니저</a>
+	        </li>
+	        <li>
+	            <a href="/siteadmin/user/member">일반회원</a>
+	        </li>
+	        <li>
+	            <a href="/siteadmin/sale">매물관리</a>
+	        </li>
+	        <li>
+	            <a href="/siteadmin/report">매물신고</a>
+	        </li>
+	        <li>
+	            <a href="/siteadmin/report-agent">중개사신고</a>
+	        </li>
+	        <li>
+	            <a href="/siteadmin/point-rate">포인트관리</a>
+	        </li>
+	        <li>
+	            <a href="/siteadmin/point-list">포인트처리내역</a>
+	        </li>
+	        <li>
+	            <a href="/siteadmin/ad-item">광고아이템</a>
+	        </li>
+	        <li>
+	            <a href="/siteadmin/board/inquiry">1:1문의</a>
+	        </li>
+	        <li>
+	            <a href="/siteadmin/board/banner">배너관리</a>
+	        </li>
+	        <li>
+	            <a href="/siteadmin/board/faq">FAQ관리</a>
+	        </li>
+	        <!-- <li>
+	            <a href="/siteadmin/business-site">사업부지</a>
+	        </li> -->
+	    </ul>
+	    
+	    <script>
+	    	var expr = $.validator.format('a[href="{0}"]', location.pathname);
+	    	//alert(expr + '...' + $(expr).length);
+	    	$(expr).parent().addClass('on');
+	    </script>
+	</div>
+
+</html>

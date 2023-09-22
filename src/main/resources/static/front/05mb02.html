@@ -1,0 +1,198 @@
+<!DOCTYPE HTML>
+<html lang="ko"> 
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge"><!-- IE에서만 -->
+    <meta name="viewport" content="width=device-width,initial-scale=1.0,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no">
+    <title>R.sunny</title>
+    <script type="text/javascript" src="../js/jquery-1.11.2.min.js"></script>
+    <script type="text/javascript" src="../js/jquery-ui.js"></script>
+    <script type="text/javascript" src="../js/stateScrollObj.js"></script>
+    <script type="text/javascript" src="../js/common.js"></script>
+    <script type="text/javascript" src="../js/sub.js"></script>
+    <link rel="stylesheet" type="text/css" href="../css/jquery-ui.css">
+    <link rel="stylesheet" type="text/css" href="../css/common.css">
+    <link rel="stylesheet" type="text/css" href="../css/layout.css">
+    <link rel="stylesheet" type="text/css" href="../css/template.css">
+</head>
+<body>
+    <!--top_layout-->
+    <div id="top_layout" class="type2">
+        <header>
+            <h1 class="logo">
+                <a href="#">알써니</a>
+            </h1>
+            <h2 class="tit">
+                <a href="#">원룸ㆍ투룸</a>
+            </h2>
+            <ul class="moBtn">
+                <li class="filter_open"><a href="#"><span>필터</span></a></li>
+                <li class="gnb_open"><a href="#"><span>모바일 메뉴</span></a></li>
+            </ul>
+        </header>
+        <nav id="gnb_layout">
+            <div class="gnb_wrap">
+                <ul class="util">
+                    <li class="login"><a href="#">로그인</a></li>
+                    <li class="point"><a href="#">ㆍ보유포인트 <span>15,000</span></a></li>
+                    <li class="mypage"><a href="#">MYPAGE</a></li>
+                    <li class="sale"><a href="#">매물 내놓기</a></li>
+                </ul>
+                <ul class="gnb">
+                    <li><a href="#">원룸ㆍ투룸+</a></li>
+                    <li><a href="#">아파트ㆍ오피스텔</a></li>
+                    <li><a href="#">주택ㆍ빌라</a></li>
+                    <li><a href="#">상가ㆍ사무실</a></li>
+                    <li><a href="#">토지ㆍ건물</a></li>
+                </ul>
+                <dl class="gnb_bottom">
+                    <dt>알써니</dt>
+                    <dd class="n1"><a href="#">고객센터</a></dd>
+                    <dd class="n2"><a href="#">이용약관</a></dd>
+                    <dd class="n3"><a href="#">관리자 모드</a></dd>
+                    <dd class="n4"><a href="#">로그아웃</a></dd>
+                </dl>
+                <a class="gnb_close" href="#">닫기</a>
+            </div>
+        </nav>
+    </div>
+    <!--//top_layout-->
+    <!--body_layout-->
+    <div id="body_layout">
+        <!--visual_wrap-->
+        <div class="visual_wrap">
+            <div class="inner type3">
+                <h2><strong>공인중개사</strong> 회원가입</h2>
+                <p>공인중개사(임대관리사회원) 회원은<br>등록 승인을 통해 회원가입이 가능합니다.</p>
+            </div>
+        </div>
+        <!--//visual_wrap-->
+        <!--step_wrap-->
+        <div class="step_wrap tyep1">
+            <div class="inner type3">
+                <dl class="end">
+                    <dt>1</dt>
+                    <dd>약관동의</dd>
+                </dl>
+                <dl class="on">
+                    <dt>2</dt>
+                    <dd>회원정보입력</dd>
+                </dl>
+                <dl>
+                    <dt>3</dt>
+                    <dd>회원가입 완료</dd>
+                </dl>
+            </div>
+        </div>
+        <!--//step_wrap-->
+        <!--input_wrap-->
+        <div class="input_wrap">
+            <div class="inner type2">
+                <ul>
+                    <li>
+                        <label for="join_1">아이디</label>
+                        <input id="join_1" type="text" />
+                        <p>4자~12자 영문+숫자로 입력해주세요.</p>
+                    </li>
+                    <li>
+                        <label for="join_2">비밀번호</label>
+                        <input id="join_2" type="text" />
+                        <p>10자~20자 영문,숫자 조합</p>
+                    </li>
+                    <li>
+                        <label for="join_3">비밀번호 확인</label>
+                        <input id="join_3" type="text" />
+                    </li>
+                    <li>
+                        <label for="join_4">공인중개사명</label>
+                        <input id="join_4" type="text" />
+                    </li>
+                    <li>
+                        <label for="join_5">대표자명</label>
+                        <input id="join_5" type="text" placeholder="이름을 입력해 주세요" />
+                    </li>
+                    <li>
+                        <label for="join_6">휴대전화번호</label>
+                        <input id="join_6" type="text" placeholder="- 제외 후 입력 해 주세요." />
+                        <input id="join_6_2" type="text" placeholder="- 제외 후 입력 해 주세요." />
+                    </li>
+                    <li>
+                        <label for="join_7">사업자 주소지</label>
+                        <div class="flexBox flex_address">
+                            <input id="join_7" type="text"/>
+                            <a href="#">주소검색</a>
+                        </div>
+                        <input id="join_7_2" type="text" placeholder="상세주소" />
+                    </li>
+                    <li>
+                        <label for="join_8">담당자명</label>
+                        <input id="join_8" type="text" placeholder="이름을 입력해 주세요" />
+                    </li>
+                    <li>
+                        <label for="join_9">담당자명</label>
+                        <input id="join_9" type="text" placeholder="휴대전화" />
+                    </li>
+                    <li>
+                        <label for="join_10">담당자명</label>
+                        <input id="join_10" type="text" placeholder="이메일 주소 형식으로 입력해 주세요." />
+                    </li>
+                    <li>
+                        <label>사진/서류 첨부</label>
+                        <ul class="fileBox">
+                            <li>
+                                <input id="file_1" type="file">
+                                <label for="file_1">사업자 등록증</label>
+                                <a href="#">사업자 등록증<br>등록 완료</a>
+                            </li>
+                            <li>
+                                <input id="file_2" type="file">
+                                <label for="file_2">자격증 사본</label>
+                                <a href="#">자격증 사본<br>등록 완료</a>
+                            </li>
+                            <li>
+                                <input id="file_3" type="file">
+                                <label for="file_3">개설 등록증</label>
+                                <a href="#">개설 등록증<br>등록 완료</a>
+                            </li>
+                            <li>
+                                <input id="file_4" type="file">
+                                <label for="file_4">공제 증서</label>
+                                <a href="#">공제 증서<br>등록 완료</a>
+                            </li>
+                            <li>
+                                <input id="file_5" type="file">
+                                <label for="file_5">사무실 외부</label>
+                                <a href="#">사무실 외부<br>등록 완료</a>
+                            </li>
+                            <li>
+                                <input id="file_6" type="file">
+                                <label for="file_6">사무실 내부</label>
+                                <a href="#">사업자 등록증<br>등록 완료</a>
+                            </li>
+                            <li>
+                                <input id="file_7" type="file">
+                                <label for="file_7">추가 사진</label>
+                                <a href="#">추가 사진<br>등록 완료</a>
+                            </li>
+                        </ul>
+                    </li>
+                    <li>
+                        <label for="join_11">추천 아이디</label>
+                        <input id="join_11" type="text" placeholder="알써니 지점 매니저 아이디 입력" />
+                        <p>알써니 지점매니저 아이디 추천 하시면, 20,000 감사 포인트를 제공 드립니다.</p>
+                    </li>
+                </ul>
+            </div>
+        </div>
+        <!--//input_wrap-->
+        <!--btn_wrap-->
+        <div class="btn_wrap">
+            <a href="#" class="type2">취소</a>
+            <a href="#" class="type1">회원가입</a>
+        </div>
+        <!--//btn_wrap-->
+    </div>
+    <!--//body_layout-->
+</body>
+</html>
+

@@ -1,0 +1,56 @@
+                <div class="tit">
+                    <div class="dropDown">
+                        <a href="#" onclick="dropDown(this)">
+                            <h2><span th:remove="tag" th:text="${saleTypeNm}">원룸ㆍ투룸</span> <span>▼</span></h2>
+                        </a>
+                        <ul>
+                            <li><a href="/02la01?t=r">원룸ㆍ투룸</a></li>
+                            <li><a href="/02la01?t=a">아파트ㆍ오피스텔</a></li>
+                            <li><a href="/02la01?t=h">주택ㆍ빌라</a></li>
+                            <li><a href="/02la01?t=s">상가ㆍ사무실</a></li>
+                            <li><a href="/02la01?t=l">토지ㆍ건물</a></li>
+                        </ul>
+                    </div>
+                    <span><em th:text="${form.totalCount}">25</em>건 매물</span>
+                </div>
+                <ul class="list saleList" th:if="${#lists.size(list) > 0}">
+                    <li class="ad" th:each="item : ${list}">
+                        <a class="menu" href="#" th:attr="data-rid=${item.rid}">
+                            <span class="thumb">
+                                <img th:src="@{${item.firstPicturePath}}" />
+                            </span>
+                            <span class="info">
+                                <span class="won">
+                                    <em th:text="${item.tradeTypeNm}">매매</em>
+                                    <span th:remove="tag" th:text="${item.priceWon}">9억 4000만원</span>
+                                </span>
+                                <span class="txt" th:text="${item.forsaleIntro}">아늑하고 넓은 투룸 ~</span>
+                                <span class="address" th:text="${item.dongAddr}">전남 여수시 미평동 | <span th:remove="tag" th:text="${item.saleDetailTypeNm}">아파트</span><span th:remove="tag" th:text="${item.tradeTypeNm}">매매</span></span>
+                                <span class="detail" th:unless="${item.saleType=='l'}">[[${item.supplyAreaWithPy}]] | [[${item.privateAreaWithPy}]]</span>
+                                <span class="detail" th:if="${item.saleType=='l'}">[[${item.landAreaWithPy}]] | [[${item.buildingAreaWithPy}]]</span>
+                            </span>
+                        </a>
+                    </li>
+                </ul>
+                <ul class="paging" th:utext="${form.pagingHtml}" th:if="${#lists.size(list) > 0}">
+                	<ul></ul>
+                </ul>
+                <p class="noList" th:if="${#lists.size(list)==0}">등록된 매물이 존재하지 않습니다.</p>
+
+<script th:inline="javascript">
+	var clusterOneItem = /*[[${clusterOneItem}]]*/ false;
+	if(clusterOneItem) {
+		$(".tabCon_wrap .list .menu:first").trigger('click');
+	}
+
+	function movePageTab1(page) {
+		var formdata = $('#frmFilter').serializeObject();
+		formdata.page = page;
+		//alert(JSON.stringify(formdata));
+
+		$.get('/forsale/tab1', formdata, function(result) {
+			$('div.tab1').html(result);
+			imgResizeOut(".tabCon_wrap .thumb img");
+		});
+	}
+</script>

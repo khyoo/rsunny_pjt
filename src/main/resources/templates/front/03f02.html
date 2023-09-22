@@ -1,0 +1,111 @@
+<!DOCTYPE HTML>
+<html lang="ko">
+<head>
+	<th:block th:replace="layout/fragments/front/head :: headFragment"></th:block>
+	<!-- Global site tag (gtag.js) - Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-6EHV3KH3XT"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-6EHV3KH3XT');
+</script>
+	<script th:inline="javascript">
+		$(document).ready(function() {
+			var form = $('#frmBase');
+
+			//필수값 체크.
+	    	form.validate({
+	    		wrapper: 'span',
+				rules: {
+					saleType: 'required'
+				}
+	    	});
+
+			$('a.prev').click(function() {
+				var formdata = form.serializeObject();
+				$.post('[(${saveUrl})]', formdata, function(result) {
+					if(result.code==0) {
+						location.href = '[(${prevPage})]';
+					}
+					else {
+						alert(result.message);
+					}
+				}).fail(function() {
+					alert('저장중 오류가 발생하였습니다.');
+				})
+			});
+			$('a.next').click(function() {
+				var formdata = form.serializeObject();
+				if(!formdata.saleType) {
+					alert('매물 유형을 선택하세요.'); return;
+				}
+				else if(formdata.saleType=='b') {	//사업부지를 선택한 경우.
+					alert('[사업부지]는 서비스 준비 중입니다.\n고객센터 1:1문의를 이용해 주세요.'); return;
+				}
+
+				var userType = /*[[${USER_TYPE}]]*/ '';
+				if(userType=='RA' && formdata.saleType != 'r') {
+					alert('임대관리사회원의 경우 원룸/투룸 매물만 등록 가능합니다'); return;
+				}
+
+				$.post('[(${saveUrl})]', formdata, function(result) {
+					if(result.code==0) {
+						location.href = '[(${nextPage})]';
+					}
+					else {
+						alert(result.message);
+					}
+				}).fail(function() {
+					alert('저장중 오류가 발생하였습니다.');
+				})
+			});
+		})
+	</script>
+</head>
+<body>
+    <!--top_layout-->
+    <div id="top_layout" class="type2">
+		<th:block th:replace="layout/fragments/front/header :: headerFragment"></th:block>
+    </div>
+    <!--//top_layout-->
+    <!--body_layout-->
+    <div id="body_layout">
+        <!--visual_wrap-->
+        <div class="visual_wrap">
+            <div class="inner type3">
+                <h2><strong>알써니</strong> [[${pageTitle}]]</h2>
+                <p>내가 등록하고 누적 포인트는 수익금으로<br>진정한 거래의 기본, 알써니!</p>
+            </div>
+        </div>
+        <!--//visual_wrap-->
+        <!--saleBox_wrap-->
+        <div class="saleBox_wrap">
+            <div class="inner type3">
+            	<form id="frmBase" name="frmBase" method="post" onsubmit="return false">
+                <ul>
+                    <li th:each="item : ${SALE_TYPE}">
+                        <input th:id="${'saleType_'+item.cd}" name="saleType" th:value="${item.cd}" type="radio" th:checked="${data.saleType==item.cd}">
+                        <label th:for="${'saleType_'+item.cd}" th:text="${item.nm}">원룸 / 투룸 +</label>
+                    </li>
+                </ul>
+                </form>
+            </div>
+        </div>
+        <!--//saleBox_wrap-->
+        <!--btn_wrap-->
+        <div class="btn_wrap">
+            <a href="javascript:void(0);" class="type2 prev">이전</a>
+            <a href="javascript:void(0);" class="type1 next">다음</a>
+        </div>
+        <!--//btn_wrap-->
+    </div>
+    <!--//body_layout-->
+    <!--foot_layout-->
+    <div id="foot_layout">
+		<th:block th:replace="layout/fragments/front/footer :: footerFragment"></th:block>
+    </div>
+    <!--//foot_layout-->
+</body>
+</html>

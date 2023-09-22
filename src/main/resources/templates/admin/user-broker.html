@@ -1,0 +1,423 @@
+<!DOCTYPE html>
+<html lang="ko"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorator="layout/default-admin">
+
+            <!--contents_layout 시작-->
+            <div id="contents_layout" layout:fragment="content">
+                <!--head 시작-->
+                <div class="head">
+                    <h2>공인중개사</h2>
+                    <p class="f_r btn">
+                        <a class="type1" href="/05mb01?userType=a" target="_blank">회원등록</a>
+                    </p>
+                </div>
+                <!--head 끝-->
+                <!--body 시작-->
+			    <form id="frmSearch" name="frmSearch" method="get" action="broker">
+			    	<input type="hidden" id="page" name="page" value="1" />
+                <div class="body">
+                    <div class="innr">
+                        <div class="bbsSearch w210">
+                            <input type="text" id="schWord" name="schWord" th:value="${form.schWord}" placeholder="키워드">
+                            <a href="javascript:void(0);" class="search">검색</a>
+                        </div>
+                    </div>
+                    <div class="bbsList">
+                        <table>
+                            <colgroup>
+                                <col style="width:70px;"/>
+                                <col style="width:10%;"/>
+                                <col style="width:15%;"/>
+                                <col style="width:8%;"/>
+                                <col style="width:105px;"/>
+                                <col />
+                                <col />
+                                <col />
+                                <col style="width:14%;"/>
+                                <col style="width:14%;"/>
+                            </colgroup>
+                            <thead>
+                                <tr>
+                                    <th scope="col">No</th>
+                                    <th scope="col">아이디</th>
+                                    <th scope="col">사무소명</th>
+                                    <th scope="col">대표자명</th>
+                                    <th scope="col">확인</th>
+                                    <th scope="col">열람매물</th>
+                                    <th scope="col">광고아이템</th>
+                                    <th scope="col">포인트</th>
+                                    <th scope="col">최근접속일</th>
+                                    <th scope="col">가입일</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr th:each="item : ${list}" th:attr="data-userid=${item.userid}">
+                                    <td th:text="${item.seq}">1</td>
+                                    <td class="btn" th:text="${item.userid}">adf1234</td>
+                                    <td th:text="${item.bizNm}">미래부동산</td>
+                                    <td th:text="${item.ceoNm}" >김대표</td>
+                                    <td class="btn"><a href="#" class="type2 lp_open" data-lp="lp_a5" th:text="${item.statusNm}" th:attr="data-userid=${item.userid}">신청</a></td>
+                                    <td class="btn"><a href="#" class="type1 lp_open" data-lp="lp_forsale"><span th:text="${item.salesCnt + item.openCnt}" th:remove="tag">0</span>건</a></td>
+                                    <td class="btn"><a href="#" class="type1 lp_open" data-lp="lp_item"><span th:text="${item.useAvailItem}" th:remove="tag">0</span>건</a></td>
+                                    <td class="btn"><a href="#" class="type1 lp_open" data-lp="lp_point"><span th:text="${#numbers.formatDecimal(item.useAvailPoint, 0, 'COMMA', 0, 'POINT')}" th:remove="tag">0</span></a></td>
+                                    <td th:text="${item.lastLoginDtm}">2019-10-10</td>
+                                    <td th:text="${#temporals.format(item.createDtm, 'yyyy-MM-dd')}">2019-10-10</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="bbsPaging">
+                        <script th:inline="javascript">printPageList(/*[(${form.totalCount})]*/ 0, /*[(${form.page})]*/ 0, /*[(${form.rows})]*/ 0);</script>
+                    </div>
+                </div>
+                </form>
+                <!--body 끝-->
+
+			    <!-- 레이어팝업 시작 -->
+			    <div id="lp_layout">
+			        <!-- 레이어팝업 lp_forsale 시작 -->
+			        <div id="lp_forsale" class="lp_wrap">
+			            <div class="head">
+			                <h2>등록(열람)매물 목록</h2>
+			            </div>
+			            <div class="body">
+			            </div>
+			            <a class="lp_close" href="#">닫기</a>
+			        </div>
+			        <!-- 레이어팝업 lp_forsale 끝 -->
+			        <!-- 레이어팝업 lp_item 시작 -->
+			        <div id="lp_item" class="lp_wrap">
+			            <div class="head">
+			                <h2>광고 아이템 내역</h2>
+			            </div>
+			            <div class="body">
+			            </div>
+			            <a class="lp_close" href="#">닫기</a>
+			        </div>
+			        <!-- 레이어팝업 lp_item 끝 -->
+			        <!-- 레이어팝업 lp_point 시작 -->
+			        <div id="lp_point" class="lp_wrap">
+			            <div class="head">
+			                <h2>포인트 내역</h2>
+			            </div>
+			            <div class="body">
+			            </div>
+			            <a class="lp_close" href="#">닫기</a>
+			        </div>
+			        <!-- 레이어팝업 lp_point 끝 -->
+			        <!-- 레이어팝업 lp_a5 시작 -->
+			        <div id="lp_a5" class="lp_wrap">
+			            <div class="head">
+			                <h2>중개사회원 가입정보</h2>
+			            </div>
+			            <div class="body">
+			            	<form id="frmBase" name="frmBase" onsubmit="return false">
+			            		<input type="hidden" name="isNew" value="" />
+			            		<input type="hidden" name="userType" value="" />
+			            		<input type="hidden" name="bizPath" value="" />
+			            		<input type="hidden" name="licensePath" value="" />
+			            		<input type="hidden" name="openPath" value="" />
+			            		<input type="hidden" name="deductiblePath" value="" />
+			            		<input type="hidden" name="outsidePath" value="" />
+			            		<input type="hidden" name="insidePath" value="" />
+			            		<input type="hidden" name="additionalPath" value="" />
+			            		<input type="hidden" name="status" value="" />
+			                <ul class="input_box">
+			                    <li>
+			                        <label for="lp_a5_for1">아이디</label>
+			                        <input id="lp_a5_for2" type="text" name="userid" data-updatable="false" value=""/>
+			                    </li>
+			                    <li>
+			                        <label for="lp_a5_for2">공인중개사업자명</label>
+			                        <input id="lp_a5_for2" type="text" name="bizNm" value=""/>
+			                    </li>
+			                    <li>
+			                        <label for="lp_a5_for3">대표자명</label>
+			                        <input id="lp_a5_for3" type="text" name="ceoNm" value=""/>
+			                    </li>
+			                    <li>
+			                        <label for="lp_a5_for4">휴대전화번호</label>
+			                        <input id="lp_a5_for4" type="text" name="phone" value=""/>
+			                    </li>
+			                    <li>
+			                        <label for="lp_a5_for5">주소</label>
+			                        <input id="lp_a5_for5" type="text" name="addr1" value=""/>
+			                        <input id="lp_a5_for5" type="text" name="addr2" value=""/>
+			                    </li>
+			                    <li class="half">
+			                        <label for="lp_a5_for6">담당자명/연락처</label>
+			                        <input id="lp_a5_for6" type="text" name="managerNm" value=""/>
+			                        <input id="lp_a5_for6" type="text" name="managerPhone" value=""/>
+			                    </li>
+			                    <li>
+			                        <label for="lp_a5_for7">메일주소</label>
+			                        <input id="lp_a5_for7" type="text" name="email" value=""/>
+			                    </li>
+			                    <li>
+			                        <label for="lp_a5_for8">사진/서류 첨부</label>
+<!-- 			                        <a class="fileDown" href="#">파일다운로드</a> -->
+			                        <ul class="imgFile">
+			                            <li><span>사업자<br>등록증</span></li>
+			                            <li><span>자격증<br>사본</span></li>
+			                            <li><span>개설<br>등록증</span></li>
+			                            <li><span>공제<br>증서</span></li>
+			                            <li><span>사무실<br>외부</span></li>
+			                            <li><span>사무실<br>내부</span></li>
+			                            <li><span>추가<br>사진</span></li>
+			                        </ul>
+			                    </li>
+			                </ul>
+                    </form><br><br>
+			                <div class="btn between btngrp1">
+			                    <a class="type1 lp_open2" data-lp="alert_a5" data-button="delete" href="#">가입취소</a>
+			                    <div>
+			                        <a class="type2 lp_open2" data-lp="alert_a5" data-button="approve" href="#">승인</a>
+			                    </div>
+			                </div>
+			                <div class="btn between btngrp2">
+			                    <div class="jquerySelect w132">
+			                        <select id="lp_a1_for1" name="stopDays">
+			                            <option value="">회원설정</option>
+			                            <option value="0">회원정지 해제</option>
+			                            <option value="7">회원정지 7일</option>
+			                            <option value="15">회원정지 15일</option>
+			                            <option value="30">회원정지 30일</option>
+			                            <option value="-99">회원삭제</option>
+			                        </select>
+			                    </div>
+			                    <a class="type2 lp_open2" data-lp="alert_a5" data-button="stop" href="#">저장</a>
+			                </div>
+			            </div>
+			            <a class="lp_close" href="#">닫기</a>
+			        </div>
+			        <!-- 레이어팝업 lp_a5 끝 -->
+			        <!-- alert 팝업 -->
+			        <div id="alert_a5" class="lp_wrap type_alert">
+			            <div class="body">
+			                <p class="button-message">승인 하시겠습니까?</p>
+			                <div class="btn">
+			                    <a class="type1 lp_close2 cancel" href="#">취소</a>
+			                    <a class="type2 confirm" data-button="" href="#">확인</a>
+			                </div>
+			            </div>
+			        </div>
+			        <!-- //alert 팝업 -->
+			    </div>
+			    <!-- 레이어팝업 끝 -->
+
+			    <script	th:inline="javascript">
+			    	$(document).ready(function() {
+			    		$('a.search').click(function() {
+			    			$('#frmSearch').submit();
+			    		});
+
+			    		//팝업 열기
+			    		$('a.lp_open').click(function() {
+			    			var form = $('#frmBase');
+			    			form.resetForm();
+
+			    			var userid = $(this).data('userid');
+			    			$.post('rest/getUser', {userid: userid}, function(user) {
+			    				if(user==null || user=='') user = {userid: ''};
+			    				user.isNew = (user && user.userid && user.userid.length > 0)? 'N' : 'Y';
+			    				//alert(JSON.stringify(user));
+			    				form.setFormData(user);
+
+			    				if(user.status=='00') {
+			    					$('div.btngrp1').show();
+			    					$('div.btngrp2').hide();
+			    				}
+			    				else {
+			    					$('div.btngrp2').show();
+			    					$('div.btngrp1').hide();
+			    				}
+
+			    				//alert(JSON.stringify(user));
+			    				var imgArea = $('ul.imgFile');
+			    				imgArea.empty();
+
+			    				if(user.bizPath && user.bizPath.length > 0) {
+			    					imgArea.append( $.validator.format('<li><a href="{0}" target="_blank"><span>사업자<br>등록증<br>등록 완료</span></a></li>', user.bizPath) );
+			    				}
+			    				else {
+			    					imgArea.append('<li><span>사업자<br>등록증</span></li>');
+			    				}
+
+			    				if(user.licensePath && user.licensePath.length > 0) {
+			    					imgArea.append( $.validator.format('<li><a href="{0}" target="_blank"><span>자격증<br>사본<br>등록 완료</span></a></li>', user.licensePath) );
+			    				}
+			    				else {
+			    					imgArea.append('<li><span>자격증<br>사본</span></li>');
+			    				}
+
+			    				if(user.openPath && user.openPath.length > 0) {
+			    					imgArea.append( $.validator.format('<li><a href="{0}" target="_blank"><span>개설<br>등록증<br>등록 완료</span></a></li>', user.openPath) );
+			    				}
+			    				else {
+			    					imgArea.append('<li><span>개설<br>등록증</span></li>');
+			    				}
+
+			    				if(user.deductiblePath && user.deductiblePath.length > 0) {
+			    					imgArea.append( $.validator.format('<li><a href="{0}" target="_blank"><span>공제<br>증서<br>등록 완료</span></a></li>', user.deductiblePath) );
+			    				}
+			    				else {
+			    					imgArea.append('<li><span>공제<br>증서</span></li>');
+			    				}
+
+			    				if(user.outsidePath && user.outsidePath.length > 0) {
+			    					imgArea.append( $.validator.format('<li><a href="{0}" target="_blank"><span>사무실<br>외부<br>등록 완료</span></a></li>', user.outsidePath) );
+			    				}
+			    				else {
+			    					imgArea.append('<li><span>사무실<br>외부</span></li>');
+			    				}
+
+			    				if(user.insidePath && user.insidePath.length > 0) {
+			    					imgArea.append( $.validator.format('<li><a href="{0}" target="_blank"><span>사무실<br>내부<br>등록 완료</span></a></li>', user.insidePath) );
+			    				}
+			    				else {
+			    					imgArea.append('<li><span>사무실<br>내부</span></li>');
+			    				}
+
+			    				if(user.additionalPath && user.additionalPath.length > 0) {
+			    					imgArea.append( $.validator.format('<li><a href="{0}" target="_blank"><span>추가<br>사진<br>등록 완료</span></a></li>', user.additionalPath) );
+			    				}
+			    				else {
+			    					imgArea.append('<li><span>추가<br>사진</span></li>');
+			    				}
+			    			})
+			    		});
+
+			    		//저장
+			    		$('a.save').click(function() {
+			    			var form = $('#frmBase');
+
+				    		var formdata = form.serializeObject();
+							//alert(JSON.stringify(formdata));
+
+			    			var isNew = (formdata.isNew=='Y');
+
+					    	//필수값 체크.
+					    	form.validate({
+								rules: {
+									userType: 'required',
+									userid: 'required',
+									usernm: 'required',
+									passwd: {required: isNew}
+								},
+								errorPlacement: function (error, element) {
+								    element.attr("placeholder", error[0].outerText);
+								}
+					    	});
+
+					    	if( !form.valid() ) return;
+
+							if(formdata.userType=='') {
+								alert('권한 유형을 선택하세요.'); return;
+							}
+							//alert(JSON.stringify(formdata));
+
+							//if( !confirm('저장하시겠습니까?') ) return;
+
+			    			$.post('rest/save', formdata, function(result) {
+			    				alert(result.message);
+			    				if(result.code==0) {
+			    					location.reload();
+			    				}
+			    			}).error(function() {
+			    				alert('처리중 오류가 발생하였습니다.');
+			    			})
+			    		});	//Enod-of-$('a.save').click(function() {
+
+			    		/*
+			                <p class="button-message">승인 하시겠습니까?</p>
+			                <p>가입 취소 하시겠습니까?</p>
+			                <p>해당 중개사 회원 일시정지 처리 하시겠습니까?</p>
+			                <p>정말 회원 삭제 하시겠습니까?<br>(회원 관련 모든 데이터가 삭제 됩니다.)</p>
+			    		*/
+			    		$('a[data-lp="alert_a5"]').click(function() {
+			    			var button = $(this).data('button');
+
+			    			var form = $('#frmBase');
+				    		var formdata = form.serializeObject();
+				    		formdata.stopDays = $('select[name=stopDays]').val();
+
+			    			if(button=='save') {
+			    				$('p.button-message').html('저장하시겠습니까?');
+			    			}
+			    			else if(button=='delete') {
+			    				$('p.button-message').html('정말 회원 삭제 하시겠습니까?<br>(회원 관련 모든 데이터가 삭제 됩니다.)');
+			    			}
+			    			else if(button=='approve') {
+			    				$('p.button-message').html('승인하시겠습니까?');
+			    			}
+			    			else if(button=='stop') {
+			    				if(formdata.stopDays=='') {
+				    				$(".lp_close2").trigger('click');
+			    					alert('회원설정 유형을 선택하세요.');
+									return;
+			    				}
+			    				var stopType = $('select[name=stopDays]').find('option:selected').text();
+			    				$('p.button-message').html('[' + stopType + '] 처리 하시겠습니까?');
+			    			}
+
+			    			$('a.confirm').data('button', button);
+			    		});
+
+			    		$('a.confirm').click(function() {
+			    			var button = $(this).data('button');
+
+			    			var form = $('#frmBase');
+				    		var formdata = form.serializeObject();
+				    		formdata.stopDays = $('select[name=stopDays]').val();
+
+			    			if(button=='save') {
+				    			$.post('rest/save', formdata, function(result) {
+				    				alert(result.message);
+				    				if(result.code==0) {
+				    					location.reload();
+				    				}
+				    			}).error(function() {
+				    				alert('처리중 오류가 발생하였습니다.');
+				    			})
+			    			}
+			    			else if(button=='delete') {
+				    			$.post('rest/delete', formdata, function(result) {
+				    				alert(result.message);
+				    				if(result.code==0) {
+				    					location.reload();
+				    				}
+				    			}).error(function() {
+				    				alert('처리중 오류가 발생하였습니다.');
+				    			})
+			    			}
+			    			else if(button=='approve') {
+				    			$.post('rest/approve', formdata, function(result) {
+				    				alert(result.message);
+				    				if(result.code==0) {
+				    					location.reload();
+				    				}
+				    			}).error(function() {
+				    				alert('처리중 오류가 발생하였습니다.');
+				    			})
+			    			}
+			    			else if(button=='stop') {
+				    			$.post('rest/stop', formdata, function(result) {
+				    				alert(result.message);
+				    				if(result.code==0) {
+				    					location.reload();
+				    				}
+				    			}).error(function() {
+				    				alert('처리중 오류가 발생하였습니다.');
+				    			})
+			    			}
+			    		});
+
+			    	})
+			    </script>
+
+            </div>
+            <!--contents_layout 끝-->
+
+</html>

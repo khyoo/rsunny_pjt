@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html lang="ko"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorator="layout/default-admin">
+
+            <!--contents_layout 시작-->
+            <div id="contents_layout" layout:fragment="content">
+                <!--head 시작-->
+                <div class="head">
+                    <h2>지점 매니저 관리</h2>
+                </div>
+                <!--head 끝-->
+                <!--body 시작-->
+			    <form id="frmSearch" name="frmSearch" method="get" action="branch">
+			    	<input type="hidden" id="page" name="page" value="1" />
+                <div class="body">
+                    <div class="innr">
+                        <div class="bbsSearch w210">
+                            <input type="text" id="schWord" name="schWord" th:value="${form.schWord}" placeholder="키워드">
+                            <a href="javascript:void(0);" class="search">검색</a>
+                        </div>
+                    </div>
+                    <div class="bbsList">
+                        <table>
+                            <colgroup>
+                                <col style="width:70px;"/>
+                                <col style="width:10%;"/>
+                                <col style="width:10%;"/>
+                                <col style="width:12%;"/>
+                                <col style="width:12%;"/>
+                                <col style="width:10%;"/>
+                                <col />
+                                <col />
+                                <col style="width:10%;"/>
+                                <col style="width:10%;"/>
+                            </colgroup>
+                            <thead>
+                                <tr>
+                                    <th scope="col">No</th>
+                                    <th scope="col">아이디</th>
+                                    <th scope="col">성명</th>
+                                    <th scope="col">연락처</th>
+                                    <th scope="col">이메일</th>
+                                    <th scope="col">지점</th>
+                                    <th scope="col">연결중개사</th>
+                                    <th scope="col">포인트</th>
+                                    <th scope="col">최근접속일</th>
+                                    <th scope="col">가입일</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr th:each="item : ${list}" th:attr="data-userid=${item.userid}">
+                                    <td th:text="${item.seq}">1</td>
+                                    <td th:text="${item.userid}">adf1234</td>
+                                    <td><a href="#" class="lp_open" data-lp="lp_a8" th:text="${item.usernm}" th:attr="data-userid=${item.userid}">김박이</a></td>
+                                    <td th:text="${item.phone}">010-1234-5678</td>
+                                    <td th:text="${item.email}">abc@def.com</td>
+                                    <td th:text="${item.belongBranch}">성남지부</td>
+                                    <td class="btn"><a href="#" class="type1 lp_open" data-lp="lp_agent">[[${item.agentCnt}]]건</a></td>
+                                    <td class="btn"><a href="#" class="type1 lp_open" data-lp="lp_point"><span th:text="${#numbers.formatDecimal(item.useAvailPoint, 0, 'COMMA', 0, 'POINT')}" th:remove="tag">0</span></a></td>
+                                    <td th:text="${item.lastLoginDtm}">2019-10-10</td>
+                                    <td th:text="${#temporals.format(item.createDtm, 'yyyy-MM-dd')}">2019-10-10</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="bbsPaging">
+                        <script th:inline="javascript">printPageList(/*[(${form.totalCount})]*/ 0, /*[(${form.page})]*/ 0, /*[(${form.rows})]*/ 0);</script>
+                    </div>
+                </div>
+                </form>
+                <!--body 끝-->
+
+			    <!-- 레이어팝업 시작 -->
+			    <div id="lp_layout">
+			        <!-- 레이어팝업 lp_a8 시작 -->
+			        <div id="lp_a8" class="lp_wrap">
+			            <div class="head">
+			                <h2>지점관리자</h2>
+			            </div>
+			            <div class="body">
+			            	<form id="frmBase" name="frmBase" onsubmit="return false">
+			            		<input type="hidden" name="isNew" value="" />
+			            		<input type="hidden" name="userType" value="BM" />
+			            		<input type="hidden" name="status" value="" />
+			                <ul class="input_box">
+			                    <li>
+			                        <label for="lp_a5_for1">아이디</label>
+			                        <input id="lp_a5_for2" type="text" name="userid" data-updatable="false" value=""/>
+			                    </li>
+			                    <li>
+			                        <label for="lp_a8_for1">성명</label>
+			                        <input id="lp_a8_for2" type="text" name="usernm" value=""/>
+			                    </li>
+			                    <li>
+			                        <label for="lp_a8_for1">소속지점</label>
+			                        <input id="lp_a8_for2" type="text" name="belongBranch" value=""/>
+			                    </li>
+			                    <li>
+			                        <label for="lp_a8_for2">연락처</label>
+			                        <input id="lp_a8_for2" type="text" name="phone" value=""/>
+			                    </li>
+			                    <li>
+			                        <label for="lp_a8_for3">이메일</label>
+			                        <input id="lp_a8_for3" type="text" name="email" value="abac@naver.com"/>
+			                    </li>
+			                    <li>
+			                        <label for="lp_a8_for4">비밀번호</label>
+			                        <input id="lp_a8_for4" type="password" name="passwd" value="" data-empty="true" placeholder="******" />
+			                    </li>
+			                    <li>
+			                        <label for="lp_a8_for5">거래은행</label>
+			                        <input id="lp_a8_for5" type="text" name="bankNm" value=""/>
+			                    </li>
+			                    <li>
+			                        <label for="lp_a8_for6">계좌번호</label>
+			                        <input id="lp_a8_for6" type="text" name="accountNo" value=""/>
+			                    </li>
+			                </ul>
+                    </form><br><br>
+			                <div class="btn between">
+			                    <div>
+			                        <a class="type2 lp_open2 delete" data-lp="alert_a5" href="#">회원삭제</a>
+			                    </div>
+			                    <a class="type2 save" href="#">저장</a>
+			                </div>
+			            </div>
+			            <a class="lp_close" href="#">닫기</a>
+			        </div>
+			        <!-- 레이어팝업 lp_a8 끝 -->
+			        <!-- 레이어팝업 lp_forsale 시작 -->
+			        <div id="lp_agent" class="lp_wrap">
+			            <div class="head">
+			                <h2>연결 중개사 목록</h2>
+			            </div>
+			            <div class="body">
+			            </div>
+			            <a class="lp_close" href="#">닫기</a>
+			        </div>
+			        <!-- 레이어팝업 lp_forsale 끝 -->
+			        <!-- 레이어팝업 lp_forsale 시작 -->
+			        <div id="lp_forsale" class="lp_wrap">
+			            <div class="head">
+			                <h2>열람 매물 목록</h2>
+			            </div>
+			            <div class="body">
+			            </div>
+			            <a class="lp_close" href="#">닫기</a>
+			        </div>
+			        <!-- 레이어팝업 lp_forsale 끝 -->
+			        <!-- 레이어팝업 lp_point 시작 -->
+			        <div id="lp_point" class="lp_wrap">
+			            <div class="head">
+			                <h2>포인트 내역</h2>
+			            </div>
+			            <div class="body">
+			            </div>
+			            <a class="lp_close" href="#">닫기</a>
+			        </div>
+			        <!-- 레이어팝업 lp_point 끝 -->
+			    </div>
+			    <!-- 레이어팝업 끝 -->
+
+			    <script	th:inline="javascript">
+			    	$(document).ready(function() {
+			    		$('a.search').click(function() {
+			    			$('#frmSearch').submit();
+			    		});
+
+
+			    		//팝업 열기
+			    		$('a.lp_open[data-lp="lp_a8"]').click(function() {
+			    			var form = $('#frmBase');
+			    			form.resetForm();
+
+			    			var userid = ($(this).hasClass('new'))? '' : $(this).closest('tr').data('userid');
+			    			//alert(userid);
+			    			$.post('rest/getUser', {userid: userid}, function(user) {
+			    				if(user==null || user=='') user = {userType: 'BM', privateProvisionYn: 'Y'};
+			    				user.isNew = (user && user.userid && user.userid.length > 0)? 'N' : 'Y';
+			    				//alert(JSON.stringify(user));
+			    				form.setFormData(user);
+			    			})
+			    		});		//End-of-$('a.lp_open[data-lp="lp_a8"]').click(function() {
+
+
+			    		//저장
+			    		$('a.save').click(function() {
+			    			var form = $('#frmBase');
+
+				    		var formdata = form.serializeObject();
+				    		formdata.bankUpdateYn = 'Y';
+							//alert(JSON.stringify(formdata));
+
+			    			var isNew = (formdata.isNew=='Y');
+
+					    	//필수값 체크.
+					    	form.validate({
+								rules: {
+									userid: 'required',
+									usernm: 'required',
+									passwd: {required: isNew},
+									phone: 'required',
+									email: 'required'
+								},
+								errorPlacement: function (error, element) {
+								    element.attr("placeholder", error[0].outerText);
+								}
+					    	});
+
+					    	if( !form.valid() ) return;
+
+							if( !confirm('저장하시겠습니까?') ) return;
+
+			    			$.post('rest/save', formdata, function(result) {
+			    				alert(result.message);
+			    				if(result.code==0) {
+			    					location.reload();
+			    				}
+			    			}).error(function() {
+			    				alert('처리중 오류가 발생하였습니다.');
+			    			})
+			    		});	//Enod-of-$('a.save').click(function() {
+
+
+			    		//삭제
+			    		$('a.delete').click(function() {
+			    			var form = $('#frmBase');
+				    		var formdata = form.serializeObject();
+
+			    			if( !confirm('삭제하시겠습니까?') ) return;
+
+			    			$.post('rest/delete', formdata, function(result) {
+			    				alert(result.message);
+			    				if(result.code==0) {
+			    					location.reload();
+			    				}
+			    			});
+
+			    		});
+
+			    		$('a.changeUserTypeOpen').click(function() {
+			    			$('#lp_a9').openModal();
+			    		});
+
+			    		$('a.changeUserTypeClose').click(function() {
+			    			$('#lp_a9').closeModal();
+			    		});
+
+			    		$('a.changeUserTypeSave').click(function() {
+			    			var formdata = $('#frmBranch').serializeObject();
+			    			formdata.userid = $('#frmBase').find('input[name=userid]').val();
+			    			if(formdata.branchList=='' && formdata.belongBranch=='') {
+			    				alert('지정명을 선택하거나 신규 지점명을 입력하세요.'); return;
+			    			}
+			    			else if(formdata.branchList != '' && formdata.belongBranch=='') {
+			    				formdata.belongBranch = formdata.branchList;
+			    			}
+
+			    			if( !confirm('지점매니저로 전환하시겠습니까?') ) return;
+
+			    			$.post('/siteadmin/user/rest/usertype', formdata, function(result) {
+			    				alert(result.message);
+			    				if(result.code==0) {
+			    					location.reload();
+			    				}
+			    			});
+
+			    			$('#lp_a9').closeModal();
+			    		});
+			    	})
+			    </script>
+
+            </div>
+            <!--contents_layout 끝-->
+
+</html>

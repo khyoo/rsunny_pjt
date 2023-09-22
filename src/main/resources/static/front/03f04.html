@@ -1,0 +1,269 @@
+<!DOCTYPE HTML>
+<html lang="ko"> 
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge"><!-- IE에서만 -->
+    <meta name="viewport" content="width=device-width,initial-scale=1.0,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no">
+    <title>R.sunny</title>
+    <script type="text/javascript" src="../js/jquery-1.11.2.min.js"></script>
+    <script type="text/javascript" src="../js/jquery-ui.js"></script>
+    <script type="text/javascript" src="../js/stateScrollObj.js"></script>
+    <script type="text/javascript" src="../js/common.js"></script>
+    <script type="text/javascript" src="../js/sub.js"></script>
+    <link rel="stylesheet" type="text/css" href="../css/jquery-ui.css">
+    <link rel="stylesheet" type="text/css" href="../css/common.css">
+    <link rel="stylesheet" type="text/css" href="../css/layout.css">
+    <link rel="stylesheet" type="text/css" href="../css/template.css">
+</head>
+<body>
+    <!--top_layout-->
+    <div id="top_layout" class="type2">
+        <header>
+            <h1 class="logo">
+                <a href="#">알써니</a>
+            </h1>
+            <h2 class="tit">
+                <a href="#">원룸ㆍ투룸</a>
+            </h2>
+            <ul class="moBtn">
+                <li class="filter_open"><a href="#"><span>필터</span></a></li>
+                <li class="gnb_open"><a href="#"><span>모바일 메뉴</span></a></li>
+            </ul>
+        </header>
+        <nav id="gnb_layout">
+            <div class="gnb_wrap">
+                <ul class="util">
+                    <li class="login"><a href="#">로그인</a></li>
+                    <li class="point"><a href="#">ㆍ보유포인트 <span>15,000</span></a></li>
+                    <li class="mypage"><a href="#">MYPAGE</a></li>
+                    <li class="sale"><a href="#">매물 내놓기</a></li>
+                </ul>
+                <ul class="gnb">
+                    <li><a href="#">원룸ㆍ투룸+</a></li>
+                    <li><a href="#">아파트ㆍ오피스텔</a></li>
+                    <li><a href="#">주택ㆍ빌라</a></li>
+                    <li><a href="#">상가ㆍ사무실</a></li>
+                    <li><a href="#">토지ㆍ건물</a></li>
+                </ul>
+                <dl class="gnb_bottom">
+                    <dt>알써니</dt>
+                    <dd class="n1"><a href="#">고객센터</a></dd>
+                    <dd class="n2"><a href="#">이용약관</a></dd>
+                    <dd class="n3"><a href="#">관리자 모드</a></dd>
+                    <dd class="n4"><a href="#">로그아웃</a></dd>
+                </dl>
+                <a class="gnb_close" href="#">닫기</a>
+            </div>
+        </nav>
+    </div>
+    <!--//top_layout-->
+    <!--body_layout-->
+    <div id="body_layout">
+        <!--visual_wrap-->
+        <div class="visual_wrap">
+            <div class="inner type3">
+                <h2><strong>알써니</strong> 매물 내놓기</h2>
+                <p>내가 등록하고 누적 포인트는 수익금으로<br>진정한 거래의 기본, 알써니!</p>
+            </div>
+        </div>
+        <!--//visual_wrap-->
+        <!--step_wrap-->
+        <div class="step_wrap type2">
+            <div class="inner type3">
+                <dl class="end">
+                    <dt>1</dt>
+                    <dd>매물 기본정보</dd>
+                </dl>
+                <dl class="on">
+                    <dt>2</dt>
+                    <dd>매물 상세/옵션</dd>
+                </dl>
+                <dl>
+                    <dt>3</dt>
+                    <dd>사진/개인정보</dd>
+                </dl>
+                <dl>
+                    <dt>4</dt>
+                    <dd>매물 등록완료</dd>
+                </dl>
+            </div>
+        </div>
+        <!--//step_wrap-->
+        <!--h3_wrap-->
+        <div class="h3_wrap">
+            <div class="inner type3">
+                <div class="tit_wrap">
+                    <h3>매물 & 거래 유형</h3>
+                </div>
+                <div class="con_wrap">
+                    <!--input_wrap-->
+                    <div class="input_wrap col2 interval_42">
+                        <ul>
+                            <li>
+                                <label for="id_03f04_1">공급면적</label>
+                                <div class="flexBox flex_30">
+                                    <input id="id_03f03_1" type="text" placeholder="만 단위"/>
+                                    <p>㎡</p>
+                                </div>
+                            </li>
+                            <li>
+                                <label for="id_03f04_2">전용면적</label>
+                                <div class="flexBox flex_30">
+                                    <input id="id_03f03_2" type="text" placeholder="만 단위"/>
+                                    <p>㎡</p>
+                                </div>
+                            </li>
+                            <li>
+                                <label for="id_03f04_3">총 층수</label>
+                                <div class="flexBox flex_30">
+                                    <input id="id_03f03_3" type="text"/>
+                                    <p>층</p>
+                                </div>
+                            </li>
+                            <li>
+                                <label for="id_03f04_4">매물 층수</label>
+                                <div class="flexBox flex_30">
+                                    <input id="id_03f03_4" type="text"/>
+                                    <p>층</p>
+                                </div>
+                            </li>
+                            <li>
+                                <label for="id_03f04_5">방향</label>
+                                <div class="flexBox flex_30">
+                                    <div class="selectBox">
+                                        <select id="id_03f04_5">
+                                            <option>동향</option>
+                                            <option>1</option>
+                                            <option>2</option>
+                                            <option>3</option>
+                                        </select>
+                                    </div>
+                                    <p></p>
+                                </div>
+                            </li>
+                            <li>
+                                <label for="id_03f04_6">주차</label>
+                                <div class="flexBox flex_30">
+                                    <div class="selectBox">
+                                        <select id="id_03f04_6">
+                                            <option>없음</option>
+                                            <option>1</option>
+                                            <option>2</option>
+                                            <option>3</option>
+                                        </select>
+                                    </div>
+                                    <p></p>
+                                </div>
+                            </li>
+                            <li>
+                                <label for="id_03f04_7">방 / 거실</label>
+                                <div class="flexBox flex_30">
+                                    <div class="selectBox">
+                                        <select id="id_03f04_7">
+                                            <option>동향</option>
+                                            <option>1</option>
+                                            <option>2</option>
+                                            <option>3</option>
+                                        </select>
+                                    </div>
+                                    <p></p>
+                                </div>
+                            </li>
+                            <li>
+                                <label for="id_03f04_8">욕실</label>
+                                <div class="flexBox flex_30">
+                                    <div class="selectBox">
+                                        <select id="id_03f04_8">
+                                            <option>없음</option>
+                                            <option>1</option>
+                                            <option>2</option>
+                                            <option>3</option>
+                                        </select>
+                                    </div>
+                                    <p></p>
+                                </div>
+                            </li>
+                            <li>
+                                <label for="id_03f04_9">엘레베이터</label>
+                                <div class="flexBox flex_30">
+                                    <div class="selectBox">
+                                        <select id="id_03f04_9">
+                                            <option>있음</option>
+                                            <option>1</option>
+                                            <option>2</option>
+                                            <option>3</option>
+                                        </select>
+                                    </div>
+                                    <p></p>
+                                </div>
+                            </li>
+                            <li>
+                                <label for="id_03f04_10">반려동물</label>
+                                <div class="flexBox flex_30">
+                                    <div class="selectBox">
+                                        <select id="id_03f04_10">
+                                            <option>가능</option>
+                                            <option>1</option>
+                                            <option>2</option>
+                                            <option>3</option>
+                                        </select>
+                                    </div>
+                                    <p></p>
+                                </div>
+                            </li>
+                            <li>
+                                <label for="id_03f04_11">준공년도</label>
+                                <div class="flexBox flex_30">
+                                    <input id="id_03f03_11" type="text" placeholder="YYYYMM 형식" />
+                                    <p>층</p>
+                                </div>
+                            </li>
+                            <li>
+                                <label for="id_03f04_12">입주</label>
+                                <div class="flexBox flex_30">
+                                    <div class="selectBox">
+                                        <select id="id_03f04_12">
+                                            <option>협의필요</option>
+                                            <option>1</option>
+                                            <option>2</option>
+                                            <option>3</option>
+                                        </select>
+                                    </div>
+                                    <p></p>
+                                </div>
+                            </li>
+                            <li>
+                                <label for="id_03f04_13">옵션정보</label>
+                                <div class="flexBox flex_bill">
+                                    <input id="id_03f04_13" type="text" placeholder="단어로 입력">
+                                    <a href="#">추가</a>
+                                </div>
+                                <p>옵션 추가 하거나 선택해 주세요.</p>
+                                <div class="billBox">
+                                    <a href="#">수도세</a>
+                                    <a href="#">전기세</a>
+                                    <a href="#">도시가스</a>
+                                    <a href="#">공용전기</a>
+                                    <a href="#">인터넷</a>
+                                    <a href="#">TV</a>
+                                </div>
+                            </li>
+                        </ul>
+                    </div>
+                    <!--//input_wrap-->
+                </div>
+            </div>
+        </div>
+        <!--//h3_wrap-->
+
+        <!--btn_wrap-->
+        <div class="btn_wrap">
+            <a href="#" class="type2">이전</a>
+            <a href="#" class="type1">다음</a>
+        </div>
+        <!--//btn_wrap-->
+    </div>
+    <!--//body_layout-->
+</body>
+</html>
+

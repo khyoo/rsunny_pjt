@@ -1,0 +1,76 @@
+<!DOCTYPE HTML>
+<html lang="ko">
+<head>
+	<th:block th:replace="layout/fragments/front/head :: headFragment"></th:block>
+	<!-- Global site tag (gtag.js) - Google Analytics -->
+	<script async src="https://www.googletagmanager.com/gtag/js?id=G-6EHV3KH3XT"></script>
+	<script>
+	  window.dataLayer = window.dataLayer || [];
+	  function gtag(){dataLayer.push(arguments);}
+	  gtag('js', new Date());
+
+	  gtag('config', 'G-6EHV3KH3XT');
+	</script>
+</head>
+<body>
+    <!--top_layout-->
+    <div id="top_layout" class="type2">
+		<th:block th:replace="layout/fragments/front/header :: headerFragment"></th:block>
+    </div>
+    <!--//top_layout-->
+    <!--body_layout-->
+    <div id="body_layout">
+        <!--visual_wrap-->
+        <div class="visual_wrap type3">
+            <div class="inner type3">
+                <h2><strong>알써니 고객센터입니다.</strong> <br>무엇을 도와드릴까요?</h2>
+            </div>
+        </div>
+        <!--//visual_wrap-->
+        <!--tab_wrap-->
+        <div class="tab_wrap">
+            <div class="inner type3">
+                <ul>
+                    <li class="on">
+                        <a href="06u0201">자주하는 질문</a>
+                    </li>
+                    <li>
+                        <a href="06u0202">1:1문의</a>
+                    </li>
+                    <li>
+                        <a href="06u0203">서비스 이용약관</a>
+                    </li>
+                    <li>
+                        <a href="06u0204">개인정보처리방침</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+        <!--//tab_wrap-->
+        <!--acco_wrap-->
+        <div class="customer_wrap type_acco">
+            <div class="inner type3">
+                <div class="tit_wrap">
+                    <h3>자주하는 질문</h3>
+                </div>
+                <ul>
+                	<li th:each="item, stat : ${list}">
+                        <a href="#">
+                            <span>Q<span th:text="${stat.index+1}" th:remove="tag">1</span>.</span>
+                            <span th:text="${item.title}" th:remove="tag">휴대전화가 없어도 회원가입 가능?</span>
+                        </a>
+                        <p>A. <span th:utext="${item.contentsHtml}" th:remove="tag">안녕하세요 회원님</span> </p>
+                    </li>
+                </ul>
+            </div>
+        </div>
+        <!--//acco_wrap-->
+    </div>
+    <!--//body_layout-->
+    <!--foot_layout-->
+    <div id="foot_layout">
+		<th:block th:replace="layout/fragments/front/footer :: footerFragment"></th:block>
+    </div>
+    <!--//foot_layout-->
+</body>
+</html>

@@ -1,0 +1,41 @@
+			                <div class="bbsList">
+			                    <p>보유 포인트 : <span th:text="${#numbers.formatDecimal( user.useAvailPoint, 0, 'COMMA', 0, 'POINT')}" th:remove="tag">0</span> point</p>
+			                    <table>
+			                        <colgroup>
+			                            <col width="27%" />
+			                            <col width="25%" />
+			                            <col />
+			                        </colgroup>
+			                        <tbody>
+			                            <tr th:each="item : ${list}">
+			                                <td th:text="${#temporals.format(item.createDtm, 'yyyy-MM-dd')}">2021-03-30</td>
+			                                <td><span th:text="${item.inoutDetailStatusNm}" th:remove="tag">0</span>
+			                                </td>
+			                                <td><span th:text="${item.pointSign}" th:remove="tag">0</span>
+			                                	<span th:text="${#numbers.formatDecimal( item.point, 0, 'COMMA', 0, 'POINT')}" th:remove="tag">0</span> 포인트
+			                                </td>
+			                            </tr>
+			                        </tbody>
+			                    </table>
+			                </div>
+			                
+			                <form id="frmPopup" name="frmPopup" method="get">
+			                <div class="bbsPaging" th:utext="${form.pagingHtml}">
+			                </div>
+			                </form> 
+			                
+			                <div class="btn">
+			                    <a class="type2 lp_close" href="#">확인</a>
+			                </div>
+			                
+			                <script th:inline="javascript">
+			                	function pointPageCallback(page) {
+			                		var userid = /*[[${form.sessionId}]]*/ '';
+			                		var rows = /*[[${form.rows}]]*/ '';
+			                		
+			                		var formdata = {sessionId : userid, page: page, rows: rows};
+			                		$.get('/siteadmin/popup/point', formdata, function(result) {
+			                			$('#lp_point').find('div.body').html(result);
+			                		});
+			                	}
+			                </script>

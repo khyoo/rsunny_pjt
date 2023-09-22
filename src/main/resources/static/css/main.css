@@ -1,0 +1,127 @@
+@charset "utf-8";
+
+.search_wrap{ background: url(../img/main/search_bg.png) no-repeat center center;}
+.search_wrap .inner{ height: 800px; padding: 260px 19px 60px 19px; display: flex; flex-direction: column; justify-content: space-between; box-sizing: border-box;}
+.search_wrap p{ font-weight: 700; font-size: 52px; color: #fff; line-height: 70px;}
+.search_wrap .searchBox{ background-color: #fff; padding: 18px 27px; display: flex; border: 1px solid #b3b3b3; border-radius: 3px;}
+.search_wrap .searchBox .selectBox{ width: 300px;}
+.search_wrap .searchBox .ui-selectmenu-button.ui-button{ width: 100%; height: 50px; background-color: #fff; padding: 0; margin: 0; border: 0;}
+.search_wrap .searchBox .ui-selectmenu-text{ font-size: 18px; color: #000; line-height: 50px; padding: 0 0 0 13px;}
+.search_wrap .searchBox .ui-button .ui-icon{ width: 14px; height: 14px; background: url(../img/main/search_ico_select.png) no-repeat center center; margin: 3px 0 0 0;}
+.search_wrap input{ font-size: 18px; color: #000; line-height: 50px; padding: 0 15px; flex: 1; border: 0;}
+.search_wrap input::placeholder{ font-size: 18px; color: #999;}
+.search_wrap a{ width: 126px; background-color: #454480; font-size: 16px; color: #fff; text-align: center; line-height: 50px; border-radius: 3px;}
+.search_wrap a::before{ width: 19px; height: 19px; background: url(../img/main/search_ico_btn.png) no-repeat center center; content: ""; margin: 15.5px 4px 15.5px 0; display: inline-block; vertical-align: top;}
+
+
+.ads_wrap{ padding: 100px 0 100px;}
+.ads_wrap .inner{ position: relative;}
+.ads_wrap h2{ font-weight: 700; font-size: 30px; color: #000; line-height: 45px;}
+.ads_wrap .grap{ height: 274px; margin: 86px 0 0 0; overflow: hidden; position: relative;}
+.ads_wrap .obj{ width: 2914px; position: absolute; top: 0; left: 0;}
+.ads_wrap .item{ width: 268px; display: inline-block; float: left;}
+.ads_wrap .item + .item{ margin: 0 0 0 26px;}
+.ads_wrap .item a{ width: 100%; display: inline-block;}
+/* START : 2022.01.20 매물 없을 때 회색 화면 추가 - kmg */
+.ads_wrap .thumb{ width: 100%; height: 186px; background-color:#ccc; position:relative; }
+.ads_wrap .thumb::before { content:'알써니'; font-family:'Jalnan'; position:absolute; font-size:30px; width:100%; text-align:center; line-height:186px; color:#eee; }
+/* END : 2022.01.20 매물 없을 때 회색 화면 추가 - kmg */
+.ads_wrap .info{ font-size: 14px; color: #000; line-height: 20px; margin: 20px 0 0 0; display: flex;}
+.ads_wrap .info em{ font-size: 14px; color: #adadad; line-height: 20px; margin: 0 0 0 10px; display: inline-block; position: relative;}
+.ads_wrap .info em + em{padding: 0 0 0 19px;margin: 0 !important; flex:1;overflow: hidden;text-overflow: ellipsis;white-space: nowrap;}
+.ads_wrap .info em + em::before{width: 1px;height: 12px;background-color: #adadad;content: "";position: absolute;top: 1px;left: 9px;}
+.ads_wrap .won{ font-weight: 700; font-size: 24px; color: #000; line-height: 36px; margin: 12px 0 0 0;}
+.ads_wrap .won em{ background-color: #dfddea; font-weight: 400; font-size: 14px; color: #5c586f; line-height: 26px; padding: 0 12px; margin: 5px 0 5px 16px; display: inline-block; border-radius: 13px;}
+.ads_wrap .control button{ width: 58px; height: 58px; background: no-repeat center center; text-indent: -9999px; display: inline-block; border: 0; position: absolute; top: 222px;}
+.ads_wrap .control button.btn_prev{ background-image: url(../img/main/ads_btn_prev.png); left: -78px;}
+.ads_wrap .control button.btn_next{ background-image: url(../img/main/ads_btn_next.png); right: -78px;}
+
+
+.tip_wrap2{ background: url(../img/main/tip_bg2.png) no-repeat center center;}
+.tip_wrap2 .inner{ text-align: center; padding: 47px 0 54px 0;}
+.tip_wrap2 a{ font-size: 24px; color: #000; line-height: 45px; display: inline-block;}
+.tip_wrap2 a::after{ width: 45px; height: 45px; background: url(../img/main/tip_btn_go.png) no-repeat center center; content: ""; margin: 0 0 0 20px; vertical-align: top;}
+.tip_wrap2 a span{ font-weight: 700; display: inline-block;}
+.tip_wrap{ background: url(../img/main/tip_bg.png) no-repeat center center;}
+.tip_wrap .inner{ text-align: center; padding: 47px 0 54px 0;}
+.tip_wrap a{ font-size: 26px; color: #000; line-height: 45px; display: inline-block;}
+.tip_wrap a::after{ width: 45px; height: 45px; background: url(../img/main/tip_btn_go.png) no-repeat center center; content: ""; margin: 0 0 0 20px; vertical-align: top;}
+.tip_wrap a span{ font-weight: 700; display: inline-block;}
+
+
+.manual_wrap{ padding: 0px 0 0px 0;}
+.manual_wrap li + li{ margin: 50px 0 0 0;}
+.manual_wrap li{ display: flex; justify-content: space-between;}
+.manual_wrap dl{ padding: 0 20px 0 48px; display: flex; flex-direction: column;}
+.manual_wrap dt{ font-weight: 700; font-size: 22px; line-height: 33px; position: relative;}
+.manual_wrap dt span{ width: 28px; height: 28px; background-color: #454480; font-weight: 400; font-size: 12px; color: #fff; text-align: center; line-height: 28px; border-radius: 50px; position: absolute; top: 0; left: -48px;}
+.manual_wrap dd{ font-size: 16px; color: #000; line-height: 26px; margin: 20px 0 0 0;}
+.manual_wrap .thumb{ width: 704px; height: 240px; background-color: #e7eeff; border-radius: 3px;}
+.manual_wrap p{ background-color: #f7e4a1; font-weight: 700; font-size: 24px; color: #000; text-align: center; line-height: 82px; padding: 23px 0 24px 0; margin: 140px 0 0 0;}
+
+
+
+
+@media (max-width:1349px){
+    .search_wrap .inner{ height: 460px; padding: 106px 119px 60px 119px;}
+    .ads_wrap .control button.btn_prev{ left: 22px;}
+    .ads_wrap .control button.btn_next{ right: 22px;}
+}
+@media (max-width:1023px){
+    .search_wrap .inner{ padding: 106px 20px 60px 20px;}
+    .search_wrap .searchBox .selectBox{ width: 200px;}
+    .search_wrap p{ font-size: 42px; line-height: 60px;}
+
+    .ads_wrap .inner{ padding-right: 0;}
+    .ads_wrap .control{ display: none;}
+    .ads_wrap .item + .item{ margin-left: 10px;}
+
+    .manual_wrap .thumb{ width: 50%;}
+}
+@media (max-width:719px){
+    #body_layout{ padding: 0;}
+
+    .search_wrap{ background-size: cover;}
+    .search_wrap .inner{ height: 241px; padding: 46px 20px 36px 20px;}
+    .search_wrap p{ font-size: 21px; line-height: 30px;}
+    .search_wrap .searchBox{ padding: 9px 10px;}
+    .search_wrap .searchBox .selectBox{ width: 110px;}
+    .search_wrap .searchBox .ui-button .ui-icon{ width: 5px; height: 5px; background-size: cover; margin: 8px 0 0 0;}
+    .search_wrap .searchBox .ui-selectmenu-button.ui-button{ height: 25px;}
+    .search_wrap .searchBox .ui-selectmenu-text{ font-size: 12px; line-height: 25px; padding: 0; margin-right: 10px;}
+    .search_wrap .searchBox .ui-button .ui-icon{ top: 2px;}
+    .search_wrap input{ font-size: 12px; line-height: 25px; letter-spacing: -0.55px; padding: 0 6px;}
+    .search_wrap input::placeholder{ font-size: 12px;}
+    .search_wrap a{ width: 59px; font-size: 12px; line-height: 25px;}
+    .search_wrap a::before{ width: 12px; height: 12px; background-size: cover; margin: 6px 2px 6px 0;}
+
+    .ads_wrap{ padding: 40px 0 44px 0;}
+    .ads_wrap h2{ font-size: 20px; line-height: 23px;}
+    .ads_wrap .grap{ height: 189px; margin-top: 36px;}
+    .ads_wrap .item{ width: 134px;}
+    .ads_wrap .thumb{ height: 120px;}
+    .ads_wrap .thumb::before{ line-height: 120px;}
+    .ads_wrap .info{ font-size: 9px; line-height: 12px; letter-spacing: -0.32px; margin-top: 12px;}
+    .ads_wrap .info em{ font-size: 9px; line-height: 10px; margin-left: 5px;}
+    .ads_wrap .info em + em{margin-left: 10px;max-width: 60px;}
+    .ads_wrap .info em + em::before{height: 9px;top: 2px;}
+    .ads_wrap .won{ font-size: 10px; line-height: 18px; margin-top: 6px;}
+    .ads_wrap .won em{ font-size: 7px; line-height: 13px; padding: 0 6px; margin: 2.5px 0 2.5px 8px; border-radius: 7px;}
+
+    .tip_wrap{ background-size: cover;}
+    .tip_wrap .inner{ padding: 21px 0 26px 0;}
+    .tip_wrap a{ font-size: 13px; line-height: 22.5px;}
+    .tip_wrap a::after{ width: 22.5px; height: 22.5px; background-size: cover; margin-left: 10px;}
+    .tip_wrap2{ background-size: cover;}
+    .tip_wrap2 .inner{ padding: 21px 0 26px 0;}
+    .tip_wrap2 a{ font-size: 13px; line-height: 22.5px;}
+    .tip_wrap2 a::after{ width: 22.5px; height: 22.5px; background-size: cover; margin-left: 10px;}
+
+    .manual_wrap{ padding: 5px 0;}
+    .manual_wrap dl{ padding: 0 0 0 28px; flex: 1;}
+    .manual_wrap dt{ font-size: 16px; line-height: 23px;}
+    .manual_wrap dt span{ width: 18px; height: 18px; font-size: 8px; line-height: 18px; top: 2px; left: -28px;}
+    .manual_wrap dd{ font-size: 12px; line-height: 20px; margin-top: 2px;}
+    .manual_wrap .thumb{ display: none;}
+    .manual_wrap p{ font-size: 11px; line-height: 16px; padding: 12px 0; margin-top: 50px;}
+}

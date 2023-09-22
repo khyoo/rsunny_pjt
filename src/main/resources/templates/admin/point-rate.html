@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="ko"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorator="layout/default-admin">
+
+            <!--contents_layout 시작-->
+            <div id="contents_layout" layout:fragment="content">
+                <!--head 시작-->
+                <div class="head">
+                    <h2>포인트 관리</h2> <div> 매매 > 매매금 x % | 전세 > 보증금 x % | 월세 > {보증금 + (월세 x 100)} x % </div>
+                </div>
+                <!--head 끝-->
+                <!--body 시작-->
+                <div th:each="rate : ${rateList}" class="body" style="padding-top: 20px; padding-bottom: 10px;">
+                 	<form id="frmRate" name="frmRate" method="post">
+                 		<input type="hidden" name="saleType" th:value="${rate.saleType}" />
+                    <div class="tit_wrap">
+                        <h3 th:text="${rate.saleTypeNm}">원룸/투룸</h3>
+                    </div>
+                    <div class="option_wrap">
+                        <div class="content">
+                            <dl>
+                                <dt>차감 포인트율</dt>
+                                <dd>
+                                    <label for="option1_1">매매</label>
+                                    <input id="option1_1" type="text" name="subRateA" th:value="${rate.subRateA}" required class="rate">
+                                    <span>%</span>
+                                </dd>
+                                <dd>
+                                    <label for="option1_2">전세</label>
+                                    <input id="option1_2" type="text" name="subRateC" th:value="${rate.subRateC}" required class="rate">
+                                    <span>%</span>
+                                </dd>
+                                <dd>
+                                    <label for="option1_3">월세</label>
+                                    <input id="option1_3" type="text" name="subRateB" th:value="${rate.subRateB}" required class="rate">
+                                    <span>%</span>
+                                </dd>
+                            </dl>
+                            <dl>
+                                <dt>적립 포인트율</dt>
+                                <dd>
+                                    <label for="option2_1">알써니</label>
+                                    <input id="option2_1" type="text" name="addRateR" th:value="${rate.addRateR}" required class="rate">
+                                    <span>%</span>
+                                </dd>
+                                <dd>
+                                    <label for="option2_2">소유자</label>
+                                    <input id="option2_2" type="text" name="addRateO" th:value="${rate.addRateO}" required class="rate">
+                                    <span>%</span>
+                                </dd>
+                                <dd>
+                                    <label for="option2_3">매니저</label>
+                                    <input id="option2_3" type="text" name="addRateM" th:value="${rate.addRateM}" required class="rate">
+                                    <span>%</span>
+                                </dd>
+                            </dl>
+                        </div>
+                        <div class="btn">
+                            <a href="javascript:void(0);" class="pointRate">적용</a>
+                        </div>
+                    </div>
+	                </form>
+                </div>
+                <!--body 끝-->
+
+			    <script	th:inline="javascript">
+			    	$(document).ready(function() {
+			    		$('a.pointRate').click(function() {
+			    			var form = $(this).closest('form');
+			    			//digits: true
+
+					    	//필수값 체크.
+					    	form.validate({
+					    		errorElement: 'span',
+								rules: {
+									subRateA: {required: true, number: true},
+									subRateB: {required: true, number: true},
+									subRateC: {required: true, number: true},
+									addRateR: {required: true, number: true},
+									addRateO: {required: true, number: true},
+									addRateM: {required: true, number: true}
+								}
+					    	});
+
+			    			if( !form.valid() ) return;
+
+			    			var formdata = form.serializeObject();
+			    			//alert( JSON.stringify(formdata) );
+
+			    			if(!confirm('저장하시겠습니까?')) return;
+
+			    			$.post('/point/rest/pointRate', formdata, function(result) {
+			    				alert(result.message);
+			    				location.reload();
+			    			}).error(function() {
+			    				alert('저장중 오류가 발생하였습니다.');
+			    			});
+			    		});
+			    	})
+			    </script>
+
+            </div>
+            <!--contents_layout 끝-->
+
+</html>

@@ -1,0 +1,217 @@
+<!DOCTYPE HTML>
+<html lang="ko"> 
+<head>
+<meta charset="utf-8" />
+<meta http-equiv="X-UA-Compatible" content="IE=edge"><!-- IE에서만 -->
+<meta name="viewport" content="width=device-width,initial-scale=1.0,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no">
+<title>R.sunny CMS 관리시스템</title>
+<script type="text/javascript" src="../js/jquery-1.11.2.min.js"></script>
+<script type="text/javascript" src="../js/jquery-ui.js"></script>
+<script type="text/javascript" src="../js/admin.js"></script>
+<link rel="stylesheet" type="text/css" href="../css/common.css">
+<link rel="stylesheet" type="text/css" href="../css/jquery-ui.css">
+<link rel="stylesheet" type="text/css" href="../css/admin.css">
+</head>
+<body>
+    <!-- 레이어팝업 시작 -->
+    <div id="lp_layout">
+        <!-- 레이어팝업 lp_a16 시작 -->
+        <div id="lp_a16" class="lp_wrap">
+            <div class="head">
+                <h2>고객문의 내용</h2>
+            </div>
+            <div class="body">
+                <div class="input_box">
+                    <ul>
+                        <li class="full">
+                            <p>
+                                <strong>문의내용</strong>
+                                문의내용 입니다 확인해주세요<br>
+                                잘모르겠습니다<br>
+                            </p>
+                        </li>
+                        <li class="full">
+                            <label for="lp_a6_1"><strong>대응/답변 내역</strong></label>
+                            <textarea></textarea>
+                        </li>
+                    </ul>
+                </div>
+                <div class="btn">
+                    <a class="type1 lp_close" data-lp="alert_a5" href="#">미결</a>
+                    <a class="type2 lp_close" data-lp="alert_a5" href="#">처리</a>
+                </div>
+            </div>
+            <a class="lp_close" href="#">닫기</a>
+        </div>
+        <!-- 레이어팝업 lp_a16 끝 -->
+    </div>
+    <!-- 레이어팝업 끝 -->
+    <!--layout 시작-->
+    <div id="layout">
+        <!--top_layout 시작-->
+        <div id="top_layout">
+            <h1>알써니 관리자 모드</h1>
+            <ul class="f_r">
+                <li><a href="ZB01LO.01.html">LOGOUT</a></li>
+                <li><a href="#" target="_blank">알써니 HOME</a></li>
+            </ul>
+        </div>
+        <!--top_layout 끝-->
+        <!--body_layout 시작-->
+        <div id="body_layout">
+            <!--lnb_layout 시작-->
+            <div id="lnb_layout">
+                <ul class="depth_1">
+                    <li>
+                        <a href="관리자관리.html">관리자관리</a>
+                    </li>
+                    <li>
+                        <a href="공인중개사회원관리.html">공인중개/임대관리회원</a>
+                    </li>
+                    <li>
+                        <a href="일반회원관리.html">일반회원관리</a>
+                    </li>
+                    <li>
+                        <a href="지점매니저관리.html">지점매니저관리</a>
+                    </li>
+                    <li>
+                        <a href="매물관리.html">매물관리</a>
+                    </li>
+                    <li>
+                        <a href="사업부지.html">사업부지</a>
+                    </li>
+                    <li>
+                        <a href="신고관리.html">신고관리</a>
+                    </li>
+                    <li>
+                        <a href="포인트관리.html">포인트관리</a>
+                    </li>
+                    <li>
+                        <a href="광고아이템관리.html">광고아이템관리</a>
+                    </li>
+                    <li>
+                        <a href="1_1문의관리.html">1:1문의관리</a>
+                    </li>
+                    <li class="on">
+                        <a href="배너관리.html">배너관리</a>
+                    </li>
+                    <li>
+                        <a href="FAQ관리.html">FAQ관리</a>
+                    </li>
+                </ul>
+            </div>
+            <!--lnb_layout 끝-->
+            <!--contents_layout 시작-->
+            <div id="contents_layout">
+                <!--head 시작-->
+                <div class="head">
+                    <h2>배너관리</h2>
+                </div>
+                <!--head 끝-->
+                <!--body 시작-->
+                <div class="body">
+                    <div class="option_wrap type2">
+                        <div class="content">
+                            <dl>
+                                <dt>
+                                    <label for="option3_1">배너명</label>
+                                </dt>
+                                <dd>
+                                    <input id="option3_1" type="text">
+                                </dd>
+                            </dl>
+                            <dl>
+                                <dt>
+                                    <label for="option3_2">Link URL</label>
+                                </dt>
+                                <dd>
+                                    <input id="option3_2" type="text">
+                                </dd>
+                            </dl>
+                            <dl>
+                                <dt>
+                                    배너이미지
+                                </dt>
+                                <dd class="file">
+                                    <input id="option3_3" type="file">
+                                    <input type="text" readonly>
+                                    <label for="option3_3">찾아보기</label>
+                                </dd>
+                            </dl>
+                        </div>
+                        <div class="btn">
+                            <a href="#">등록</a>
+                        </div>
+                    </div>
+                    <div class="innr flex_end">
+                        <div class="btn">
+                            <a href="#">삭제</a>
+                            <a href="#">비노출</a>
+                            <a href="#">노출</a>
+                        </div>
+                    </div>
+                    <div class="bbsList">
+                        <table>
+                            <colgroup>
+                                <col style="width:20%;"/>
+                                <col style="width:auto;"/>
+                                <col style="width:35%;"/>
+                                <col style="width:100px;"/>
+                                <col style="width:80px;"/>
+                            </colgroup>
+                            <tbody>
+                                <tr>
+                                    <td>2019-10-10</td>
+                                    <td><img src="" /></td>
+                                    <td>12월 3일 이벤트 배너</td>
+                                    <td>노출</td>
+                                    <td class="check">
+                                        <input id="bannerCk_1" type="checkbox" />
+                                        <label for="bannerCk_1">선택</label>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>2019-10-10</td>
+                                    <td><img src="" /></td>
+                                    <td>12월 3일 이벤트 배너</td>
+                                    <td>비노출</td>
+                                    <td class="check">
+                                        <input id="bannerCk_2" type="checkbox" />
+                                        <label for="bannerCk_2">선택</label>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>2019-10-10</td>
+                                    <td><img src="" /></td>
+                                    <td>12월 3일 이벤트 배너</td>
+                                    <td>노출</td>
+                                    <td class="check">
+                                        <input id="bannerCk_3" type="checkbox" />
+                                        <label for="bannerCk_3">선택</label>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="bbsPaging">
+                        <ul>
+                            <li class="prev"><a href="#">이전</a></li>
+                            <li class="on"><a href="#">1</a></li>
+                            <li><a href="#">2</a></li>
+                            <li><a href="#">3</a></li>
+                            <li><a href="#">4</a></li>
+                            <li><a href="#">5</a></li>
+                            <li class="next"><a href="#">다음</a></li>
+                        </ul>
+                    </div>
+                </div>
+                <!--body 끝-->
+            </div>
+            <!--contents_layout 끝-->
+        </div>
+        <!--body_layout 끝-->
+    </div>
+    <!--layout 끝-->
+</body>
+</html>
+

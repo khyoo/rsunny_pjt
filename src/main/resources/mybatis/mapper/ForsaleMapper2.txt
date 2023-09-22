@@ -1,0 +1,1233 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+    
+<mapper namespace="com.regroup.rsunny.forsale.mapper.ForsaleMapper">
+
+    <select id="getList" parameterType="com.regroup.rsunny.common.model.SaleSearchDTO" resultType="com.regroup.rsunny.common.model.SaleDTO">
+    	WITH LT AS (
+			SELECT 
+				  fs.*
+				, (case when picture01_path is not null then picture01_path
+						when picture02_path is not null then picture02_path
+						when picture03_path is not null then picture03_path
+						when picture04_path is not null then picture04_path
+						when picture05_path is not null then picture05_path
+						when picture06_path is not null then picture06_path
+						when picture07_path is not null then picture07_path
+						when picture08_path is not null then picture08_path
+						else '/img/sub/visual_img_1.png'
+					end) 											AS first_picture_path
+				, concat(fs.sido, ' ', fs.sigungu, ' ', fs.dong)	AS dong_addr
+				, substring(fs.completion_ym, 1, 4)					AS completion_year
+				, c0.nm												AS sale_type_nm
+				, c1.nm												AS sale_detail_type_nm
+				, c2.nm												AS trade_type_nm
+				, count(*) over() 									AS total_count
+				, row_number() over(ORDER BY it.end_dtm desc, fs.rid desc)	AS rnk
+			FROM forsale		fs
+				JOIN user		ur ON fs.create_id = ur.userid AND ur.status = '90'
+				LEFT OUTER JOIN (
+					SELECT rid
+						, count(*)	as item_count
+						, max(end_dtm)	as end_dtm
+					FROM item
+					WHERE start_dtm		&lt;= now()
+					  AND end_dtm		&gt;= now()
+					  AND status		= '00'
+					  AND item_type		= '1'
+					GROUP BY rid
+				) it ON fs.rid = it.rid
+				LEFT OUTER JOIN code c0 ON c0.grp = 'SALE_TYPE' AND fs.sale_type = c0.cd
+				LEFT OUTER JOIN code c1 ON c1.grp = 'SALE_TYPE_DTL' AND fs.sale_detail_type = c1.cd
+				LEFT OUTER JOIN code c2 ON c2.grp = 'TRADE_TYPE' AND ifnull(fs.trade_type, 'A') = c2.cd
+			<where>
+				<if test="status != null and status != ''">
+					AND fs.status = #{status}
+				</if>
+				<if test="saleType != null and saleType != ''">
+					AND fs.sale_type = #{saleType}
+				</if>
+				<if test="userType != null and (userType=='AA' or userType=='RA')">
+					AND (
+						fs.brokerage_type != 'C'
+						OR
+						(fs.brokerage_type = 'C' and fs.create_id = #{typeSessionId})
+					)
+				</if>
+				<if test="sessionId != null and sessionId != ''">
+					AND (
+						fs.create_id = #{sessionId}
+						OR 
+						fs.rid IN (
+							SELECT rid
+							FROM point
+							WHERE userid = #{sessionId}
+							  AND inout_detail = 'OS'
+						)
+					)
+				</if>
+				<if test="saleDetailType != null and saleDetailType != ''">
+					AND fs.sale_detail_type IN
+					<foreach item="item" index="index" collection="saleDetailTypeList" open="(" separator="," close=")">
+					     #{item}
+					</foreach>
+				</if>
+				<if test="tradeType != null and tradeType != ''">
+					AND fs.trade_type IN
+					<foreach item="item" index="index" collection="tradeTypeList" open="(" separator="," close=")">
+					     #{item}
+					</foreach>
+				</if>
+	
+				<if test="priceFr != null and priceFr != ''">
+					AND fs.price &gt;= #{priceFr}
+				</if>
+				<if test="priceTo != null and priceTo != ''">
+					AND fs.price &lt;= #{priceTo}
+				</if>
+				
+				<if test="monthlyPriceFr != null and monthlyPriceFr != ''">
+					AND fs.monthly_price &gt;= #{monthlyPriceFr}
+				</if>
+				<if test="monthlyPriceTo != null and monthlyPriceTo != ''">
+					AND fs.monthly_price &lt;= #{monthlyPriceTo}
+				</if>
+				
+				<if test="privateAreaFr != null and privateAreaFr != ''">
+					AND fs.private_area &gt;= #{privateAreaFr}
+				</if>
+				<if test="privateAreaTo != null and privateAreaTo != ''">
+					AND fs.private_area &lt;= #{privateAreaTo}
+				</if>
+				
+				<if test="completionYearFr != null and completionYearFr != ''">
+					AND substring(fs.completion_ym,1,4) &gt;= #{completionYearFr}
+				</if>
+				<if test="completionYearTo != null and completionYearTo != ''">
+					AND substring(fs.completion_ym,1,4) &lt;= #{completionYearTo}
+				</if>
+				
+				<if test="moveinType != null and moveinType != ''">
+					AND fs.movein_type = #{moveinType}
+				</if>
+
+				<if test="schWord != null and schWord != ''">
+					AND (
+						fs.addr1 LIKE concat('%', #{schWord}, '%') 
+					)
+				</if>
+				<if test="swX != null">
+					AND (
+						    fs.pos_x &gt;= #{swX}
+						AND fs.pos_y &gt;= #{swY}
+						AND fs.pos_x &lt;= #{neX}
+						AND fs.pos_y &lt;= #{neY}
+					)
+				</if>
+			</where>
+    	)
+    	SELECT LT.*
+    		, (total_count - rnk + 1)		AS seq
+    	FROM LT
+		WHERE rnk BETWEEN #{frRow} AND #{toRow}
+    	ORDER BY rnk
+    </select>
+
+    <select id="getListForAdmin" parameterType="com.regroup.rsunny.common.model.SaleSearchDTO" resultType="com.regroup.rsunny.common.model.SaleDTO">
+    	WITH LT AS (
+			SELECT 
+				  fs.*
+				, (case when picture01_path is not null then picture01_path
+						when picture02_path is not null then picture02_path
+						when picture03_path is not null then picture03_path
+						when picture04_path is not null then picture04_path
+						when picture05_path is not null then picture05_path
+						when picture06_path is not null then picture06_path
+						when picture07_path is not null then picture07_path
+						when picture08_path is not null then picture08_path
+						else '/img/sub/visual_img_1.png'
+					end) 											AS first_picture_path
+				, concat(fs.sido, ' ', fs.sigungu, ' ', fs.dong)	AS dong_addr
+				, substring(fs.completion_ym, 1, 4)					AS completion_year
+				, c0.nm												AS sale_type_nm
+				, c1.nm												AS sale_detail_type_nm
+				, c2.nm												AS trade_type_nm
+				, count(*) over() 									AS total_count
+				, row_number() over(ORDER BY fs.rid desc)			AS rnk
+			FROM forsale fs
+				LEFT OUTER JOIN code c0 ON c0.grp = 'SALE_TYPE' AND fs.sale_type = c0.cd
+				LEFT OUTER JOIN code c1 ON c1.grp = 'SALE_TYPE_DTL' AND fs.sale_detail_type = c1.cd
+				LEFT OUTER JOIN code c2 ON c2.grp = 'TRADE_TYPE' AND fs.trade_type = c2.cd
+				LEFT OUTER JOIN code pl ON pl.grp = 'POST_L' AND pl.cd = #{postL} AND fs.sido = pl.nm
+				LEFT OUTER JOIN code pm ON pm.grp = 'POST_M' AND pm.cd = #{postM} AND fs.sigungu = pm.nm
+				LEFT OUTER JOIN code ps ON ps.grp = 'POST_S' AND ps.cd = #{postS} AND fs.dong = ps.nm
+			<where>
+				<if test="saleType != null and saleType != ''">
+					AND fs.sale_type = #{saleType}
+				</if>
+				<if test="tradeType != null and tradeType != ''">
+					AND fs.trade_type = #{tradeType}
+				</if>
+				<if test="postL != null and postL != ''">
+					AND pl.cd IS NOT NULL
+				</if>
+				<if test="postM != null and postM != ''">
+					AND pm.cd IS NOT NULL
+				</if>
+				<if test="postS != null and postS != ''">
+					AND ps.cd IS NOT NULL
+				</if>
+				<if test="schWord != null and schWord != ''">
+					AND (
+						fs.sale_no LIKE concat('%', #{schWord}, '%') 
+						OR
+						fs.addr1 LIKE concat('%', #{schWord}, '%') 
+						OR
+						fs.owner_nm LIKE concat('%', #{schWord}, '%') 
+					)
+				</if>
+			</where>
+    	)
+    	SELECT LT.*
+    		, (total_count - rnk + 1)		AS seq
+    	FROM LT
+		WHERE rnk BETWEEN #{frRow} AND #{toRow}
+    	ORDER BY rnk
+    </select>
+
+    <select id="getSalesOpenList" resultType="com.regroup.rsunny.common.model.SaleDTO">
+    	WITH LT AS (
+			SELECT 
+				  fs.*
+				, count(*) over() 									AS total_count
+				, row_number() over(ORDER BY fs.rid desc)			AS rnk
+			FROM forsale fs
+			WHERE fs.create_id = #{userid}
+			   OR fs.rid IN (
+					SELECT rid
+					FROM point
+					WHERE userid = #{userid}
+					  AND inout_detail = 'OS'
+			   )
+    	)
+    	SELECT LT.*
+    		, (total_count - rnk + 1)		AS seq
+    	FROM LT
+		WHERE rnk BETWEEN #{frRow} AND #{toRow}
+    	ORDER BY rnk
+    </select>
+
+    <select id="getSale" resultType="com.regroup.rsunny.common.model.SaleDTO">
+		SELECT 
+			  fs.*
+			, (case when picture01_path is not null then picture01_path
+					when picture02_path is not null then picture02_path
+					when picture03_path is not null then picture03_path
+					when picture04_path is not null then picture04_path
+					when picture05_path is not null then picture05_path
+					when picture06_path is not null then picture06_path
+					when picture07_path is not null then picture07_path
+					when picture08_path is not null then picture08_path
+					else '/img/sub/visual_img_1.png'
+				end) 						AS first_picture_path
+			, concat(fs.sido, ' ', fs.sigungu, ' ', fs.dong)	AS dong_addr
+			, substring(fs.completion_ym, 1, 4)					AS completion_year
+			, ur.email											AS user_email
+			, c0.nm												AS sale_type_nm
+			, c1.nm												AS sale_detail_type_nm
+			, c2.nm												AS trade_type_nm
+			, c3.nm												AS direction_type_nm
+			, c4.nm												AS parking_type_nm
+			, c5.nm												AS room_type_nm
+			, c6.nm												AS bathroom_type_nm
+			, c7.nm												AS elevator_type_nm
+			, c8.nm												AS animal_type_nm
+			, c9.nm												AS movein_type_nm
+		FROM forsale fs
+			LEFT OUTER JOIN user ur ON fs.create_id	= ur.userid
+			LEFT OUTER JOIN code c0 ON c0.grp = 'SALE_TYPE' AND fs.sale_type = c0.cd
+			LEFT OUTER JOIN code c1 ON c1.grp = 'SALE_TYPE_DTL' AND fs.sale_detail_type = c1.cd
+			LEFT OUTER JOIN code c2 ON c2.grp = 'TRADE_TYPE' AND ifnull(fs.trade_type, 'A') = c2.cd
+			LEFT OUTER JOIN code c3 ON c3.grp = 'DIRECTION' AND fs.direction_type = c3.cd
+			LEFT OUTER JOIN code c4 ON c4.grp = 'PARKING' AND fs.parking_type = c4.cd
+			LEFT OUTER JOIN code c5 ON c5.grp = 'ROOM' AND fs.room_type = c5.cd
+			LEFT OUTER JOIN code c6 ON c6.grp = 'BATHROOM' AND fs.bathroom_type = c6.cd
+			LEFT OUTER JOIN code c7 ON c7.grp = 'ELEVATOR' AND fs.elevator_type = c7.cd
+			LEFT OUTER JOIN code c8 ON c8.grp = 'ANIMAL' AND fs.animal_type = c8.cd
+			LEFT OUTER JOIN code c9 ON c9.grp = 'MOVEIN' AND fs.movein_type = c9.cd
+		WHERE rid = #{rid}
+    </select>
+
+    <select id="getSaleEditing" resultType="com.regroup.rsunny.common.model.SaleDTO">
+		SELECT 
+			  fe.*
+			, (case when fe.picture01_path is not null then fe.picture01_path
+					when fe.picture02_path is not null then fe.picture02_path
+					when fe.picture03_path is not null then fe.picture03_path
+					when fe.picture04_path is not null then fe.picture04_path
+					when fe.picture05_path is not null then fe.picture05_path
+					when fe.picture06_path is not null then fe.picture06_path
+					when fe.picture07_path is not null then fe.picture07_path
+					when fe.picture08_path is not null then fe.picture08_path
+					else '/img/sub/visual_img_1.png'
+				end) 						AS first_picture_path
+			, concat(fs.sido, ' ', fs.sigungu, ' ', fs.dong)	AS dong_addr
+			, c0.nm							AS sale_type_nm
+			, c1.nm							AS sale_detail_type_nm
+			, c2.nm							AS trade_type_nm
+			, (case when fs.rid is null then 'C' else 'U' end)		AS edit_mode
+		FROM forsale_editing fe
+			LEFT OUTER JOIN forsale	fs	ON fe.rid = fs.rid
+			LEFT OUTER JOIN code	c0	ON c0.grp = 'SALE_TYPE'		AND fe.sale_type = c0.cd
+			LEFT OUTER JOIN code	c1	ON c1.grp = 'SALE_TYPE_DTL' AND fe.sale_detail_type = c1.cd
+			LEFT OUTER JOIN code	c2	ON c2.grp = 'TRADE_TYPE'	AND fe.trade_type = c2.cd
+		WHERE fe.rid = #{rid}
+    </select>
+
+    <insert id="insertSaleEditing" parameterType="com.regroup.rsunny.common.model.SaleDTO">
+		INSERT INTO forsale_editing (
+			  rid
+			, brokerage_type
+			, sale_type
+			, sale_detail_type
+			, trade_type
+			, price
+			, maintenance_fee
+			, maintenance_yn
+			, monthly_price
+			, short_price
+			, short_maintenance_yn
+			, short_min_month
+			, include_items
+			, supply_area
+			, private_area
+			, total_floor
+			, sale_floor
+			, direction_type
+			, parking_type
+			, room_type
+			, bathroom_type
+			, elevator_type
+			, animal_type
+			, completion_ym
+			, movein_type
+			, option_items
+			, picture01_path
+			, picture02_path
+			, picture03_path
+			, picture04_path
+			, picture05_path
+			, picture06_path
+			, picture07_path
+			, picture08_path
+			, forsale_intro
+			, forsale_intro_detail
+			, hashtag
+			, addr1
+			, addr2
+			, jibun_addr
+			, sido
+			, sigungu
+			, dong
+			, hdong
+			, bcode
+			, hcode
+			, pos_x
+			, pos_y
+			, owner_nm
+			, phone
+			, features_intro
+			, private_provision_yn
+			, status
+			, create_dtm
+			, create_id
+		) VALUES (
+			  #{rid}
+			, ifnull(#{brokerageType}, 'A')
+			, #{saleType}
+			, #{saleDetailType}
+			, #{tradeType}
+			, #{price}
+			, #{maintenanceFee}
+			, #{maintenanceYn}
+			, #{monthlyPrice}
+			, #{shortPrice}
+			, #{shortMaintenanceYn}
+			, #{shortMinMonth}
+			, #{includeItems}
+			, #{supplyArea}
+			, #{privateArea}
+			, #{totalFloor}
+			, #{saleFloor}
+			, #{directionType}
+			, #{parkingType}
+			, #{roomType}
+			, #{bathroomType}
+			, #{elevatorType}
+			, #{animalType}
+			, #{completionYm}
+			, #{moveinType}
+			, #{optionItems}
+			, #{picture01Path}
+			, #{picture02Path}
+			, #{picture03Path}
+			, #{picture04Path}
+			, #{picture05Path}
+			, #{picture06Path}
+			, #{picture07Path}
+			, #{picture08Path}
+			, #{forsaleIntro}
+			, #{forsaleIntroDetail}
+			, #{hashtag}
+			, #{addr1}
+			, #{addr2}
+			, #{jibunAddr}
+			, #{sido}
+			, #{sigungu}
+			, #{dong}
+			, #{hdong}
+			, #{bcode}
+			, #{hcode}
+			, #{posX}
+			, #{posY}
+			, #{ownerNm}
+			, #{phone}
+			, #{featuresIntro}
+			, #{privateProvisionYn}
+			, 'tmp'
+			, now()
+			, #{sessionId}
+		)
+    </insert>
+
+    <update id="updateSale02Editing" parameterType="com.regroup.rsunny.common.model.SaleDTO">
+		UPDATE forsale_editing SET
+			  sale_type					= #{saleType}
+			, sale_no					= concat(upper(#{saleType}), LPAD(id, 6, 0))
+			, update_dtm				= now()
+			, update_id					= #{sessionId}
+		WHERE rid						= #{rid}
+    </update>
+
+    <update id="updateSale03Editing" parameterType="com.regroup.rsunny.common.model.SaleDTO">
+		UPDATE forsale_editing SET
+			  sale_no					= concat(upper(sale_type), LPAD(id, 6, 0))
+			, brokerage_type			= ifnull(#{brokerageType}, 'A')
+			, sale_detail_type			= #{saleDetailType}
+			, trade_type				= #{tradeType}
+			, price						= #{price}
+			, maintenance_fee			= #{maintenanceFee}
+			, maintenance_yn			= #{maintenanceYn}
+			, monthly_price				= #{monthlyPrice}
+			, short_price				= #{shortPrice}
+			, short_maintenance_yn		= #{shortMaintenanceYn}
+			, short_min_month			= #{shortMinMonth}
+			, include_items				= #{includeItems}
+			, update_dtm				= now()
+			, update_id					= #{sessionId}
+		WHERE rid						= #{rid}
+    </update>
+
+    <update id="updateSale04Editing" parameterType="com.regroup.rsunny.common.model.SaleDTO">
+		UPDATE forsale_editing SET
+			  sale_no					= concat(upper(sale_type), LPAD(id, 6, 0))
+			, supply_area				= #{supplyArea}
+			, private_area				= #{privateArea}
+			, land_area					= #{landArea}
+			, building_area				= #{buildingArea}
+			, total_floor				= #{totalFloor}
+			, sale_floor				= #{saleFloor}
+			, direction_type			= #{directionType}
+			, parking_type				= #{parkingType}
+			, room_type					= #{roomType}
+			, bathroom_type				= #{bathroomType}
+			, elevator_type				= #{elevatorType}
+			, animal_type				= #{animalType}
+			, completion_ym				= #{completionYm}
+			, movein_type				= #{moveinType}
+			, option_items				= #{optionItems}
+			, update_dtm				= now()
+			, update_id					= #{sessionId}
+		WHERE rid						= #{rid}
+    </update>
+
+    <update id="updateSale05Editing" parameterType="com.regroup.rsunny.common.model.SaleDTO">
+		UPDATE forsale_editing SET
+			  sale_no					= concat(upper(sale_type), LPAD(id, 6, 0))
+			, picture01_path			= #{picture01Path}
+			, picture02_path			= #{picture02Path}
+			, picture03_path			= #{picture03Path}
+			, picture04_path			= #{picture04Path}
+			, picture05_path			= #{picture05Path}
+			, picture06_path			= #{picture06Path}
+			, picture07_path			= #{picture07Path}
+			, picture08_path			= #{picture08Path}
+			, forsale_intro				= #{forsaleIntro}
+			, forsale_intro_detail		= #{forsaleIntroDetail}
+			, hashtag					= #{hashtag}
+			, addr1						= #{addr1}
+			, addr2						= #{addr2}
+			, jibun_addr				= #{jibunAddr}
+			, sido						= #{sido}
+			, sigungu					= #{sigungu}
+			, dong						= #{dong}
+			, hdong						= #{hdong}
+			, bcode						= #{bcode}
+			, hcode						= #{hcode}
+			, pos_x						= #{posX}
+			, pos_y						= #{posY}
+			, owner_nm					= #{ownerNm}
+			, phone						= #{phone}
+			, features_intro			= #{featuresIntro}
+			, private_provision_yn		= #{privateProvisionYn}
+			, update_dtm				= now()
+			, update_id					= #{sessionId}
+		WHERE rid						= #{rid}
+    </update>
+
+    <update id="updateStatus" parameterType="com.regroup.rsunny.common.model.SaleDTO">
+		UPDATE forsale SET
+			  status			= #{status}
+			, update_dtm		= now()
+			, update_id			= #{sessionId}
+		WHERE rid				= #{rid}
+	</update>
+
+    <insert id="insertSale" parameterType="com.regroup.rsunny.common.model.SaleDTO">
+		INSERT INTO forsale (
+			  rid
+			, sale_no
+			, brokerage_type
+			, sale_type
+			, sale_detail_type
+			, trade_type
+			, price
+			, maintenance_fee
+			, maintenance_yn
+			, monthly_price
+			, short_price
+			, short_maintenance_yn
+			, short_min_month
+			, include_items
+			, supply_area
+			, private_area
+			, total_floor
+			, sale_floor
+			, direction_type
+			, parking_type
+			, room_type
+			, bathroom_type
+			, elevator_type
+			, animal_type
+			, completion_ym
+			, movein_type
+			, option_items
+			, picture01_path
+			, picture02_path
+			, picture03_path
+			, picture04_path
+			, picture05_path
+			, picture06_path
+			, picture07_path
+			, picture08_path
+			, forsale_intro
+			, forsale_intro_detail
+			, hashtag
+			, addr1
+			, addr2
+			, jibun_addr
+			, sido
+			, sigungu
+			, dong
+			, hdong
+			, bcode
+			, hcode
+			, pos_x
+			, pos_y
+			, owner_nm
+			, phone
+			, features_intro
+			, private_provision_yn
+			, status
+			, view_count
+			, create_dtm
+			, create_id
+		)
+		SELECT
+			  rid
+			, sale_no
+			, brokerage_type
+			, sale_type
+			, sale_detail_type
+			, trade_type
+			, price
+			, maintenance_fee
+			, maintenance_yn
+			, monthly_price
+			, short_price
+			, short_maintenance_yn
+			, short_min_month
+			, include_items
+			, supply_area
+			, private_area
+			, total_floor
+			, sale_floor
+			, direction_type
+			, parking_type
+			, room_type
+			, bathroom_type
+			, elevator_type
+			, animal_type
+			, completion_ym
+			, movein_type
+			, option_items
+			, picture01_path
+			, picture02_path
+			, picture03_path
+			, picture04_path
+			, picture05_path
+			, picture06_path
+			, picture07_path
+			, picture08_path
+			, forsale_intro
+			, forsale_intro_detail
+			, hashtag
+			, addr1
+			, addr2
+			, jibun_addr
+			, sido
+			, sigungu
+			, dong
+			, hdong
+			, bcode
+			, hcode
+			, pos_x
+			, pos_y
+			, owner_nm
+			, phone
+			, features_intro
+			, private_provision_yn
+			, '00'
+			, 0
+			, create_dtm
+			, create_id
+		FROM forsale_editing	fe
+		WHERE rid						= #{rid}
+    </insert>
+
+    <update id="updateSale" parameterType="com.regroup.rsunny.common.model.SaleDTO">
+		UPDATE forsale fs
+			LEFT JOIN forsale_editing fe ON fs.rid = fe.rid
+		SET 
+			  fs.sale_no					= fe.sale_no
+			, fs.brokerage_type				= fe.brokerage_type
+			, fs.sale_type					= fe.sale_type
+			, fs.sale_detail_type			= fe.sale_detail_type
+			, fs.trade_type					= fe.trade_type
+			, fs.price						= fe.price
+			, fs.maintenance_fee			= fe.maintenance_fee
+			, fs.maintenance_yn				= fe.maintenance_yn
+			, fs.monthly_price				= fe.monthly_price
+			, fs.short_price				= fe.short_price
+			, fs.short_maintenance_yn		= fe.short_maintenance_yn
+			, fs.short_min_month			= fe.short_min_month
+			, fs.include_items				= fe.include_items
+			, fs.supply_area				= fe.supply_area
+			, fs.private_area				= fe.private_area
+			, fs.land_area					= fe.land_area
+			, fs.building_area				= fe.building_area
+			, fs.total_floor				= fe.total_floor
+			, fs.sale_floor					= fe.sale_floor
+			, fs.direction_type				= fe.direction_type
+			, fs.parking_type				= fe.parking_type
+			, fs.room_type					= fe.room_type
+			, fs.bathroom_type				= fe.bathroom_type
+			, fs.elevator_type				= fe.elevator_type
+			, fs.animal_type				= fe.animal_type
+			, fs.completion_ym				= fe.completion_ym
+			, fs.movein_type				= fe.movein_type
+			, fs.option_items				= fe.option_items
+			, fs.picture01_path				= fe.picture01_path
+			, fs.picture02_path				= fe.picture02_path
+			, fs.picture03_path				= fe.picture03_path
+			, fs.picture04_path				= fe.picture04_path
+			, fs.picture05_path				= fe.picture05_path
+			, fs.picture06_path				= fe.picture06_path
+			, fs.picture07_path				= fe.picture07_path
+			, fs.picture08_path				= fe.picture08_path
+			, fs.forsale_intro				= fe.forsale_intro
+			, fs.forsale_intro_detail		= fe.forsale_intro_detail
+			, fs.hashtag					= fe.hashtag
+			, fs.addr1						= fe.addr1
+			, fs.addr2						= fe.addr2
+			, fs.jibun_addr					= fe.jibun_addr
+			, fs.sido						= fe.sido
+			, fs.sigungu					= fe.sigungu
+			, fs.dong						= fe.dong
+			, fs.hdong						= fe.hdong
+			, fs.bcode						= fe.bcode
+			, fs.hcode						= fe.hcode
+			, fs.pos_x						= fe.pos_x
+			, fs.pos_y						= fe.pos_y
+			, fs.owner_nm					= fe.owner_nm
+			, fs.phone						= fe.phone
+			, fs.email						= fe.email
+			, fs.features_intro				= fe.features_intro
+			, fs.private_provision_yn		= fe.private_provision_yn
+			, fs.update_dtm					= fe.update_dtm
+			, fs.update_id					= fe.update_id
+		WHERE fe.rid						= #{rid}
+    </update>
+
+    <update id="updateViewCount" parameterType="com.regroup.rsunny.common.model.SaleDTO">
+		UPDATE forsale SET
+			view_count					= (case when view_count is null then 1 else view_count + 1 end)
+		WHERE rid						= #{rid}
+    </update>
+
+    <update id="updateOpenCount" parameterType="com.regroup.rsunny.common.model.SaleDTO">
+		UPDATE forsale SET
+			open_count					= (case when open_count is null then 1 else view_count + 1 end)
+		WHERE rid						= #{rid}
+    </update>
+
+    <delete id="deleteSale" parameterType="com.regroup.rsunny.common.model.SaleDTO">
+		DELETE
+		FROM forsale
+		WHERE rid						= #{rid}
+    </delete>
+
+    <delete id="deleteSaleEditing" parameterType="com.regroup.rsunny.common.model.SaleDTO">
+		DELETE
+		FROM forsale_editing
+		WHERE rid						= #{rid}
+    </delete>
+
+    <select id="getAgentList" resultType="com.regroup.rsunny.system.model.UserDTO">
+    	/*해당 매물 등록자이거나 또는 동일 시군구인 경우. 아이템2 구매자, 등록자, 동일 동, 동일 시군구 순으로 나열*/
+		SELECT 
+			    ur.userid
+			  , ur.usernm
+			  , ur.biz_nm
+			  , ifnull(ur.manager_phone, ur.phone)		as phone
+			  , ur.email
+              , it.end_dtm
+              , ag.sort_no
+		FROM user ur
+			INNER JOIN (
+				SELECT create_id	as userid
+					, 1				as sort_no
+				FROM forsale		fs
+				WHERE rid = #{rid}
+				UNION
+				SELECT ur.userid
+					, (case when fs.create_id = ur.userid then	1
+							when fs.dong = ur.dong then			2 
+							else								3 end) 		as sort_no
+				FROM forsale		fs
+					INNER JOIN user	ur ON fs.sido = ur.sido and fs.sigungu = ur.sigungu AND fs.brokerage_type = 'A'
+				WHERE fs.rid = #{rid}
+			) ag ON ur.userid = ag.userid
+			LEFT OUTER JOIN (
+				select it.userid
+					, max(it.end_dtm)	as end_dtm
+				from forsale fs 
+					inner join item it on now() between it.start_dtm and it.end_dtm and it.item_type = 2 and fs.sale_type = it.sale_type
+				where fs.rid = #{rid}
+				group by it.userid
+			) it ON ur.userid = it.userid
+		WHERE ur.user_type IN ('AA', 'RA')
+		  AND ur.status = '90'
+        ORDER BY it.end_dtm desc, ag.sort_no
+    </select>
+
+
+
+	<select id="getRealTradingsList" parameterType="com.regroup.rsunny.common.model.SaleDTO" resultType="com.regroup.rsunny.common.model.SaleDTO">		
+		SELECT 
+			x.rid
+			, x.sigungu
+			, x.jibun	
+			, x.use_area	
+			, x.deal_amount
+			, x.deposit
+			, x.monthly_rent
+			, x.deal_month
+			, lpad(x.deal_day, 2, 0) as deal_day
+			, x.pos_x 
+			, x.pos_y
+			, max(x.deal_date) as deal_date 
+		FROM 
+		(
+			SELECT
+				  rid
+				, sigungu
+				, jibun
+				, use_area	
+				, deal_amount
+				, deposit
+				, monthly_rent
+				, deal_month
+				, deal_day	
+				, pos_x 
+				, pos_y 
+				, concat(deal_month, lpad(deal_day, 2, 0)) as deal_date	
+			FROM real_tradings
+			WHERE trade_type = #{tradeType}
+			GROUP BY 
+				  rid
+				, sigungu
+				, jibun
+				, use_area
+				, deal_amount
+				, deposit
+				, monthly_rent
+				, deal_month
+				, deal_day
+				, pos_x 
+				, pos_y 
+			HAVING pos_x != 0 and pos_y != 0
+			ORDER BY sigungu, jibun, concat(deal_month, lpad(deal_day, 2, 0)) DESC
+		) x	
+		GROUP BY 
+			x.sigungu
+			, x.jibun	
+    </select>
+    
+    <select id="getRealTradingsAllList" parameterType="com.regroup.rsunny.common.model.SaleDTO" resultType="com.regroup.rsunny.common.model.SaleDTO">		
+    	SELECT 
+    			rid
+    			, sigungu
+    			, jibun
+    			, jibun1
+    			, jibun2
+    			, apart_name
+    			, use_area
+    			, deal_month
+    			, deal_day
+    			, deal_amount
+    			, floor
+    			, build_year
+    			, roadnm_addr
+    			, cancel_deal_day
+    			, req_gbn
+    			, rdealer_lawdnm
+    			, pos_x
+    			, pos_y
+		FROM real_tradings		
+		WHERE pos_x IS NULL AND pos_y IS NULL
+    </select>
+    
+    <update id="updateRealTradings" parameterType="com.regroup.rsunny.common.model.SaleDTO">
+		UPDATE real_tradings
+		SET 
+			  pos_x = #{posX}
+			, pos_y = #{posY}
+		WHERE rid = #{rid}
+    </update>
+    
+    
+    <select id="getRealTradingsListFromPnu" parameterType="com.regroup.rsunny.common.model.SaleDTO" resultType="com.regroup.rsunny.common.model.SaleDTO">
+		SELECT * FROM real_tradings_apt_2023_2 
+		WHERE pnu = #{pnu}
+		ORDER BY CONCAT(deal_month, lpad(deal_day, 2, 0)) DESC
+	</select>
+	
+	<select id="getRealTradingsListFromApt1" parameterType="com.regroup.rsunny.common.model.SaleDTO" resultType="com.regroup.rsunny.common.model.SaleDTO">
+		SELECT 
+			x.rid
+			, x.sigungu
+			, x.jibun	
+			, x.use_area	
+			, x.deal_amount
+			, x.deposit
+			, x.monthly_rent
+			, x.deal_month
+			, lpad(x.deal_day, 2, 0) as deal_day
+			, x.pos_x 
+			, x.pos_y
+			, max(x.deal_date) as deal_date 
+		FROM 
+		(
+			SELECT
+				  rid
+				, sigungu
+				, jibun
+				, use_area	
+				, deal_amount
+				, deposit
+				, monthly_rent
+				, deal_month
+				, deal_day	
+				, pos_x 
+				, pos_y 
+				, concat(deal_month, lpad(deal_day, 2, 0)) as deal_date	
+			FROM real_tradings_apt_temp
+			WHERE  
+			<![CDATA[ 
+			  	pos_x >= #{posMinX} 
+			AND pos_y >= #{posMinY} 
+			AND pos_x <= #{posMaxX} 
+			AND pos_y <= #{posMaxY}
+			]]>
+			GROUP BY 
+				  rid
+				, sigungu
+				, jibun
+				, use_area
+				, deal_amount
+				, deposit
+				, monthly_rent
+				, deal_month
+				, deal_day
+				, pos_x 
+				, pos_y 
+			HAVING pos_x != 0 and pos_y != 0
+			ORDER BY sigungu, jibun, concat(deal_month, lpad(deal_day, 2, 0)) DESC
+		) x	
+		GROUP BY 
+			x.sigungu
+			, x.jibun
+	</select>
+	
+	<select id="getRealTradingsListFromApt2" parameterType="com.regroup.rsunny.common.model.SaleDTO" resultType="com.regroup.rsunny.common.model.SaleDTO">
+		SELECT 
+			x.rid
+			, x.sigungu
+			, x.jibun	
+			, x.use_area	
+			, x.deal_amount
+			, x.deposit
+			, x.monthly_rent
+			, x.deal_month
+			, lpad(x.deal_day, 2, 0) as deal_day
+			, x.pos_x 
+			, x.pos_y
+			, max(x.deal_date) as deal_date 
+		FROM 
+		(
+			SELECT
+				  rid
+				, sigungu
+				, jibun
+				, use_area	
+				, deal_amount
+				, deposit
+				, monthly_rent
+				, deal_month
+				, deal_day	
+				, pos_x 
+				, pos_y 
+				, concat(deal_month, lpad(deal_day, 2, 0)) as deal_date	
+			FROM real_tradings_apt2_temp
+			WHERE monthly_type = #{monthlyType} 
+			<![CDATA[ 
+			  AND pos_x >= #{posMinX} 
+			  AND pos_y >= #{posMinY} 
+			  AND pos_x <= #{posMaxX} 
+			  AND pos_y <= #{posMaxY}
+			]]>
+			GROUP BY 
+				  rid
+				, sigungu
+				, jibun
+				, use_area
+				, deal_amount
+				, deposit
+				, monthly_rent
+				, deal_month
+				, deal_day
+				, pos_x 
+				, pos_y 
+			HAVING pos_x != 0 and pos_y != 0
+			ORDER BY sigungu, jibun, concat(deal_month, lpad(deal_day, 2, 0)) DESC
+		) x	
+		GROUP BY 
+			x.sigungu
+			, x.jibun
+	</select>
+	
+	<select id="getRealTradingsListFromOfficetel1" parameterType="com.regroup.rsunny.common.model.SaleDTO" resultType="com.regroup.rsunny.common.model.SaleDTO">
+		
+		SELECT 
+			x.rid
+			, x.sigungu
+			, x.jibun	
+			, x.use_area	
+			, x.deal_amount
+			, x.deposit
+			, x.monthly_rent
+			, x.deal_month
+			, lpad(x.deal_day, 2, 0) as deal_day
+			, x.pos_x 
+			, x.pos_y
+			, max(x.deal_date) as deal_date 
+		FROM 
+		(
+			SELECT
+				  rid
+				, sigungu
+				, jibun
+				, use_area	
+				, deal_amount
+				, deposit
+				, monthly_rent
+				, deal_month
+				, deal_day	
+				, pos_x 
+				, pos_y 
+				, concat(deal_month, lpad(deal_day, 2, 0)) as deal_date	
+			FROM real_tradings_officetel_temp
+			WHERE  
+			<![CDATA[ 
+			  	pos_x >= #{posMinX} 
+			AND pos_y >= #{posMinY} 
+			AND pos_x <= #{posMaxX} 
+			AND pos_y <= #{posMaxY}
+			]]>
+			GROUP BY 
+				  rid
+				, sigungu
+				, jibun
+				, use_area
+				, deal_amount
+				, deposit
+				, monthly_rent
+				, deal_month
+				, deal_day
+				, pos_x 
+				, pos_y 
+			HAVING pos_x != 0 and pos_y != 0
+			ORDER BY sigungu, jibun, concat(deal_month, lpad(deal_day, 2, 0)) DESC
+		) x	
+		GROUP BY 
+			x.sigungu
+			, x.jibun
+	</select>
+	
+	<select id="getRealTradingsListFromOfficetel2" parameterType="com.regroup.rsunny.common.model.SaleDTO" resultType="com.regroup.rsunny.common.model.SaleDTO">
+		SELECT 
+			x.rid
+			, x.sigungu
+			, x.jibun	
+			, x.use_area	
+			, x.deal_amount
+			, x.deposit
+			, x.monthly_rent
+			, x.deal_month
+			, lpad(x.deal_day, 2, 0) as deal_day
+			, x.pos_x 
+			, x.pos_y
+			, max(x.deal_date) as deal_date 
+		FROM 
+		(
+			SELECT
+				  rid
+				, sigungu
+				, jibun
+				, use_area	
+				, deal_amount
+				, deposit
+				, monthly_rent
+				, deal_month
+				, deal_day	
+				, pos_x 
+				, pos_y 
+				, concat(deal_month, lpad(deal_day, 2, 0)) as deal_date	
+			FROM real_tradings_officetel2_temp
+			WHERE monthly_type = #{monthlyType} 
+			<![CDATA[ 
+			  AND pos_x >= #{posMinX} 
+			  AND pos_y >= #{posMinY} 
+			  AND pos_x <= #{posMaxX} 
+			  AND pos_y <= #{posMaxY}
+			]]>
+			GROUP BY 
+				  rid
+				, sigungu
+				, jibun
+				, use_area
+				, deal_amount
+				, deposit
+				, monthly_rent
+				, deal_month
+				, deal_day
+				, pos_x 
+				, pos_y 
+			HAVING pos_x != 0 and pos_y != 0
+			ORDER BY sigungu, jibun, concat(deal_month, lpad(deal_day, 2, 0)) DESC
+		) x	
+		GROUP BY 
+			x.sigungu
+			, x.jibun
+	</select>
+	
+	<select id="getRealTradingsListFromMultihouse1" parameterType="com.regroup.rsunny.common.model.SaleDTO" resultType="com.regroup.rsunny.common.model.SaleDTO">
+		SELECT 
+			x.rid
+			, x.sigungu
+			, x.jibun	
+			, x.use_area	
+			, x.deal_amount
+			, x.deposit
+			, x.monthly_rent
+			, x.deal_month
+			, lpad(x.deal_day, 2, 0) as deal_day
+			, x.pos_x 
+			, x.pos_y
+			, max(x.deal_date) as deal_date 
+		FROM 
+		(
+			SELECT
+				  rid
+				, sigungu
+				, jibun
+				, use_area	
+				, deal_amount
+				, deposit
+				, monthly_rent
+				, deal_month
+				, deal_day	
+				, pos_x 
+				, pos_y 
+				, concat(deal_month, lpad(deal_day, 2, 0)) as deal_date	
+			FROM real_tradings_multihouse_temp
+			WHERE  
+			<![CDATA[ 
+			  	pos_x >= #{posMinX} 
+			AND pos_y >= #{posMinY} 
+			AND pos_x <= #{posMaxX} 
+			AND pos_y <= #{posMaxY}
+			]]>
+			GROUP BY 
+				  rid
+				, sigungu
+				, jibun
+				, use_area
+				, deal_amount
+				, deposit
+				, monthly_rent
+				, deal_month
+				, deal_day
+				, pos_x 
+				, pos_y 
+			HAVING pos_x != 0 and pos_y != 0
+			ORDER BY sigungu, jibun, concat(deal_month, lpad(deal_day, 2, 0)) DESC
+		) x	
+		GROUP BY 
+			x.sigungu
+			, x.jibun
+	</select>
+	
+	<select id="getRealTradingsListFromMultihouse2" parameterType="com.regroup.rsunny.common.model.SaleDTO" resultType="com.regroup.rsunny.common.model.SaleDTO">
+		SELECT 
+			x.rid
+			, x.sigungu
+			, x.jibun	
+			, x.use_area	
+			, x.deposit
+			, x.monthly_rent
+			, x.deal_month
+			, lpad(x.deal_day, 2, 0) as deal_day
+			, x.pos_x 
+			, x.pos_y
+			, max(x.deal_date) as deal_date 
+		FROM 
+		(
+			SELECT
+				  rid
+				, sigungu
+				, jibun
+				, use_area	
+				, deposit
+				, monthly_rent
+				, deal_month
+				, deal_day	
+				, pos_x 
+				, pos_y 
+				, concat(deal_month, lpad(deal_day, 2, 0)) as deal_date	
+			FROM real_tradings_multihouse2_temp
+			WHERE monthly_type = #{monthlyType} 
+			<![CDATA[ 
+			  AND pos_x >= #{posMinX} 
+			  AND pos_y >= #{posMinY} 
+			  AND pos_x <= #{posMaxX} 
+			  AND pos_y <= #{posMaxY}
+			]]>
+			GROUP BY 
+				  rid
+				, sigungu
+				, jibun
+				, use_area
+				, deposit
+				, monthly_rent
+				, deal_month
+				, deal_day
+				, pos_x 
+				, pos_y 
+			HAVING pos_x != 0 and pos_y != 0
+			ORDER BY sigungu, jibun, concat(deal_month, lpad(deal_day, 2, 0)) DESC
+		) x	
+		GROUP BY 
+			x.sigungu
+			, x.jibun
+	</select>
+	
+	<select id="getRealTradingsListFromApt3" parameterType="com.regroup.rsunny.common.model.SaleDTO" resultType="com.regroup.rsunny.common.model.SaleDTO">
+		SELECT 
+			x.rid
+			, x.sigungu
+			, x.jibun	
+			, x.use_area	
+			, x.deal_amount
+			, x.deposit
+			, x.monthly_rent
+			, x.deal_month
+			, lpad(x.deal_day, 2, 0) as deal_day
+			, x.pos_x 
+			, x.pos_y
+			, max(x.deal_date) as deal_date 
+		FROM 
+		(
+			SELECT
+				  rid
+				, sigungu
+				, jibun
+				, use_area	
+				, deal_amount
+				, deposit
+				, monthly_rent
+				, deal_month
+				, deal_day	
+				, pos_x 
+				, pos_y 
+				, concat(deal_month, lpad(deal_day, 2, 0)) as deal_date	
+			FROM real_tradings_apt2_temp
+			WHERE monthly_type = '전세' 
+			<![CDATA[ 
+			  AND pos_x >= #{posMinX} 
+			  AND pos_y >= #{posMinY} 
+			  AND pos_x <= #{posMaxX} 
+			  AND pos_y <= #{posMaxY}
+			]]>
+			GROUP BY 
+				  rid
+				, sigungu
+				, jibun
+				, use_area
+				, deal_amount
+				, deposit
+				, monthly_rent
+				, deal_month
+				, deal_day
+				, pos_x 
+				, pos_y 
+			HAVING pos_x != 0 and pos_y != 0
+			ORDER BY sigungu, jibun, concat(deal_month, lpad(deal_day, 2, 0)) DESC
+		) x	
+		GROUP BY 
+			x.sigungu
+			, x.jibun
+	</select>
+	
+</mapper>

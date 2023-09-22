@@ -1,0 +1,4 @@
+                                    <div class="txtRadio" th:each="item, stat : ${INCLUDE_ITEMS}">
+                                        <input th:id="${'optionItem_'+stat.index}" type="checkbox" name="chk" th:value="${item.nm}" th:checked="${item.useYn=='Y'}">
+                                        <label th:for="${'optionItem_'+stat.index}" th:text="${item.nm}">수도세</label>
+                                    </div>

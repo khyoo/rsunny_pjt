@@ -1,0 +1,249 @@
+<!DOCTYPE HTML>
+<html lang="ko">
+<head>
+	<th:block th:replace="layout/fragments/front/head :: headFragment"></th:block>
+	<!-- Global site tag (gtag.js) - Google Analytics -->
+	<script async src="https://www.googletagmanager.com/gtag/js?id=G-6EHV3KH3XT"></script>
+	<script>
+	  window.dataLayer = window.dataLayer || [];
+	  function gtag(){dataLayer.push(arguments);}
+	  gtag('js', new Date());
+
+	  gtag('config', 'G-6EHV3KH3XT');
+	</script>
+</head>
+<body>
+    <!--top_layout-->
+    <div id="top_layout" class="type2">
+		<th:block th:replace="layout/fragments/front/header :: headerFragment"></th:block>
+
+	<script src="//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
+	<script th:inline="javascript">
+		$(document).ready(function() {
+			$('input[name=addr1]').click(function() {
+				$('a.address').trigger('click');
+			});
+
+			$('a.address').click(function() {
+				new daum.Postcode({
+					oncomplete:function(postdata) {
+						//alert(JSON.stringify(postdata));
+						$('input[name=addr1]').val(postdata.address);
+					}
+				}).open();
+			});
+
+			$('a.save').click(function() {
+				var form = $('#frmBase');
+
+				//필수값 체크.
+		    	form.validate({
+		    		wrapper: 'div',
+					rules: {
+						userid: {required: true, userid: true, rangelength: [4, 12]},
+						passwd: {required: true, rangelength: [6, 20]},
+						passwd2: {required: true, rangelength: [6, 20], equalTo: '#passwd'},
+						bizNm: {required: true, maxlength: 30},
+						ceoNm: {required: true, maxlength:  8},
+						phone: {required: true, maxlength: 13},
+						phone2: {required: true, maxlength: 13, equalTo: '#phone'},
+						addr1: 'required',
+						addr2: 'required',
+						managerNm: 'required',
+						managerPhone: {required: true, maxlength: 13},
+						email: {required: true, email: true}
+					}
+		    	});
+
+				if( !form.valid() ) return;
+
+				var formdata = form.serializeObject();
+				if(formdata.passwd != formdata.passwd2) {
+					alert('비밀번호가 일치하지 않습니다.'); return;
+				}
+				if(formdata.phone != formdata.phone) {
+					alert('휴대전화번호가 일치하지 않습니다.'); return;
+				}
+
+	    		if( !confirm('가입 하시겠습니까?') ) return;
+
+				var form = form[0];
+				var formdata = new FormData(form);
+
+				$.ajax({
+					type: 'POST',
+					enctype: 'multipart/form-data',
+					url: '/user/rest/save',
+					data: formdata,
+					processData: false,
+					contentType: false,
+					cache: false,
+					timeout: 600000,
+					success: function(result) {
+		    			if(result.code == 0) {
+		    				location.href = '/05mb03/' + result.data;
+		    			}
+		    			else {
+			    			alert(result.message);
+		    			}
+					}
+				});
+
+			});	//End-of-$('a.save').click(function() {
+
+			$('a.cancel').click(function() {
+				location.href = '/';
+			});
+		})
+	</script>
+
+    </div>
+    <!--//top_layout-->
+    <!--body_layout-->
+    <div id="body_layout">
+        <!--visual_wrap-->
+        <div class="visual_wrap">
+            <div class="inner type4">
+                <h2><strong>공인중개사</strong> 회원가입</h2>
+                <p>공인중개사(임대관리사회원) 회원은<br>등록 승인을 통해 회원가입이 가능합니다.</p>
+            </div>
+        </div>
+        <!--//visual_wrap-->
+        <!--step_wrap-->
+        <div class="step_wrap tyep1">
+            <div class="inner type3">
+                <dl class="end">
+                    <dt>1</dt>
+                    <dd>약관동의</dd>
+                </dl>
+                <dl class="on">
+                    <dt>2</dt>
+                    <dd>회원정보입력</dd>
+                </dl>
+                <dl>
+                    <dt>3</dt>
+                    <dd>회원가입 완료</dd>
+                </dl>
+            </div>
+        </div>
+        <!--//step_wrap-->
+        <!--input_wrap-->
+        <div class="input_wrap">
+            <div class="inner type2">
+ 		 		<form id="frmBase" name="frmBase" enctype="multipart/form-data" method="post" onsubmit="return false;">
+ 		 			<input type="hidden" id="crudType" name="crudType" value="C" />
+ 		 			<input type="hidden" id="userType" name="userType" th:value="${form.userType}" />
+ 		 			<input type="hidden" id="privateProvisionYn" name="privateProvisionYn" th:value="${form.pp}" />
+                <ul>
+                    <li>
+                        <label for="userid">아이디</label>
+                        <input id="userid" name="userid" type="text" />
+                        <p>4자~12자 영문+숫자로 입력해주세요.</p>
+                    </li>
+                    <li>
+                        <label for="passwd">비밀번호</label>
+                        <input id="passwd" name="passwd" type="password" />
+                        <p>10자~20자 영문,숫자 조합</p>
+                    </li>
+                    <li>
+                        <label for="passwd2">비밀번호 확인</label>
+                        <input id="passwd2" name="passwd2" type="password" />
+                    </li>
+                    <li th:if="${form.userType=='a'}">
+                        <label for="join_4">공인중개사명</label>
+                        <input id="join_4" name="bizNm" type="text" />
+                    </li>
+                    <li>
+                        <label for="join_5">대표자명</label>
+                        <input id="join_5" name="ceoNm" type="text" placeholder="이름을 입력해 주세요" />
+                    </li>
+                    <li>
+                        <label for="phone">휴대전화번호</label>
+                        <input id="phone" name="phone" type="text" placeholder="- 제외 후 입력 해 주세요." />
+                        <input id="phone2" name="phone2" type="text" placeholder="- 제외 후 입력 해 주세요." />
+                    </li>
+                    <li>
+                        <label for="join_7">사업자 주소지</label>
+                        <div class="flexBox flex_address">
+                            <input id="join_7" name="addr1" type="text" readonly="readonly" style="text-align: left;" />
+                            <a href="#" class="address">주소검색</a>
+                        </div>
+                        <input id="join_7_2" name="addr2" type="text" placeholder="상세주소" />
+                    </li>
+                    <li th:if="${form.userType=='a'}">
+                        <label for="join_8">담당자명</label>
+                        <input id="join_8" name="managerNm" type="text" placeholder="이름을 입력해 주세요" />
+                    </li>
+                    <li th:if="${form.userType=='a'}">
+                        <label for="join_9">담당자연락처</label>
+                        <input id="join_9" name="managerPhone" type="text" placeholder="휴대전화" />
+                    </li>
+                    <li>
+                        <label for="email">이메일</label>
+                        <input id="email" name="email" type="text" placeholder="이메일 주소 형식으로 입력해 주세요." />
+                    </li>
+                    <li>
+                        <label>사진/서류 첨부</label>
+                        <ul class="fileBox">
+                            <li>
+                                <input id="file_1" name="bizFile" type="file">
+                                <label for="file_1">사업자 등록증</label>
+                                <a href="#">사업자 등록증<br>등록 완료</a>
+                            </li>
+                            <li>
+                                <input id="file_2" name="licenseFile" type="file">
+                                <label for="file_2">자격증 사본</label>
+                                <a href="#">자격증 사본<br>등록 완료</a>
+                            </li>
+                            <li>
+                                <input id="file_3" name="openFile" type="file">
+                                <label for="file_3">개설 등록증</label>
+                                <a href="#">개설 등록증<br>등록 완료</a>
+                            </li>
+                            <li>
+                                <input id="file_4" name="deductibleFile" type="file">
+                                <label for="file_4">공제 증서</label>
+                                <a href="#">공제 증서<br>등록 완료</a>
+                            </li>
+                            <li>
+                                <input id="file_5" name="outsideFile" type="file">
+                                <label for="file_5">사무실 외부</label>
+                                <a href="#">사무실 외부<br>등록 완료</a>
+                            </li>
+                            <li>
+                                <input id="file_6" name="insideFile" type="file">
+                                <label for="file_6">사무실 내부</label>
+                                <a href="#">사무실 내부<br>등록 완료</a>
+                            </li>
+                            <li>
+                                <input id="file_7" name="additionalFile" type="file">
+                                <label for="file_7">추가 사진</label>
+                                <a href="#">추가 사진<br>등록 완료</a>
+                            </li>
+                        </ul>
+                    </li>
+                    <li>
+                        <label for="join_11">추천 매니저 아이디</label>
+                        <input id="join_11" name="recommandId" type="text" placeholder="알써니 매니저 아이디를 입력해 주세요." />
+                        <p>추천 매니저 아이디 입력 시, 감사포인트 2,000P를 지급해 드립니다.</p>
+                    </li>
+                </ul>
+                </form>
+            </div>
+        </div>
+        <!--//input_wrap-->
+        <!--btn_wrap-->
+        <div class="btn_wrap">
+            <a href="#" class="type2 cancel">취소</a>
+            <a href="#" class="type1 save">회원가입</a>
+        </div>
+        <!--//btn_wrap-->
+    </div>
+    <!--//body_layout-->
+    <!--foot_layout-->
+    <div id="foot_layout">
+		<th:block th:replace="layout/fragments/front/footer :: footerFragment"></th:block>
+    </div>
+    <!--//foot_layout-->
+</body>
+</html>

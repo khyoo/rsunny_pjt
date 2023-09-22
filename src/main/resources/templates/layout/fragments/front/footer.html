@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html 	lang="ko"
+     	xmlns:th="http://www.thymeleaf.org">
+
+    <div th:fragment="footerFragment" th:remove="tag">
+        <div class="inner">
+            <div class="util">
+                <img class="logo" src="/img/common/logo_gray.svg" alt="">
+                <ul>
+                    <li><a href="/06u0201">고객센터</a></li>
+                    <li><a href="/06u0203">이용약관</a></li>
+                    <li sec:authorize="hasRole('ROLE_ADMIN')"><a href="/siteadmin/">관리자모드</a></li>
+                    <li sec:authorize="isAuthenticated()"><a href="javascript:void(0);" class="LOGOUT">로그아웃</a></li>
+                </ul>
+            </div>
+            <div class="address">
+                <address>
+                    <div>
+                        <p><span>(주)알써니</span></p>
+                        <p><span>대표자</span>&nbsp;&nbsp;&nbsp;김근호</p>
+                    </div>
+                    <div>
+                        <p><span>주소</span>&nbsp;&nbsp;&nbsp;전라남도 여수시 중앙4길 25-1(중앙동)</p>
+                        <p><span>사업자등록번호</span>&nbsp;&nbsp;&nbsp;693-86-02032</p>
+                    </div>
+                    <div>
+                        <p><span>제휴문의</span>&nbsp;&nbsp;&nbsp;rsunny1020@gmail.com</p>
+                        <p><span>고객센터</span>&nbsp;&nbsp;&nbsp;061.654.6888 (10:00~17:00)</p>
+                    </div>
+                </address>
+                <p class="copy">Copyright © 2022, All rights reserved</p>
+            </div>
+        </div>
+    </div>
+
+</html>

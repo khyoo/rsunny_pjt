@@ -1,0 +1,955 @@
+<!DOCTYPE HTML>
+<html lang="ko">
+
+<head>
+	<th:block th:replace="layout/fragments/front/head :: headFragment"></th:block>
+	<meta name="viewport"
+		content="target-densitydpi=device-dpi, user-scalable=0, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, width=device-width" />
+	<link rel="stylesheet" type="text/css" href="/css/main.css">
+	<script type="text/javascript" src="/js/main.js"></script>
+	<script type="text/javascript"
+		src="//dapi.kakao.com/v2/maps/sdk.js?appkey=565d4d316c7e529f3ad7bd8265a31214&libraries=services,clusterer,drawing"></script>
+
+	<script th:inline="javascript">
+		$(document).ready(function () {
+			$('#w').keyup(function () {
+				if (event.keyCode == 13) $('a.search').trigger('click');
+
+				// 장소 검색 객체를 생성합니다
+				var ps = new kakao.maps.services.Places();
+				// 키워드로 장소를 검색합니다
+				ps.keywordSearch($('#w').val(), placesSearchCB, {size:10});
+			});
+
+			$('a.search').click(function () {
+				if ($('#w').val() == '') {
+					$('#w').attr('placeholder', '검색할 주소지 정보를 입력하세요.');
+					return;
+				}
+
+				location.href = '/02la01?t=r&keyword=' + $('#w').val();
+				//var geocoder = new kakao.maps.services.Geocoder();
+				//geocoder.addressSearch( $('#w').val(), callback);
+
+				/*
+				$('#map').show();
+				var mapContainer = document.getElementById('map'), // 지도를 표시할 div 
+					mapOption = {
+						center: new kakao.maps.LatLng(37.566826, 126.9786567), // 지도의 중심좌표
+						level: 3 // 지도의 확대 레벨
+					};  
+				
+				// 지도를 생성합니다    
+				var map = new kakao.maps.Map(mapContainer, mapOption); 
+				
+				
+				
+				// 키워드로 장소를 검색합니다
+				ps.keywordSearch($('#w').val(), placesSearchCB); 
+				
+				// 키워드 검색 완료 시 호출되는 콜백함수 입니다
+				function placesSearchCB (data, status, pagination) {
+					if (status === kakao.maps.services.Status.OK) {
+				
+						// 검색된 장소 위치를 기준으로 지도 범위를 재설정하기위해
+						// LatLngBounds 객체에 좌표를 추가합니다
+						var bounds = new kakao.maps.LatLngBounds();
+				
+						for (var i=0; i<data.length; i++) {
+							//displayMarker(data[i]);    
+							bounds.extend(new kakao.maps.LatLng(data[i].y, data[i].x));
+						}       
+				
+						// 검색된 장소 위치를 기준으로 지도 범위를 재설정합니다
+						map.setBounds(bounds);
+					} 
+				}
+				
+				// 지도에 마커를 표시하는 함수입니다
+				function displayMarker(place) {
+				    
+					// 마커를 생성하고 지도에 표시합니다
+					var marker = new kakao.maps.Marker({
+						map: map,
+						position: new kakao.maps.LatLng(place.y, place.x) 
+					});
+				
+					// 마커에 클릭이벤트를 등록합니다
+					kakao.maps.event.addListener(marker, 'click', function() {
+						// 마커를 클릭하면 장소명이 인포윈도우에 표출됩니다
+						infowindow.setContent('<div style="padding:5px;font-size:12px;">' + place.place_name + '</div>');
+						infowindow.open(map, marker);
+					});
+				}
+				*/
+			});	//End-of-search.
+
+
+			$('.keywordBox').on('click', 'div', function(){
+				$('.keywordBox').hide();				
+				$('#w').val($(this).text());
+			});
+
+			// 키워드 검색 완료 시 호출되는 콜백함수 입니다
+			var placesSearchCB = function (result, status, pagination) {console.log(result);
+				if (status === kakao.maps.services.Status.OK) {
+					$('.keywordBox').show();	
+					$('.keywordBox').html('');
+					for (var i = 0; i < result.length; i++) {
+						//result.address_name
+						let html = '';
+						html += '<div>';
+						
+						// 실거래가/매물검색
+						if ($('#t').val() === '1') {
+							html += result[i].place_name;	
+						} else if ($('#t').val() === '2') {
+							html += result[i].address_name;	
+						}
+						
+						html += '</div>';
+						
+						$('.keywordBox').append(html);
+					}
+				}
+			};
+
+/*
+			var callback = function (result, status) {
+				if (status === kakao.maps.services.Status.OK) {
+					//alert(JSON.stringify(result[0]));
+					$('#frmSearch').prop('onsubmit', '');
+					$('#frmSearch').submit();
+				} else if (status === kakao.maps.services.Status.ZERO_RESULT) {
+					$('#w').val('');
+					$('#w').attr('placeholder', '검색 결과가 없습니다. 주소지 정보로 검색해 주세요');
+				}
+			};	//End-of-callback
+*/
+		})
+	</script>
+
+	<!-- START : 2022.01.20 폰트 추가 - kmg -->
+	<style>
+		#map {
+			display: none;
+			width: 100%;
+			height: 100vh;
+			margin-top: -72px;
+		}
+
+		img {
+			-webkit-perspective: 1;
+		}
+
+		.mobile_only {
+			display: none;
+		}
+
+		.search_wrap {
+			background: url(../img/main/main.png) no-repeat center center;
+			background-size: cover;
+			height: 100vh;
+			margin-top: -72px;
+		}
+
+		.search_wrap .inner {
+			max-width: 1440px;
+			width: 100%;
+			height: 950px;
+			padding: 320px 560px 60px 19px;
+			justify-content: flex-start;
+		}
+
+		.search_wrap .searchBox {
+			border: none;
+			border-radius: 4px;
+			box-shadow: 0 15px 30px 0 rgb(0, 0, 0, 0.10);
+		}
+
+		.search_wrap .inner p {
+			font-family: "Jalnan";
+			text-shadow: 0 15px 30px rgb(0, 0, 0, 0.20);
+			margin-bottom: 30px;
+		}
+
+		.search_wrap .inner p>span {
+			display: inline;
+			color: #ffff00;
+		}
+
+		.search_wrap .inner p b {
+			display: inline-block;
+			margin: 0 4px 0 2px;
+		}
+
+		.search_wrap .searchBox .selectBox {
+			width: 160px;
+		}
+
+		#gnb_layout .gnb li a {
+			color: #ccc;
+			font-weight: 500;
+		}
+
+		#gnb_layout .gnb li a:hover {
+			color: #fff;
+			font-weight: 500;
+		}
+
+		#gnb_layout .util li a {
+			color: #ccc;
+		}
+
+		#gnb_layout .util li a:hover {
+			color: #fff;
+		}
+
+		#gnb_layout .util li.sale a {
+			color: #473ab3;
+			font-weight: 500;
+			background-color: #fff;
+			padding: 0 18px;
+			line-height: 37px;
+			border-radius: 17px;
+			border: none;
+		}
+
+		.ads_wrap h2 {
+			font-weight: 500;
+		}
+
+		.ads_wrap .grap {
+			margin-top: 45px;
+		}
+
+		.ads_wrap .control button {
+			top: 152px;
+		}
+
+		.tip_wrap {
+			background-image: url('/img/main/tip_bg1.png');
+			padding-top: 20px;
+			padding-bottom: 50px;
+			margin-bottom: 160px;
+		}
+
+		.tip_wrap .title .sub-text {
+			font-weight: 300;
+		}
+
+		.tip_wrap .title .main-text {
+			margin-top: 4px;
+			font-weight: 700;
+			font-size: 32px;
+		}
+
+		.tip_wrap .tip_list ul {
+			display: flex;
+			justify-content: space-between;
+		}
+
+		.tip_wrap .tip_list li {
+			background-color: white;
+			box-shadow: 0 0 15px 0 rgba(0, 0, 0, 0.1);
+			padding: 40px 0 50px;
+			border-radius: 10px;
+			width: 32%;
+		}
+
+		.tip_wrap .tip_list img {
+			display: block;
+			max-width: 262px;
+			max-height: 262px;
+			width: 20vw;
+			height: 20vw;
+			min-width: 160px;
+			min-height: 160px;
+			margin-bottom: 20px;
+			margin: 0 auto;
+		}
+
+		.tip_wrap .tip_list .main-text {
+			position: relative;
+			display: inline-block;
+			font-size: 24px;
+			font-weight: 700;
+			text-align: center;
+			line-height: 1.5;
+			padding: 0 5px;
+		}
+
+		.tip_wrap .tip_list .main-text span {
+			position: relative;
+		}
+
+		.tip_wrap .tip_list .main-text:nth-child(2)::before {
+			content: '';
+			position: absolute;
+			left: 0;
+			bottom: 5px;
+			width: 100%;
+			height: 10px;
+			background-color: #dbd4f2;
+		}
+
+		.tip_wrap .tip_list .sub-text {
+			margin-top: 15px;
+			font-size: 14px;
+			color: #888;
+			font-weight: 300;
+			text-align: center;
+			line-height: 1.5;
+			word-break: keep-all;
+		}
+
+		.tip_wrap2 {
+			background: none;
+			padding: 0 20px;
+
+		}
+
+		.tip_wrap2 .inner {
+			background-color: #4925bc;
+			padding: 0;
+			border-radius: 10px;
+		}
+
+		.tip_wrap2 .inner a {
+			display: flex;
+			color: white;
+			padding: 16px 24px;
+			align-items: center;
+		}
+
+		.tip_wrap2 .inner a span {
+			margin-left: auto;
+		}
+
+		.tip_wrap3 {
+			height: 563px;
+			background-image: url('/img/main/tip_bg3.png');
+			background-size: cover;
+			background-position: center;
+		}
+
+		.tip_wrap3 .inner {
+			padding-top: 220px;
+		}
+
+		.tip_wrap3 .main-text {
+			font-size: 35px;
+			font-weight: 300;
+			color: white;
+			line-height: 1.3;
+		}
+
+		.tip_wrap3 .sub-text {
+			margin-top: 30px;
+			color: #aaa;
+		}
+
+		.tip_wrap3 .btn-wrapper {
+			margin-top: 35px;
+		}
+
+		.tip_wrap3 .btn-wrapper a {
+			display: inline-block;
+			color: #3a2cae;
+			background-color: white;
+			padding: 0 20px;
+			line-height: 40px;
+			border-radius: 20px;
+			margin-right: 20px;
+		}
+
+		#foot_layout {
+			background-color: #333;
+		}
+		
+		.keywordBox {
+		    position: relative;
+		    background-color: #fff;
+		    width: 60%;
+		    height: 500px;
+		    margin-left: 190px;
+		    cursor: default;
+    		overflow: auto;
+		    display: none;			
+		}
+		
+		.keywordBox div {
+			background-color: #fff;
+		    font-size: 15px;
+		    white-space: nowrap;
+		    overflow: hidden;
+		    width: 100%;
+		    height: 40px;
+		    border-bottom: 1px solid #e5e5ea;
+		    padding: 10px 20px;
+		    line-height: 20px;
+		    color: #2c2c2e;
+		    cursor: pointer;
+		}
+		
+		.keywordBox div:hover {
+			background: rgba(0,0,0,0.05)
+		}
+
+		@media (max-width:1349px) {
+			#gnb_layout .util li.sale a {
+				background-color: transparent;
+			}
+
+			.search_wrap .inner {
+				max-width: 1240px;
+				width: 100%;
+				height: 600px;
+				padding: 20vh 20px 60px 20px;
+			}
+
+			.tip_wrap .tip_list ul {
+				padding: 0 1%;
+			}
+		}
+
+
+		@media (max-width:1024px) {
+			.search_wrap {
+				margin-top: -54px;
+			}
+
+			.tip_wrap2 a {
+				font-size: 18px;
+			}
+		}
+
+		@media (max-width:768px) {
+
+
+			.mobile_only {
+				display: block;
+			}
+
+			.search_wrap {
+				background: url(../img/main/main_mob.png) no-repeat center center;
+				margin-top: -54px;
+			}
+
+			.search_wrap .inner {
+				padding: 30vh 20px 0 20px;
+			}
+
+			.search_wrap .inner p {
+				text-shadow: 10px 0 15px rgba(0, 0, 0, 0.15);
+				margin-bottom: 20px;
+			}
+
+			.search_wrap .searchBox {
+				padding: 9px 10px 9px 13px;
+			}
+
+			.search_wrap .searchBox .selectBox {
+				width: 110px;
+			}
+
+			.search_wrap .inner {
+				width: 100%;
+			}
+
+			.ads_wrap .grap {
+				margin-top: 20px;
+			}
+
+			.tip_wrap {
+
+				margin-bottom: 110px;
+			}
+
+			.tip_wrap .title .sub-text {
+				font-weight: 300;
+			}
+
+			.tip_wrap .title .main-text {
+				/* margin-top:4px; */
+				/* font-weight:700; */
+				font-size: 22px;
+				margin-bottom: 10px;
+			}
+
+			.tip_wrap .tip_list ul {
+				flex-direction: column;
+				align-items: center;
+			}
+
+			.tip_wrap .tip_list ul li {
+				width: 260px;
+				margin-bottom: 30px;
+			}
+
+			.tip_wrap .tip_list .main-text {
+				font-size: 20px;
+			}
+
+			.tip_wrap .tip_list .sub-text {
+				padding: 0 30px;
+			}
+
+			#gnb_layout .util li.sale a {
+				background-color: transparent;
+			}
+
+			#top_layout .moBtn .gnb_open a span {
+				background-color: white;
+			}
+
+			#top_layout .moBtn .gnb_open a span::before {
+				background-color: white;
+			}
+
+			#top_layout .moBtn .gnb_open a span::after {
+				background-color: white;
+			}
+
+			#foot_layout .util .logo {
+				height: 30px;
+				margin-top: 2px
+			}
+
+			#body_layout {
+				padding: 0;
+			}
+
+			.search_wrap {
+				background-size: cover;
+			}
+
+			.search_wrap p {
+				font-size: 21px;
+				line-height: 30px;
+			}
+
+			.search_wrap .searchBox {
+				padding: 9px 10px;
+			}
+
+			.search_wrap .searchBox .selectBox {
+				width: 110px;
+			}
+
+			.search_wrap .searchBox .ui-button .ui-icon {
+				width: 5px;
+				height: 5px;
+				background-size: cover;
+				margin: 8px 0 0 0;
+			}
+
+			.search_wrap .searchBox .ui-selectmenu-button.ui-button {
+				height: 25px;
+			}
+
+			.search_wrap .searchBox .ui-selectmenu-text {
+				font-size: 12px;
+				line-height: 25px;
+				padding: 0;
+				margin-right: 10px;
+			}
+
+			.search_wrap .searchBox .ui-button .ui-icon {
+				top: 2px;
+			}
+
+			.search_wrap input {
+				font-size: 12px;
+				line-height: 25px;
+				letter-spacing: -0.55px;
+				padding: 0 6px;
+			}
+
+			.search_wrap input::placeholder {
+				font-size: 12px;
+			}
+
+			.search_wrap a {
+				width: 59px;
+				font-size: 12px;
+				line-height: 25px;
+			}
+
+			.search_wrap a::before {
+				width: 12px;
+				height: 12px;
+				background-size: cover;
+				margin: 6px 2px 6px 0;
+			}
+
+			.ads_wrap {
+				padding: 40px 0 44px 0;
+			}
+
+			.ads_wrap h2 {
+				font-size: 20px;
+				line-height: 23px;
+			}
+
+			.ads_wrap .grap {
+				height: 189px;
+				margin-top: 36px;
+			}
+
+			.ads_wrap .item {
+				width: 134px;
+			}
+
+			.ads_wrap .thumb {
+				height: 120px;
+			}
+
+			.ads_wrap .thumb::before {
+				line-height: 120px;
+			}
+
+			.ads_wrap .info {
+				font-size: 9px;
+				line-height: 12px;
+				letter-spacing: -0.32px;
+				margin-top: 12px;
+			}
+
+			.ads_wrap .info em {
+				font-size: 9px;
+				line-height: 10px;
+				margin-left: 5px;
+			}
+
+			.ads_wrap .info em+em {
+				margin-left: 10px;
+				max-width: 60px;
+			}
+
+			.ads_wrap .info em+em::before {
+				height: 9px;
+				top: 2px;
+			}
+
+			.ads_wrap .won {
+				font-size: 10px;
+				line-height: 18px;
+				margin-top: 6px;
+			}
+
+			.ads_wrap .won em {
+				font-size: 7px;
+				line-height: 13px;
+				padding: 0 6px;
+				margin: 2.5px 0 2.5px 8px;
+				border-radius: 7px;
+			}
+
+			.tip_wrap {
+				background-size: cover;
+			}
+
+			.tip_wrap .inner {
+				padding: 21px 0 26px 0;
+			}
+
+			.tip_wrap a {
+				font-size: 13px;
+				line-height: 22.5px;
+			}
+
+			.tip_wrap a::after {
+				width: 22.5px;
+				height: 22.5px;
+				background-size: cover;
+				margin-left: 10px;
+			}
+
+			.tip_wrap2 {
+				background-size: cover;
+			}
+
+			.tip_wrap2 p {
+				text-align: left;
+			}
+
+			.tip_wrap2 a {
+				font-size: 13px;
+				line-height: 22.5px;
+			}
+
+			.tip_wrap2 a::after {
+				width: 22.5px;
+				height: 22.5px;
+				background-size: cover;
+				margin-left: 10px;
+			}
+
+			.manual_wrap {
+				padding: 5px 0;
+			}
+
+			.manual_wrap dl {
+				padding: 0 0 0 28px;
+				flex: 1;
+			}
+
+			.manual_wrap dt {
+				font-size: 16px;
+				line-height: 23px;
+			}
+
+			.manual_wrap dt span {
+				width: 18px;
+				height: 18px;
+				font-size: 8px;
+				line-height: 18px;
+				top: 2px;
+				left: -28px;
+			}
+
+			.manual_wrap dd {
+				font-size: 12px;
+				line-height: 20px;
+				margin-top: 2px;
+			}
+
+			.manual_wrap .thumb {
+				display: none;
+			}
+
+			.manual_wrap p {
+				font-size: 11px;
+				line-height: 16px;
+				padding: 12px 0;
+				margin-top: 50px;
+			}
+		}
+
+		@media (max-width: 447px) {
+
+			.tip_wrap3 {
+				height: 480px;
+				background-image: url('/img/main/mob_tip_bg3.png');
+				background-repeat: no-repeat;
+				background-size: 447px;
+				background-position: bottom;
+				background-color: #4925bc;
+				margin-top: 110px;
+			}
+
+			.tip_wrap3 .inner {
+				padding-top: 50px;
+			}
+
+			.tip_wrap3 .main-text {
+				font-size: 20px;
+			}
+
+			.tip_wrap3 .sub-text {
+				margin-top: 15px;
+			}
+
+			.tip_wrap3 .btn-wrapper {
+				margin-top: 24px;
+			}
+
+			.tip_wrap3 .btn-wrapper a {
+				padding: 0 11px;
+				line-height: 30px;
+				margin-right: 10px;
+			}
+			
+			
+		}
+	</style>
+	<!-- END : 2022.01.20 폰트 추가 - kmg -->
+</head>
+
+<body th:inline="text">
+	<!--top_layout-->
+	<div id="top_layout">
+		<th:block th:replace="layout/fragments/front/header :: headerFragment"></th:block>
+	</div>
+	<!--//top_layout-->
+	<!--body_layout-->
+	<div id="body_layout">
+		<!--search_wrap-->
+		<div id="map"></div>
+		<div class="search_wrap">
+			<form id="frmSearch" name="frmSearch" method="get" action="02la01" onsubmit="return false;">
+				<div class="inner">
+					<p>집주인•중개사 매물광고 무료<br>열람수익도 발생하는 <span>R<b>·</b>sunny</span></p>
+					<div class="searchBox">
+						<div class="selectBox">
+							<select id="t" name="t">
+								<!--
+                            <option th:each="item : ${saleTypeList}" th:value="${item.cd}" th:text="${item.nm}">원룸투룸</option>
+                            -->
+								<option value="1">실거래가</option>
+								<option value="2">매물검색</option>
+							</select>
+						</div>
+						<input type="text" id="w" name="w" placeholder="지번·지역·지하철역 검색" autocomplete="off" />
+						<a href="javascript:void(0);" class="search">검색</a>						
+					</div>
+					<div class="keywordBox">
+						
+					</div>
+				</div>
+			</form>
+		</div>
+		<!--//search_wrap-->
+		<!--ads_wrap-->
+		<div id="slide_ads" class="ads_wrap">
+			<div class="inner">
+				<h2>오늘은 어떤 매물이 인기 있을까요?</h2>
+				<div class="grap">
+					<ul class="obj">
+						<li class="item" th:each="item : ${list}" th:attr="data-rid=${item.rid}">
+							<a th:href="${item.linkUrl}">
+								<sapn class="thumb"><img th:src="${item.firstPicturePath}" /></sapn>
+								<span class="info">
+									[[${item.saleDetailTypeNm}]]
+									<em>면적 [[${item.area}]]㎡</em>
+									<em>[[${item.dongAddr}]]</em>
+								</span>
+								<span class="won">
+									[[${item.priceWon}]]
+								</span>
+							</a>
+						</li>
+					</ul>
+				</div>
+				<div class="control">
+					<button type="button" data-control="prev" class="btn_prev">이전</button>
+					<button type="button" data-control="next" class="btn_next">다음</button>
+				</div>
+			</div>
+		</div>
+		<!--//ads_wrap-->
+		<!--tip_wrap-->
+		<div class="tip_wrap">
+			<div class="inner">
+				<div class="title">
+					<a href="#">
+						<p class="sub-text">돈 되는 부동산 플랫폼,</p>
+						<p class="main-text">알써니를 활용하는 꿀팁!</p>
+					</a>
+				</div>
+				<div class="tip_list">
+					<ul>
+						<li>
+							<img src="/img/main/001.png" />
+							<p class="main-text"><span>매물을 구할 땐,</span></p><br>
+							<p class="main-text">중개사를 선택하세요.</p>
+							<p class="sub-text">
+								지역 중개사를 직접 선택하여<br>
+								안전하게 거래할 수 있습니다.<br>
+								신속한 거래, 안전한 중개!
+							</p>
+						</li>
+						<li>
+							<img src="/img/main/002.png" />
+							<p class="main-text"><span>매물을 등록하면,</span></p><br>
+							<p class="main-text">수익금이 발생해요.</p>
+							<p class="sub-text">
+								집주인과 중개사는 무료로<br>
+								광고하고, 수익도 발생합니다.<br>
+								매물 광고하고, 수익도 얻자!
+							</p>
+						</li>
+						<li>
+							<img src="/img/main/003.png" />
+							<p class="main-text"><span>중개사 회원은,</span></p><br>
+							<p class="main-text">매물확보가 가능해요.</p>
+							<p class="sub-text">
+								클릭 한 번으로 매물을 구하고,<br>
+								고객은 자동으로 매칭됩니다.<br>
+								걱정없이, 편하게 중개하자!
+							</p>
+						</li>
+					</ul>
+				</div>
+			</div>
+		</div>
+		<!-- <div class="tip_wrap">
+            <div class="inner">
+                <a href="#"><span>돈 되는 부동산 플랫폼, </span> 알써니를 활용하는 꿀팁!</span></a>
+            </div>
+        </div> -->
+		<!--//tip_wrap-->
+		<!--manual_wrap-->
+		<!-- <div id="slide_ads" class="ads_wrap">
+            <div class="inner">
+                    <h2>알써니만의 특장점을 알아보세요.</h2>
+                    </div>
+            <div class="manual_wrap">
+                <div class="inner">
+                    <ul>
+                        <li>
+                            <dl>
+                                <dt><span>01</span>매물을 구할 땐, 중개사를 선택하세요.</dt>
+                                <dd>지역 중개사를 직접 선택하여<br>안전하게 거래할 수 있어요.<br>신속한 거래, 안전한 중개!</dd>
+                            </dl>
+                            <div class="thumb"><img src="/img/main/001.png" /></div>
+                        </li>
+                        <li>
+                            <dl>
+                                <dt><span>02</span>매물을 등록하면, 수익금이 발생해요.</dt>
+                                <dd>등록 후 중개사 회원이 알선하기로 매물정보 열람을 하면<br>매물 등록자는 열람포인트를 얻을 수 있어요.<br>매물 등록하고, 포인트 쌓자!</dd>
+                            </dl>
+                            <div class="thumb"><img src="/img/main/002.png" /></div>
+                        </li>
+                        <li>
+                            <dl>
+                                <dt><span>03</span>중개사 회원은, 매물확보가 가능해요.</dt>
+                                <dd>원룸부터 건물까지 수많은 매물을<br>열람버튼 하나로 얻을 수 있어요.<br>매물 없어도 걱정하지 말자!<br><br></dd>
+                            </dl>
+                            <div class="thumb"><img src="/img/main/003.png" /></div>
+                        </li>
+                    </ul>
+                    <p><a href="http://rsunny.io/06u0202">시행부지를 알고 계신가요? 시행사와 시공사를 매칭해 드립니다. &nbsp;&nbsp; [문의하기]</a></p>
+                </div>
+            </div> -->
+		<!--tip2_wrap-->
+		<!-- <div class="tip_wrap2">
+                <div class="inner">
+                    <a href="http://rsunny.io/06u0202"><span>시행부지를 알고 계신가요?</span><br> 시행사와 시공사를 매칭해 드립니다. &nbsp;&nbsp; [문의하기]</a>
+                </div>
+            </div> -->
+		<div class="tip_wrap2">
+			<div class="inner">
+				<a href="http://rsunny.io/06u0202">
+					<p>사업부지를 알고 계신가요?<br class="mobile_only">시행사와 시공사를 매칭해 드립니다.</p>
+					<span>문의하기</span>
+				</a>
+			</div>
+		</div>
+		<!--//tip2_wrap-->
+	</div>
+	<!--//manual_wrap-->
+	<div class="tip_wrap3">
+		<div class="inner">
+			<p class="main-text">
+				집주인, 중개사분 이신가요?<br>
+				무료로 광고하고, 수익금도 챙기세요!
+			</p>
+			<p class="sub-text">로그인하고 다양한 서비스를 이용해 보세요.</p>
+			<div class="btn-wrapper">
+				<a href="#!">회원가입</a>
+				<a href="#!">로그인</a>
+			</div>
+		</div>
+	</div>
+	</div>
+	<!--//body_layout-->
+	<!--foot_layout-->
+	<div id="foot_layout">
+		<th:block th:replace="layout/fragments/front/footer :: footerFragment"></th:block>
+	</div>
+	<!--//foot_layout-->
+</body>
+
+</html>

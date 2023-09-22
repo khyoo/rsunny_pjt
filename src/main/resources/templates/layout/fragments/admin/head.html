@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html 	lang="ko"
+     	xmlns:th="http://www.thymeleaf.org">
+
+	<head th:fragment="headFragment">
+		<meta charset="utf-8" />
+		<meta http-equiv="X-UA-Compatible" content="IE=edge"><!-- IE에서만 -->
+		<meta name="viewport" content="width=device-width,initial-scale=1.0,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no">
+		<title>R.sunny CMS 관리시스템</title>
+		<script type="text/javascript" src="/js/jquery-1.11.2.min.js"></script>
+		<script type="text/javascript" src="/js/jquery-ui.js"></script>
+	    <script type="text/javascript" src="/js/jquery.mask.js"></script>
+		<script type="text/javascript" src="/js/admin.js"></script>
+	    <script th:src="@{/js/jquery.validate.min.js}"></script>
+		
+		<link rel="stylesheet" type="text/css" href="/css/common.css">
+		<link rel="stylesheet" type="text/css" href="/css/jquery-ui.css">
+		<link rel="stylesheet" type="text/css" href="/css/admin.css">
+	    <link rel="stylesheet" type="text/css" href="/css/custom.css">
+		
+	    <script th:src="@{/js/common-form.js}"></script>
+	    <script th:src="@{/js/common-code.js}"></script>
+	    <script th:src="@{/js/common-init.js}"></script>
+	    <script th:src="@{/js/admin-popup.js}"></script>
+	    <script type="text/javascript" src="/js/common-validation.js"></script>
+<!-- 	    <script th:src="@{/js/common-prototype.js}"></script> -->
+
+		<style>
+			.error { color: red !important; }
+		</style>
+	</head>
+
+</html>

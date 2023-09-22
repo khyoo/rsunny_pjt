@@ -1,0 +1,58 @@
+spring:
+  servlet:
+    multipart:
+      enabled: true
+      max-file-size: 50MB
+      max-request-size: 50MB
+  datasource:
+    sql-script-encoding: utf-8
+    driver-class-name: org.mariadb.jdbc.Driver
+    url: jdbc:mariadb://127.0.0.1:3306/rsunny_db
+    #url: jdbc:mariadb://139.150.74.35:3306/rsunny_db
+    username: rsunny
+    password: rsunny!09
+    hikari:
+      connection-timeout: 30000
+      idle-timeout: 600000
+      max-lifetime: 1800000
+
+  jpa:
+    database-platform: org.hibernate.dialect.MySQL5InnoDBDialect
+    show-sql: true
+    hibernate:
+      ddl-auto: update
+    properties:
+      hibernate:
+        format_sql: true
+        temp:
+          use_jdbc_metadata_defaults: false
+
+  thymeleaf:
+    enabled: true
+    prefix: classpath:templates/
+    suffix: .html
+    cache: false
+    check-template-location: true
+  mvc:
+    favicon:
+      enabled: false
+
+rsunny:
+  daum: 
+    restapi-key: e55d2bc5417f67efdc6c62fd5247af5b
+  file:
+    upload-path: /upload-files
+    upload-folder: C:/temp
+  rsunnyid: rsunnypoint
+  item:
+    price1 : 10000
+    price2 : 20000
+  recommand:
+    branch-point: 3000
+    agent-point: 2000
+
+logging:
+  level:
+    root: info
+    com.regroup: debug
+    org.hibernate.type.descriptor.sql: trace

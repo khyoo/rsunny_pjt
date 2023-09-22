@@ -1,0 +1,100 @@
+<!DOCTYPE HTML>
+<html lang="ko">
+<head>
+	<th:block th:replace="layout/fragments/front/head :: headFragment"></th:block>
+	<!-- Global site tag (gtag.js) - Google Analytics -->
+	<script async src="https://www.googletagmanager.com/gtag/js?id=G-6EHV3KH3XT"></script>
+	<script>
+	  window.dataLayer = window.dataLayer || [];
+	  function gtag(){dataLayer.push(arguments);}
+	  gtag('js', new Date());
+
+	  gtag('config', 'G-6EHV3KH3XT');
+	</script>
+	<script th:inline="javascript">
+		$(document).ready(function() {
+			$('a.change').click(function() {
+				var form = $('#frmBase');
+
+				//필수값 체크.
+		    	form.validate({
+		    		wrapper: 'div',
+					rules: {
+						passwd: {required: true, passwd: true, rangelength: [10, 20]},
+						passwd2: {required: true, passwd: true, rangelength: [10, 20], equalTo: '#passwd'}
+					}
+		    	});
+
+				if( !form.valid() ) return;
+
+				var formdata = form.serializeObject();
+
+	    		if( !confirm('변경하시겠습니까?') ) return;
+
+				$.post('/user/rest/changePasswd',formdata, function(result) {
+					alert(result.message);
+	    			if(result.code == 0) {
+	    				location.href = '/';
+	    			}
+				}).error(function(e) {
+					alert('처리시 오류가 발생하였습니다.');
+				});
+			});	//End-of-$('a.change').click(function() {
+		})
+	</script>
+</head>
+<body>
+    <!--top_layout-->
+    <div id="top_layout" class="type2">
+		<th:block th:replace="layout/fragments/front/header :: headerFragment"></th:block>
+    </div>
+    <!--//top_layout-->
+    <!--body_layout-->
+    <div id="body_layout">
+        <!--visual_wrap-->
+        <div class="visual_wrap">
+            <div class="inner bg2">
+                <h2><strong>알써니</strong> 회원 비밀번호 변경</h2>
+                <p>회원님의 비밀번호를 다시 설정해주세요.<br>앞으로 이 비밀번호로 접속하시면 됩니다.</p>
+            </div>
+        </div>
+        <!--//visual_wrap-->
+        <!--h3_wrap-->
+        <div class="h3_wrap">
+            <div class="inner type2">
+                <div class="tit_wrap">
+                    <h3>알써니 회원 비밀번호 변경</h3>
+                </div>
+                <div class="con_wrap">
+                    <!--input_wrap-->
+	 		 		<form id="frmBase" name="frmBase"  method="post" onsubmit="return false;">
+	 		 			<input type="hidden" id="userToken" name="userToken" th:value="${form.userToken}" />
+                    <div class="input_wrap">
+                        <ul>
+                            <li>
+                                <label for="passwd">비밀번호</label>
+                        		<input id="passwd" name="passwd" type="password" />
+                                <p>10자~20자 영문,숫자 조합</p>
+                            </li>
+                            <li>
+                                <label for="passwd2">비밀번호 확인</label>
+                        		<input id="passwd2" name="passwd2" type="password" />
+                                <p>10자~20자 영문,숫자 조합</p>
+                            </li>
+                        </ul>
+                    </div>
+                    </form>
+                    <!--//input_wrap-->
+                </div>
+            </div>
+        </div>
+        <!--//h3_wrap-->
+        <!--btn_wrap-->
+        <div class="btn_wrap">
+            <a href="#" class="type1 change">확인</a>
+        </div>
+        <!--//btn_wrap-->
+    </div>
+    <!--//body_layout-->
+</body>
+</html>

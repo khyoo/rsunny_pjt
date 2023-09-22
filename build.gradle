@@ -1,0 +1,74 @@
+plugins {
+	id 'org.springframework.boot' version '2.2.5.RELEASE'
+	id 'io.spring.dependency-management' version '1.0.11.RELEASE'
+	id 'java'
+	id 'war'
+}
+
+tasks.bootJar {enabled = false}
+tasks.war {enabled = true}
+
+group = 'com.bdvr'
+version = '1.0.0-SNAPSHOT'
+sourceCompatibility = '1.8'
+
+repositories {
+	mavenCentral()
+}
+
+configurations {
+	developmentOnly
+	runtimeClasspath {
+		extendsFrom developmentOnly
+	}
+	compileOnly {
+		extendsFrom annotationProcessor
+	}
+} 
+
+dependencies {
+	implementation 'org.springframework.boot:spring-boot-starter-web'
+  	implementation 'org.mybatis.spring.boot:mybatis-spring-boot-starter:2.1.2'
+  	implementation 'org.springframework.boot:spring-boot-starter-jdbc:2.2.5.RELEASE'
+	implementation 'org.springframework.boot:spring-boot-starter-security'
+	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+	implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
+	
+  	implementation 'nz.net.ultraq.thymeleaf:thymeleaf-layout-dialect'
+	implementation 'org.thymeleaf.extras:thymeleaf-extras-springsecurity5'
+	implementation 'org.thymeleaf:thymeleaf-spring5'
+	implementation 'org.thymeleaf.extras:thymeleaf-extras-java8time'
+	
+	implementation 'com.sun.mail:javax.mail:1.6.2'
+ 	implementation 'org.modelmapper:modelmapper:2.3.8'
+
+	implementation 'org.apache.httpcomponents:httpclient:4.5.12'
+	implementation 'commons-io:commons-io:2.7'
+
+	implementation 'org.codehaus.groovy:groovy:3.0.3'
+  	
+	runtimeOnly 'org.mariadb.jdbc:mariadb-java-client'
+	runtimeOnly 'mysql:mysql-connector-java'	
+	implementation 'org.hibernate:hibernate-hikaricp:5.4.13.Final'
+	
+	implementation 'com.googlecode.json-simple:json-simple:1.1.1'
+	
+//	compile('org.apache.tomcat.embed:tomcat-embed-jasper')
+//	compile('javax.servlet:jstl:1.2')
+
+    compileOnly('org.projectlombok:lombok')
+    annotationProcessor('org.projectlombok:lombok')
+	developmentOnly 'org.springframework.boot:spring-boot-devtools'
+
+	implementation group: 'org.apache.poi', name: 'poi', version: '4.1.1'
+    implementation group: 'org.apache.poi', name: 'poi-ooxml', version: '4.1.1'
+	
+    // log4jdbc
+    implementation('org.bgee.log4jdbc-log4j2:log4jdbc-log4j2-jdbc4.1:1.16')
+  	
+	providedRuntime 'org.springframework.boot:spring-boot-starter-tomcat'
+
+	testImplementation 'org.springframework.boot:spring-boot-starter-test'
+    testImplementation 'org.junit.jupiter:junit-jupiter-api:5.3.1'
+    testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.3.1'	
+}

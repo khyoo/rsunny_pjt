@@ -1,0 +1,322 @@
+<!DOCTYPE HTML>
+<html lang="ko">
+<head>
+	<th:block th:replace="layout/fragments/front/head :: headFragment"></th:block>
+	<!-- Global site tag (gtag.js) - Google Analytics -->
+	<script async src="https://www.googletagmanager.com/gtag/js?id=G-6EHV3KH3XT"></script>
+	<script>
+	  window.dataLayer = window.dataLayer || [];
+	  function gtag(){dataLayer.push(arguments);}
+	  gtag('js', new Date());
+
+	  gtag('config', 'G-6EHV3KH3XT');
+	</script>
+	<script th:inline="javascript">
+		$(document).ready(function() {
+			var form = $('#frmBase');
+
+			//필수값 체크.
+	    	form.validate({
+	    		wrapper: 'span',
+				rules: {
+					saleType: 'required',
+					brokerageType: 'required',
+					saleDetailType: 'required',
+					tradeType: 'required',
+					price: 'required',
+					maintenanceFee: 'required',
+					monthlyPrice: 'required'
+				},
+		        errorPlacement: function(label, element) {
+		        	var nm = element.attr('name');;
+		        	if(nm=='brokerageType' || nm=='saleDetailType' || nm=='tradeType') {
+			            label.addClass('wrapperclass');
+			            label.insertBefore(element.closest('div.con_wrap'));
+		        	}
+		        	else {
+			            label.addClass('wrapperclass');
+			            label.insertBefore(element);
+		        	}
+		        }
+	        });
+			$('a.prev').click(function() {
+				var formdata = form.serializeObject();
+				formdata.includeItems = $('#includeItems').find('input[type=checkbox]:checked').listToString();
+
+				$.post('[(${saveUrl})]', formdata, function(result) {
+					if(result.code==0) {
+						location.href = '[(${prevPage})]';
+					}
+					else {
+						alert(result.message);
+					}
+				}).fail(function() {
+					alert('저장중 오류가 발생하였습니다.');
+				})
+			});
+			$('a.next').click(function() {
+				var formdata = form.serializeObject();
+				formdata.includeItems = $('#includeItems').find('input[type=checkbox]:checked').listToString();
+				//alert(JSON.stringify(formdata));
+
+				if( !form.valid() ) return;
+
+				$.post('[(${saveUrl})]', formdata, function(result) {
+					if(result.code==0) {
+						location.href = '[(${nextPage})]';
+					}
+					else {
+						alert(result.message);
+					}
+				}).fail(function() {
+					alert('저장중 오류가 발생하였습니다.');
+				})
+			});
+			$('input[name=includeItem]').keypress(function() {
+				if(event.keyCode==13) $('a.addInclude').trigger('click');
+			})
+
+			/*
+			$('a.addInclude').click(function() {
+				var item = $('input[name=includeItem]').val();
+				if(item=='') return;
+
+				var newitem = $.validator.format('<div class="txtRadio"><input id="a1" type="checkbox" name="chk" value="{0}"><label for="a1">{0}</label></div>', item);
+				alert(newitem);
+				$('div.includeItems').append( newitem );
+				$('div.includeItems').find('input[name=chk]').trigger('click');
+			});
+			*/
+
+			//중개유형 변경시.
+			$('input[type=radio][name=brokerageType]').change(function() {
+				var val = $('input[type=radio][name=brokerageType]:checked').val();
+				if(val=='A') {
+					$('p.brokerageTypeMsg').text('매물주소와 매물소유주 정보를 제공합니다.(정보제공 수익금 발생)');
+				}
+				else if(val=='B') {
+					$('p.brokerageTypeMsg').text('다른 공인중개사와 공동중개를 희망합니다.(정보제공 수익금 발생)');
+				}
+				else if(val=='C') {
+					$('p.brokerageTypeMsg').text('단독으로 중개하기를 희망합니다.(정보제공 수익금 발생하지 않음)');
+				}
+				else {
+					$('p.brokerageTypeMsg').text('');
+				}
+			});
+			//로딩시 현재 메시지 설정.
+			$('input[type=radio][name=brokerageType]').trigger('change');
+
+			//거래유형 변경시.
+			$('input[type=radio][name=tradeType]').change(function() {
+				var tradeType = $($('input[type=radio][name=tradeType]:checked')).val();
+
+				if(tradeType=='B') {
+					$('input.monthly').prop('disabled', false);
+					$('input.monthly').css('background-color', '#ffffff');
+				}
+				else {
+					$('input.monthly').prop('disabled', true);
+					$('input[type=text].monthly').val('');
+					$('input[type=checkbox].monthly').prop('checked', false);
+					$('input.monthly').css('background-color','#eeeeee');
+				}
+			});
+
+			//매물상세유형 변경시.
+			$('input[type=radio][name=saleDetailType]').change(function() {
+				var formdata = form.serializeObject();
+				$.get('/register/03f03/includeItems', formdata, function(result) {
+					$('#includeItems').html(result);
+				})
+			});
+
+			//관리비
+			$('input[name=maintenanceYn]').change(function() {
+				var checked = $('input[name=maintenanceYn]').is(':checked');
+				var maintenanceFee = $('input[name=maintenanceFee]');
+				maintenanceFee.prop('readonly', (checked)? true : false);
+				if(checked) maintenanceFee.val(0);
+			});
+
+			$('input[type=radio][name=tradeType]').trigger('change');
+			$('input[type=radio][name=saleDetailType]').trigger('change');
+			$('input[name=maintenanceYn]').trigger('change');
+		})
+	</script>
+</head>
+<body>
+    <!--top_layout-->
+    <div id="top_layout" class="type2">
+		<th:block th:replace="layout/fragments/front/header :: headerFragment"></th:block>
+    </div>
+    <!--//top_layout-->
+    <!--body_layout-->
+    <div id="body_layout">
+        <!--visual_wrap-->
+        <div class="visual_wrap">
+            <div class="inner type3">
+                <h2><strong>알써니</strong> [[${pageTitle}]]</h2>
+                <p>내가 등록하고 누적 포인트는 수익금으로<br>진정한 거래의 기본, 알써니!</p>
+            </div>
+        </div>
+        <!--//visual_wrap-->
+        <!--step_wrap-->
+        <div class="step_wrap type2">
+            <div class="inner type3">
+                <dl class="on">
+                    <dt>1</dt>
+                    <dd>매물 기본정보</dd>
+                </dl>
+                <dl>
+                    <dt>2</dt>
+                    <dd>매물 상세/옵션</dd>
+                </dl>
+                <dl>
+                    <dt>3</dt>
+                    <dd>사진/개인정보</dd>
+                </dl>
+                <dl>
+                    <dt>4</dt>
+                    <dd>매물 등록완료</dd>
+                </dl>
+            </div>
+        </div>
+        <!--//step_wrap-->
+        <!--h3_wrap-->
+        <form id="frmBase" name="frmBase" method="post" onsubmit="return false">
+        	<input type="hidden" id="rid" name="rid" th:value="${data.rid}" />
+        	<input type="hidden" id="saleType" name="saleType" th:value="${data.saleType}" />
+        <div class="h3_wrap">
+            <div class="inner type3" th:if="${userType=='AA' || userType=='RA'}"><!-- 일반회원이 아닌 경우만 보임. -->
+                <div class="tit_wrap">
+                    <h3>중개유형 선택</h3>
+                </div>
+                <div class="con_wrap">
+                    <span th:each="item : ${BROKERAGE_TYPE}" th:remove="tag">
+                    <div  class="txtRadio">
+                        <input th:id="${'brokerageType_'+item.cd}" name="brokerageType" th:value="${item.cd}" type="radio" th:checked="${data.brokerageType==item.cd}">
+                        <label th:for="${'brokerageType_'+item.cd}" th:text="${item.nm}">공동매물</label>
+                    </div>
+					</span><br><br>
+                  <p class="brokerageTypeMsg"><!-- 매물주소와 매물소유주 정보를 제공합니다.(정보제공 수익금 발생) --></p>
+                </div>
+            </div>
+        </div>
+        <!--//h3_wrap-->
+        <!--h3_wrap-->
+        <div class="h3_wrap">
+            <div class="inner type3">
+                <div class="tit_wrap">
+                    <h3>매물 & 거래 유형 <span>(필수)</span></h3>
+                </div>
+                <div class="con_wrap type_radio">
+                	<span th:each="item : ${SALE_TYPE_DTL}" th:remove="tag">
+	                    <div class="txtRadio">
+	                        <input th:id="${'saleDetailType_'+item.cd}" name="saleDetailType" th:value="${item.cd}" type="radio" th:checked="${data.saleDetailType==item.cd}">
+	                        <label th:for="${'saleDetailType_'+item.cd}" th:text="${item.nm}">원룸</label>
+	                    </div>
+                    </span>
+                	<span th:each="item : ${TRADE_TYPE}" th:remove="tag">
+	                    <div class="txtRadio">
+	                        <input th:id="${'tradeType_'+item.cd}" name="tradeType" th:value="${item.cd}" type="radio" th:checked="${data.tradeType==item.cd}">
+	                        <label th:for="${'tradeType_'+item.cd}" th:text="${item.nm}">매매</label>
+	                    </div>
+                    </span>
+                </div>
+            </div>
+        </div>
+        <!--//h3_wrap-->
+        <div class="inner type3">
+            <hr />
+        </div>
+        <!--h3_wrap-->
+        <div class="h3_wrap">
+            <div class="inner type3">
+                <div class="tit_wrap">
+                    <h3>거래금액</h3>
+                </div>
+                <div class="con_wrap">
+                    <!--input_wrap-->
+                    <div class="input_wrap col2 interval_42">
+                        <ul>
+                            <li>
+                                <label for="id_03f03_4">금액 <span>(필수)</span></label>
+                                <div class="flexBox flex_42">
+                                    <input id="id_03f03_4" type="text" name="price" th:value="${data.price}" placeholder="만 단위" class="comma">
+                                    <p>만원</p>
+                                </div>
+                                <p>매매금, 전세금, 보증금, 분양금액 해당사항 입력</p>
+                            </li>
+														<li>
+																<label for="id_03f03_7">월세</label>
+																<div class="flexBox flex_42">
+																		<input id="id_03f03_7" type="text" name="monthlyPrice" th:value="${data.monthlyPrice}" placeholder="만 단위" class="comma monthly">
+																		<p>만원</p>
+																</div>
+														</li>
+                            <li>
+                                <label for="id_03f03_5">관리비</label>
+                                <div class="flexBox flex_42">
+                                    <input id="id_03f03_5" type="text" name="maintenanceFee" th:value="${data.maintenanceFee}" placeholder="만 단위" class="comma">
+                                    <p>만원</p>
+                                </div>
+                                <div class="radioBox">
+                                    <input id="id_03f03_6" name="maintenanceYn" value="N" type="checkbox" th:checked="${data.maintenanceYn=='N'}">
+                                    <label for="id_03f03_6">관리비 없음</label>
+                                </div>
+                            </li>
+                            <li>
+                                <label for="id_03f03_9">단기 시</label>
+                                <div class="flexBox flex_42">
+                                    <input id="id_03f03_9" type="text" name="shortPrice" th:value="${data.shortPrice}" placeholder="만 단위" class="comma monthly">
+                                    <p>만원</p>
+                                </div>
+                                <div class="flexBox flex_term">
+                                    <div class="radioBox">
+                                        <input id="id_03f03_10" name="shortMaintenanceYn" value="N" type="checkbox" th:checked="${data.shortMaintenanceYn=='N'}" class="monthly">
+                                        <label for="id_03f03_10">관리비 없음</label>
+                                    </div>
+                                    <div class="termBox">
+                                        <label for="id_03f03_11">최소</label>
+                                        <div class="flexBox flex_42">
+                                            <input id="id_03f03_11" name="shortMinMonth" th:value="${data.shortMinMonth}" type="text" placeholder="1" class="monthly">
+                                            <p>개월</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </li>
+                            <li>
+                                <label for="id_03f03_8">포함 항목</label>
+                                <div class="flexBox flex_bill">
+                                    <input id="id_03f03_8" type="text" name="includeItem" placeholder="단어로 입력">
+                                    <a href="#" class="addInclude">추가</a>
+                                </div>
+                                <p>포함 항목을 입력 - 추가하고 선택해 주세요.</p>
+                                <div class="billBox" id="includeItems">
+                               </div>
+                            </li>
+                        </ul>
+                    </div>
+                    <!--//input_wrap-->
+                </div>
+            </div>
+        </div>
+        </form>
+        <!--//h3_wrap-->
+
+        <!--btn_wrap-->
+        <div class="btn_wrap">
+            <a href="javascript:void(0);" class="type2 prev" th:if="${data.editMode=='C'}">이전</a>
+            <a href="javascript:void(0);" class="type1 next">다음</a>
+        </div>
+        <!--//btn_wrap-->
+    </div>
+    <!--//body_layout-->
+    <!--foot_layout-->
+    <div id="foot_layout">
+		<th:block th:replace="layout/fragments/front/footer :: footerFragment"></th:block>
+    </div>
+    <!--//foot_layout-->
+</body>
+</html>

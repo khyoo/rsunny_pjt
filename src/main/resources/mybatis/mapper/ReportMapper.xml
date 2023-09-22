@@ -1,0 +1,132 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+    
+<mapper namespace="com.regroup.rsunny.forsale.mapper.ReportMapper">
+
+    <select id="getList" resultType="com.regroup.rsunny.forsale.model.ReportDTO">
+    	WITH LT AS (
+			SELECT 
+				  rp.cid
+				, rp.agent_id
+				, ifnull(au.usernm, rp.agent_id)	AS agent_nm
+				, rp.report_type
+				, c0.nm				AS report_type_nm
+				, rp.etc_memo
+				, rp.status			AS report_status
+				, rp.create_dtm		AS report_dtm
+				, rp.create_id		AS reporter_id
+				, ur.usernm			AS reporter_nm
+				, pt.pid
+                , pt.grp_pid
+				, fs.*
+				, fu.usernm			AS sale_usernm
+				, c1.nm				AS sale_type_nm
+				, count(*) over() 								AS total_count
+				, row_number() over(ORDER BY rp.cid desc)		AS rnk
+			FROM report					rp
+				LEFT OUTER JOIN forsale	fs ON rp.rid = fs.rid
+				LEFT OUTER JOIN user	ur ON rp.create_id = ur.userid
+				LEFT OUTER JOIN user	fu ON fs.create_id = fu.userid
+				LEFT OUTER JOIN user	au ON rp.agent_id = au.userid
+				LEFT OUTER JOIN code	c0 ON c0.grp like 'REPORT_TYPE%' AND rp.report_type = c0.cd
+				LEFT OUTER JOIN code	c1 ON c1.grp = 'SALE_TYPE' AND fs.sale_type = c1.cd
+				LEFT OUTER JOIN point	pt ON rp.rid = pt.rid AND rp.create_id = pt.userid AND pt.inout_detail = 'OS' AND pt.status = '60' /*알선하기 포인트 출금 대기*/
+			<where>
+				<choose>
+					<when test="pageType != null and pageType=='AGENT'">
+						AND length(rp.agent_id) &gt; 0
+					</when>
+					<otherwise>
+						AND (rp.agent_id is null OR rp.agent_id = '')
+					</otherwise>
+				</choose>
+				<if test="userType != null and userType != ''">
+					AND ur.user_type = #{userType}
+				</if>
+				<if test="schWord != null and schWord != ''">
+					AND (
+						fs.sale_no LIKE concat('%', #{schWord}, '%') 
+						OR
+						fu.usernm LIKE concat('%', #{schWord}, '%') 
+						OR
+						rp.create_id LIKE concat('%', #{schWord}, '%') 
+						OR
+						fs.create_id LIKE concat('%', #{schWord}, '%') 
+					)
+				</if>
+			</where>
+    	)
+    	SELECT LT.*
+    		, (total_count - rnk + 1)		AS seq
+    	FROM LT
+		WHERE rnk BETWEEN #{frRow} AND #{toRow}
+    	ORDER BY rnk
+    </select>
+
+    <select id="getReport" resultType="com.regroup.rsunny.forsale.model.ReportDTO">
+		SELECT 
+			  rp.cid
+			, rp.agent_id
+			, ifnull(au.usernm, rp.agent_id)	AS agent_nm
+			, rp.report_type
+			, c0.nm				AS report_type_nm
+			, rp.etc_memo
+			, rp.status			AS report_status
+			, rp.create_id		AS reporter_id
+			, ur.usernm			AS reporter_nm
+			, pt.pid
+            , pt.grp_pid
+			, fs.*
+		FROM report					rp
+			LEFT OUTER JOIN forsale	fs ON rp.rid = fs.rid
+			LEFT OUTER JOIN user	ur ON rp.create_id = ur.userid
+			LEFT OUTER JOIN user	au ON rp.agent_id = au.userid
+			LEFT OUTER JOIN code	c0 ON c0.grp like 'REPORT_TYPE%' AND rp.report_type = c0.cd
+			LEFT OUTER JOIN point	pt ON rp.rid = pt.rid AND rp.create_id = pt.userid AND pt.inout_detail = 'OS' AND pt.status = '60' /*알선하기 포인트 차감 대기건*/
+		WHERE rp.cid				= #{cid}
+		LIMIT 1
+    </select>
+
+    <insert id="insertReport" parameterType="com.regroup.rsunny.forsale.model.ReportDTO">
+		INSERT INTO report (
+			  cid
+			, rid
+			, agent_id
+			, report_type
+			, etc_memo
+			, status
+			, create_dtm
+			, create_id
+		) VALUES (
+			  #{cid}
+			, #{rid}
+			, #{agentId}
+			, #{reportType}
+			, #{etcMemo}
+			, '00'
+			, now()
+			, #{sessionId}
+		)
+    </insert>
+
+    <update id="updateReport" parameterType="com.regroup.rsunny.forsale.model.ReportDTO">
+		UPDATE report SET
+			  rid					= #{rid}
+			, agent_id				= #{agentId}
+			, report_type			= #{reportType}
+			, etc_memo				= #{etcMemo}
+			, update_dtm			= now()
+			, update_id				= #{sessionId}
+		WHERE cid					= #{cid}
+    </update>
+
+    <update id="updateStatusRefund" parameterType="com.regroup.rsunny.forsale.model.ReportDTO">
+		UPDATE report SET
+			  status				= '90'
+			, status_memo			= #{statusMemo}
+			, update_dtm			= now()
+			, update_id				= #{sessionId}
+		WHERE cid					= #{cid}
+    </update>
+
+</mapper>

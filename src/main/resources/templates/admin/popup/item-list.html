@@ -1,0 +1,34 @@
+			                <div class="bbsList">
+			                    <p class="between"><span>보유(사용가능) [[${useAvailItem}]]건</span> | <span>사용 [[${useCount}]]건</span> | <span>적용 [[${applyCount}]]건</span></p>
+			                    <table>
+			                        <colgroup>
+			                            <col />
+			                            <col />
+			                        </colgroup>
+			                        <tbody th:inline="text">
+			                            <tr th:each="item : ${list}">
+			                                <td th:text="${#temporals.format(item.createDtm, 'yyyy-MM-dd')}">2021-03-30</td>
+			                                <td>[[${item.inoutTypeNm}]] : [[${item.itemCount}]]건</td>
+			                            </tr>
+			                        </tbody>
+			                    </table>
+			                </div>
+			                <div class="bbsPaging" th:utext="${form.pagingHtml}">
+			                </div>
+			                
+			                <div class="btn">
+			                    <a class="type2 lp_close" href="#">확인</a>
+			                </div>
+			                
+			                <script th:inline="javascript">
+			                	function itemPageCallback(page) {
+			                		var userid = /*[[${form.sessionId}]]*/ '';
+			                		var rows = /*[[${form.rows}]]*/ '';
+			                		
+			                		var formdata = {sessionId : userid, page: page, rows: rows};
+			                		$.get('/siteadmin/popup/item', formdata, function(result) {
+			                			$('#lp_item').find('div.body').html(result);
+			                		});
+			                	}
+			                </script>
+			                

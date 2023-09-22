@@ -1,0 +1,32 @@
+			            <div class="head" th:inline="text">
+			                <h2>포인트 [[${data.inoutDetailNm}]]</h2>
+			            </div>
+			            <div class="body" th:inline="text">
+			                <div class="input_box">
+			                    <ul>
+			                        <li>
+			                            <label for="lp_a14_for1">[[${data.inoutDetailNm}]] 요청 포인트</label>
+			                            <input id="lp_a14_for1" type="text" th:value="${#numbers.formatDecimal(data.point, 0, 'COMMA', 0, 'POINT')}" disabled />
+			                            
+			                        </li>
+			                        <li>
+			                            <label for="lp_a14_for2">거래은행</label>
+			                            <input id="lp_a14_for2" type="text" th:value="${data.bankNm}" readonly="readonly" />
+			                        </li>
+			                        <li>
+			                            <label for="lp_a14_for3">계좌번호</label>
+			                            <input id="lp_a14_for3" type="text" th:value="${data.accountNo}" readonly="readonly" />
+			                        <li>
+			                            <label for="lp_a14_for4">예금주</label>
+			                            <input id="lp_a14_for4" type="text" th:value="${data.accountOwner}" readonly="readonly" />
+			                        </li>
+			                    </ul>
+			                </div>
+			                <div class="btn" th:switch="${data.status}">
+			                    <a th:case="'10'" class="type2 approve" th:attr="data-pid=${data.pid}" data-lp="alert_a5" href="#">승인</a>
+			                    <a th:case="'50'" class="type2 approve" th:attr="data-pid=${data.pid}" data-lp="alert_a5" href="#">승인</a>
+			                    <a th:case="*" class="type2 lp_close" data-lp="alert_a5" href="#">닫기</a>
+			                </div>
+			            </div>
+			            <a class="lp_close" href="#">닫기</a>
+

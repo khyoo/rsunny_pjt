@@ -1,0 +1,177 @@
+<!DOCTYPE HTML>
+<html lang="ko">
+<head>
+	<th:block th:replace="layout/fragments/front/head :: headFragment"></th:block>
+	<!-- Global site tag (gtag.js) - Google Analytics -->
+	<script async src="https://www.googletagmanager.com/gtag/js?id=G-6EHV3KH3XT"></script>
+	<script>
+	  window.dataLayer = window.dataLayer || [];
+	  function gtag(){dataLayer.push(arguments);}
+	  gtag('js', new Date());
+
+	  gtag('config', 'G-6EHV3KH3XT');
+	</script>
+	<script src="//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
+	<script th:inline="javascript">
+		$(document).ready(function() {
+			$('input[name=addr1]').click(function() {
+				$('a.address').trigger('click');
+			});
+
+			$('a.address').click(function() {
+				new daum.Postcode({
+					oncomplete:function(postdata) {
+						//alert(JSON.stringify(postdata));
+						$('input[name=addr1]').val(postdata.address);
+					}
+				}).open();
+			});
+
+			$('a.save').click(function() {
+				var form = $('#frmBase');
+
+				//필수값 체크.
+		    	form.validate({
+		    		wrapper: 'div',
+					rules: {
+						userid: {required: true, userid: true, rangelength: [4, 12]},
+						passwd: {required: true, rangelength: [6, 20]},
+						passwd2: {required: true, rangelength: [6, 20], equalTo: '#passwd'},
+						usernm: 'required',
+						phone: 'required',
+						phone2: {required: true, equalTo: '#phone'},
+						email: {required: true, email: true}
+					}
+		    	});
+
+				if( !form.valid() ) return;
+
+				var formdata = form.serializeObject();
+				if(formdata.passwd != formdata.passwd2) {
+					alert('비밀번호가 일치하지 않습니다.'); return;
+				}
+				if(formdata.phone != formdata.phone) {
+					alert('휴대전화번호가 일치하지 않습니다.'); return;
+				}
+
+	    		if( !confirm('가입하시겠습니까?') ) return;
+
+				var form = form[0];
+				var formdata = new FormData(form);
+
+				$.ajax({
+					type: 'POST',
+					enctype: 'multipart/form-data',
+					url: '/user/rest/save',
+					data: formdata,
+					processData: false,
+					contentType: false,
+					cache: false,
+					timeout: 600000,
+					success: function(result) {
+		    			if(result.code == 0) {
+		    				location.href = '/05ma03/' + result.data;
+		    			}
+		    			else {
+			    			alert(result.message);
+		    			}
+					}
+				});
+
+			});	//End-of-$('a.save').click(function() {
+
+			$('a.cancel').click(function() {
+				location.href = '/';
+			});
+		})
+	</script>
+</head>
+<body>
+    <!--top_layout-->
+    <div id="top_layout" class="type2">
+		<th:block th:replace="layout/fragments/front/header :: headerFragment"></th:block>
+    </div>
+    <!--//top_layout-->
+    <!--body_layout-->
+    <div id="body_layout">
+        <!--visual_wrap-->
+        <div class="visual_wrap">
+            <div class="inner type4">
+                <h2><strong>일반</strong> 회원가입</h2>
+                <p>개인정보는 별도 동의없이 절대 외부 누출이나 공개되지 않습니다.<br>자세한 사항은 이용약관 및 개인정보처리방침을 참조하시기 바랍니다.</p>
+            </div>
+        </div>
+        <!--//visual_wrap-->
+        <!--step_wrap-->
+        <div class="step_wrap tyep1">
+            <div class="inner type3">
+                <dl class="end">
+                    <dt>1</dt>
+                    <dd>약관동의</dd>
+                </dl>
+                <dl class="on">
+                    <dt>2</dt>
+                    <dd>회원정보입력</dd>
+                </dl>
+                <dl>
+                    <dt>3</dt>
+                    <dd>회원가입 완료</dd>
+                </dl>
+            </div>
+        </div>
+        <!--//step_wrap-->
+        <!--input_wrap-->
+        <div class="input_wrap">
+            <div class="inner type2">
+ 		 		<form id="frmBase" name="frmBase" enctype="multipart/form-data" method="post" onsubmit="return false;">
+ 		 			<input type="hidden" id="crudType" name="crudType" value="C" />
+ 		 			<input type="hidden" id="userType" name="userType" th:value="NM" />
+ 		 			<input type="hidden" id="privateProvisionYn" name="privateProvisionYn" th:value="${form.pp}" />
+                <ul>
+                    <li>
+                        <label for="userid">아이디</label>
+                        <input id="userid" name="userid" type="text" />
+                        <p>4자~12자 영문+숫자로 입력해주세요.</p>
+                    </li>
+                    <li>
+                        <label for="passwd">비밀번호</label>
+                        <input id="passwd" name="passwd" type="password" />
+                        <p>10자~20자 영문,숫자 조합</p>
+                    </li>
+                    <li>
+                        <label for="passwd2">비밀번호 확인</label>
+                        <input id="passwd2" name="passwd2" type="password" />
+                    </li>
+                    <li>
+                        <label for="join_4">이름</label>
+                        <input id="join_4" name="usernm" type="text" placeholder="이름을 입력해 주세요" />
+                    </li>
+                    <li>
+                        <label for="join_5">이메일주소</label>
+                        <input id="join_5" name="email" type="text" placeholder="이메일 주소 형식으로 입력해 주세요." />
+                    </li>
+                    <li>
+                        <label for="phone">휴대전화번호</label>
+                        <input id="phone" name="phone" type="text" placeholder="- 제외 후 입력 해 주세요." />
+                        <input id="phone2" name="phone2" type="text" placeholder="- 제외 후 입력 해 주세요." />
+                    </li>
+                </ul>
+                </form>
+            </div>
+        </div>
+        <!--//input_wrap-->
+        <!--btn_wrap-->
+        <div class="btn_wrap">
+            <a href="#" class="type2 cancel">취소</a>
+            <a href="#" class="type1 save">회원가입</a>
+        </div>
+        <!--//btn_wrap-->
+    </div>
+    <!--//body_layout-->
+    <!--foot_layout-->
+    <div id="foot_layout">
+		<th:block th:replace="layout/fragments/front/footer :: footerFragment"></th:block>
+    </div>
+    <!--//foot_layout-->
+</body>
+</html>

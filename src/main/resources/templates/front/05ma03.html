@@ -1,0 +1,96 @@
+<!DOCTYPE HTML>
+<html lang="ko">
+<head>
+	<th:block th:replace="layout/fragments/front/head :: headFragment"></th:block>
+	<!-- Global site tag (gtag.js) - Google Analytics -->
+	<script async src="https://www.googletagmanager.com/gtag/js?id=G-6EHV3KH3XT"></script>
+	<script>
+	  window.dataLayer = window.dataLayer || [];
+	  function gtag(){dataLayer.push(arguments);}
+	  gtag('js', new Date());
+
+	  gtag('config', 'G-6EHV3KH3XT');
+	</script>
+	<script th:inline="javascript">
+		$(document).ready(function() {
+
+		});
+	</script>
+</head>
+<body>
+    <!--top_layout-->
+    <div id="top_layout" class="type2">
+		<th:block th:replace="layout/fragments/front/header :: headerFragment"></th:block>
+    </div>
+    <!--//top_layout-->
+    <!--body_layout-->
+    <div id="body_layout">
+        <!--visual_wrap-->
+        <div class="visual_wrap">
+            <div class="inner type4">
+                <h2><strong>일반</strong> 회원가입</h2>
+                <p>개인정보는 별도 동의없이 절대 외부 누출이나 공개되지 않습니다.<br>자세한 사항은 이용약관 및 개인정보처리방침을 참조하시기 바랍니다.</p>
+            </div>
+        </div>
+        <!--//visual_wrap-->
+        <!--step_wrap-->
+        <div class="step_wrap tyep1">
+            <div class="inner type3">
+                <dl class="end">
+                    <dt>1</dt>
+                    <dd>약관동의</dd>
+                </dl>
+                <dl class="end">
+                    <dt>2</dt>
+                    <dd>회원정보입력</dd>
+                </dl>
+                <dl class="on">
+                    <dt>3</dt>
+                    <dd>회원가입 완료</dd>
+                </dl>
+            </div>
+        </div>
+        <!--//step_wrap-->
+        <!--complete_wrap-->
+        <div class="complete_wrap">
+            <div class="inner type2">
+                <p>
+                    <strong th:text="${data.usernm}">김써니 <span>님</span></strong>
+                    회원가입이 완료 되었습니다.
+                </p>
+                <div>
+                    <dl>
+                        <dt>아이디</dt>
+                        <dd th:text="${data.userid}">oooo1234</dd>
+                    </dl>
+                    <dl>
+                        <dt>성명</dt>
+                        <dd th:text="${data.usernm}">김써니</dd>
+                    </dl>
+                    <dl>
+                        <dt>이메일</dt>
+                        <dd th:text="${data.email}">abc@ded.com</dd>
+                    </dl>
+                    <dl>
+                        <dt>휴대전화</dt>
+                        <dd th:text="${data.phone}">000-0000-0000</dd>
+                    </dl>
+                </div>
+            </div>
+        </div>
+        <!--//complete_wrap-->
+        <!--btn_wrap-->
+        <div class="btn_wrap">
+            <a href="/" class="type2">HOME</a>
+            <a href="#" class="type1 lp_open" data-lp="04l01p">로그인</a>
+        </div>
+        <!--//btn_wrap-->
+    </div>
+    <!--//body_layout-->
+    <!--foot_layout-->
+    <div id="foot_layout">
+		<th:block th:replace="layout/fragments/front/footer :: footerFragment"></th:block>
+    </div>
+    <!--//foot_layout-->
+</body>
+</html>

@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="ko" 
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorator="layout/default-admin">
+
+            <!--contents_layout 시작-->
+            <div id="contents_layout" layout:fragment="content" th:inline="text">
+                <!--head 시작-->
+                <div class="head">
+                    <h2>광고 아이템 구매 요청 목록</h2>
+                </div>
+                <!--head 끝-->
+                <!--body 시작-->
+                <div class="body">
+		            <form id="frmSearch" name="frmSearch" method="get" action="ad-item">
+			        		<input type="hidden" id="page" name="page" value="1" />
+                    <div class="innr between">
+                        <div class="bbsSearch w210">
+                            <input type="text" id="schWord" name="schWord" th:value="${form.schWord}" placeholder="키워드">
+                            <a href="javascript:void(0);" class="search">검색</a>
+                        </div>
+                        <div class="jquerySelect w152">
+                            <select id="lp_a1_for1" name="userType">
+                                <option value="">권한유형</option>
+                                <option th:each="item : ${userTypeList}" th:value="${item.cd}" th:text="${item.nm}">유형1</option>
+                            </select>
+                        </div>
+                    </div>
+                    </form>
+                    <div class="bbsList">
+                        <table>
+                            <colgroup>
+                                <col style="width:15%;"/>
+                                <col style="width:14%;"/>
+                                <col style="width:14%;"/>
+                                <col style="width:14%;"/>
+                                <col style="width:14%;"/>
+<!--                                 <col style="width:15%;"/> -->
+<!--                                 <col style="width:14%;"/> -->
+                            </colgroup>
+                            <thead>
+                                <tr>
+                                    <th scope="col">요청시간</th>
+                                    <th scope="col">회원유형</th>
+                                    <th scope="col">아이디(성명)</th>
+                                    <th scope="col">연락처</th>
+                                    <th scope="col">구매 건수(금액)</th>
+<!--                                     <th scope="col">처리시간</th> -->
+<!--                                     <th scope="col">상태</th> -->
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr th:each="item : ${list}">
+                                    <td th:text="${#temporals.format(item.createDtm, 'yyyy-MM-dd HH:mm')}">2021-10-10 14:22</td>
+                                    <td th:text="${item.userTypeNm}">일반회원</td>
+                                    <td>[[${item.userid}]]([[${item.usernm}]])</td>
+                                    <td th:text="${item.phone}">010-1234-5678</td>
+                                    <td>[[${item.itemCount}]]건([[${#numbers.formatDecimal(item.itemPrice, 0, 'COMMA', 0, 'POINT')}]]원)</td>
+<!--                                     <td></td> -->
+<!--                                     <td class="btn"><a href="#" class="type1 lp_open" data-lp="lp_a15">확인</a></td> -->
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="bbsPaging">
+                       <script th:inline="javascript">printPageList(/*[(${form.totalCount})]*/ 0, /*[(${form.page})]*/ 0, /*[(${form.rows})]*/ 0);</script>
+                    </div>
+                </div>
+                <!--body 끝-->
+
+			    <!-- 레이어팝업 시작 -->
+			    <div id="lp_layout">
+			        <!-- 레이어팝업 lp_a15 시작 -->
+			        <div id="lp_a15" class="lp_wrap">
+			            <div class="head">
+			                <h2>광고아이템 처리</h2>
+			            </div>
+			            <div class="body">
+			                <div class="input_box">
+			                    <ul>
+			                        <li>
+			                            <label for="lp_a15_for1">입금계좌</label>
+			                            <input id="lp_a15_for1" type="text" value="231456-52-2145668" disabled />
+			                            
+			                        </li>
+			                        <li>
+			                            <label for="lp_a15_for2">입금자명</label>
+			                            <input id="lp_a15_for2" type="text" value="김박이" disabled />
+			                        </li>
+			                        <li class="buy_count">
+			                            <label for="lp_a15_for3">구매수량</label>
+			                            <input id="lp_a15_for3" type="text" value="2" disabled />
+			                            <p>건 <span>20,000원</span></p>
+			                        </li>
+			                    </ul>
+			                </div>
+			                <div class="btn">
+			                    <a class="type2 lp_open2" data-lp="alert_a5" href="#">승인</a>
+			                </div>
+			            </div>
+			            <a class="lp_close" href="#">닫기</a>
+			        </div>
+			        <!-- 레이어팝업 lp_a15 끝 -->
+			        <!-- alert_a5 팝업 -->
+			        <div id="alert_a5" class="lp_wrap type_alert">
+			            <div class="body">
+			                <p>구매 건수를 시스템에 추가 하시겠습니까?</p>
+			                <div class="btn">
+			                    <a class="type1 lp_close2" href="#">취소</a>
+			                    <a class="type2 lp_close" href="#">확인</a>
+			                </div>
+			            </div>
+			        </div>
+			        <!-- //alert_a5 팝업 -->
+			    </div>
+			    <!-- 레이어팝업 끝 -->
+			    
+			    <script th:inline="javascript">
+			    	$(document).ready(function() {
+			    		$('a.search').click(function() {
+			    			$('#frmSearch').submit();
+			    		});
+			    	});
+			    	
+			    </script>
+
+            </div>
+            <!--contents_layout 끝-->
+
+</html>
+

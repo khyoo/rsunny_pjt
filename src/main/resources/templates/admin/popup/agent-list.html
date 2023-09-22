@@ -1,0 +1,33 @@
+			                <div class="bbsList">
+			                    <p>총 <span th:text="${form.totalCount}" th:remove="tag">0</span>건</p>
+			                    <table>
+			                        <colgroup>
+			                            <col />
+			                            <col />
+			                        </colgroup>
+			                        <tbody>
+			                            <tr th:each="item : ${list}">
+			                                <td><span>[[${item.usernm}]] / [[${item.ceoNm}]]</span></td>
+			                                <td th:text="${#temporals.format(item.createDtm, 'yyyy-MM-dd')}">2021-04-30</td>
+			                            </tr>
+			                        </tbody>
+			                    </table>
+			                </div>
+			                <div class="bbsPaging" th:utext="${form.pagingHtml}">			                    
+			                </div>
+			                
+			                <div class="btn">
+			                    <a class="type2 lp_close" href="#">확인</a>
+			                </div>
+			                
+			                <script th:inline="javascript">
+			                	function agentPageCallback(page) {
+			                		var userid = /*[[${form.userid}]]*/ '';
+			                		var rows = /*[[${form.rows}]]*/ '';
+			                		
+			                		var formdata = {userid : userid, page: page, rows: rows};
+			                		$.get('/siteadmin/popup/agent', formdata, function(result) {
+			                			$('#lp_agent').find('div.body').html(result);
+			                		});
+			                	}
+			                </script>

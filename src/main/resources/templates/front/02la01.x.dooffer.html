@@ -1,0 +1,149 @@
+	        <!-- 레이어팝업 lp_02mb01p02 시작 -->
+	        <div id="lp_02mb01p02" class="lp_wrap type2">
+	            <div class="head">
+	                <h2>매물열람하기 (소유자 정보 확인)</h2>
+	            </div>
+	            <div class="body">
+					<!-- 공동중개 매물일 경우 아래 문구 노출   -->
+					<p class="brokerageTypeB">본 매물은 공동중개 매물입니다.</p>
+	                <p>알써니 <span class="colorB f_w_700 REQ_POINT">10,000 포인트</span> 차감 후 가능합니다.</p>
+	                <p class="txt18">(포인트 부족 시 포인트 메뉴에서 충전하세요)</p>
+	                <div class="btn">
+	                    <a href="#" class="type2 lp_close">취소</a>
+	                    <a href="#" class="type1 offerConfirm">포인트 차감</a>
+	                </div>
+	            </div>
+	            <a class="lp_close" href="#">닫기</a>
+	        </div>
+	        <!-- 레이어팝업 lp_02mb01p02 끝 -->
+	        <!-- 레이어팝업 lp_02mb01p03 시작 -->
+	        <div id="lp_02mb01p03" class="lp_wrap type2">
+	            <div class="head">
+	                <h2>매물 소유자 정보</h2>
+	            </div>
+	            <div class="body">
+	                <div class="rowBox ownerInfo ownerInfo1">
+	                    <dl>
+	                        <dt>소유자명</dt>
+	                        <dd data-field="ownerNm">-</dd>
+	                    </dl>
+	                    <dl>
+	                        <dt>연락처</dt>
+	                        <dd data-field="phone">-</dd>
+	                    </dl>
+	                    <dl>
+	                        <dt>매물 주소</dt>
+	                        <dd data-field="addr">-</dd>
+	                    </dl>
+	                </div>
+	                <div class="rowBox ownerInfo ownerInfo2">
+	                    <dl>
+	                        <dt>중개소명</dt>
+	                        <dd data-field="usernm">-</dd>
+	                    </dl>
+	                    <dl>
+	                        <dt>담당자명</dt>
+	                        <dd data-field="managerNm">-</dd>
+	                    </dl>
+	                    <dl>
+	                        <dt>담당자연락처</dt>
+	                        <dd data-field="managerPhone">-</dd>
+	                    </dl>
+	                    <dl>
+	                        <dt>중개소 주소</dt>
+	                        <dd data-field="addr">-</dd>
+	                    </dl>
+	                </div>
+	                <div class="btn">
+	                    <a href="#" class="type1 lp_close">확인</a>
+	                </div>
+	            </div>
+	            <a class="lp_close" href="#">닫기</a>
+	        </div>
+	        <!-- 레이어팝업 lp_02mb01p03 끝 -->
+
+			<script th:inline="javascript">
+			    $(document).ready(function() {
+					$('a.dooffer').click(function() {
+						var rid = $(this).data('rid');
+						$('p.brokerageTypeB').hide();
+						//alert(rid);
+						var formdata = {rid: rid};
+						$.post('/forsale/rest/checkOffer', formdata, function(result) {
+							//alert( JSON.stringify(result) );
+							if(result.code==0) {
+								$('span.REQ_POINT').text( result.data.point.toLocaleString() + ' 포인트');
+								$('a.offerConfirm').data('rid', result.data.rid);
+								if(result.data.brokerageType=='B') {	//공동중개인 경우 메시지 노출.
+									$('p.brokerageTypeB').show();
+								}
+								$("#lp_02mb01p02").openModal();
+							}
+							else if(result.code==10) {	//기열람 매물
+								$("#lp_02mb01p02").closeModal();	//확인창은 닫음.
+								//소유자정보 보여주기.
+								showOwnerInfo(result.data);
+							}
+							else {
+								$("#lp_message").message('알선하기', result.message);
+							}
+						});
+					});	//End-of-$('a.dooffer').click(function() {
+
+					$('a.offerConfirm').click(function() {
+						var rid = $(this).data('rid');
+
+						var formdata = {rid: rid};
+						$.post('/forsale/rest/dooffer', formdata, function(result) {
+							if(result.code==0) {
+								var modal = $('#lp_02mb01p03');
+								var data = result.data;
+								//화면의 사용 가능 포인트값 실시간 변경시키기.
+								//alert(data.sessionUserAvailPoint);
+								var sessionUserAvailPoint = data.sessionUserAvailPoint.toLocaleString();
+								$('.session_point').text( sessionUserAvailPoint );
+								$('.session_point_type2').text( $.validator.format('{0} P', sessionUserAvailPoint) );
+								//포인트목록 조회 함수가 있으면 실행.
+								if(typeof(pointList)=='function') pointList(1);
+
+								$("#lp_02mb01p02").closeModal();	//확인창은 닫음.
+								//소유자정보 보여주기.
+								showOwnerInfo(result.data);
+							}
+							else {
+								$("#lp_message").message('알선하기', result.message);
+							}
+						});
+					});	//End-of-$('a.dooffer').click(function() {
+
+					function showOwnerInfo(forsale) {
+						var modal = $('#lp_02mb01p03');
+						//alert( JSON.stringify(data) );
+						modal.find('dd[data-field]').text('');	//각 항목 초기화.
+						modal.find('div.ownerInfo').hide();		//공동중개인 경우랑 나머지 경우 보여주는 소유자 정보가 다름으로 인해 2개의 div로 분리 처리.
+						if(forsale.brokerageType=='B') {	//공동중개인 경우.
+							modal.find('div.ownerInfo2').show();
+							//소유자정보(등록자) 설정.
+							var data = forsale.ownerInfo;
+							modal.find('dd[data-field=usernm]').text(data.usernm);
+							modal.find('dd[data-field=managerNm]').text(data.managerNm);
+							var phone = (data.managerPhone != null && data.managerPhone.length > 0 )? data.managerPhone : data.phone;
+							modal.find('dd[data-field=managerPhone]').text(phone);
+							var addr = $.validator.format('{0} {1}', (data.addr1==null)?'':data.addr1, (data.addr2==null)?'':data.addr2);
+							modal.find('dd[data-field=addr]').text(addr);
+						}
+						else {
+							modal.find('div.ownerInfo1').show();
+							//소유자정보(매물정보의소유자) 설정.
+							var data = forsale;
+							modal.find('dd[data-field=ownerNm]').text(data.ownerNm);
+							modal.find('dd[data-field=phone]').text(data.phone);
+							var addr = $.validator.format('{0} {1}', (data.addr1==null)?'':data.addr1, (data.addr2==null)?'':data.addr2);
+							modal.find('dd[data-field=addr]').text(addr);
+						}
+
+						modal.openModal();	//소유자 정보창 오픈.
+					}
+
+			    });	//End-of-$(document).ready
+			</script>

@@ -1,0 +1,777 @@
+<!DOCTYPE HTML>
+<html lang="ko"> 
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge"><!-- IE에서만 -->
+    <meta name="viewport" content="width=device-width,initial-scale=1.0,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no">
+    <title>R.sunny</title>
+    <script type="text/javascript" src="../js/jquery-1.11.2.min.js"></script>
+    <script type="text/javascript" src="../js/jquery-ui.js"></script>
+    <script type="text/javascript" src="../js/jquery.touchSlider.js"></script>
+    <script type="text/javascript" src="../js/stateScrollObj.js"></script>
+    <script type="text/javascript" src="../js/common.js"></script>
+    <script type="text/javascript" src="../js/sub.js"></script>
+    <link rel="stylesheet" type="text/css" href="../css/jquery-ui.css">
+    <link rel="stylesheet" type="text/css" href="../css/common.css">
+    <link rel="stylesheet" type="text/css" href="../css/layout.css">
+    <link rel="stylesheet" type="text/css" href="../css/template.css">
+</head>
+<body>
+    <!--top_layout-->
+    <div id="top_layout" class="type3">
+        <header>
+            <h1 class="logo">
+                <a href="#">알써니</a>
+            </h1>
+            <h2 class="tit">
+                <a href="#">원룸ㆍ투룸</a>
+            </h2>
+            <ul class="moBtn">
+                <li class="filter_open"><a href="#"><span>필터</span></a></li>
+                <li class="gnb_open"><a href="#"><span>모바일 메뉴</span></a></li>
+            </ul>
+        </header>
+        <nav id="gnb_layout">
+            <div class="gnb_wrap">
+                <ul class="util">
+                    <li class="login"><a href="#">로그인</a></li>
+                    <li class="point"><a href="#">ㆍ보유포인트 <span>15,000</span></a></li>
+                    <li class="mypage"><a href="#">MYPAGE</a></li>
+                    <li class="sale"><a href="#">매물 내놓기</a></li>
+                </ul>
+                <ul class="gnb">
+                    <li><a href="#">원룸ㆍ투룸+</a></li>
+                    <li><a href="#">아파트ㆍ오피스텔</a></li>
+                    <li><a href="#">주택ㆍ빌라</a></li>
+                    <li><a href="#">상가ㆍ사무실</a></li>
+                    <li><a href="#">토지ㆍ건물</a></li>
+                </ul>
+                <dl class="gnb_bottom">
+                    <dt>알써니</dt>
+                    <dd class="n1"><a href="#">고객센터</a></dd>
+                    <dd class="n2"><a href="#">이용약관</a></dd>
+                    <dd class="n3"><a href="#">관리자 모드</a></dd>
+                    <dd class="n4"><a href="#">로그아웃</a></dd>
+                </dl>
+                <a class="gnb_close" href="#">닫기</a>
+            </div>
+        </nav>
+    </div>
+    <!--//top_layout-->
+    <!--gis_layout-->
+    <div id="gis_layout">
+        <!--gis_wrap-->
+        <div class="gis_wrap">
+            <div class="location">
+                <a class="gps" href="#">gps</a>
+                <a class="zoom_in" href="#">in</a>
+                <a class="zoom_out" href="#">out</a>
+                <ul>
+                    <li>서울시</li>
+                    <li>용산구</li>
+                    <li>남영동</li>
+                </ul>
+            </div>
+            <div class="gis">
+                GIS
+            </div>
+        </div>
+        <!--//gis_wrap-->
+        <!--left_wrap-->
+        <div class="left_wrap">
+            <div class="headBox">
+                <div class="banner_wrap">
+                    <a class="thumb" href="#">
+                        <img src="../img/sub/visual_img_2.png" />
+                    </a>
+                </div>
+                <!--로그인시 노출-->
+                <div class="tab_wrap type2">
+                    <ul>
+                        <li class="on"><a href="#" data-tab="tab1">전체 매물</a></li>
+                        <li><a href="#" data-tab="tab2">등록 매물</a></li>
+                        <!-- 02lb02 공인중개사 로그인시
+                        <li><a href="#" data-tab="tab2">등록/열람매물</a></li>
+                        -->
+                        <li><a href="#" data-tab="tab3">아이템 구매</a></li>
+                        <li><a href="#" data-tab="tab4">포인트 & 관리</a></li>
+                    </ul>
+                </div>
+                <!--//로그인시 노출-->
+            </div>
+            <!--tab1-->
+            <div class="tabCon_wrap tab1 on">
+                <h2>원룸ㆍ투룸1 <span><em>25</em>건 매물</span></h2>
+                <ul class="list">
+                    <li class="ad">
+                        <a class="menu" href="#">
+                            <span class="thumb">
+                                <img src="../img/sub/visual_img_2.png" />
+                            </span>
+                            <span class="info">
+                                <span class="won">
+                                    <em>매매</em>
+                                    9억 4000만원
+                                </span>
+                                <span class="txt">아늑하고 넓은 투룸 ~</span>
+                                <span class="address">전남 여수시 미평동 | 아파트매매</span>
+                                <span class="detail">34.6㎡(11평) | 34.6㎡(11평)</span>
+                            </span>
+                        </a>
+                    </li>
+                    <li>
+                        <a class="menu" href="#">
+                            <span class="thumb">
+                                <img src="../img/sub/visual_img_1.png" />
+                            </span>
+                            <span class="info">
+                                <span class="won">
+                                    <em>매매</em>
+                                    9억 4000만원
+                                </span>
+                                <span class="txt">아늑하고 넓은 투룸 ~</span>
+                                <span class="address">전남 여수시 미평동 | 아파트매매</span>
+                                <span class="detail">34.6m2(11평) | 34.6m2(11평)</span>
+                            </span>
+                        </a>
+                    </li>
+                    <li>
+                        <a class="menu" href="#">
+                            <span class="thumb">
+                                <img src="../img/sub/visual_img_1.png" />
+                            </span>
+                            <span class="info">
+                                <span class="won">
+                                    <em>매매</em>
+                                    9억 4000만원
+                                </span>
+                                <span class="txt">아늑하고 넓은 투룸 ~</span>
+                                <span class="address">전남 여수시 미평동 | 아파트매매</span>
+                                <span class="detail">34.6m2(11평) | 34.6m2(11평)</span>
+                            </span>
+                        </a>
+                    </li>
+                    <li>
+                        <a class="menu" href="#">
+                            <span class="thumb">
+                                <img src="../img/sub/visual_img_1.png" />
+                            </span>
+                            <span class="info">
+                                <span class="won">
+                                    <em>매매</em>
+                                    9억 4000만원
+                                </span>
+                                <span class="txt">아늑하고 넓은 투룸 ~</span>
+                                <span class="address">전남 여수시 미평동 | 아파트매매</span>
+                                <span class="detail">34.6m2(11평) | 34.6m2(11평)</span>
+                            </span>
+                        </a>
+                    </li>
+                    <li>
+                        <a class="menu" href="#">
+                            <span class="thumb">
+                                <img src="../img/sub/visual_img_1.png" />
+                            </span>
+                            <span class="info">
+                                <span class="won">
+                                    <em>매매</em>
+                                    9억 4000만원
+                                </span>
+                                <span class="txt">아늑하고 넓은 투룸 ~</span>
+                                <span class="address">전남 여수시 미평동 | 아파트매매</span>
+                                <span class="detail">34.6m2(11평) | 34.6m2(11평)</span>
+                            </span>
+                        </a>
+                    </li>
+                </ul>
+                <ul class="paging">
+                    <li class="prev"><a href="#">이전</a></li>
+                    <li class="num on"><a href="#">1</a></li>
+                    <li class="num"><a href="#">2</a></li>
+                    <li class="num"><a href="#">3</a></li>
+                    <li class="num"><a href="#">4</a></li>
+                    <li class="next"><a href="#">다음</a></li>
+                </ul>
+            </div>
+            <!--//tab1-->
+            <!--tab2-->
+            <div class="tabCon_wrap tab2">
+                <h2>원룸ㆍ투룸 <span><em>25</em>건 매물</span></h2>
+                <ul class="list">
+                    <li class="ad">
+                        <a class="menu" href="#">
+                            <span class="thumb">
+                                <img src="../img/sub/visual_img_2.png" />
+                            </span>
+                            <span class="info">
+                                <span class="won">
+                                    <em>매매</em>
+                                    9억 4000만원
+                                </span>
+                                <span class="txt">아늑하고 넓은 투룸 ~</span>
+                                <span class="address">전남 여수시 미평동 | 아파트매매</span>
+                                <span class="detail">34.6m2(11평) | 34.6m2(11평)</span>
+                            </span>
+                        </a>
+                        <div class="util">
+                            <a href="#">메뉴열기</a>
+                            <div class="util_list">
+                                <a href="#">광고설정</a>
+                                <a href="#">노출/비노출</a>
+                                <a href="#">편집</a>
+                            </div>
+                        </div>
+                    </li>
+                    <li>
+                        <a class="menu" href="#">
+                            <span class="thumb">
+                                <img src="../img/sub/visual_img_1.png" />
+                            </span>
+                            <span class="info">
+                                <span class="won">
+                                    <em>매매</em>
+                                    9억 4000만원
+                                </span>
+                                <span class="txt">아늑하고 넓은 투룸 ~</span>
+                                <span class="address">전남 여수시 미평동 | 아파트매매</span>
+                                <span class="detail">34.6m2(11평) | 34.6m2(11평)</span>
+                            </span>
+                        </a>
+                        <div class="util">
+                            <a href="#">메뉴열기</a>
+                            <div class="util_list">
+                                <a href="#">광고설정</a>
+                                <a href="#">노출/비노출</a>
+                                <a href="#">편집</a>
+                            </div>
+                        </div>
+                    </li>
+                    <li>
+                        <a class="menu" href="#">
+                            <span class="thumb">
+                                <img src="../img/sub/visual_img_1.png" />
+                            </span>
+                            <span class="info">
+                                <span class="won">
+                                    <em>매매</em>
+                                    9억 4000만원
+                                </span>
+                                <span class="txt">아늑하고 넓은 투룸 ~</span>
+                                <span class="address">전남 여수시 미평동 | 아파트매매</span>
+                                <span class="detail">34.6m2(11평) | 34.6m2(11평)</span>
+                            </span>
+                        </a>
+                        <div class="util">
+                            <a href="#">메뉴열기</a>
+                            <div class="util_list">
+                                <a href="#">광고설정</a>
+                                <a href="#">노출/비노출</a>
+                                <a href="#">편집</a>
+                            </div>
+                        </div>
+                    </li>
+                    <li>
+                        <a class="menu" href="#">
+                            <span class="thumb">
+                                <img src="../img/sub/visual_img_1.png" />
+                            </span>
+                            <span class="info">
+                                <span class="won">
+                                    <em>매매</em>
+                                    9억 4000만원
+                                </span>
+                                <span class="txt">아늑하고 넓은 투룸 ~</span>
+                                <span class="address">전남 여수시 미평동 | 아파트매매</span>
+                                <span class="detail">34.6m2(11평) | 34.6m2(11평)</span>
+                            </span>
+                        </a>
+                        <div class="util">
+                            <a href="#">메뉴열기</a>
+                            <div class="util_list">
+                                <a href="#">광고설정</a>
+                                <a href="#">노출/비노출</a>
+                                <a href="#">편집</a>
+                            </div>
+                        </div>
+                    </li>
+                    <li>
+                        <a class="menu" href="#">
+                            <span class="thumb">
+                                <img src="../img/sub/visual_img_1.png" />
+                            </span>
+                            <span class="info">
+                                <span class="won">
+                                    <em>매매</em>
+                                    9억 4000만원
+                                </span>
+                                <span class="txt">아늑하고 넓은 투룸 ~</span>
+                                <span class="address">전남 여수시 미평동 | 아파트매매</span>
+                                <span class="detail">34.6m2(11평) | 34.6m2(11평)</span>
+                            </span>
+                        </a>
+                        <div class="util">
+                            <a href="#">메뉴열기</a>
+                            <div class="util_list">
+                                <a href="#">광고설정</a>
+                                <a href="#">노출/비노출</a>
+                                <a href="#">편집</a>
+                            </div>
+                        </div>
+                    </li>
+                </ul>
+                <ul class="paging">
+                    <li class="prev"><a href="#">이전</a></li>
+                    <li class="num on"><a href="#">1</a></li>
+                    <li class="num"><a href="#">2</a></li>
+                    <li class="num"><a href="#">3</a></li>
+                    <li class="num"><a href="#">4</a></li>
+                    <li class="next"><a href="#">다음</a></li>
+                </ul>
+            </div>
+            <!--//tab2-->
+            <!--tab3-->
+            <div class="tabCon_wrap tab3">
+                <h2>광고아이템 적용은<br>보유 포인트내에서<br>전환하여 사용 가능 합니다.</h2>
+                <!--itemList_wrap-->
+                <div class="itemList_wrap">
+                    <!--itemBox-->
+                    <div class="itemBox type1">
+                        <h3>광고아이템1</h3>
+                        <p>등록 및 열람 매물을 목록 상단으로 노출 하는 상품.<br>매물 주소지 목록에서만 적용 됨. </p>
+                        <ul>
+                            <li>구매 시 보유 포인트에서 차감 됩니다.</li> 
+                            <li>아이템 1개당 1개의 매물에 적용.</li>
+                            <li>적용기간은 10일 간 적용(자정 기준)</li>
+                            <li>적용기간 내 적용 취소 시 아이템 소멸.</li>
+                            <li>구매 후 1일 이상 사용 시 환불 불가능.</li>
+                        </ul>
+                        <div class="buyBox">
+                            <dl>
+                                <dt>보유 포인트</dt>
+                                <dd>20,000 P</dd>
+                            </dl>
+                            <dl>
+                                <dt>구매 수량</dt>
+                                <dd>
+                                    <div class="selectBox">
+                                        <select>
+                                            <option>1</option>
+                                            <option>2</option>
+                                            <option>3</option>
+                                            <option>4</option>
+                                            <option>5</option>
+                                        </select>
+                                    </div>
+                                    <p>20,000원</p>
+                                </dd>
+                            </dl>
+                        </div>
+                        <div class="btn_wrap">
+                            <a href="#">아이템 전환</a>
+                        </div>
+                    </div>
+                    <!--//itemBox-->
+                    <!--itemBox-->
+                    <div class="itemBox type1">
+                        <h3>광고아이템2</h3>
+                        <p>공인중개사 목록에서 상단으로 노출되는 광고 상품.</p>
+                        <ul>
+                            <li>구매 시 보유 포인트에서 차감. </li>
+                            <li>매물 유형별로 적용 (유형별 별도 구매)</li>
+                            <li>적용기간은 10일 간 적용 (자정 기준)</li>
+                            <li>구매 시 즉시 적용되며, 적용 취소 및 환불은 불가능.</li>
+                        </ul>
+                        <div class="buyBox">
+                            <dl>
+                                <dt>보유 포인트</dt>
+                                <dd>20,000 P</dd>
+                            </dl>
+                            <dl>
+                                <dt>매물유형</dt>
+                                <dd>
+                                    <div class="selectBox">
+                                        <select>
+                                            <option>원룸ㆍ투룸+</option>
+                                            <option>2</option>
+                                            <option>3</option>
+                                            <option>4</option>
+                                            <option>5</option>
+                                        </select>
+                                    </div>
+                                    <p>20,000원</p>
+                                </dd>
+                            </dl>
+                        </div>
+                        <div class="btn_wrap">
+                            <a href="#">아이템 전환</a>
+                        </div>
+                    </div>
+                    <!--//itemBox-->
+                </div>
+                <!--//itemList_wrap-->
+            </div>
+            <!--//tab3-->
+            <!--tab4-->
+            <div class="tabCon_wrap tab4">
+                <div class="tit_wrap">
+                    <h2>알써니 포인트관리</h2>
+                    <p>김써니(아이디)</p>
+                    <div class="infoBox">
+                        <ul>
+                            <li>abcd@efgh.com</li>
+                            <li>010-0000-0000</li>
+                        </ul>
+                        <a href="#">편집</a>
+                    </div>
+                    <div class="pointBox">
+                        <dl>
+                            <dt>누적 포인트</dt>
+                            <dd>
+                                <p>10,000 P</p>
+                                <div class="btn">
+                                    <a href="#">충전 신청</a>
+                                    <a href="#">출금 신청</a>
+                                </div>
+                            </dd>
+                        </dl>
+                    </div>
+                </div>
+                <div class="pointList_wrap">
+                    <div class="titBox">
+                        <h2>포인트 내역</h2>
+                        <div class="typeBox">
+                            <div id="pointType" class="selectBox">
+                                <select>
+                                    <option value="0">전체내역</option>
+                                    <option value="1">적립내역</option>
+                                    <option value="2">사용내역</option>
+                                    <option value="3">충전내역</option>
+                                </select>
+                            </div>
+                            <div id="buyList" class="selectBox">
+                                <select>
+                                    <option>매물선택(전체)</option>
+                                    <option>2</option>
+                                    <option>3</option>
+                                    <option>4</option>
+                                    <option>5</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <ul class="listBox">
+                        <li>
+                           <p class="date">2020.12.30</p> 
+                           <p class="txt">미래 부동산</p>
+                           <p class="point">
+                               <span>열람</span>
+                               +1,000 P
+                           </p>
+                        </li>
+                        <li>
+                           <p class="date">2020.12.30</p> 
+                           <p class="txt">다랑이 중개관리자무소</p>
+                           <p class="point">
+                               <span>열람</span>
+                               +1,000 P
+                           </p>
+                        </li>
+                        <li>
+                           <p class="date">2020.12.30</p> 
+                           <p class="txt">아이템1 구매 2건</p>
+                           <p class="point">
+                               <span>사용</span>
+                               -1,000 P
+                           </p>
+                        </li>
+                        <li>
+                           <p class="date">2020.12.30</p> 
+                           <p class="txt">포인트 출금</p>
+                           <p class="point">
+                               <span>열람</span>
+                               -1,000 P
+                           </p>
+                        </li>
+                    </ul>
+                    <ul class="paging">
+                        <li class="prev"><a href="#">이전</a></li>
+                        <li class="num"><a href="#">1</a></li>
+                        <li class="num"><a href="#">2</a></li>
+                        <li class="num"><a href="#">3</a></li>
+                        <li class="num"><a href="#">4</a></li>
+                        <li class="next"><a href="#">다음</a></li>
+                    </ul>
+                </div>
+            </div>
+            <!--//tab4-->
+        </div>
+        <!--//left_wrap-->
+        <!--filter_wrap-->
+        <div class="filter_wrap on">
+            <a href="#">원룸ㆍ투룸+</a>
+            <div class="filterBox">
+                <div class="checkBox">
+                    <div class="txtRadio">
+                        <input id="filter_ck_1" type="checkbox">
+                        <label for="filter_ck_1">원룸</label>
+                    </div>
+                    <div class="txtRadio">
+                        <input id="filter_ck_2" type="checkbox">
+                        <label for="filter_ck_2">투룸</label>
+                    </div>
+                    <div class="txtRadio">
+                        <input id="filter_ck_3" type="checkbox">
+                        <label for="filter_ck_3">쓰리룸 +</label>
+                    </div>
+                    <div class="txtRadio">
+                        <input id="filter_ck_4" type="checkbox">
+                        <label for="filter_ck_4">매매</label>
+                    </div>
+                    <div class="txtRadio">
+                        <input id="filter_ck_5" type="checkbox">
+                        <label for="filter_ck_5">전세</label>
+                    </div>
+                    <div class="txtRadio">
+                        <input id="filter_ck_6" type="checkbox">
+                        <label for="filter_ck_6">월세</label>
+                    </div>
+                </div>
+                <div class="input_wrap">
+                    <dl>
+                        <dt>매매·보증·전세금</dt>
+                        <dd class="rangeBox">
+                            <input type="text" placeholder="만 단위" />
+                            <span>~</span>
+                            <input type="text" placeholder="만 단위" />
+                        </dd>
+                    </dl>
+                    <dl>
+                        <dt>월세</dt>
+                        <dd class="rangeBox">
+                            <input type="text" placeholder="만 단위" />
+                            <span>~</span>
+                            <input type="text" placeholder="만 단위" />
+                        </dd>
+                    </dl>
+                    <dl>
+                        <dt>전용면적</dt>
+                        <dd class="rangeBox">
+                            <input type="text" placeholder="㎡ 단위" />
+                            <span>~</span>
+                            <input type="text" placeholder="㎡ 단위" />
+                        </dd>
+                    </dl>
+                    <dl>
+                        <dt>준공년도</dt>
+                        <dd class="rangeBox">
+                            <input type="text" placeholder="년 단위" />
+                            <span>~</span>
+                            <input type="text" placeholder="년 단위" />
+                        </dd>
+                    </dl>
+                    <dl>
+                        <dt>입주 시점</dt>
+                        <dd class="selectBox">
+                            <select>
+                                <option>선택</option>
+                                <option>1</option>
+                                <option>2</option>
+                                <option>3</option>
+                            </select>
+                        </dd>
+                    </dl>
+                </div>
+                <div class="btn_wrap">
+                    <a href="#">매물검색</a>
+                </div>
+            </div>
+        </div>
+        <!--//filter_wrap-->
+        <!--detail_wrap-->
+        <div class="detail_wrap">
+             <div class="saleNum">
+                <p>매물번호<span>NCT 102412</span></p>
+                <a href="#">닫기</a>
+             </div>
+             <div class="btn_wrap">
+                 <div class="left">
+                    <!--일반사용자 로그인시 노출-->
+                    <a href="#" class="gislp_open" data-lp="broker">알선받기</a>
+                    <!--//일반사용자 로그인시 노출-->
+                    <!--공인중개사 로그인시 노출-->
+                    <a href="#">알선하기</a>
+                    <!--//공인중개사 로그인시 노출-->
+                    <!--일반사용자&공인중개사 보인매물시 노출-->
+                    <a href="#">편집</a>
+                    <a href="#">광고</a>
+                    <!--//일반사용자&공인중개사 보인매물시 노출-->
+                </div>
+                 <div class="right">
+                     <!--일반사용자 로그인시만 노출-->
+                    <a class="report gislp_open" data-lp="report" href="#">신고하기</a>
+                    <!--//일반사용자 로그인시만 노출-->
+                    <div class="share">
+                        <a href="#">공유하기</a>
+                        <div class="sns">
+                            <a class="n1" href="#">페이스북</a>
+                            <a class="n2" href="#">인스타그램</a>
+                            <a class="n3" href="#">카카오톡</a>
+                        </div>
+                    </div>
+                 </div>
+             </div>
+             <div id="slide_detail" class="slide_wrap">
+                <div class="sliderBox">
+                    <ul>
+                        <li class="thumb"><img src="../img/sub/visual_img_2.png" /></li>
+                        <li class="thumb"><img src="../img/sub/visual_img_2.png" /></li>
+                        <li class="thumb"><img src="../img/sub/visual_img_2.png" /></li>
+                    </ul>
+                </div>
+                <div class="controlBox">
+                    <button type="button" class="btn_prev">이전</button>
+                    <button type="button" class="btn_next">다음</button>
+                </div>
+             </div>
+             <div class="tag_wrap">
+                <p>#반려동물</p>
+                <p>#단기가능</p>
+                <p>#1년가능</p>
+             </div>
+             <div class="info_wrap">
+                 <dl>
+                     <dt>월세 보200 / 월35</dt>
+                     <dd>서울시 강남구 삼성동</dd>
+                     <dd>원룸 | 면적 33m2 | 2층 | 남동향 | 공용주차</dd>
+                     <dd>엘리베이터 있음 | 준공 2020년 | 입주협의</dd>
+                     <dd>반려동물 가능 | 단기 월 55만원 (2개월 이상)</dd>
+                 </dl>
+                 <dl>
+                     <dt>관리비 5만원</dt>
+                     <dd>수도세, 인터넷, 인터넷TV, 공용전기, 공용청소, 엘리베이터</dd>
+                 </dl>
+                 <dl>
+                     <dt>옵션</dt>
+                     <dd>에어컨, 냉장고, 세탁기, 인덕션, 붙박이장, 신발장</dd>
+                 </dl>
+                 <dl>
+                     <dt>위치정보</dt>
+                     <dd>서울시 강남구 삼성동</dd>
+                     <dd class="map"><img src="../img/sub/map.PNG" /></dd>
+                 </dl>
+             </div>
+        </div>
+        <!--//detail_wrap-->
+            <!--broker_wrap-->
+            <div class="broker_wrap lp_gis">
+                <div class="head">
+                    <h2>알선받기</h2>
+                </div>
+                <div class="body">
+                    <ul>
+                        <li>
+                            <div class="radioBox">
+                                <input id="id_broker1" type="checkbox">
+                                <label for="id_broker1">선택</label>
+                            </div>
+                            <a href="#">황금토지 부동산</a>
+                            <p>010-4266-1236</p>
+                        </li>
+                        <li>
+                            <a href="#">한겨례 부동산</a>
+                            <p>010-4266-1236</p>
+                        </li>
+                        <li>
+                            <a href="#">마음두가지 공인중개사</a>
+                            <p>010-4266-1236</p>
+                        </li>
+                        <li>
+                            <div class="radioBox">
+                                <input id="id_broker4" type="checkbox">
+                                <label for="id_broker4">선택</label>
+                            </div>
+                            <a href="#">강남 0번지 공인중개사</a>
+                            <p>010-4266-1236</p>
+                        </li>
+                        <li>
+                            <div class="radioBox">
+                                <input id="id_broker5" type="checkbox">
+                                <label for="id_broker5">선택</label>
+                            </div>
+                            <a href="#">새희망새빛 부동산</a>
+                            <p>010-4266-1236</p>
+                        </li>
+                        <li>
+                            <div class="radioBox">
+                                <input id="id_broker6" type="checkbox">
+                                <label for="id_broker6">선택</label>
+                            </div>
+                            <a href="#">6새희망새빛 부동산</a>
+                            <p>010-4266-1236</p>
+                        </li>
+                        <li>
+                            <div class="radioBox">
+                                <input id="id_broker7" type="checkbox">
+                                <label for="id_broker7">선택</label>
+                            </div>
+                            <a href="#">7새희망새빛 부동산</a>
+                            <p>010-4266-1236</p>
+                        </li>
+                    </ul>
+                    <div class="btn">
+                        <a href="#" class="type1">확인</a>
+                    </div>
+                </div>
+                <a href="#" class="wrap_close" data-lp="broker">닫기</a>
+            </div>
+            <!--//broker_wrap-->
+            <!--report_wrap-->
+            <div class="report_wrap lp_gis">
+                <div class="head">
+                    <h2>신고하기(일반)</h2>
+                </div>
+                <div class="body">
+                    <h3>매물번호  NO44444434</h3>
+                    <div class="inputBox">
+                        <ul>
+                            <li>
+                                <label for="id_report1">해당 중개사</label>
+                                <div class="selectBox">
+                                    <select id="id_report1">
+                                        <option>미소공인중개사무소</option>
+                                        <option>2</option>
+                                        <option>3</option>
+                                        <option>4</option>
+                                    </select>
+                                </div>
+                            </li>
+                            <li>
+                                <label for="id_report2">신고유형</label>
+                                <div class="selectBox">
+                                    <select id="id_report2">
+                                        <option>신고 유형을 선택하세요.</option>
+                                        <option>2</option>
+                                        <option>3</option>
+                                        <option>4</option>
+                                    </select>
+                                </div>
+                            </li>
+                            <li>
+                                <label for="id_report3">기타사항</label>
+                                <textarea id="id_report3" placeholder="기타사항"></textarea>
+                            </li>
+                        </ul>
+                        <div class="btn">
+                            <a href="#" class="type2">취소</a>
+                            <a href="#" class="type1">신고하기</a>
+                        </div>
+                    </div>
+                </div>
+                <a href="#" class="wrap_close" data-lp="report">닫기</a>
+            </div>
+            <!--//report_wrap-->
+    </div>
+    <!--//gis_layout-->
+</body>
+</html>
+

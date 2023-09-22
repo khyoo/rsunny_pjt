@@ -1,0 +1,56 @@
+		        	<form id="frmPoint" name="frmPoint" method="get" action="#">
+                    <div class="titBox">
+                        <h2>포인트 내역</h2>
+                        <div class="typeBox">
+                            <div id="pointType" class="selectBox">
+                                <select id="frontType" name="frontType">
+                                    <option value="">전체내역</option>
+                                    <option value="IS" th:selected="${form.frontType=='IS'}">적립내역</option>
+                                    <option value="O" th:selected="${form.frontType=='O'}">사용내역</option>
+                                    <option value="ID" th:selected="${form.frontType=='ID'}">충전내역</option>
+                                </select>
+                            </div>
+                            <div id="buyList" class="selectBox">
+                                <select>
+                                    <option>매물선택(전체)</option>
+                                    <!-- 
+                                    <option>2</option>
+                                    <option>3</option>
+                                    <option>4</option>
+                                    <option>5</option>
+                                     -->
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    </form>
+                    <ul class="listBox tab4_list" th:inline="text">
+                    	<li class="ad" th:each="item : ${list}">
+                           <p class="date" th:text="${#temporals.format(item.createDtm, 'yyyy-MM-dd')}">2020.12.30</p> 
+                           <p class="txt">[[${item.detailRemark}]]</p>
+                           <p class="point">
+                               <span class="type1">[[${item.inoutDetailNm2}]]</span>
+                               [[${item.pointSign}]][[${#numbers.formatDecimal( item.point, 0, 'COMMA', 0, 'POINT')}]] P
+                           </p>
+                        </li>
+                    </ul>
+	                <ul class="paging" th:utext="${form.pagingHtml}">
+	                </ul>
+                </div>
+<script>
+	function pointList(page) {
+		var formdata = $('#frmPoint').serializeObject();
+		formdata.page = page;
+		$.get('/forsale/tab4', formdata, function(result) {
+			//alert(result);
+			$('div.pointList_wrap').html(result);
+			$( ".selectBox select" ).selectmenu();
+		});
+	}
+	
+	$( "#pointType select" ).selectmenu({
+		change:function(event,data){
+			pointList(1);
+		}
+	});
+</script>

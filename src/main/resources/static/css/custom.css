@@ -1,0 +1,30 @@
+.error {
+	color: red !important;
+}
+
+input.year {
+	text-align: center !important;
+}
+
+#lp_forsale{ width: 460px;}
+#lp_layout #lp_forsale .body{ padding-top: 20px;}
+#lp_forsale .bbsList{ margin-top: 0;}
+#lp_forsale .bbsList td:last-child{ text-align: right; padding-right: 30px;}
+
+#lp_item{ width: 460px;}
+#lp_layout #lp_item .body{ padding-top: 20px;}
+#lp_item .bbsList{ margin-top: 0;}
+#lp_item .bbsList p.between{ display: flex; justify-content: space-between;}
+#lp_item .bbsList td:last-child{ text-align: right; padding-right: 30px;}
+
+#lp_point{ width: 460px;}
+#lp_layout #lp_point .body{ padding-top: 20px;}
+#lp_point .bbsList{ margin-top: 0;}
+#lp_point .bbsList td:last-child{ text-align: right; padding-right: 30px;}
+
+#lp_agent{ width: 460px;}
+#lp_layout #lp_agent .body{ padding-top: 20px;}
+#lp_agent .bbsList{ margin-top: 0;}
+#lp_agent .bbsList td:last-child{ text-align: right; padding-right: 30px;}
+
+.report_wrap{ width: 430px; height: 593px; background-color: #fff; display: none;}

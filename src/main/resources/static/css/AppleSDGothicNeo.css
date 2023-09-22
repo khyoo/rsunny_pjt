@@ -1,0 +1,40 @@
+/*
+@font-face {
+  font-family: 'asg';
+  font-style: normal;
+  font-weight: 100;
+  src: url(AppleSDGothicNeo/AppleSDGothicNeo-Thin.woff) format('woff');
+}
+@font-face {
+  font-family: 'asg';
+  font-style: normal;
+  font-weight: 300;
+  src: url(AppleSDGothicNeo/AppleSDGothicNeo-Light.woff) format('woff');
+}
+@font-face {
+   font-family: 'asg';
+   font-style: normal;
+   font-weight: 400;
+   src: url(AppleSDGothicNeo/AppleSDGothicNeo-Regular.woff) format('woff');
+ }
+@font-face {
+   font-family: 'asg';
+   font-style: normal;
+   font-weight: 500;
+   src: url(AppleSDGothicNeo/AppleSDGothicNeo-Medium.woff) format('woff');
+ }
+ */
+@font-face {
+   font-family: 'asg';
+   font-style: normal;
+   font-weight: 700;
+   src: url(AppleSDGothicNeo/AppleSDGothicNeo-Bold.woff) format('woff');
+ }
+ /*
+@font-face {
+   font-family: 'asg';
+   font-style: normal;
+   font-weight: 900;
+   src: url(AppleSDGothicNeo/AppleSDGothicNeo-Black.woff) format('woff');
+ }
+ */

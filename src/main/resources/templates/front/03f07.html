@@ -1,0 +1,200 @@
+<!DOCTYPE HTML>
+<html lang="ko">
+<head>
+	<th:block th:replace="layout/fragments/front/head :: headFragment"></th:block>
+	<!-- Global site tag (gtag.js) - Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-6EHV3KH3XT"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-6EHV3KH3XT');
+</script>
+</head>
+<body>
+    <!--top_layout-->
+    <div id="top_layout" class="type2">
+		<th:block th:replace="layout/fragments/front/header :: headerFragment"></th:block>
+    </div>
+    <!--//top_layout-->
+    <!--body_layout-->
+    <div id="body_layout">
+        <!--visual_wrap-->
+        <div class="visual_wrap">
+            <div class="inner type3">
+                <h2><strong>알써니</strong> 매물 관리</h2>
+                <p>내가 등록하고 누적 포인트는 수익금으로<br>진정한 거래의 기본, 알써니!</p>
+            </div>
+        </div>
+        <!--//visual_wrap-->
+        <!--step_wrap-->
+        <div class="step_wrap type2">
+            <div class="inner type3">
+                <dl class="on">
+                    <dt>1</dt>
+                    <dd>매물 기본정보</dd>
+                </dl>
+                <dl>
+                    <dt>2</dt>
+                    <dd>매물 상세/옵션</dd>
+                </dl>
+                <dl>
+                    <dt>3</dt>
+                    <dd>사진/개인정보</dd>
+                </dl>
+                <dl>
+                    <dt>4</dt>
+                    <dd>매물 등록완료</dd>
+                </dl>
+            </div>
+        </div>
+        <!--//step_wrap-->
+        <!--saleNum_wrap-->
+        <div class="saleNum_wrap">
+            <div class="inner type3">
+                <dl>
+                    <dt>
+                        매물번호  <span>N0203212</span>
+                    </dt>
+                    <dd>
+                        <a href="#">삭제</a>
+                        <a href="#">비노출</a>
+                    </dd>
+                </dl>
+            </div>
+        </div>
+        <!--//saleNum_wrap-->
+        <!--h3_wrap-->
+        <div class="h3_wrap">
+            <div class="inner type3">
+                <div class="tit_wrap">
+                    <h3>매물 & 거래 유형 <span>(필수)</span></h3>
+                </div>
+                <div class="con_wrap type_radio">
+                    <div class="txtRadio">
+                        <input id="id_03f03_2_1" name="id_03f03_2" type="radio" checked>
+                        <label for="id_03f03_2_1">원룸</label>
+                    </div>
+                    <div class="txtRadio">
+                        <input id="id_03f03_2_2" name="id_03f03_2" type="radio">
+                        <label for="id_03f03_2_2">투룸</label>
+                    </div>
+                    <div class="txtRadio">
+                        <input id="id_03f03_2_3" name="id_03f03_2" type="radio">
+                        <label for="id_03f03_2_3">쓰리룸 +</label>
+                    </div>
+                    <div class="txtRadio">
+                        <input id="id_03f03_3_1" name="id_03f03_3" type="radio" checked>
+                        <label for="id_03f03_3_1">매매</label>
+                    </div>
+                    <div class="txtRadio">
+                        <input id="id_03f03_3_2" name="id_03f03_3" type="radio">
+                        <label for="id_03f03_3_2">월세</label>
+                    </div>
+                    <div class="txtRadio">
+                        <input id="id_03f03_3_3" name="id_03f03_3" type="radio">
+                        <label for="id_03f03_3_3">전세</label>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!--//h3_wrap-->
+        <div class="inner type3">
+            <hr />
+        </div>
+        <!--h3_wrap-->
+        <div class="h3_wrap">
+            <div class="inner type3">
+                <div class="tit_wrap">
+                    <h3>거래금액</h3>
+                </div>
+                <div class="con_wrap">
+                    <!--input_wrap-->
+                    <div class="input_wrap col2 interval_42">
+                        <ul>
+                            <li>
+                                <label for="id_03f03_4">금액 <span>(필수)</span></label>
+                                <div class="flexBox flex_42">
+                                    <input id="id_03f03_4" type="text" placeholder="만 단위">
+                                    <p>만원</p>
+                                </div>
+                                <p>매매금, 전세금, 보증금, 분양금액 해당사항 입력</p>
+                            </li>
+                            <li>
+                                <label for="id_03f03_5">관리비</label>
+                                <div class="flexBox flex_42">
+                                    <input id="id_03f03_5" type="text" placeholder="만 단위">
+                                    <p>만원</p>
+                                </div>
+                                <div class="radioBox">
+                                    <input id="id_03f03_6" type="checkbox">
+                                    <label for="id_03f03_6">관리비 없음</label>
+                                </div>
+                            </li>
+                            <li>
+                                <label for="id_03f03_7">월세</label>
+                                <div class="flexBox flex_42">
+                                    <input id="id_03f03_7" type="text" placeholder="만 단위">
+                                    <p>만원</p>
+                                </div>
+                            </li>
+                            <li>
+                                <label for="id_03f03_8">포함 항목</label>
+                                <div class="flexBox flex_bill">
+                                    <input id="id_03f03_8" type="text" placeholder="단어로 입력">
+                                    <a href="#">추가</a>
+                                </div>
+                                <p>옵션 추가 하거나 선택해 주세요.</p>
+                                <div class="billBox">
+                                    <a href="#">수도세</a>
+                                    <a href="#">전기세</a>
+                                    <a href="#">도시가스</a>
+                                    <a href="#">공용전기</a>
+                                    <a href="#">인터넷</a>
+                                    <a href="#">TV</a>
+                                </div>
+                            </li>
+                            <li>
+                                <label for="id_03f03_9">단기 시</label>
+                                <div class="flexBox flex_42">
+                                    <input id="id_03f03_9" type="text" placeholder="만 단위">
+                                    <p>만원</p>
+                                </div>
+                                <div class="flexBox flex_term">
+                                    <div class="radioBox">
+                                        <input id="id_03f03_10" type="checkbox">
+                                        <label for="id_03f03_10">관리비 없음</label>
+                                    </div>
+                                    <div class="termBox">
+                                        <label for="id_03f03_11">최소</label>
+                                        <div class="flexBox flex_42">
+                                            <input id="id_03f03_11" type="text" placeholder="1">
+                                            <p>개월</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </li>
+                        </ul>
+                    </div>
+                    <!--//input_wrap-->
+                </div>
+            </div>
+        </div>
+        <!--//h3_wrap-->
+
+        <!--btn_wrap-->
+        <div class="btn_wrap">
+            <a href="#" class="type2">이전</a>
+            <a href="#" class="type1">다음</a>
+        </div>
+        <!--//btn_wrap-->
+    </div>
+    <!--//body_layout-->
+    <!--foot_layout-->
+    <div id="foot_layout">
+		<th:block th:replace="layout/fragments/front/footer :: footerFragment"></th:block>
+    </div>
+    <!--//foot_layout-->
+</body>
+</html>

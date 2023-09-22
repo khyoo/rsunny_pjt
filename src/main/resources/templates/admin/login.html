@@ -1,0 +1,90 @@
+<!DOCTYPE HTML>
+<html lang="ko"> 
+<head>
+	<meta charset="utf-8" />
+	<meta http-equiv="X-UA-Compatible" content="IE=edge"><!-- IE에서만 -->
+	<meta name="viewport" content="width=device-width,initial-scale=1.0,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no">
+	<title>R.sunny CMS 관리시스템</title>
+	<link rel="stylesheet" type="text/css" href="/css/common.css">
+	<link rel="stylesheet" type="text/css" href="/css/admin.css">
+	
+	<script type="text/javascript" src="/js/jquery-1.11.2.min.js"></script>
+	<script type="text/javascript" src="/js/jquery-ui.js"></script>
+	<script type="text/javascript" src="/js/admin.js"></script>
+	<script th:src="@{/js/jquery.validate.min.js}"></script>
+	<script th:src="@{/js/common-form.js}"></script>
+
+	<script>
+	    $(document).ready(function() {
+		    $.extend(jQuery.validator.messages, {
+		        required: "(필수)"
+		    });
+		    
+	    	//필수값 체크.
+	    	$('#frmLogin').validate({
+	    		wrapper: 'div',
+				rules: {
+					userid: 'required',
+					passwd: 'required'
+				}
+	    	});
+	    	
+	    	//엔터키 처리.
+	    	$('input').keypress(function(event) {
+	    		if(event.keyCode==13) {
+	    			if( $(this).attr('name')=='userid' ) {
+	    				$('#passwd').focus();
+	    			}
+	    			else if( $(this).attr('name')=='passwd' ) {
+	    				$('input.login').trigger('click');
+	    			}
+	    		}
+	    	})
+	
+	    	//로그인 버튼 처리.
+			$('a.login').click(function() {
+	    		if( !$('#frmLogin').valid() ) return;
+	    		
+	    		var formdata = $('#frmLogin').serializeObject();
+	    		//alert(JSON.stringify(formdata));
+	    		$.post('/siteadmin/rest/checkLogin', formdata, function(result) {
+	    			if(result.code == 0) {
+	    				location.href = '/siteadmin';
+	    			}
+	    			else {
+	    				alert(result.message);
+	    			}
+	    		});
+			});	//End-of-$('input.login').click
+			
+	    });	//End-of-$(document).ready
+	</script>
+
+</head>
+<body>
+    <div id="login">
+        <div class="head">
+            <h1>R.sunny CMS 관리시스템</h1>
+        </div>
+        <div class="body">
+			<form id="frmLogin" name="frmLogin" th:action="@{/login}" method="post" onsubmit="return false;">
+            <ul>
+                <li class="id">
+                    <input type="text" id="userid" name="userid" placeholder="ID"/>
+                </li>
+                <li class="pw">
+                    <input type="password" id="passwd" name="passwd" placeholder="Password"/>
+                </li>
+                <li class="login">
+                    <a href="javascript:void(0);" class="login">CHECK IN</a>
+                </li>
+                <li class="txt">
+                    CMS 관련 문의는 info@rsunny.net 으로 메일 주세요. 
+                </li>
+            </ul>
+            </form>
+        </div> 
+    </div>
+</body>
+</html>
+

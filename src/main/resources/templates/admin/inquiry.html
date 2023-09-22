@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="ko" 
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorator="layout/default-admin">
+
+            <!--contents_layout 시작-->
+            <div id="contents_layout" layout:fragment="content">
+                <!--head 시작-->
+                <div class="head">
+                    <h2>1:1문의관리</h2>
+                </div>
+                <!--head 끝-->
+                <!--body 시작-->
+                <div class="body">
+		            <form id="frmSearch" name="frmSearch" method="get" action="inquiry">
+                    	<input type="hidden" id="page" name="page" value="1">
+                    <div class="innr">
+                        <div class="bbsSearch w210">
+                            <input type="text" id="schWord" name="schWord" th:value="${form.schWord}" placeholder="키워드">
+                            <a href="javascript:void(0);" class="search">검색</a>
+                        </div>
+                    </div>
+                    </form>
+                    <div class="bbsList">
+                        <table>
+                            <colgroup>
+                                <col style="width:100px;"/>
+                                <col style="width:17%;"/>
+                                <col style="width:17%;"/>
+                                <col style="width:17%;"/>
+                                <col style="width:17%;"/>
+                                <col style="width:16%;"/>
+                                <col style="width:auto;"/>
+                            </colgroup>
+                            <thead>
+                                <tr>
+                                    <th scope="col">NO</th>
+                                    <th scope="col">성명</th>
+                                    <th scope="col">이메일주소</th>
+                                    <th scope="col">연락처</th>
+                                    <th scope="col">작성일</th>
+                                    <th scope="col">내용</th>
+                                    <th scope="col">상태</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr th:each="item : ${list}">
+                                    <td th:text="${item.seq}">12</td>
+                                    <td th:text="${item.name}">김써니</td>
+                                    <td th:text="${item.email}">abc@email.com</td>
+                                    <td th:text="${item.phone}">010-1234-5678</td>
+                                    <td th:text="${#temporals.format(item.createDtm, 'yyyy-MM-dd')}">2019-10-10</td>
+                                    <td class="btn"><a href="#" class="type1 lp_open" data-lp="lp_a16" th:attr="data-bid=${item.bid}"> 보기</a></td>
+                                    <td th:text="${item.statusNm}">처리</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="bbsPaging">
+                    	<script th:inline="javascript">printPageList(/*[(${form.totalCount})]*/ 0, /*[(${form.page})]*/ 0, /*[(${form.rows})]*/ 0);</script>
+                    </div>
+                </div>
+                <!--body 끝-->
+                
+			    <!-- 레이어팝업 시작 -->
+			    <div id="lp_layout">
+			        <!-- 레이어팝업 lp_a16 시작 -->
+			        <div id="lp_a16" class="lp_wrap">
+			            <div class="head">
+			                <h2>고객문의 내용</h2>
+			            </div>
+			            <div class="body">
+		            		<form id="frmBase" name="frmBase" method="post">
+                    			<input type="hidden" id="bid" name="bid" value="">
+			                <div class="input_box">
+			                    <ul>
+			                        <li class="full">
+			                            <p style="max-height: 200px; overflow: auto;">
+			                                <strong>문의내용</strong>
+			                            	<textarea id="contents" name="contents" readonly="readonly"></textarea>
+			                            </p>
+			                        </li>
+			                        <li class="full">
+			                            <label for="lp_a6_1"><strong>대응/답변 내역</strong></label>
+			                            <textarea id="answer" name="answer"></textarea>
+			                        </li>
+			                    </ul>
+			                </div>
+			                </form>
+			                <div class="btn">
+			                    <a class="type1 hold" data-lp="alert_a5" href="#">미결</a>
+			                    <a class="type2 answer" data-lp="alert_a5" href="#">처리</a>
+			                </div>
+			            </div>
+			            <a class="lp_close" href="#">닫기</a>
+			        </div>
+			        <!-- 레이어팝업 lp_a16 끝 -->
+			    </div>
+			    <!-- 레이어팝업 끝 -->
+			    
+			    <script th:inline="javascript">
+			    	$(document).ready(function() {
+			    		$('a.search').click(function() {
+			    			$('#frmSearch').submit();
+			    		});
+			    		
+			    		//팝업 열기
+			    		$('a.lp_open').click(function() {
+			    			var form = $('#frmBase');
+			    			form.resetForm();
+			    			
+			    			var bid = $(this).data('bid');
+			    			var url = $.validator.format('/board/inquiry/view/{0}', bid);
+			    			$.post(url, {bid: bid}, function(user) {
+			    				//alert(JSON.stringify(user));
+			    				form.setFormData(user);
+			    			})
+			    		});
+			    		
+			    		//답변
+			    		$('a.answer').click(function() {
+			    			var form = $('#frmBase');
+			    			
+					    	//필수값 체크.
+					    	form.validate({
+								rules: {
+									answer: 'required'
+								},
+								errorPlacement: function (error, element) {
+								    element.attr("placeholder", error[0].outerText);
+								}
+					    	});
+
+					    	if( !form.valid() ) return;
+				    		var formdata = form.serializeObject();
+				    		formdata.status = '90';
+				    		//alert(JSON.stringify(formdata));
+							
+							if( !confirm('처리하시겠습니까?') ) return;
+			    			
+			    			$.post('/board/inquiry/rest/answer', formdata, function(result) {
+			    				alert(result.message);
+			    				if(result.code==0) {
+			    					location.reload();
+			    				}
+			    			}).error(function() {
+			    				alert('처리중 오류가 발생하였습니다.');
+			    			})
+			    		});	//Enod-of-$('a.save').click(function() {
+			    		
+			    		//미결
+			    		$('a.hold').click(function() {
+			    			var form = $('#frmBase');
+
+				    		var formdata = form.serializeObject();
+				    		formdata.status = '99';
+				    		//alert(JSON.stringify(formdata));
+							
+							if( !confirm('미결 처리하시겠습니까?') ) return;
+			    			
+			    			$.post('/board/inquiry/rest/answer', formdata, function(result) {
+			    				alert(result.message);
+			    				if(result.code==0) {
+			    					location.reload();
+			    				}
+			    			}).error(function() {
+			    				alert('처리중 오류가 발생하였습니다.');
+			    			})
+			    		});	//Enod-of-$('a.save').click(function() {
+			    	});
+			    </script>
+                
+            </div>
+            <!--contents_layout 끝-->
+
+</html>
+

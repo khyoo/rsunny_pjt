@@ -1,0 +1,343 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+    
+<mapper namespace="com.regroup.rsunny.point.mapper.PointMapper">
+
+    <select id="getList" resultType="com.regroup.rsunny.point.model.PointDTO">
+    	WITH LT AS (
+			SELECT 
+				  pt.*
+				, (case when pt.inout_detail='ID' then '포인트 충전'
+						when pt.inout_detail='IS' then fu.usernm
+						when pt.inout_detail='OI' then concat('아이템', it.item_type, ' ', it.item_count, '건')
+						when pt.inout_detail='OS' then concat('매물열람(', fs.sale_no, ')')
+						when pt.inout_detail='IS' then '포인트 출금'
+						else c1.nm
+					end)					as detail_remark
+				, ifnull(ur.usernm, pt.userid)		as usernm
+				, ur.phone
+				, ur.email
+				, c0.nm						as inout_type_nm
+				, c1.nm						as inout_detail_nm
+				, c2.nm						as user_type_nm
+				, c3.nm						as status_nm
+				, (case when pt.status = '00' then c1.nm
+						else c3.nm end)		as inout_detail_nm2
+				, (case when pt.inout_type='I' then '+' else '-' end)	as point_sign
+				, concat(case when pt.status='00' then c0.nm else c3.nm end)	as inout_status_nm
+				, concat(case when pt.status='00' then c1.nm else c3.nm end)	as inout_detail_status_nm
+				, count(*) over() 							AS total_count
+				, row_number() over(ORDER BY pt.pid desc)	AS rnk
+			FROM point					pt
+				LEFT OUTER JOIN user	ur on pt.userid = ur.userid
+				LEFT OUTER JOIN forsale	fs on pt.rid = fs.rid
+				LEFT OUTER JOIN user	fu on fs.create_id = fu.userid
+				LEFT OUTER JOIN item	it on pt.pid = it.pid
+				LEFT OUTER JOIN code	c0 ON c0.grp = 'POINT_TYPE' AND pt.inout_type = c0.cd
+				LEFT OUTER JOIN code	c1 ON c1.grp = 'POINT_TYPE_DTL' AND pt.inout_detail = c1.cd
+				LEFT OUTER JOIN code	c2 ON c2.grp = 'USER_TYPE' AND ur.user_type = c2.cd
+				LEFT OUTER JOIN code	c3 ON c3.grp = 'POINT_STATUS' AND pt.status = c3.cd
+			<where>
+				<choose>
+					<when test="status != null and status=='NG'">
+						AND pt.status IN('20','50')
+					</when>
+					<when test="status != null and status != ''">
+						AND pt.status = #{status}
+					</when>
+				</choose>
+				<if test="sessionId != null and sessionId != ''">
+					AND pt.userid = #{sessionId}
+				</if>
+				<choose>
+					<when test="frontType != null and frontType=='IS'">
+						AND pt.inout_detail = #{frontType}
+					</when>
+					<when test="frontType != null and frontType=='ID'">
+						AND pt.inout_detail = #{frontType}
+					</when>
+					<when test="frontType != null and frontType=='O'.toString()">
+						AND pt.inout_type = #{frontType}
+					</when>
+				</choose>
+				<if test="inoutDetail != null and inoutDetail != ''">
+					AND pt.inout_detail = #{inoutDetail}
+				</if>
+				<if test="userType != null and userType != ''">
+					AND ur.user_type = #{userType}
+				</if>
+				<if test="schWord != null and schWord != ''">
+					AND (
+						ur.userid LIKE concat('%', #{schWord}, '%')
+						OR
+						ur.usernm LIKE concat('%', #{schWord}, '%')
+						OR
+						ur.phone LIKE concat('%', #{schWord}, '%')
+						OR
+						ur.email LIKE concat('%', #{schWord}, '%')
+					)
+				</if>
+			</where>
+    	)
+    	SELECT LT.*
+    		, (total_count - rnk + 1)		AS seq
+    		, get_use_avail_point(userid)	AS use_avail_point
+    		, get_withdrawal_avail_point(userid)	AS withdrawal_avail_point
+    	FROM LT
+		WHERE rnk BETWEEN #{frRow} AND #{toRow}
+    	ORDER BY rnk
+    </select>
+
+    <select id="getPoint" resultType="com.regroup.rsunny.point.model.PointDTO">
+		SELECT 
+			  pt.*
+			, ifnull(ur.usernm, pt.userid)		as usernm
+			, ur.phone
+			, ur.email
+			, c0.nm						as inout_type_nm
+			, c1.nm						as inout_detail_nm
+			, c2.nm						as user_type_nm
+			, c3.nm						as status_nm
+			, (case when pt.status = '00' then c1.nm
+					else c3.nm end)		as inout_detail_nm2
+    		, get_use_avail_point(pt.userid)			AS use_avail_point
+    		, get_withdrawal_avail_point(pt.userid)		AS withdrawal_avail_point
+		FROM point					pt
+			LEFT OUTER JOIN user	ur on pt.userid = ur.userid
+			LEFT OUTER JOIN code	c0 ON c0.grp = 'POINT_TYPE' AND pt.inout_type = c0.cd
+			LEFT OUTER JOIN code	c1 ON c1.grp = 'POINT_TYPE_DTL' AND pt.inout_detail = c1.cd
+			LEFT OUTER JOIN code	c2 ON c2.grp = 'USER_TYPE' AND ur.user_type = c2.cd
+			LEFT OUTER JOIN code	c3 ON c3.grp = 'POINT_STATUS' AND pt.status = c3.cd
+		WHERE pt.pid = #{pid}
+    </select>
+
+    <select id="getPointByRid" resultType="com.regroup.rsunny.point.model.PointDTO">
+		SELECT 
+			  pt.*
+		FROM point pt
+		WHERE rid = #{rid}
+		  AND userid = #{sessionId}
+		  AND inout_detail = 'OS'
+		LIMIT 1
+    </select>
+
+    <select id="getPointRate" resultType="com.regroup.rsunny.point.model.PointRateDTO">
+		SELECT 
+				  cd.cd				as sale_type
+				, cd.nm				as sale_type_nm
+				, pr.sub_rate_a
+				, pr.sub_rate_b
+				, pr.sub_rate_c
+				, pr.add_rate_r
+				, pr.add_rate_o
+				, pr.add_rate_m
+		FROM code							cd
+			LEFT OUTER JOIN point_rate		pr ON cd.cd = pr.sale_type
+		WHERE cd.grp		= 'SALE_TYPE' 
+		  AND cd.use_yn		= 'Y'
+		ORDER BY ifnull(cd.sort_no, 9999)
+    </select>
+
+    <insert id="insertPointRate" parameterType="com.regroup.rsunny.point.model.PointRateDTO">
+		INSERT INTO point_rate (
+			  sale_type
+			, sub_rate_a
+			, sub_rate_b
+			, sub_rate_c
+			, add_rate_r
+			, add_rate_o
+			, add_rate_m
+		) VALUES (
+			  #{saleType}
+			, #{subRateA}
+			, #{subRateB}
+			, #{subRateC}
+			, #{addRateR}
+			, #{addRateO}
+			, #{addRateM}
+		)
+    </insert>
+
+    <update id="updatePointRate" parameterType="com.regroup.rsunny.point.model.PointRateDTO">
+		UPDATE point_rate SET
+			  sub_rate_a	= #{subRateA}
+			, sub_rate_b	= #{subRateB}
+			, sub_rate_c	= #{subRateC}
+			, add_rate_r	= #{addRateR}
+			, add_rate_o	= #{addRateO}
+			, add_rate_m	= #{addRateM}
+		WHERE sale_type	= #{saleType}
+    </update>
+
+    <select id="getLastPidByUser" resultType="com.regroup.rsunny.point.model.PointDTO">
+		SELECT 
+			  max(pid)			AS pid
+		FROM point
+		WHERE userid	= #{userid}
+    </select>
+
+    <insert id="insertPoint" parameterType="com.regroup.rsunny.point.model.PointDTO">
+		INSERT INTO point (
+			  userid
+			, inout_type
+			, inout_detail
+			, status
+			, point
+			, bank_nm
+			, account_no
+			, account_owner
+			, rid
+			, grp_pid
+			, remark
+			, create_dtm
+			, create_id
+			, update_dtm
+			, update_id
+		) VALUES (
+			  #{userid}
+			, #{inoutType}
+			, #{inoutDetail}
+			, #{status}
+			, #{point}
+			, #{bankNm}
+			, #{accountNo}
+			, #{accountOwner}
+			, #{rid}
+			, #{grpPid}
+			, #{remark}
+			, now()
+			, #{sessionId}
+			, now()
+			, #{sessionId}
+		)
+    </insert>
+
+    <update id="updateApprove" parameterType="com.regroup.rsunny.point.model.PointDTO">
+		UPDATE point SET
+			  status					= #{status}
+			, update_dtm				= now()
+			, update_id					= #{sessionId}
+		WHERE pid						= #{pid}
+    </update>
+
+	<!-- 아이템 -->
+    <select id="getItemList" resultType="com.regroup.rsunny.point.model.ItemDTO">
+    	WITH LT AS (
+			SELECT fs.sale_no
+				, it.*
+			    , (case when inout_type = 'I' then '구매' 
+						when inout_type = 'IO' then '적용' 
+                        else '사용' end)					AS inout_type_nm
+				, ifnull(ur.usernm, ur.userid)		as usernm
+				, ur.phone
+				, ur.email
+				, c2.nm										AS user_type_nm
+				, count(*) over() 							AS total_count
+				, row_number() over(ORDER BY it.iid desc)	AS rnk
+			FROM item it
+				INNER JOIN user			ur on it.userid = ur.userid
+				LEFT OUTER JOIN forsale fs ON it.rid = fs.rid
+				LEFT OUTER JOIN code	c2 ON c2.grp = 'USER_TYPE' AND ur.user_type = c2.cd
+			<where>
+				<if test="sessionId != null and sessionId != ''">
+					AND it.userid = #{sessionId}
+				</if>
+				<if test="userType != null and userType != ''">
+					AND ur.user_type = #{userType}
+				</if>
+				<if test="schWord != null and schWord != ''">
+					AND (
+						ur.userid LIKE concat('%', #{schWord}, '%')
+						OR
+						ur.usernm LIKE concat('%', #{schWord}, '%')
+						OR
+						ur.phone LIKE concat('%', #{schWord}, '%')
+						OR
+						ur.email LIKE concat('%', #{schWord}, '%')
+					)
+				</if>
+			</where>
+    	)
+    	SELECT LT.*
+    		, (total_count - rnk + 1)		AS seq
+    		, get_avail_item(userid)				AS use_avail_item
+    		, (select sum(case when inout_type='O' then 1 end) from item where userid = LT.userid)	as use_count
+    		, (select sum(case when inout_type='IO' then 1 end) from item where userid = LT.userid)	as apply_count
+    	FROM LT
+		WHERE rnk BETWEEN #{frRow} AND #{toRow}
+    	ORDER BY rnk
+    </select>
+
+    <insert id="insertItem" parameterType="com.regroup.rsunny.point.model.ItemDTO">
+		INSERT INTO item (
+			  userid
+			, item_type
+			, inout_type
+			, inout_detail
+			, item_count
+			, unit_price
+			, item_price
+			, sale_type
+			, status
+			, rid
+			, pid
+			, start_dtm
+			, end_dtm
+			, remark
+			, create_dtm
+			, create_id
+		) VALUES (
+			  #{userid}
+			, #{itemType}
+			, #{inoutType}
+			, #{inoutDetail}
+			, #{itemCount}
+			, #{unitPrice}
+			, #{itemPrice}
+			, #{saleType}
+			, #{status}
+			, #{rid}
+			, #{pid}
+			, #{startDtm}
+			, #{endDtm}
+			, #{remark}
+			, now()
+			, #{sessionId}
+		)
+    </insert>
+
+    <update id="updatePointStatus">
+		UPDATE point SET
+			  status					= '00'
+		WHERE status in ('20', '60')
+		  AND DATE_ADD(create_dtm, INTERVAL 1 DAY) &lt;= now();
+    </update>
+
+    <select id="getItem2Purchase" resultType="com.regroup.rsunny.point.model.ItemDTO">
+		SELECT it.userid
+			, start_dtm
+			, end_dtm
+		FROM item it
+		WHERE it.userid		= #{userid}
+		  AND it.item_type	= 2
+		  AND it.sale_type	= #{saleType}
+		  AND now() between it.start_dtm and it.end_dtm
+		LIMIT 1
+    </select>
+
+    <select id="getPointListByGrp" resultType="com.regroup.rsunny.point.model.PointDTO">
+		SELECT 
+			  *
+		FROM point
+		WHERE rid		= #{rid} 
+		  AND grp_pid	= #{grpPid}
+    </select>
+
+    <delete id="deletePointByGrp">
+		DELETE
+		FROM point
+		WHERE rid		= #{rid} 
+		  AND grp_pid	= #{grpPid}
+    </delete>
+
+</mapper>

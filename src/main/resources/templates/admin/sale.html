@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html lang="ko" 
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorator="layout/default-admin">
+
+            <!--contents_layout 시작-->
+            <div id="contents_layout" layout:fragment="content">
+                <!--head 시작-->
+                <div class="head">
+                    <h2>매물 관리</h2>
+                </div>
+                <!--head 끝-->
+                <!--body 시작-->
+                <div class="body">
+			        <form id="frmSearch" name="frmSearch" method="get" action="sale">
+			        	<input type="hidden" id="page" name="page" value="1" />
+                    <div class="innr between">
+                        <div class="flex_column">
+                            <div>
+                                <div class="jquerySelect w152">
+                                    <select id="saleType" name="saleType">
+                                        <option value="">-매물유형-</option>
+                                        <option th:each="item : ${saleTypeList}" th:value="${item.cd}" th:text="${item.nm}" th:selected="${form.saleType==item.cd}">유형1</option>
+                                    </select>
+                                </div>
+                                <div class="jquerySelect w152">
+                                    <select id="tradeType" name="tradeType">
+                                        <option value="">-거래방식-</option>
+                                        <option th:each="item : ${tradeTypeList}" th:value="${item.cd}" th:text="${item.nm}" th:selected="${form.tradeType==item.cd}">방식1</option>
+                                    </select>
+                                </div>
+                                <div class="btn">
+                                    <a href="javascript:void(0);" class="search type1">확인</a>
+                                </div>
+                            </div>
+                            <div>
+                                <div class="jquerySelect w152">
+                                    <select id="postL" name="postL" data-role="none">
+                                        <option value="">-시도-</option>
+                                        <option th:each="item : ${postLList}" th:value="${item.cd}" th:text="${item.nm}" th:selected="${item.cd==form.postL}">시도1</option>
+                                    </select>
+                                </div>
+                                <div class="jquerySelect w152">
+                                    <select id="postM" name="postM" data-role="none">
+                                        <option value="">-시군구-</option>
+                                        <option th:each="item : ${postMList}" th:value="${item.cd}" th:text="${item.nm}" th:selected="${item.cd==form.postM}">시군구</option>
+                                    </select>
+                                </div>
+                                <div class="jquerySelect w152">
+                                    <select id="postS" name="postS" data-role="none">
+                                        <option value="">-행정동-</option>
+                                        <option th:each="item : ${postSList}" th:value="${item.cd}" th:text="${item.nm}" th:selected="${item.cd==form.postS}">행정동1</option>
+                                    </select>
+                                </div>
+                                <div class="btn">
+                                    <a href="javascript:void(0);" class="search type2">확인</a>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="bbsSearch w400">
+                            <input type="text" id="schWord" name="schWord" th:value="${form.schWord}" placeholder="매물코드 or 소유자 or 주소지">
+                            <a href="javascript:void(0);" class="search type3">검색</a>
+                        </div>
+                    </div>
+                   	</form>
+                    <div class="bbsList">
+                        <table>
+                            <colgroup>
+                                <col style="width:10%;"/>
+                                <col style="width:10%;"/>
+                                <col style="width:10%;"/>
+                                <col style="width:15%;"/>
+                                <col style="width:10%;"/>
+                                <col />
+                                <col style="width:8%;"/>
+                                <col style="width:10%;"/>
+                                <col style="width:120px;"/>
+                            </colgroup>
+                            <thead>
+                                <tr>
+                                    <th scope="col">매물코드</th>
+                                    <th scope="col">매물유형</th>
+                                    <th scope="col">거래방식</th>
+                                    <th scope="col">거래금액</th>
+                                    <th scope="col">소유자</th>
+                                    <th scope="col">주소지</th>
+                                    <th scope="col">열람수</th>
+                                    <th scope="col">등록일</th>
+                                    <th scope="col">관리</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr th:each="item : ${list}" th:attr="data-rid=${item.rid}, data-status=${item.status}">
+<!--                                     <td><a href="#" class="type1 lp_open" data-lp="lp_a11" th:text="${item.saleNo}">dr000202</a></td> -->
+                                    <td><a th:href="${item.linkUrl}" class="type1" target="_blank" th:text="${item.saleNo}">dr000202</a></td>
+                                    <td th:text="${item.saleDetailTypeNm}">원룸</td>
+                                    <td th:text="${item.tradeTypeNm}">월세</td>
+                                    <td th:text="${item.priceWon}">보200/월35</td>
+                                    <td><a href="#" class="type1 lp_open" data-lp="lp_a12" th:text="${item.ownerNm}">김부동</a></td>
+                                    <td th:text="${item.addr1}">동천면 이동리</td>
+                                    <td><span th:text="${item.viewCount}" th:remove="tag">15</span>건</td>
+                                    <td th:text="${#temporals.format(item.createDtm, 'yyyy-MM-dd')}">2019-10-10</td>
+                                    <!-- <td th:text="${item.statusNm}">광고</td> -->
+                                    <td class="btn type2">
+                                        <a href="#" class="type2 lp_open delete">삭제</a>
+                                        <a href="#" class="type1 lp_open hide" th:if="${item.status=='00'}">노출됨</a>
+                                        <a href="#" class="type1 lp_open show" th:if="${item.status=='99'}">비노출</a>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="bbsPaging">
+                        <script th:inline="javascript">printPageList(/*[(${form.totalCount})]*/ 0, /*[(${form.page})]*/ 0, /*[(${form.rows})]*/ 0);</script>
+                    </div>
+                </div>
+                <!--body 끝-->
+			                
+			    <!-- 레이어팝업 시작 -->
+			    <div id="lp_layout">
+			        <!-- 레이어팝업 lp_a11 시작 -->
+			        <div id="lp_a11" class="lp_wrap">
+			            <div class="head">
+			                <h2>매물 상세정보</h2>
+			            </div>
+			            <div class="body">
+			                <div class="btn between">
+			                    <span></span>
+			                    <a href="#" class="type2">매물수정</a>
+			                </div>
+			                <div id="roomInfo" class="slide_wrap">
+			                    <p>매물번호 : N0203212</p>
+			                    <div class="sliderBox">
+			                        <ul>
+			                            <li><img src="/img/etc/sample.jpeg"/></li>
+			                            <li><img src="/img/etc/sample1.jpg"/></li>
+			                            <li><img src="/img/etc/sample2.jpg"/></li>
+			                            <li><img src="/img/etc/sample3.jpg"/></li>
+			                        </ul>
+			                    </div>
+			                    <div class="controlBox">
+			                        <div class="pageCount"></div>
+			                        <button type="button" class="btn_prev">이전</button>
+			                        <button type="button" class="btn_next">다음</button>
+			                    </div>
+			                </div>
+			            </div>
+			            <a class="lp_close" href="#">닫기</a>
+			        </div>
+			        <!-- 레이어팝업 lp_a11 끝 -->
+			        <!-- 레이어팝업 lp_a12 시작 -->
+			        <div id="lp_a12" class="lp_wrap owner">
+			            <div class="head">
+			                <h2>매물 소유자 정보</h2>
+			            </div>
+			            <div class="body">
+			                <ul class="txt_box type2">
+			                    <li>
+			                        <strong>성명</strong>
+			                        <p class="ownerNm">김누구</p>
+			                    </li>
+			                    <li>
+			                        <strong>연락처</strong>
+			                        <p class="phone">010-0000-1234</p>
+			                    </li>
+			                    <!-- <li>
+			                        <strong>이메일</strong>
+			                        <p class="email">abc@email.com</p>
+			                    </li> -->
+			                </ul>
+			                <div class="btn">
+			                    <a class="type2 lp_close" href="#">확인</a>
+			                </div>
+			            </div>
+			            <a class="lp_close" href="#">닫기</a>
+			        </div>
+			        <!-- 레이어팝업 lp_a12 끝 -->
+			    </div>
+			    <!-- 레이어팝업 끝 -->
+			    
+			    <script th:inline="javascript">
+			    	$(document).ready(function() {
+						//시도를 변경하는 경우.
+						//$( "#filesA" ).selectmenu({ change: function( event, ui ) { alert('x'); }});
+						
+						$('#postL').on('selectmenuchange', function() {
+							var params = { grp: 'POST_M', uppGrp: 'POST_L', uppCd: $(this).val() };
+							//alert(JSON.stringify(params));
+							setCodeList('subCode', params, $('#postM'));
+						});
+						
+						$('#postM').on('selectmenuchange', function() {
+							var params = { grp: 'POST_S', uppGrp: 'POST_M', uppCd: $(this).val() };
+							setCodeList('subCode', params, $('#postS'));
+						});
+						
+			    		$('a.search').click(function() {
+			    			var form = $('#frmSearch');
+			    			if( $(this).hasClass('type1') ) {
+			    				form.find('select[name=postL]').val('');
+			    				form.find('select[name=postM]').val('');
+			    				form.find('select[name=postS]').val('');
+			    				form.find('input[name=schWord]').val('');
+			    			}
+			    			else if( $(this).hasClass('type2') ) {
+			    				form.find('select[name=saleType]').val('');
+			    				form.find('select[name=tradeType]').val('');
+			    				form.find('input[name=schWord]').val('');
+			    			}
+			    			
+			    			$(this).closest('form').submit();
+			    		});
+			    		
+			    		$('a[data-lp="lp_a12"]').click(function() {
+		    				var owner = $('div.owner');
+		    				owner.find('p').text('');
+		    				
+			    			var rid = $(this).closest('tr').attr('data-rid');
+		    				//alert(JSON.stringify(rid));
+			    			var param = {rid: rid}
+			    			$.get('/forsale/rest/getSale', param, function(data) {
+			    				owner.find('p.ownerNm').text(data.ownerNm);
+			    				owner.find('p.phone').text(data.phone);
+			    				//owner.find('p.email').text(data.userEmail);
+			    			})
+			    		})	//End-of-$('a[data-lp="lp_a12"]').click(function() {
+			    		
+			    		//삭제
+			    		$('a.delete').click(function() {
+			        		var rid = $(this).closest('tr').data('rid');
+			        		//alert( rid + '...' + status );
+			        		if( !confirm('삭제하시겠습니까?') ) return;
+			        		
+			        		var formdata = {rid: rid}
+			    			
+			    			$.post('/forsale/rest/delete', formdata, function(result) {
+			    				alert(result.message);
+			    				if(result.code==0) {
+			    					location.reload();
+			    				}
+			    			}).fail(function() {
+			    				alert('저장중 오류가 발생하였습니다.');
+			    			})
+			        	});
+			    		
+			    		//노출/비노출
+			    		$('a.show, a.hide').click(function() {
+			        		var rid = $(this).closest('tr').data('rid');
+			        		var status = $(this).closest('tr').data('status');
+			        		//alert( rid + '...' + status );
+			        		var msg = (status=='00')? '비노출 처리하시겠습니까?' : '노출 처리하시겠습니까?';
+			        		if( !confirm(msg) ) return;
+			        		
+			        		var newstatus = (status=='00')? '99' : '00';
+			        		var formdata = {rid: rid, status: newstatus}
+			    			
+			    			$.post('/forsale/rest/toggleStatus', formdata, function(result) {
+			    				alert(result.message);
+			    				if(result.code==0) {
+			    					location.reload();
+			    				}
+			    			}).fail(function() {
+			    				alert('저장중 오류가 발생하였습니다.');
+			    			})
+			        	});
+						
+			    	});
+			    	
+			    </script>
+                
+            </div>
+            <!--contents_layout 끝-->
+
+</html>
+

@@ -1,0 +1,23 @@
+        <!-- 레이어팝업 lp_02la03p01 시작 -->
+        <div id="lp_message" class="lp_wrap type2">
+            <div class="head">
+                <h2 class="title">-</h2>
+            </div>
+            <div class="body">
+                <p class="message">-</p>
+                <div class="btn">
+                    <a href="#" class="type1 lp_close alertConfirm">확인</a>
+                </div>
+            </div>
+            <a class="lp_close" href="#">닫기</a>
+        </div>
+        <!-- 레이어팝업 lp_02la03p01 끝 -->
+	
+		<script>
+			var message_callback = null;
+		    $(document).ready(function() {
+		    	$('#lp_message').find('a.alertConfirm').click(function() {
+		    		if(message_callback != null) message_callback();
+		    	});
+       		});
+       	</script>

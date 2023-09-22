@@ -1,0 +1,109 @@
+        <!-- 레이어팝업 lp_02la04p01 시작 -->
+        <div id="lp_02la04p01" class="lp_wrap type2">
+            <div class="head">
+                <h2>회원정보 편집</h2>
+            </div>
+            <div class="body">
+ 		 		<form id="frmGeneralUser" name="frmGeneralUser" enctype="multipart/form-data" method="post" onsubmit="return false;">
+ 		 			<input type="hidden" id="crudType" name="crudType" value="U" />
+ 		 			<input type="hidden" id="userType" name="userType" th:value="${user.userType}" />
+ 		 			<input type="hidden" id="belongBranch" name="belongBranch" th:value="${user.belongBranch}" />
+                <div class="inputBox">
+                    <ul>
+                        <li>
+                            <label for="02la04p01_1">성명</label>
+                            <input id="02la04p01_1" name="usernm" th:value="${user.usernm}" type="text" />
+                        </li>
+                        <li>
+                            <label for="02la04p01_2">이메일</label>
+                            <input id="02la04p01_2" name="email" th:value="${user.email}" type="text" />
+                        </li>
+                        <li>
+                            <label for="02la04p01_3">연락처</label>
+                            <input id="02la04p01_3" name="phone" th:value="${user.phone}" type="text" />
+                        </li>
+                        <li>
+                            <label for="passwd">비밀번호 변경</label>
+                            <input id="passwd" name="passwd" type="password" placeholder="10자~20자 영문,숫자 조합" />
+                        </li>
+                        <li>
+                            <label for="passwd2">비밀번호 확인</label>
+                            <input id="passwd2" name="passwd2" type="password" />
+                        </li>
+                    </ul>
+                </div>
+                </form>
+                <div class="btn">
+                    <a href="#" class="type2 lp_close">취소</a>
+                    <a href="#" class="type1 userupdate">저장</a>
+                </div>
+            </div>
+            <a class="lp_close" href="#">닫기</a>
+        </div>
+        <!-- 레이어팝업 lp_02la04p01 끝 -->
+
+	<script th:inline="javascript">
+		$(document).ready(function() {
+			$('input[name=addr1]').click(function() {
+				$('a.address').trigger('click');
+			});
+
+			$('a.address').click(function() {
+				new daum.Postcode({
+					oncomplete:function(postdata) {
+						//alert(JSON.stringify(postdata));
+						$('input[name=addr1]').val(postdata.address);
+					}
+				}).open();
+			});
+
+			$('a.userupdate').click(function() {
+				var form = $('#frmGeneralUser');
+
+				//필수값 체크.
+		    	form.validate({
+		    		wrapper: 'div',
+					rules: {
+						userid: {required: true, userid: true, rangelength: [4, 12]},
+						passwd2: {rangelength: [6, 20], equalTo: '#passwd'},
+						usernm: 'required',
+						phone: 'required',
+						email: {required: true, email: true}
+					}
+		    	});
+
+				if( !form.valid() ) return;
+
+				var formdata = form.serializeObject();
+
+	    		if( !confirm('저장하시겠습니까?') ) return;
+
+				var form = form[0];
+				var formdata = new FormData(form);
+
+				$.ajax({
+					type: 'POST',
+					enctype: 'multipart/form-data',
+					url: '/user/rest/update',
+					data: formdata,
+					processData: false,
+					contentType: false,
+					cache: false,
+					timeout: 600000,
+					success: function(result) {
+		    			if(result.code == 0) {
+		    				location.reload();
+		    			}
+		    			else {
+			    			alert(result.message);
+		    			}
+					}
+				});
+
+			});	//End-of-$('a.save').click(function() {
+
+			$('a.cancel').click(function() {
+				location.href = '/';
+			});
+		})
+	</script>

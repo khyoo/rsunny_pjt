@@ -1,0 +1,31 @@
+                        <li th:each="item, stat : ${list}">
+                        	<!--
+                            <div class="radioBox">
+                                <input th:id="${'id_broker'+stat.index}" type="checkbox" name="offerId" th:value="${item.userid}">
+                                <label th:for="${'id_broker'+stat.index}">선택</label>
+                            </div> -->
+                            <a href="javascript:void(0);" class="agent-info" th:attr="data-userid=${item.userid}" th:text="${item.usernm}">부동산</a>
+                            <a th:href="${'tel:' + item.phone}"><p th:text="${item.phone}">010-4266-1236</p></a>
+                        </li>
+
+			<script th:inline="javascript">
+			    $(document).ready(function() {
+					$('a.agent-info').click(function() {
+						var userid = $(this).data('userid');
+						var formdata = {userid: userid};
+						$.get('/forsale/rest/agent-info', formdata, function(result) {
+							//alert( JSON.stringify(result) );
+							var modal = $("#lp_02ma01p02");
+
+							modal.find('p.usernm').text(result.usernm);
+							modal.find('dd.ceoNm').text(result.ceoNm);
+							var addr = $.validator.format('{0} {1}', (result.addr1==null)?'':result.addr1, (result.addr2==null)?'':result.addr2);
+							modal.find('dd.addr').text(addr);
+							modal.find('dd.phone').text(result.phone);
+
+							modal.openModal();
+						});
+					});	//End-of-$('a.dooffer').click(function() {
+
+			    });	//End-of-$(document).ready
+			</script>

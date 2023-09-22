@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="ko" 
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorator="layout/default-admin">
+
+            <!--contents_layout 시작-->
+            <div id="contents_layout" layout:fragment="content">
+                <!--head 시작-->
+                <div class="head">
+                    <h2>중개사 신고</h2>
+                </div>
+                <!--head 끝-->
+                <!--body 시작-->
+                <div class="body">
+                    <div class="innr between">
+			            <form id="frmSearch" name="frmSearch" method="get" action="report">
+			        		<input type="hidden" id="page" name="page" value="1" />
+                         <div class="bbsSearch w400">
+                            <input type="text" id="schWord" name="schWord" placeholder="매물코드 or 키워드">
+                            <a href="javascript:void(0);" class="search">검색</a>
+                        </div>
+                        <div class="jquerySelect w152">
+                            <select id="lp_a1_for1" name="userType">
+                                <option value="">권한유형</option>
+                                <option th:each="item : ${userTypeList}" th:value="${item.cd}" th:text="${item.nm}" th:selected="${item.cd==form.userType}">유형1</option>
+                            </select>
+                        </div>
+                        </form>
+                    </div>
+                    <div class="bbsList">
+                        <table>
+                            <colgroup>
+                                <col style="width:10%;"/>
+                                <col style="width:13%;"/>
+                                <col style="width:13%;"/>
+                                <col style="width:10%;"/>
+                                <col />
+                                <col style="width:10%;"/>
+                                <col style="width:11%;"/>
+                                <col style="width:13%;"/>
+                                <col style="width:10%;"/>
+                            </colgroup>
+                            <thead>
+                                <tr>
+                                    <th scope="col">매물코드</th>
+                                    <th scope="col">매물유형</th>
+                                    <th scope="col">거래금액</th>
+                                    <th scope="col">중개소명</th>
+                                    <th scope="col">열람수</th>
+                                    <th scope="col">등록일</th>
+                                    <th scope="col">신고자</th>
+                                    <th scope="col">신고일</th>
+                                    <th scope="col">상태</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr th:each="item : ${list}" th:attr="data-rid=${item.rid}, data-cid=${item.cid}">
+                                    <td th:text="${item.saleNo}">dr000202</td>
+                                    <td th:text="${item.saleTypeNm}"></td>
+                                    <td th:text="${item.priceWon}">보200/월35</td>
+                                    <td th:text="${item.agentNm}">김부동</td>
+                                    <td align="right">[[${item.openCount}]]건</td>
+                                    <td th:text="${#temporals.format(item.createDtm, 'yyyy-MM-dd')}">2019-10-10</td>
+                                    <td th:text="${item.reporterNm}">김부동</td>
+                                    <td th:text="${#temporals.format(item.reportDtm, 'yyyy-MM-dd HH:mm')}">2019-10-10 12:31</td>
+                                    <td class="btn"><a href="#" class="type1 lp_open detail" data-lp="lp_a13">보기</a></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="bbsPaging">
+                        <script th:inline="javascript">printPageList(/*[(${form.totalCount})]*/ 0, /*[(${form.page})]*/ 0, /*[(${form.rows})]*/ 0);</script>
+                    </div>
+                </div>
+                <!--body 끝-->
+                
+			    <!-- 레이어팝업 시작 -->
+			    <div id="lp_layout">
+			        <!-- 레이어팝업 lp_a13 시작 -->
+			        <div id="lp_a13" class="lp_wrap">
+			            <div class="head">
+			                <h2>
+			                    신고내용(중개사)
+			                    <!--신고내용(일반)-->
+			                </h2>
+			            </div>
+			            <div class="body">
+			            	<form id="frmReport" name="frmReport" onsubmit="return false;">
+			            		<input type="hidden" name="rid" />
+			            		<input type="hidden" name="cid" />
+			            		<input type="hidden" name="pid" />
+			            		<input type="hidden" name="grpPid" />
+			            		<input type="hidden" name="reporterId" />
+			                <div class="input_box">
+			                    <ul>
+			                        <li>
+			                            <label for="lp_a13_for1">매물번호</label>
+			                            <input id="lp_a13_for1" type="text" name="saleNo" value="" />
+			                            
+			                        </li>
+			                        <li>
+			                            <label for="lp_a13_for3">중개사명</label>
+			                            <input id="lp_a13_for3" type="text" name="agentNm" value="" />
+			                        </li>
+			                        <li>
+			                            <label for="lp_a13_for3">신고유형</label>
+			                            <input id="lp_a13_for3" type="text" name="reportTypeNm" value="" />
+			                        </li>
+			                        <li class="full">
+			                            <label for="lp_a13_for4">기타사항</label>
+			                            <textarea id="lp_a13_for4" name="etcMemo" readonly="readonly"></textarea>
+			                        </li>
+			                    </ul>
+                                <div class="btn">
+                                    <a href="#" class="refund">포인트 반환</a>
+                                    <span class="refund" style="display: none;"><font color="red"><b>포인트 반환 완료</b></font></span>
+                                </div>
+			                </div>
+			                <div class="btn between">
+			                    <div class="jquerySelect w152">
+			                        <!--  
+			                        <select id="lp_a1_for1" name="status">
+			                            <option value="">-노출선택-</option>
+			                            <option value="00">노출</option>
+			                            <option value="99">비노출</option>
+			                        </select>
+			                        -->
+			                    </div>
+			                    <a class="type2 lp_open2 lp_close" data-lp="alert_a5" href="#">닫기</a>
+			                </div>
+			                </form>
+			            </div>
+			            <a class="lp_close" href="#">닫기</a>
+			        </div>
+			        <!-- 레이어팝업 lp_a13 끝 -->
+			    </div>
+			    <!-- 레이어팝업 끝 -->
+			    
+			    <script	th:inline="javascript">
+			    	$(document).ready(function() {
+			    		$('a.search').click(function() {
+			    			$('#frmSearch').submit();
+			    		});
+			    		
+			    		$('a.detail').click(function() {
+			    			var row = $(this).closest('tr');
+			    			var formdata = { rid: row.data('rid'), cid: row.data('cid') };
+
+			    			$('a.refund').hide();		//포인트 반환 버튼 숨기기.
+			    			$('span.refund').hide();	//포인트 반환 완료 메시지 숨기기.
+			    			
+							$.post('/report/rest/getReport', formdata, function(result) {
+								//alert( JSON.stringify(result) );
+								//alert(result.reportStatus);
+								var form = $('#frmReport');
+								form.setFormData(result);
+								if(result.grpPid && result.grpPid.length > 0) $('a.refund').show();
+								if(result.reportStatus=='90') $('span.refund').show();
+							});
+			    		});
+			    		
+			    		//노출/비노출
+			    		$('a.save').click(function() {
+			    			var form = $('#frmReport');
+			    			var formdata = form.serializeObject();
+			    			//alert( JSON.stringify(formdata) );
+							
+							if(formdata.status=='') {
+								alert('처리유형을 선택하세요.'); return;
+							}
+							else if(formdata.status=='00') {
+				        		//alert( rid + '...' + status );
+				        		if( !confirm('노출 처리하시겠습니까?') ) return;
+							}
+							else if(formdata.status=='99') {
+				        		//alert( rid + '...' + status );
+				        		if( !confirm('비노출 처리하시겠습니까?') ) return;
+							}
+							else {
+								return;
+							}
+			    			
+			    			$.post('/forsale/rest/toggleStatus', formdata, function(result) {
+			    				alert(result.message);
+			    				if(result.code==0) {
+			    					location.reload();
+			    				}
+			    			}).fail(function() {
+			    				alert('저장중 오류가 발생하였습니다.');
+			    			})
+			        	});
+			    		
+			    		$('a.refund').click(function() {
+			    			var form = $('#frmReport');
+			    			var formdata = form.serializeObject();
+			    			//alert( JSON.stringify(formdata) );
+
+			        		if( !confirm('포인트를 반환 처리하시겠습니까?') ) return;
+			    			
+			    			$.post('/report/rest/refund', formdata, function(result) {
+			    				alert(result.message);
+			    				if(result.code==0) {
+			    					location.reload();
+			    				}
+			    			}).fail(function() {
+			    				alert('처리중 오류가 발생하였습니다.');
+			    			})
+
+			    		});
+			    		
+			    	})
+			    </script>
+                
+            </div>
+            <!--contents_layout 끝-->
+
+</html>
+

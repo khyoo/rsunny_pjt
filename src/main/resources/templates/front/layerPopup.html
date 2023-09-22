@@ -1,0 +1,856 @@
+<!DOCTYPE HTML>
+<html lang="ko" th:fragment="popupFragment">
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge"><!-- IE에서만 -->
+    <meta name="viewport" content="width=device-width,initial-scale=1.0,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no">
+    <title>R.sunny Layer Popup</title>
+    <script type="text/javascript" src="/js/jquery-1.11.2.min.js"></script>
+    <script type="text/javascript" src="/js/jquery-ui.js"></script>
+    <script type="text/javascript" src="/js/common.js"></script>
+    <link rel="stylesheet" type="text/css" href="/css/jquery-ui.css">
+    <link rel="stylesheet" type="text/css" href="/css/common.css">
+    <link rel="stylesheet" type="text/css" href="/css/layout.css">
+    <link rel="stylesheet" type="text/css" href="/css/template.css">
+    <style>
+        body{ padding: 20px;}
+        .popList{ width: 100%; border: 1px solid #222; border-bottom: 0; border-right: 0;}
+        .popList th{ height: 30px; background-color: #444; font-weight: 400; font-size: 16px; color: #fff; border-right: 1px solid #222; border-bottom: 1px solid #222;}
+        .popList tbody tr:hover td{ background-color: #eaeaea;}
+        .popList td{ height: 30px; font-size: 16px; color: #222; padding: 0 10px; border-right: 1px solid #222; border-bottom: 1px solid #222;}
+        .popList td:nth-child(1),
+        .popList td:nth-child(6){ text-align: center;}
+        .popList td a{ position: relative;}
+        .popList td a::after{ width: 6px; height: 6px; content: ""; margin: 0px 0 2px 5px; display: inline-block; border-right: 2px solid #222; border-bottom: 2px solid #222; transform: rotate(-45deg);}
+    </style>
+</head>
+<body>
+    <!-- 레이어팝업 시작 -->
+    <div id="lp_layout">
+        <!-- 레이어팝업 lp_04l01p 시작 -->
+        <div id="lp_04l01p" class="lp_wrap type1">
+            <div class="head">
+                <h2><strong>알써니</strong>로그인</h2>
+            </div>
+            <div class="body">
+                <div class="inputBox">
+                    <ul>
+                        <li>
+                            <label for="04l01p_1">아이디</label>
+                            <input id="04l01p_1" type="text" />
+                        </li>
+                        <li>
+                            <label for="04l01p_2">비밀번호</label>
+                            <input id="04l01p_2" type="password" />
+                        </li>
+                    </ul>
+                    <div class="idPw_search">
+                        <a href="#" class="lp_open2" data-lp="04l01p01">ID 및 비밀번호 찾기</a>
+                    </div>
+                </div>
+                <div class="btn">
+                    <a href="#" class="lp_close">로그인</a>
+                </div>
+                <div class="join_wrap">
+                    <ul>
+                        <li>
+                            <p>가장 빠르고<br>정직한 거래의 시작!<br>인기 매물 열람수익까지</p>
+                            <a href="#">일반회원가입</a>
+                        </li>
+                        <li>
+                            <p>알써니<br>공식파트너 시작<br>우리지역 우리고객</p>
+                            <a href="#">공인중개사회원</a>
+                            <a href="#">임대관리사회원</a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            <a class="lp_close" href="#">닫기</a>
+        </div>
+        <!-- 레이어팝업 lp_04l01p 끝 -->
+        <!-- 레이어팝업 lp_04l01p01 시작 -->
+        <div id="lp_04l01p01" class="lp_wrap type2">
+            <div class="head">
+                <h2>아이디 & 비밀번호 찾기</h2>
+            </div>
+            <div class="body">
+                <p>회원가입 시 이메일 주소로<br>아이디 및 비밀번호 변경<br>링크를 전달 드립니다.</p>
+                <div class="inputBox">
+                    <ul>
+                        <li>
+                            <input type="text" placeholder="이메일 주소 입력" />
+                        </li>
+                    </ul>
+                </div>
+                <div class="btn">
+                    <a href="#" class="type1 lp_close2">확인</a>
+                </div>
+            </div>
+            <a class="lp_close2" href="#">닫기</a>
+        </div>
+        <!-- 레이어팝업 lp_04l01p01 끝 -->
+        <!-- 레이어팝업 lp_02la02p01 시작 -->
+        <div id="lp_02la02p01" class="lp_wrap type2">
+            <div class="head">
+                <h2>알써니 광고 아이템</h2>
+            </div>
+            <div class="body">
+                <ul class="ul_list">
+                    <li>매물 동 지역 목록에서 상위 노출</li>
+                    <li>아이템 메뉴에서 추가 구매 가능합니다.</li>
+                </ul>
+                <div class="inputBox">
+                    <ul>
+                        <li class="itemSet">
+                            <p>보유 5건</p>
+                            <a href="#" class="lp_close">적용</a>
+                        </li>
+                    </ul>
+                </div>
+                <div class="btn">
+                    <a href="#" class="type1 lp_close">확인</a>
+                </div>
+            </div>
+            <a class="lp_close" href="#">닫기</a>
+        </div>
+        <!-- 레이어팝업 lp_02la02p01 끝 -->
+        <!-- 레이어팝업 lp_02la04p01 시작 -->
+        <div id="lp_02la04p01" class="lp_wrap type2">
+            <div class="head">
+                <h2>정보 편집</h2>
+            </div>
+            <div class="body">
+                <div class="inputBox">
+                    <ul>
+                        <li>
+                            <label for="02la04p01_1">성명</label>
+                            <input id="02la04p01_1" type="text" />
+                        </li>
+                        <li>
+                            <label for="02la04p01_2">이메일</label>
+                            <input id="02la04p01_2" type="text" />
+                        </li>
+                        <li>
+                            <label for="02la04p01_3">연락처</label>
+                            <input id="02la04p01_3" type="text" />
+                        </li>
+                        <li>
+                            <label for="02la04p01_4">비밀번호 변경</label>
+                            <input id="02la04p01_4" type="text" placeholder="10자~20자 영문,숫자 조합" />
+                        </li>
+                        <li>
+                            <label for="02la04p01_5">비밀번호 확인</label>
+                            <input id="02la04p01_5" type="text" />
+                        </li>
+                    </ul>
+                </div>
+                <div class="btn">
+                    <a href="#" class="type2 lp_close">취소</a>
+                    <a href="#" class="type1 lp_close">저장</a>
+                </div>
+            </div>
+            <a class="lp_close" href="#">닫기</a>
+        </div>
+        <!-- 레이어팝업 lp_02la04p01 끝 -->
+        <!-- 레이어팝업 lp_02la04p02 시작 -->
+        <div id="lp_02la04p02" class="lp_wrap type2">
+            <div class="head">
+                <h2>포인트 출금 신청</h2>
+            </div>
+            <div class="point_input">
+                <dl>
+                    <dt>출금 가능 누적 포인트</dt>
+                    <dd>10,000 P</dd>
+                </dl>
+                <span></span>
+                <dl>
+                    <dt><label for="02la04p02_1">출금포인트</label></dt>
+                    <dd><input id="02la04p02_1" type="text" placeholder="10,000 P 이상가능"></dd>
+                </dl>
+            </div>
+            <div class="body">
+                <div class="inputBox">
+                    <ul>
+                        <li>
+                            <label for="02la04p02_2">거래은행</label>
+                            <div class="selectBox">
+                                <select id="02la04p02_2">
+                                    <option>거래은행 선택</option>
+                                    <option>1</option>
+                                    <option>2</option>
+                                    <option>3</option>
+                                </select>
+                            </div>
+                        </li>
+                        <li>
+                            <label for="02la04p02_3">계좌번호</label>
+                            <input id="02la04p02_3" type="text" placeholder="“-” 없이 입력해 주세요." />
+                        </li>
+                        <li>
+                            <label for="02la04p02_4">예금주</label>
+                            <input id="02la04p02_4" type="text" placeholder="실 예금주명 입력" />
+                        </li>
+                    </ul>
+                </div>
+                <div class="btn">
+                    <a href="#" class="type1 lp_close">출금 요청 신청</a>
+                </div>
+            </div>
+            <a class="lp_close" href="#">닫기</a>
+        </div>
+        <!-- 레이어팝업 lp_02la04p02 끝 -->
+        <!-- 레이어팝업 lp_02la03p01 시작 -->
+        <div id="lp_02la03p01" class="lp_wrap type2">
+            <div class="head">
+                <h2>알써니 아이템 구매</h2>
+            </div>
+            <div class="body">
+                <p>포인트 부족으로<br>전환 처리 되지 못했습니다.</p>
+                <div class="btn">
+                    <a href="#" class="type1 lp_close">확인</a>
+                </div>
+            </div>
+            <a class="lp_close" href="#">닫기</a>
+        </div>
+        <!-- 레이어팝업 lp_02la03p01 끝 -->
+        <!-- 레이어팝업 lp_02lb02p01 시작 -->
+        <div id="lp_02lb02p01" class="lp_wrap type2">
+            <div class="head">
+                <h2>매물열람하기 (소유자 정보 확인)</h2>
+            </div>
+            <div class="body">
+                <p>본 매물은 공동중개 매물입니다.</p>
+                <p>알써니 <span class="colorB f_w_700">10,000 포인트</span> 차감 후 가능합니다.</p>
+                <p class="txt18">(포인트 부족 시 포인트 메뉴에서 충전하세요)</p>
+                <div class="btn">
+                    <a href="#" class="type2 lp_close">취소</a>
+                    <a href="#" class="type1 lp_close">포인트 차감</a>
+                </div>
+            </div>
+            <a class="lp_close" href="#">닫기</a>
+        </div>
+        <!-- 레이어팝업 lp_02lb02p01 끝 -->
+        <!-- 레이어팝업 02lb03p01 시작 -->
+        <div id="lp_02lb03p01" class="lp_wrap type2">
+            <div class="head">
+                <h2>알써니 아이템 구매</h2>
+            </div>
+            <div class="body">
+                <p>포인트 부족으로<br>전환 처리 되지 못했습니다.</p>
+                <div class="btn">
+                    <a href="#" class="type1 lp_close">확인</a>
+                </div>
+            </div>
+            <a class="lp_close" href="#">닫기</a>
+        </div>
+        <!-- 레이어팝업 02lb03p01 끝 -->
+        <!-- 레이어팝업 lp_02lb04p01 시작 -->
+        <div id="lp_02lb04p01" class="lp_wrap type2">
+            <div class="head">
+                <h2>정보 편집</h2>
+            </div>
+            <div class="body">
+                <div class="inputBox col2">
+                    <ul>
+                        <li class="col_left">
+                            <label for="02lb04p01_1">공인중개사명</label>
+                            <input id="02lb04p01_1" type="text" placeholder="정식 명칭을 입력해 주세요." />
+                        </li>
+                        <li class="col_right">
+                            <label for="02lb04p01_2">대표자명</label>
+                            <input id="02lb04p01_2" type="text" placeholder="실명을 입력해 주세요" />
+                        </li>
+                        <li class="colspan2">
+                            <label for="02lb04p01_3">비밀번호</label>
+                            <div class="flexBox">
+                                <div class="flex_half col_left">
+                                    <input id="02lb04p01_3" type="text" placeholder="10자~20자 영문,숫자 조합" />
+                                </div>
+                                <div class="flex_half col_right">
+                                    <input id="02lb04p01_4" type="text" placeholder="비밀번호 확인" />
+                                </div>
+                            </div>
+                        </li>
+                        <li class="colspan2">
+                            <label for="02lb04p01_5">휴대전화</label>
+                            <div class="flexBox">
+                                <div class="flex_half col_left">
+                                    <input id="02lb04p01_5" type="text" placeholder="휴대전화" />
+                                </div>
+                                <div class="flex_half col_right">
+                                    <input id="02lb04p01_6" type="text" placeholder="휴대전화 확인" />
+                                </div>
+                            </div>
+                        </li>
+                        <li class="colspan2">
+                            <label for="02lb04p01_7">사업자 주소지</label>
+                            <div class="flexBox serachBox">
+                                <div class="flex_half col_left">
+                                    <input id="02lb04p01_7" type="text" />
+                                    <a href="#">주소검색</a>
+                                </div>
+                                <div class="flex_half col_right">
+                                    <input id="02lb04p01_8" type="text" placeholder="상세주소" />
+                                </div>
+                            </div>
+                        </li>
+                        <li class="colspan2">
+                            <label for="02lb04p01_9">담당자명/연락처</label>
+                            <div class="flexBox">
+                                <div class="flex_half col_left">
+                                    <input id="02lb04p01_9" type="text" placeholder="실명을 입력해 주세요." />
+                                </div>
+                                <div class="flex_half col_right">
+                                    <input id="02lb04p01_10" type="text" placeholder="휴대전화" />
+                                </div>
+                            </div>
+                        </li>
+                        <li class="col_left">
+                            <label for="02lb04p01_11">메일주소</label>
+                            <input id="02lb04p01_11" type="text" placeholder="이메일 주소 형식으로 입력해 주세요." />
+                        </li>
+                        <li class="colspan2">
+                            <label>사진/서류 첨부</label>
+                            <ul class="fileBox">
+                                <li>
+                                    <input id="02lb04p01_12" type="file">
+                                    <label for="02lb04p01_12">사업자 등록증</label>
+                                    <a href="#">사업자 등록증<br>등록완료</a>
+                                </li>
+                                <li>
+                                    <input id="02lb04p01_13" type="file">
+                                    <label for="02lb04p01_13">자격증 사본</label>
+                                    <a href="#">자격증 사본<br>등록완료</a>
+                                </li>
+                                <li>
+                                    <input id="02lb04p01_14" type="file">
+                                    <label for="02lb04p01_14">개설 등록증</label>
+                                    <a href="#">개설 등록증<br>등록완료</a>
+                                </li>
+                                <li>
+                                    <input id="02lb04p01_15" type="file">
+                                    <label for="02lb04p01_15">공체 증서</label>
+                                    <a href="#">공체 증서<br>등록완료</a>
+                                </li>
+                                <li>
+                                    <input id="02lb04p01_16" type="file">
+                                    <label for="02lb04p01_16">사무실 외부</label>
+                                    <a href="#">사무실 외부<br>등록완료</a>
+                                </li>
+                                <li>
+                                    <input id="02lb04p01_17" type="file">
+                                    <label for="02lb04p01_17">사무실 내부</label>
+                                    <a href="#">사무실 내부<br>등록완료</a>
+                                </li>
+                                <li>
+                                    <input id="02lb04p01_18" type="file">
+                                    <label for="02lb04p01_18">추가 사진</label>
+                                    <a href="#">추가 사진<br>등록완료</a>
+                                </li>
+                            </ul>
+                        </li>
+                        <li class="col_left">
+                            <label for="02lb04p01_19">거래은행</label>
+                            <div class="selectBox">
+                                <select id="02lb04p01_19">
+                                    <option>거래은행 선택</option>
+                                    <option>1</option>
+                                    <option>2</option>
+                                    <option>3</option>
+                                </select>
+                            </div>
+                        </li>
+                        <li class="col_right">
+                            <label for="02lb04p01_20">계좌번호</label>
+                            <input id="02lb04p01_20" type="text" placeholder="“-” 없이 입력해 주세요." />
+                        </li>
+                    </ul>
+                </div>
+                <div class="btn">
+                    <a href="#" class="type2 lp_close">취소</a>
+                    <a href="#" class="type1 lp_close">저장</a>
+                </div>
+            </div>
+            <a class="lp_close" href="#">닫기</a>
+        </div>
+        <!-- 레이어팝업 lp_02lb04p01 끝 -->
+        <!-- 레이어팝업 lp_02lb04p02 시작 -->
+        <div id="lp_02lb04p02" class="lp_wrap type2">
+            <div class="head">
+                <h2>연락처 노출 설정</h2>
+            </div>
+            <div class="body">
+                <p>아래 매물 유형별 연락처<br>노출을 관리 할 수 있습니다.</p>
+                <p class="txt18">(비노출 시 관할 동에 해당 매물유형은<br>알선받기 목록에 연락처가 노출되지 않습니다.) </p>
+                <div class="show_choice">
+                    <dl>
+                        <dt>원룸·투룸+</dt>
+                        <dd>
+                            <span class="radioBox">
+                                <input id="02lb04p02_1_1" name="02lb04p02_1" type="radio">
+                                <label for="02lb04p02_1_1">노출</label>
+                            </span>
+                            <span class="radioBox">
+                                <input id="02lb04p02_1_2" name="02lb04p02_1" type="radio">
+                                <label for="02lb04p02_1_2">비노출</label>
+                            </span>
+                        </dd>
+                    </dl>
+                    <dl>
+                        <dt>아파트·오피스텔</dt>
+                        <dd>
+                            <span class="radioBox">
+                                <input id="02lb04p02_2_1" name="02lb04p02_2" type="radio">
+                                <label for="02lb04p02_2_1">노출</label>
+                            </span>
+                            <span class="radioBox">
+                                <input id="02lb04p02_2_2" name="02lb04p02_2" type="radio">
+                                <label for="02lb04p02_2_2">비노출</label>
+                            </span>
+                        </dd>
+                    </dl>
+                    <dl>
+                        <dt>주택·빌라</dt>
+                        <dd>
+                            <span class="radioBox">
+                                <input id="02lb04p02_3_1" name="02lb04p02_3" type="radio">
+                                <label for="02lb04p02_3_1">노출</label>
+                            </span>
+                            <span class="radioBox">
+                                <input id="02lb04p02_3_2" name="02lb04p02_3" type="radio">
+                                <label for="02lb04p02_3_2">비노출</label>
+                            </span>
+                        </dd>
+                    </dl>
+                    <dl>
+                        <dt>상가·사무실</dt>
+                        <dd>
+                            <span class="radioBox">
+                                <input id="02lb04p02_4_1" name="02lb04p02_4" type="radio">
+                                <label for="02lb04p02_4_1">노출</label>
+                            </span>
+                            <span class="radioBox">
+                                <input id="02lb04p02_4_2" name="02lb04p02_4" type="radio">
+                                <label for="02lb04p02_4_2">비노출</label>
+                            </span>
+                        </dd>
+                    </dl>
+                    <dl>
+                        <dt>토지·건물</dt>
+                        <dd>
+                            <span class="radioBox">
+                                <input id="02lb04p02_5_1" name="02lb04p02_5" type="radio">
+                                <label for="02lb04p02_5_1">노출</label>
+                            </span>
+                            <span class="radioBox">
+                                <input id="02lb04p02_5_2" name="02lb04p02_5" type="radio">
+                                <label for="02lb04p02_5_2">비노출</label>
+                            </span>
+                        </dd>
+                    </dl>
+                </div>
+                <div class="btn">
+                    <a href="#" class="type2 lp_close">취소</a>
+                    <a href="#" class="type1 lp_close">저장</a>
+                </div>
+            </div>
+            <a class="lp_close" href="#">닫기</a>
+        </div>
+        <!-- 레이어팝업 lp_02lb04p02 끝 -->
+        <!-- 레이어팝업 lp_02lb04p03 시작 -->
+        <div id="lp_02lb04p03" class="lp_wrap type2">
+            <div class="head">
+                <h2>포인트 출금 신청</h2>
+            </div>
+            <div class="point_input">
+                <dl>
+                    <dt>출금 가능 누적 포인트</dt>
+                    <dd>10,000 P</dd>
+                </dl>
+                <span></span>
+                <dl>
+                    <dt><label for="02la04p02_1">출금포인트</label></dt>
+                    <dd><input id="02la04p02_1" type="text" placeholder="10,000 P 이상가능"></dd>
+                </dl>
+            </div>
+            <div class="body">
+                <div class="inputBox">
+                    <ul>
+                        <li>
+                            <label for="02la04p02_2">거래은행</label>
+                            <div class="selectBox">
+                                <select id="02la04p02_2">
+                                    <option>거래은행 선택</option>
+                                    <option>1</option>
+                                    <option>2</option>
+                                    <option>3</option>
+                                </select>
+                            </div>
+                        </li>
+                        <li>
+                            <label for="02la04p02_3">계좌번호</label>
+                            <input id="02la04p02_3" type="text" placeholder="“-” 없이 입력해 주세요." />
+                        </li>
+                        <li>
+                            <label for="02la04p02_4">예금주</label>
+                            <input id="02la04p02_4" type="text" placeholder="실 예금주명 입력" />
+                        </li>
+                    </ul>
+                </div>
+                <ul class="ul_list type2">
+                    <li>출금요청 신청 후 관리자 승인 후 등록된 회원명의 거래 계좌로<br>송금 처리됩니다.</li>
+                    <li>송금 처리는 승인 후 24시내 처리 됩니다.</li>
+                </ul>
+                <div class="btn">
+                    <a href="#" class="type1 lp_close">출금 요청 신청</a>
+                </div>
+            </div>
+            <a class="lp_close" href="#">닫기</a>
+        </div>
+        <!-- 레이어팝업 lp_02lb04p03 끝 -->
+        <!-- 레이어팝업 lp_02lb04p04 시작 -->
+        <div id="lp_02lb04p04" class="lp_wrap type2">
+            <div class="head">
+                <h2>포인트 충전 신청</h2>
+            </div>
+            <div class="body">
+                <div class="stepBox">
+                    <h3>알써니 포인트 충전 절차</h3>
+                    <ul>
+                        <li>
+                            <span>1</span>
+                            <p>충전 포인트<br>결정</p>
+                        </li>
+                        <li>
+                            <span>2</span>
+                            <p>아래 계좌로<br>송금 진행</p>
+                        </li>
+                        <li>
+                            <span>3</span>
+                            <p>입금 정보 입력<br>신청하기</p>
+                        </li>
+                        <li>
+                            <span>4</span>
+                            <p>알써니 확인 후<br>충전 완료</p>
+                        </li>
+                    </ul>
+                </div>
+                <div class="rowBox type2">
+                    <dl>
+                        <dt>입금계좌</dt>
+                        <dd>우리은행 234-23000129-098</dd>
+                    </dl>
+                    <dl>
+                        <dt>예금주</dt>
+                        <dd>주식회사 알써니</dd>
+                    </dl>
+                    <p>신청 시 24시간 내 무통장 입금 확인하여 포인트 충전이 완료 됩니다.</p>
+                </div>
+                <div class="inputBox">
+                    <ul>
+                        <li>
+                            <label for="02lb04p04_1">충전포인트</label>
+                            <div class="selectBox">
+                                <select id="02lb04p04_1">
+                                    <option>10,000 포인트</option>
+                                    <option>1</option>
+                                    <option>2</option>
+                                    <option>3</option>
+                                </select>
+                            </div>
+                        </li>
+                        <li>
+                            <label for="02lb04p04_2">거래은행</label>
+                            <div class="selectBox">
+                                <select id="02lb04p04_2">
+                                    <option>선택</option>
+                                    <option>1</option>
+                                    <option>2</option>
+                                    <option>3</option>
+                                </select>
+                            </div>
+                        </li>
+                        <li>
+                            <label for="02la04p02_3">입금계좌</label>
+                            <input id="02la04p02_3" type="text" placeholder="“-” 없이 입력해 주세요." />
+                        </li>
+                        <li>
+                            <label for="02la04p02_4">입금자명</label>
+                            <input id="02la04p02_4" type="text" placeholder="실 예금주명 입력" />
+                        </li>
+                    </ul>
+                </div>
+                <ul class="ul_list type2">
+                    <li>입금 후 최종신청 해주세요.</li>
+                    <li>포인트는 현금과 동일하게 사용되면 소멸되지 않습니다.</li>
+                </ul>
+                <div class="btn">
+                    <a href="#" class="type1 lp_close">신청</a>
+                </div>
+            </div>
+            <a class="lp_close" href="#">닫기</a>
+        </div>
+        <!-- 레이어팝업 lp_02lb04p04 끝 -->
+        <!-- 레이어팝업 lp_02mb01p02 시작 -->
+        <div id="lp_02mb01p02" class="lp_wrap type2">
+            <div class="head">
+                <h2>매물열람하기 (소유자 정보 확인)</h2>
+            </div>
+            <div class="body">
+                <p>알써니 <span class="colorB f_w_700">10,000 포인트</span> 차감 후 가능합니다.</p>
+                <p class="txt18">(포인트 부족 시 포인트 메뉴에서 충전하세요)</p>
+                <div class="btn">
+                    <a href="#" class="type2 lp_close">취소</a>
+                    <a href="#" class="type1 lp_close">포인트 차감</a>
+                </div>
+            </div>
+            <a class="lp_close" href="#">닫기</a>
+        </div>
+        <!-- 레이어팝업 lp_02mb01p02 끝 -->
+        <!-- 레이어팝업 lp_02mb01p03 시작 -->
+        <div id="lp_02mb01p03" class="lp_wrap type2">
+            <div class="head">
+                <h2>매물 소유자 정보</h2>
+            </div>
+            <div class="body">
+                <div class="rowBox">
+                    <dl>
+                        <dt>소유자명</dt>
+                        <dd>김누구</dd>
+                    </dl>
+                    <dl>
+                        <dt>연락처</dt>
+                        <dd>000-0000-0000</dd>
+                    </dl>
+                    <dl>
+                        <dt>이메일</dt>
+                        <dd>dfadsdf@fdklfj.com</dd>
+                    </dl>
+                </div>
+                <div class="btn">
+                    <a href="#" class="type1 lp_close">확인</a>
+                </div>
+            </div>
+            <a class="lp_close" href="#">닫기</a>
+        </div>
+        <!-- 레이어팝업 lp_02mb01p03 끝 -->
+        <!-- 레이어팝업 lp_02ma01p02 시작 -->
+        <div id="lp_02ma01p02" class="lp_wrap type2">
+            <div class="head">
+                <h2>공인중개사 정보</h2>
+            </div>
+            <div class="body">
+                <p>믿음공인중개사사무소</p>
+                <div class="rowBox type3">
+                    <dl>
+                        <dt>대표자</dt>
+                        <dd>김민국</dd>
+                    </dl>
+                </div>
+                <div class="rowBox type4">
+                    <dl>
+                        <dt>소재지</dt>
+                        <dd>서울시 강남구 삼성로 180, 1층 101호</dd>
+                    </dl>
+                    <dl>
+                        <dt>대표번호</dt>
+                        <dd>0505-7852-2356 (전화)</dd>
+                    </dl>
+                    <dl>
+                        <dt>소개글</dt>
+                        <dd>우리 믿음부동산은 강남구 일대 20년의 전통을 자랑하는…</dd>
+                    </dl>
+                    <div class="btn">
+                        <a href="#" class="type1 lp_close">확인</a>
+                    </div>
+                </div>
+            </div>
+            <a class="lp_close" href="#">닫기</a>
+        </div>
+        <!-- 레이어팝업 lp_02ma01p02 끝 -->
+        <!-- 레이어팝업 lp_06ma02 시작 -->
+        <div id="lp_06ma02" class="lp_wrap type1">
+            <div class="head">
+                <h2><strong>알써니</strong>비밀번호 관리</h2>
+            </div>
+            <div class="body">
+                <p>비밀번호 변경이 완료 되었습니다</p>
+                <div class="btn">
+                    <a href="#" class="lp_close">로그인</a>
+                </div>
+            </div>
+            <a class="lp_close" href="#">닫기</a>
+        </div>
+        <!-- 레이어팝업 lp_06ma02 끝 -->
+    </div>
+    <!-- 레이어팝업 끝 -->
+    <table class="popList">
+        <colgroup>
+            <col style="width: 80px;" />
+            <col style="width: 200px;" />
+            <col style="width: 200px;" />
+            <col style="width: 200px;" />
+            <col style="width: 200px;" />
+            <col style="width: 200px;" />
+            <col style="width: auto;" />
+        </colgroup>
+        <thead>
+            <tr>
+                <th scope="col">번호</th>
+                <th scope="col">1depth</th>
+                <th scope="col">2depth</th>
+                <th scope="col">3depth</th>
+                <th scope="col">4depth</th>
+                <th scope="col">ID</th>
+                <th scope="col">기타</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>1</td>
+                <td>로그인</td>
+                <td>로그인</td>
+                <td></td>
+                <td></td>
+                <td><a href="#" class="lp_open" data-lp="04l01p">04l01p</a></td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>2</td>
+                <td>로그인</td>
+                <td>아이디/비번찾기</td>
+                <td></td>
+                <td></td>
+                <td><a href="#" class="lp_open" data-lp="04l01p01">04l01p01</a></td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>3</td>
+                <td>매물</td>
+                <td>매물목록(일반)</td>
+                <td>등록매물</td>
+                <td>아이템적용(p)</td>
+                <td><a href="#" class="lp_open" data-lp="02la02p01">02la02p01</a></td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>4</td>
+                <td>매물</td>
+                <td>매물목록(일반)</td>
+                <td>포인트&관리</td>
+                <td>정보편집(p)</td>
+                <td><a href="#" class="lp_open" data-lp="02la04p01">02la04p01</a></td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>5</td>
+                <td>매물</td>
+                <td>매물목록(일반)</td>
+                <td>포인트&관리</td>
+                <td>포인트출금신청(p)</td>
+                <td><a href="#" class="lp_open" data-lp="02la04p02">02la04p02</a></td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>6</td>
+                <td>매물</td>
+                <td>매물목록(일반)</td>
+                <td>아이템구매</td>
+                <td>광고아이템신청(p)</td>
+                <td><a href="#" class="lp_open" data-lp="02la03p01">02la03p01</a></td>
+                <td>02lb03p01 중복</td>
+            </tr>
+            <tr>
+                <td>7</td>
+                <td>매물</td>
+                <td>매물목록(중개사)</td>
+                <td>등록/열람매물</td>
+                <td>아이템적용(p)</td>
+                <td><a href="#" class="lp_open" data-lp="02lb02p01">02lb02p01</a></td>
+                <td>02mb01p02 중복</td>
+            </tr>
+            <tr>
+                <td>8</td>
+                <td>매물</td>
+                <td>매물목록(중개사)</td>
+                <td>아이템구매</td>
+                <td>광고아이템신청(p)</td>
+                <td><a href="#" class="lp_open" data-lp="02lb03p01">02lb03p01</a></td>
+                <td>02la03p01 중복</td>
+            </tr>
+            <tr>
+                <td>9</td>
+                <td>매물</td>
+                <td>매물목록(중개사)</td>
+                <td>포인트관리</td>
+                <td>정보편집(p)</td>
+                <td><a href="#" class="lp_open" data-lp="02lb04p01">02lb04p01</a></td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>10</td>
+                <td>매물</td>
+                <td>매물목록(중개사)</td>
+                <td>포인트관리</td>
+                <td>연락처노출설정(p)</td>
+                <td><a href="#" class="lp_open" data-lp="02lb04p02">02lb04p02</a></td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>11</td>
+                <td>매물</td>
+                <td>매물목록(중개사)</td>
+                <td>포인트관리</td>
+                <td>포인트출금신청(p)</td>
+                <td><a href="#" class="lp_open" data-lp="02lb04p03">02lb04p03</a></td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>12</td>
+                <td>매물</td>
+                <td>매물목록(중개사)</td>
+                <td>포인트관리</td>
+                <td>포인트충전신청(p)</td>
+                <td><a href="#" class="lp_open" data-lp="02lb04p04">02lb04p04</a></td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>13</td>
+                <td>매물</td>
+                <td>매물상세(중개사)</td>
+                <td>매물열람하기</td>
+                <td></td>
+                <td><a href="#" class="lp_open" data-lp="02mb01p02">02mb01p02</a></td>
+                <td>02lb02p01 중복</td>
+            </tr>
+            <tr>
+                <td>14</td>
+                <td>매물</td>
+                <td>매물상세(중개사)</td>
+                <td>소유자정보(p)</td>
+                <td></td>
+                <td><a href="#" class="lp_open" data-lp="02mb01p03">02mb01p03</a></td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>15</td>
+                <td>매물</td>
+                <td>매물상세(일반)</td>
+                <td>공인중개사정보(p)</td>
+                <td></td>
+                <td><a href="#" class="lp_open" data-lp="02ma01p02">02ma01p02</a></td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>16</td>
+                <td>로그인</td>
+                <td>로그인</td>
+                <td>비밀번호변경</td>
+                <td>비밀번호변경 완료팝업</td>
+                <td><a href="#" class="lp_open" data-lp="06ma02">06ma02</a></td>
+                <td></td>
+            </tr>
+        </tbody>
+    </table>
+</body>
+</html>

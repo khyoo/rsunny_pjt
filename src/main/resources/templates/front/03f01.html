@@ -1,0 +1,83 @@
+<!DOCTYPE HTML>
+<html lang="ko">
+<head>
+	<th:block th:replace="layout/fragments/front/head :: headFragment"></th:block>
+	<!-- Global site tag (gtag.js) - Google Analytics -->
+	<script async src="https://www.googletagmanager.com/gtag/js?id=G-6EHV3KH3XT"></script>
+	<script>
+	  window.dataLayer = window.dataLayer || [];
+	  function gtag(){dataLayer.push(arguments);}
+	  gtag('js', new Date());
+
+	  gtag('config', 'G-6EHV3KH3XT');
+	</script>
+	<script th:inline="javascript">
+		$(document).ready(function() {
+			$('a.prev').click(function() {
+				location.href = '[(${prevPage})]';
+			});
+			$('a.next').click(function() {
+				var isAuthenticated = /*[(${IS_AUTHENTICATED})]*/ false;
+				if( !isAuthenticated ) {
+					$('a[data-lp="04l01p"]').trigger('click');
+					return;
+				}
+				location.href = '[(${nextPage})]';
+			});
+		})
+	</script>
+	<!-- 지정된 숫자까지 카운트업하는 숫자 애니메이션 -->
+<script>
+        jQuery(document).ready(function($) {
+            $('.counter').counterUp({
+                delay: 10, // 숫자당 돌아가는 속도를 지연시켜주는 요소이며  숫자가 높으면 높을 수록 숫자가 돌아가는 속도가 느려집니다.
+                time: 1000 // 카운트업 해주는 애니메이션의 전체 지속시간으로 1000일 경우, 1초를 의미합니다.
+            });
+        });
+</script>
+<script src="/js/waypoints.min.js"></script>
+<script src="/js/jquery.counterup.min.js"></script>
+<!-- 지정된 숫자까지 카운트업하는 숫자 애니메이션 -->
+</head>
+<body>
+
+    <!--top_layout-->
+    <div id="top_layout" class="type2">
+		<th:block th:replace="layout/fragments/front/header :: headerFragment"></th:block>
+    </div>
+    <!--//top_layout-->
+    <!--body_layout-->
+    <div id="body_layout">
+        <!--visual_wrap-->
+        <div class="visual_wrap type2">
+            <div class="inner">
+                <p>매물을 등록하면 수익금이 쌓이는<br>기분 좋은 거래의 시작, R·sunny!</p>
+                <ul>
+                    <li>
+											<span class="counter">328</span>
+                        알써니 매물 건 수
+                    </li>
+                    <!-- <li>
+                        <span>+ 71건</span>
+                        누적 거래 건 수
+                    </li>	-->
+                    <li>
+                        <span class="counter">1,659,300</span>
+                        회원 누적 수익금
+                    </li>
+                </ul>
+                <div class="btn_wrap">
+                    <a href="javascript:void(0);" class="next">매물등록 시작하기</a>
+                </div>
+            </div>
+        </div>
+        <!--//visual_wrap-->
+    </div>
+    <!--//body_layout-->
+    <!--foot_layout-->
+    <div id="foot_layout">
+		<th:block th:replace="layout/fragments/front/footer :: footerFragment"></th:block>
+    </div>
+    <!--//foot_layout-->
+</body>
+</html>

@@ -1,0 +1,228 @@
+        <!-- 레이어팝업 lp_02lb04p01 시작 -->
+        <div id="lp_02lb04p01" class="lp_wrap type2">
+            <div class="head">
+                <h2>회원정보 편집</h2>
+            </div>
+            <div class="body">
+ 		 		<form id="frmAgentUser" name="frmAgentUser" enctype="multipart/form-data" method="post" onsubmit="return false;">
+ 		 			<input type="hidden" id="crudType" name="crudType" value="U" />
+ 		 			<input type="hidden" id="userType" name="userType" th:value="${user.userType}" />
+ 		 			<input type="hidden" id="bankUpdateYn" name="bankUpdateYn" value="Y" />
+ 		 			<input type="hidden" id="recommandId" name="recommandId" th:value="${user.recommandId}" />
+                <div class="inputBox col2">
+                    <ul>
+                        <li class="col_left" th:if="${USER_TYPE=='AA'}">
+                            <label for="usernm">공인중개사명</label>
+                            <input id="usernm" type="text" name="bizNm" th:value="${user.bizNm}" placeholder="정식 명칭을 입력해 주세요." />
+                        </li>
+                        <li class="col_right">
+                            <label for="02lb04p01_2">대표자명</label>
+                            <input id="02lb04p01_2" type="text" name="ceoNm" th:value="${user.ceoNm}" placeholder="실명을 입력해 주세요" />
+                        </li>
+                        <li class="colspan2">
+                            <label for="passwd">비밀번호 - 비밀번호 확 </label>
+                            <div class="flexBox">
+                                <div class="flex_half col_left">
+                                    <input id="passwd" type="password" name="passwd" placeholder="10자~20자 영문,숫자 조합" />
+                                </div>
+                                <div class="flex_half col_right">
+                                    <input id="passwd2" type="password" name="passwd2" placeholder="비밀번호 확인" />
+                                </div>
+                            </div>
+                        </li>
+                        <li class="colspan2">
+                            <label for="phone">휴대전화번호 - 휴대전화번호확인</label>
+                            <div class="flexBox">
+                                <div class="flex_half col_left">
+                                    <input id="phone" type="text" name="phone" th:value="${user.phone}" placeholder="휴대전화" />
+                                </div>
+                                <div class="flex_half col_right">
+                                    <input id="phone2" type="text" name="phone2" th:value="${user.phone}" placeholder="휴대전화 확인" />
+                                </div>
+                            </div>
+                        </li>
+                        <!--
+                        <li class="colspan2">
+                            <label for="addr1">사업자 주소지</label>
+                            <div class="flexBox serachBox">
+                                <div class="flex_half col_left">
+                                    <input id="addr1" type="text" name="addr1" th:value="${user.addr1}" readonly="readonly" />
+                                    <a href="#" class="address">주소검색</a>
+                                </div>
+                                <div class="flex_half col_right">
+                                    <input id="addr2" type="text" name="addr2" th:value="${user.addr2}" placeholder="상세주소" />
+                                </div>
+                            </div>
+                        </li>
+                        -->
+                        <li class="colspan2" th:if="${USER_TYPE=='AA'}">
+                            <label for="02lb04p01_9">담당자명 - 연락처</label>
+                            <div class="flexBox">
+                                <div class="flex_half col_left">
+                                    <input id="02lb04p01_9" type="text" name="managerNm" th:value="${user.managerNm}" placeholder="실명을 입력해 주세요." />
+                                </div>
+                                <div class="flex_half col_right">
+                                    <input id="02lb04p01_10" type="text" name="managerPhone" th:value="${user.managerPhone}" placeholder="휴대전화" />
+                                </div>
+                            </div>
+                        </li>
+                        <li class="col_left">
+                            <label for="02lb04p01_11">메일주소</label>
+                            <input id="02lb04p01_11" type="text" name="email" th:value="${user.email}" placeholder="이메일 주소 형식으로 입력해 주세요." />
+                        </li>
+                        <!--
+                        <li class="colspan2">
+                            <label>사진/서류 첨부</label>
+                            <ul class="fileBox">
+                                <li th:class="${#strings.isEmpty(user.bizPath)?'' : 'on'}">
+                                    <input id="02lb04p01_12" type="file" name="bizFile" />
+                                    <input id="bizPath" type="hidden" name="bizPath" th:value="${user.bizPath}" />
+                                    <label for="02lb04p01_12">사업자 등록증</label>
+                                    <a href="#">사업자 등록증<br>등록완료</a>
+                                </li>
+                                <li th:class="${#strings.isEmpty(user.licensePath)?'' : 'on'}">
+                                    <input id="02lb04p01_13" type="file" name="licenseFile" />
+                                    <input id="licensePath" type="hidden" name="licensePath" th:value="${user.licensePath}" />
+                                    <label for="02lb04p01_13">자격증 사본</label>
+                                    <a href="#">자격증 사본<br>등록완료</a>
+                                </li>
+                                <li th:class="${#strings.isEmpty(user.openPath)?'' : 'on'}">
+                                    <input id="02lb04p01_14" type="file" name="openFile" />
+                                    <input id="openPath" type="hidden" name="openPath" th:value="${user.openPath}" />
+                                    <label for="02lb04p01_14">개설 등록증</label>
+                                    <a href="#">개설 등록증<br>등록완료</a>
+                                </li>
+                                <li th:class="${#strings.isEmpty(user.deductiblePath)?'' : 'on'}">
+                                    <input id="02lb04p01_15" type="file" name="deductibleFile" />
+                                    <input id="deductiblePath" type="hidden" name="deductiblePath" th:value="${user.deductiblePath}" />
+                                    <label for="02lb04p01_15">공체 증서</label>
+                                    <a href="#">공제 증서<br>등록완료</a>
+                                </li>
+                                <li th:class="${#strings.isEmpty(user.outsidePath)?'' : 'on'}">
+                                    <input id="02lb04p01_16" type="file" name="outsideFile" />
+                                    <input id="outsidePath" type="hidden" name="outsidePath" th:value="${user.outsidePath}" />
+                                    <label for="02lb04p01_16">사무실 외부</label>
+                                    <a href="#">사무실 외부<br>등록완료</a>
+                                </li>
+                                <li th:class="${#strings.isEmpty(user.insidePath)?'' : 'on'}">
+                                    <input id="02lb04p01_17" type="file" name="insideFile" />
+                                    <input id="insidePath" type="hidden" name="insidePath" th:value="${user.insidePath}" />
+                                    <label for="02lb04p01_17">사무실 내부</label>
+                                    <a href="#">사무실 내부<br>등록완료</a>
+                                </li>
+                                <li th:class="${#strings.isEmpty(user.additionalPath)?'' : 'on'}">
+                                    <input id="02lb04p01_18" type="file" name="additionalFile" />
+                                    <input id="additionalPath" type="hidden" name="additionalPath" th:value="${user.additionalPath}" />
+                                    <label for="02lb04p01_18">추가 사진</label>
+                                    <a href="#">추가 사진<br>등록완료</a>
+                                </li>
+                            </ul>
+                        </li>
+                        -->
+                        <li class="col_left">
+                            <label for="02lb04p01_19">거래은행</label>
+                            <div class="selectBox--bug">
+                                <select id="02lb04p01_19" name="bankNm">
+                                    <option value="">-선택-</option>
+                                	<option th:each="item : ${BANK_LIST}" th:value="${item.nm}" th:text="${item.nm}" th:selected="${user.bankNm==item.nm}">은행명</option>
+                                </select>
+                            </div>
+                        </li>
+                        <li class="col_right">
+                            <label for="02lb04p01_20">계좌번호</label>
+                            <input id="02lb04p01_20" type="text" name="accountNo" th:value="${user.accountNo}" placeholder="“-” 없이 입력해 주세요." />
+                        </li>
+                    </ul>
+                </div>
+                </form>
+                <div class="btn">
+                    <a href="#" class="type2 lp_close">취소</a>
+                    <a href="#" class="type1 userupdate">저장</a>
+                </div>
+            </div>
+            <a class="lp_close" href="#">닫기</a>
+        </div>
+        <!-- 레이어팝업 lp_02lb04p01 끝 -->
+
+	<script src="//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
+	<script th:inline="javascript">
+		$(document).ready(function() {
+		    $(".fileBox li").on("click",function(){
+		        var box = $(this);
+		        box.removeClass("on")
+				box.find("input").val("");
+		        //alert(box.find('input[type=file]').length);
+		        //box.find('input[type=file]').trigger('click');
+		        //console.log(">>>>>>>> _val : "+$(this).parent().find("input").val());
+		    });
+
+			$('input[name=addr1]').click(function() {
+				$('a.address').trigger('click');
+			});
+
+			$('a.address').click(function() {
+				new daum.Postcode({
+					oncomplete:function(postdata) {
+						//alert(JSON.stringify(postdata));
+						$('input[name=addr1]').val(postdata.address);
+					}
+				}).open();
+			});
+
+			$('a.userupdate').click(function() {
+				var form = $('#frmAgentUser');
+
+				//필수값 체크.
+		    	form.validate({
+		    		wrapper: 'div',
+					rules: {
+						userid: {required: true, userid: true, rangelength: [4, 12]},
+						passwd2: {rangelength: [6, 20], equalTo: '#passwd'},
+						bizNm: {required: true, maxlength: 30},
+						ceoNm: {required: true, maxlength:  8},
+						phone: {required: true, maxlength: 13},
+						phone2: {required: true, maxlength: 13, equalTo: '#phone'},
+						addr1: 'required',
+						addr2: 'required',
+						managerNm: 'required',
+						managerPhone: {required: true, maxlength: 13},
+						email: {required: true, email: true}
+					}
+		    	});
+
+				if( !form.valid() ) return;
+
+				var formdata = form.serializeObject();
+				//alert(JSON.stringify(formdata));
+
+	    		if( !confirm('저장하시겠습니까?') ) return;
+
+				var form = form[0];
+				var formdata = new FormData(form);
+
+				$.ajax({
+					type: 'POST',
+					enctype: 'multipart/form-data',
+					url: '/user/rest/update-agent',
+					data: formdata,
+					processData: false,
+					contentType: false,
+					cache: false,
+					timeout: 600000,
+					success: function(result) {
+		    			if(result.code == 0) {
+		    				location.reload();
+		    			}
+		    			else {
+			    			alert(result.message);
+		    			}
+					}
+				});
+
+			});	//End-of-$('a.save').click(function() {
+
+			$('a.cancel').click(function() {
+				location.href = '/';
+			});
+		})
+	</script>

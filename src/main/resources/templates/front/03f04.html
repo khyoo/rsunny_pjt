@@ -1,0 +1,311 @@
+<!DOCTYPE HTML>
+<html lang="ko">
+<head>
+	<th:block th:replace="layout/fragments/front/head :: headFragment"></th:block>
+	<!-- Global site tag (gtag.js) - Google Analytics -->
+	<script async src="https://www.googletagmanager.com/gtag/js?id=G-6EHV3KH3XT"></script>
+	<script>
+	  window.dataLayer = window.dataLayer || [];
+	  function gtag(){dataLayer.push(arguments);}
+	  gtag('js', new Date());
+
+	  gtag('config', 'G-6EHV3KH3XT');
+	</script>
+	<script th:inline="javascript">
+		$(document).ready(function() {
+			var form = $('#frmBase');
+
+			//필수값 체크.
+	    	form.validate({
+	    		wrapper: 'div',
+				rules: {
+					supplyArea: 'required',
+					privateArea: 'required',
+					landArea: 'required',
+					buildingArea: 'required',
+					totalFloor: 'required',
+					saleFloor: 'required',
+					directionType: 'required',
+					parkingType: 'required',
+					roomType: 'required',
+					bathroomType: 'required',
+					elevatorType: 'required',
+					animalType: 'required',
+					completionYm: 'required',
+					moveinType: 'required'
+				}
+	    	});
+
+			var saleDetailType = /*[[${data.saleDetailType}]]*/ '';
+			if(saleDetailType=='l1') {	//토지인 경우.
+		    	$('input[name=buildingArea]').rules( 'remove' );
+		    	$('input[name=totalFloor]').rules( 'remove' );
+		    	$('input[name=saleFloor]').rules( 'remove' );
+		    	$('input[name=completionYm]').rules( 'remove' );
+			}
+			else if(saleDetailType=='l2') {	//건물인 경우.
+		    	$('input[name=saleFloor]').rules( 'remove' );
+			}
+			else if(saleDetailType=='l3') {	//공장인 경우.
+		    	$('input[name=saleFloor]').rules( 'remove' );
+			}
+
+			$('a.prev').click(function() {
+				var formdata = form.serializeObject();
+				formdata.optionItems = $('#optionItems').find('input[type=checkbox]:checked').listToString();
+
+				$.post('[(${saveUrl})]', formdata, function(result) {
+					if(result.code==0) {
+						location.href = '[(${prevPage})]';
+					}
+					else {
+						alert(result.message);
+					}
+				}).fail(function() {
+					alert('저장중 오류가 발생하였습니다.');
+				})
+			});
+			$('a.next').click(function() {
+				var formdata = form.serializeObject();
+				formdata.optionItems = $('#optionItems').find('input[type=checkbox]:checked').listToString();
+
+				if( !form.valid() ) return;
+
+				$.post('[(${saveUrl})]', formdata, function(result) {
+					if(result.code==0) {
+						location.href = '[(${nextPage})]';
+					}
+					else {
+						alert(result.message);
+					}
+				}).fail(function() {
+					alert('저장중 오류가 발생하였습니다.');
+				})
+			});
+
+			$('input[name=optionItem]').keypress(function() {
+				if(event.keyCode==13) $('a.addOption').trigger('click');
+			})
+		})
+	</script>
+</head>
+<body>
+    <!--top_layout-->
+    <div id="top_layout" class="type2">
+		<th:block th:replace="layout/fragments/front/header :: headerFragment"></th:block>
+    </div>
+    <!--//top_layout-->
+    <!--body_layout-->
+    <div id="body_layout">
+        <!--visual_wrap-->
+        <div class="visual_wrap">
+            <div class="inner type3">
+                <h2><strong>알써니</strong> [[${pageTitle}]]</h2>
+                <p>내가 등록하고 누적 포인트는 수익금으로<br>진정한 거래의 기본, 알써니!</p>
+            </div>
+        </div>
+        <!--//visual_wrap-->
+        <!--step_wrap-->
+        <div class="step_wrap type2">
+            <div class="inner type3">
+                <dl class="end">
+                    <dt>1</dt>
+                    <dd>매물 기본정보</dd>
+                </dl>
+                <dl class="on">
+                    <dt>2</dt>
+                    <dd>매물 상세/옵션</dd>
+                </dl>
+                <dl>
+                    <dt>3</dt>
+                    <dd>사진/개인정보</dd>
+                </dl>
+                <dl>
+                    <dt>4</dt>
+                    <dd>매물 등록완료</dd>
+                </dl>
+            </div>
+        </div>
+        <!--//step_wrap-->
+        <!--h3_wrap-->
+        <form id="frmBase" name="frmBase" method="post" onsubmit="return false">
+        <div class="h3_wrap">
+            <div class="inner type3">
+                <div class="tit_wrap">
+                    <h3>매물 & 거래 유형</h3>
+                </div>
+                <div class="con_wrap">
+                    <!--input_wrap-->
+                    <div class="input_wrap col2 interval_42">
+                        <ul>
+                            <li th:if="${data.areaKind == 'B'}">
+                                <label for="id_03f04_1">대지면적</label>
+                                <div class="flexBox flex_30">
+                                    <input id="id_03f03_1" name="landArea" th:value="${data.landArea}" type="text" placeholder=""/>
+                                    <p>㎡</p>
+                                </div>
+                            </li>
+                            <li th:if="${data.areaKind == 'B'}">
+                                <label for="id_03f04_2">건축면적</label>
+                                <div class="flexBox flex_30">
+                                    <input id="id_03f03_2" name="buildingArea" th:value="${data.buildingArea}" type="text" placeholder=""/>
+                                    <p>㎡</p>
+                                </div>
+                            </li>
+                            <li th:if="${data.areaKind != 'B'}">
+                                <label for="id_03f04_1">공급면적</label>
+                                <div class="flexBox flex_30">
+                                    <input id="id_03f03_1" name="supplyArea" th:value="${data.supplyArea}" type="text" placeholder=""/>
+                                    <p>㎡</p>
+                                </div>
+                            </li>
+                            <li th:if="${data.areaKind != 'B'}">
+                                <label for="id_03f04_2">전용면적</label>
+                                <div class="flexBox flex_30">
+                                    <input id="id_03f03_2" name="privateArea" th:value="${data.privateArea}" type="text" placeholder=""/>
+                                    <p>㎡</p>
+                                </div>
+                            </li>
+                            <li>
+                                <label for="id_03f04_3">총 층수</label>
+                                <div class="flexBox flex_30">
+                                    <input id="id_03f03_3" name="totalFloor" th:value="${data.totalFloor}" type="text"/>
+                                    <p>층</p>
+                                </div>
+                            </li>
+                            <li>
+                                <label for="id_03f04_4">매물 층수</label>
+                                <div class="flexBox flex_30">
+                                    <input id="id_03f03_4" name="saleFloor" th:value="${data.saleFloor}" type="text"/>
+                                    <p>층</p>
+                                </div>
+                            </li>
+                            <li>
+                                <label for="id_03f04_5">방향</label>
+                                <div class="flexBox flex_30">
+                                    <div class="selectBox">
+                                       <select id="directionType" name="directionType">
+                                            <option value="">-선택-</option>
+                                            <option th:each="item : ${DIRECTION}" th:value="${item.cd}" th:text="${item.nm}" th:selected="${data.directionType==item.cd}">동향</option>
+                                        </select>
+                                    </div>
+                                    <p></p>
+                                </div>
+                            </li>
+                            <li>
+                                <label for="id_03f04_6">주차</label>
+                                <div class="flexBox flex_30">
+                                    <div class="selectBox">
+                                        <select id="id_03f04_6" name="parkingType">
+                                            <option value="">-선택-</option>
+                                            <option th:each="item : ${PARKING}" th:value="${item.cd}" th:text="${item.nm}" th:selected="${data.parkingType==item.cd}">주차</option>
+                                        </select>
+                                    </div>
+                                    <p></p>
+                                </div>
+                            </li>
+                            <li th:if="${data.saleType=='r' || data.saleType=='a' || data.saleType=='h'}">
+                                <label for="id_03f04_7">방 / 거실</label>
+                                <div class="flexBox flex_30">
+                                    <div class="selectBox">
+                                        <select id="id_03f04_7" name="roomType">
+                                            <option value="">-선택-</option>
+                                            <option th:each="item : ${ROOM}" th:value="${item.cd}" th:text="${item.nm}" th:selected="${data.roomType==item.cd}">동향</option>
+                                        </select>
+                                    </div>
+                                    <p></p>
+                                </div>
+                            </li>
+                            <li th:if="${data.saleType=='r' || data.saleType=='a' || data.saleType=='h'}">
+                                <label for="id_03f04_8">욕실</label>
+                                <div class="flexBox flex_30">
+                                    <div class="selectBox">
+                                        <select id="id_03f04_8" name="bathroomType">
+                                            <option value="">-선택-</option>
+                                            <option th:each="item : ${BATHROOM}" th:value="${item.cd}" th:text="${item.nm}" th:selected="${data.bathroomType==item.cd}">없음</option>
+                                        </select>
+                                    </div>
+                                    <p></p>
+                                </div>
+                            </li>
+                            <li>
+                                <label for="id_03f04_9">엘레베이터</label>
+                                <div class="flexBox flex_30">
+                                    <div class="selectBox">
+                                        <select id="id_03f04_9" name="elevatorType">
+                                            <option value="">-선택-</option>
+                                            <option th:each="item : ${ELEVATOR}" th:value="${item.cd}" th:text="${item.nm}" th:selected="${data.elevatorType==item.cd}">없음</option>
+                                        </select>
+                                    </div>
+                                    <p></p>
+                                </div>
+                            </li>
+                            <li>
+                                <label for="id_03f04_10">반려동물</label>
+                                <div class="flexBox flex_30">
+                                    <div class="selectBox">
+                                        <select id="id_03f04_10" name="animalType">
+                                            <option value="">-선택-</option>
+                                            <option th:each="item : ${ANIMAL}" th:value="${item.cd}" th:text="${item.nm}" th:selected="${data.animalType==item.cd}">반려동물</option>
+                                        </select>
+                                    </div>
+                                    <p></p>
+                                </div>
+                            </li>
+                            <li>
+                                <label for="id_03f04_11">준공년도</label>
+                                <div class="flexBox flex_30">
+                                    <input id="id_03f03_11" name="completionYm" th:value="${data.completionYm}" type="text" placeholder="YYYYMM 형식" />
+                                    <p>층</p>
+                                </div>
+                            </li>
+                            <li>
+                                <label for="id_03f04_12">입주</label>
+                                <div class="flexBox flex_30">
+                                    <div class="selectBox">
+                                        <select id="id_03f04_12" name="moveinType">
+                                            <option value="">-선택-</option>
+                                            <option th:each="item : ${MOVEIN}" th:value="${item.cd}" th:text="${item.nm}" th:selected="${data.moveinType==item.cd}">입주</option>
+                                        </select>
+                                    </div>
+                                    <p></p>
+                                </div>
+                            </li>
+                            <li>
+                                <label for="id_03f04_13">옵션정보</label>
+                                <div class="flexBox flex_bill">
+                                    <input id="id_03f04_13" name="optionItem" type="text" placeholder="단어로 입력">
+                                    <a href="#" class="addOption">추가</a>
+                                </div>
+                                <p>옵션 추가 하거나 선택해 주세요.</p>
+                                <div class="billBox" id="optionItems">
+                                    <div class="txtRadio" th:each="item, stat : ${OPTION_ITEMS}">
+                                        <input th:id="${'optionItem_'+stat.index}" type="checkbox" name="chk" th:value="${item.nm}" th:checked="${item.useYn=='Y'}">
+                                        <label th:for="${'optionItem_'+stat.index}" th:text="${item.nm}">수도세</label>
+                                    </div>
+                                </div>
+                            </li>
+                        </ul>
+                    </div>
+                    <!--//input_wrap-->
+                </div>
+            </div>
+        </div>
+        </form>
+        <!--//h3_wrap-->
+
+        <!--btn_wrap-->
+        <div class="btn_wrap">
+            <a href="javascript:void(0);" class="type2 prev">이전</a>
+            <a href="javascript:void(0);" class="type1 next">다음</a>
+        </div>
+        <!--//btn_wrap-->
+    </div>
+    <!--//body_layout-->
+    <!--foot_layout-->
+    <div id="foot_layout">
+		<th:block th:replace="layout/fragments/front/footer :: footerFragment"></th:block>
+    </div>
+    <!--//foot_layout-->
+</body>
+</html>

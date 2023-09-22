@@ -1,0 +1,149 @@
+<!DOCTYPE HTML>
+<html lang="ko">
+<head>
+	<th:block th:replace="layout/fragments/front/head :: headFragment"></th:block>
+	<!-- Global site tag (gtag.js) - Google Analytics -->
+	<script async src="https://www.googletagmanager.com/gtag/js?id=G-6EHV3KH3XT"></script>
+	<script>
+	  window.dataLayer = window.dataLayer || [];
+	  function gtag(){dataLayer.push(arguments);}
+	  gtag('js', new Date());
+
+	  gtag('config', 'G-6EHV3KH3XT');
+	</script>
+	<script th:inline="javascript">
+		$(document).ready(function() {
+			$('a.next').click(function() {
+				if( !$('input[name=chk1]').is(':checked') ) {
+					alert('[알써니 공인중개사(임대관리사회원) 회원 이용약관]에 동의하셔야 합니다.'); return;
+				}
+				if( !$('input[name=chk2]').is(':checked') ) {
+					alert('[개인정보 수집 및 이용 동의]에 동의하셔야 합니다.'); return;
+				}
+				var pp = $('input[name=chk3]:checked').val();
+
+				if( pp != 'Y' ) {
+					alert('[개인정보 제3자 제공 동의]에 동의하셔야 합니다.'); return;
+				}
+				/*
+				if(pp==undefined) {
+					alert('[개인정보 제3자 제공 동의] 여부를 선택하세요.'); return;
+				}
+				*/
+				location.href = $.validator.format('05mb02?pp={0}&userType={1}', pp, /*[[${form.userType}]]*/ '');
+			});
+
+			$('a.cancel').click(function() {
+				location.href = '/';
+			});
+		})
+	</script>
+</head>
+<body>
+    <!--top_layout-->
+    <div id="top_layout" class="type2">
+		<th:block th:replace="layout/fragments/front/header :: headerFragment"></th:block>
+    </div>
+    <!--//top_layout-->
+    <!--body_layout-->
+    <div id="body_layout">
+        <!--visual_wrap-->
+        <div class="visual_wrap">
+            <div class="inner type4">
+                <h2><strong>공인중개사</strong> 회원가입</h2>
+                <p>공인중개사(임대관리사회원) 회원은<br>등록 승인을 통해 회원가입이 가능합니다.</p>
+            </div>
+        </div>
+        <!--//visual_wrap-->
+        <!--step_wrap-->
+        <div class="step_wrap tyep1">
+            <div class="inner type3">
+                <dl class="on">
+                    <dt>1</dt>
+                    <dd>약관동의</dd>
+                </dl>
+                <dl>
+                    <dt>2</dt>
+                    <dd>회원정보입력</dd>
+                </dl>
+                <dl>
+                    <dt>3</dt>
+                    <dd>회원가입 완료</dd>
+                </dl>
+            </div>
+        </div>
+        <!--//step_wrap-->
+        <!--agree_wrap-->
+        <div class="agree_wrap">
+            <div class="inner type2">
+                <dl>
+                    <dt>
+                        <h3>알써니 공인중개사(임대관리사회원) 회원 이용약관</h3>
+                        <div class="radioBox">
+                            <input type="checkbox" id="agree_1" name="chk1">
+                            <label for="agree_1">동의</label>
+                        </div>
+                    </dt>
+										<dd>
+                        <h4>제1조 목적</h4><br>
+                        <p>본 약관은 알써니(이하 “회사”라 한다.)가 운영 및 제공하는 인터넷 서비스(이하 “알써니”라 한다.)를 이용함에 있어 회사와 이용자 간의 권리, 의무 및 책임 사항을 규정함을 목적으로 합니다.</p><br>
+												<h4>제 2조 용어의 정의</h4><br>
+												1. “알써니”라 함은 회원들이 등록한 매물 및 부동산 관련 정보들을 이용자들에게 제공하기 위하여 컴퓨터 등의 정보통신 설비를 이용하여 설정한 가상의 영업장을 말하며, 아울러 인터넷 사이트 및 모바일 어플리케이션을 운영하는 사업자의 의미로도 사용합니다.<br><br>
+												<p><a href="http://rsunny.io/06u0203" target="_blank">자세히 보기</a></p>
+                    </dd>
+                </dl><br><br><br>
+                <dl>
+                    <dt>
+                        <h3>개인정보 수집 및 이용 동의</h3>
+                        <div class="radioBox">
+                            <input type="checkbox" id="agree_2" name="chk2">
+                            <label for="agree_2">동의</label>
+                        </div>
+                    </dt>
+										<dd>
+                        <h4>제1조 (약관의 적용목적)</h4><br>
+                        <p>1. 개인정보 처리방침이란 알써니(이하 “회사”라 한다.)에서 어떤 개인 정보를 수집하고, 수집한 정보를 어떻게 이용하며, 필요에 따라 누구와 공유하는지, 이용목적이 달성된 개인 정보를 언제, 어떻게 파기하는지 등 개인 정보에 관한 정보를 제공합니다.
+													<br>2. 회사는 이용자가 자신의 개인정보에 대해 어떠한 권리를 가지고 있으며, 이를 어떻게 행사할 수 있는지, 개인정보 침해 사고가 발생할 경우 피해예방을 위해 누구에게 연락하고 도움을 받을 수 있는지를 알려드립니다.</p><br><br>
+													<p><a href="http://rsunny.io/06u0204" target="_blank">자세히 보기</a></p>
+                    </dd>
+                </dl><br><br><br>
+                <dl>
+                    <dt>
+                        <h3>개인정보 제3자 제공 동의</h3>
+                        <div class="radioBox_wrap">
+                            <div class="radioBox">
+                            	<input type="radio" id="agree_3_1" name="chk3" value="N">
+                                <label for="agree_3_1">미동의</label>
+                            </div>
+                            <div class="radioBox">
+                            	<input type="radio" id="agree_3_2" name="chk3" value="Y">
+                                 <label for="agree_3_2">동의</label>
+                            </div>
+                        </div>
+                    </dt>
+										<dd>
+										<h4>제1조 목적</h4><br>
+										<p>본 약관은 알써니(이하 “회사”라 한다.)가 운영 및 제공하는 인터넷 서비스(이하 “알써니”라 한다.)를 이용함에 있어 회사와 이용자 간의 권리, 의무 및 책임 사항을 규정함을 목적으로 합니다.</p><br>
+										<h4>제 2조 용어의 정의</h4><br>
+										1. “알써니”라 함은 회원들이 등록한 매물 및 부동산 관련 정보들을 이용자들에게 제공하기 위하여 컴퓨터 등의 정보통신 설비를 이용하여 설정한 가상의 영업장을 말하며, 아울러 인터넷 사이트 및 모바일 어플리케이션을 운영하는 사업자의 의미로도 사용합니다.<br><br>
+										<p><a href="http://rsunny.io/06u0203" target="_blank">자세히 보기</a></p>
+								</dd>
+                </dl>
+            </div>
+        </div>
+        <!--//agree_wrap-->
+        <!--btn_wrap-->
+        <div class="btn_wrap">
+            <a href="#" class="type2 cancel">취소</a>
+            <a href="#" class="type1 next">다음</a>
+        </div>
+        <!--//btn_wrap-->
+    </div>
+    <!--//body_layout-->
+    <!--foot_layout-->
+    <div id="foot_layout">
+		<th:block th:replace="layout/fragments/front/footer :: footerFragment"></th:block>
+    </div>
+    <!--//foot_layout-->
+</body>
+</html>

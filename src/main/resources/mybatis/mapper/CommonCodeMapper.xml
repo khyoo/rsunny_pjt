@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+    
+<mapper namespace="com.regroup.rsunny.common.mapper.CommonCodeMapper">
+
+	<select id="getList" resultType="com.regroup.rsunny.common.model.CodeDTO">
+    	SELECT *
+    	FROM code
+    	WHERE grp = #{grp}
+    	  AND ifnull(use_yn, 'Y') = 'Y'
+		<if test="uppGrp != null and uppGrp != ''">
+			AND upp_grp	= #{uppGrp}
+			AND upp_cd	= #{uppCd}
+		</if>
+		ORDER BY upp_grp, upp_cd, ifnull(sort_no, 9999), cd
+	</select>
+
+	<select id="getCode" resultType="com.regroup.rsunny.common.model.CodeDTO">
+    	SELECT *
+    	FROM code
+    	WHERE grp = #{grp}
+		  AND cd = #{cd}
+	</select>
+
+	<select id="getUserList" resultType="com.regroup.rsunny.common.model.CodeDTO">
+    	SELECT userid	as cd
+    		, usernm	as nm
+    	FROM tbl_user
+    	WHERE active_flag = 1
+    	ORDER BY usernm
+	</select>
+
+	<select id="getCustCompanyList" resultType="com.regroup.rsunny.common.model.CodeDTO">
+    	SELECT cust_comp_id	as cd
+    		, cust_comp_nm	as nm
+    	FROM tbl_cust_company
+    	ORDER BY cust_comp_nm
+	</select>
+
+	<select id="getCustManagerList" resultType="com.regroup.rsunny.common.model.CodeDTO">
+    	SELECT cust_mngr_id	as cd
+    		, cust_mngr_nm	as nm
+    	FROM tbl_cust_manager
+    	WHERE cust_comp_id = #{grp}
+    	ORDER BY cust_mngr_nm
+	</select>
+
+</mapper>

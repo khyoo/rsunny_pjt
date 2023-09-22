@@ -1,0 +1,139 @@
+<!DOCTYPE HTML>
+<html lang="ko">
+<head>
+	<th:block th:replace="layout/fragments/front/head :: headFragment"></th:block>
+	<!-- Global site tag (gtag.js) - Google Analytics -->
+	<script async src="https://www.googletagmanager.com/gtag/js?id=G-6EHV3KH3XT"></script>
+	<script>
+	  window.dataLayer = window.dataLayer || [];
+	  function gtag(){dataLayer.push(arguments);}
+	  gtag('js', new Date());
+
+	  gtag('config', 'G-6EHV3KH3XT');
+	</script>
+    <script th:inline="javascript">
+    	$(document).ready(function() {
+    		$('a.search').click(function() {
+    			$('#frmSearch').submit();
+    		});
+
+    		$('a.save').click(function() {
+    			var form = $('#frmBase');
+
+		    	//필수값 체크.
+		    	form.validate({
+		    		errorElement: 'span',
+					rules: {
+						name: {required: true, maxlength: 8},
+						phone: {required: true, maxlength: 13},
+						email: {required: true, email: true},
+						contents: 'required'
+					}
+		    	});
+
+		    	if( !form.valid() ) return;
+
+		    	if( !$('input[name=checkAgree]').is(':checked') ) {
+		    		alert('개인정보 제공 및 이용에 동의에 체크해 주세요.'); return;
+		    	}
+
+		    	if( !confirm('보내시겠습니까?') ) return;
+
+				var formdata = form.serializeObject();
+				$.post('/board/inquiry/rest/save', formdata, function(result) {
+					alert(result.message);
+					if(result.code==0) location.reload();
+				}).error(function() {
+					alert('처리중 오류가 발생하였습니다.');
+				})
+    		});
+    	});
+
+    </script>
+</head>
+<body>
+    <!--top_layout-->
+    <div id="top_layout" class="type2">
+		<th:block th:replace="layout/fragments/front/header :: headerFragment"></th:block>
+    </div>
+    <!--//top_layout-->
+    <!--body_layout-->
+    <div id="body_layout">
+        <!--visual_wrap-->
+        <div class="visual_wrap type3">
+            <div class="inner type3">
+							<h2><strong>알써니 고객센터입니다.</strong> <br>무엇을 도와드릴까요?</h2>
+            </div>
+        </div>
+        <!--//visual_wrap-->
+        <!--tab_wrap-->
+        <div class="tab_wrap">
+            <div class="inner type3">
+                <ul>
+                    <li>
+                        <a href="06u0201">자주하는 질문</a>
+                    </li>
+                    <li class="on">
+                        <a href="06u0202">1:1문의</a>
+                    </li>
+                    <li>
+                        <a href="06u0203">서비스 이용약관</a>
+                    </li>
+                    <li>
+                        <a href="06u0204">개인정보처리방침</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+        <!--//tab_wrap-->
+        <!--customer_wrap-->
+        <div class="customer_wrap">
+            <div class="inner type3">
+                <div class="tit_wrap">
+                    <h3>알써니 서비스 관련 문의 및 광고/제휴 관련 다양한궁금사항을 남겨주세요.</h3>
+                </div>
+                <div class="input_wrap">
+                   	<form id="frmBase" name="frmBase">
+                   		<input type="hidden" id="page" name="page" value="1">
+                    <ul>
+                        <li>
+                            <label for="id_06u0202_1">성명</label>
+                            <input id="id_06u0202_1" name="name" type="text" placeholder="이름을 입력해 주세요" />
+                        </li>
+                        <li>
+                            <label for="id_06u0202_2">연락처</label>
+                            <input id="id_06u0202_2" name="phone" type="text" placeholder="휴대전화" />
+                        </li>
+                        <li>
+                            <label for="id_06u0202_3">이메일</label>
+                            <input id="id_06u0202_3" name="email" type="text" placeholder="이메일 주소 형식으로 입력해 주세요." />
+                        </li>
+                        <li>
+                            <label for="id_06u0202_4">문의내용</label>
+                            <textarea id="id_06u0202_4" name="contents" placeholder="내용"></textarea>
+                            <div class="radioBox">
+                                <input id="agree_1" name="checkAgree" type="checkbox" value="Y'">
+                                <label for="agree_1">개인정보 제공 및 이용에 동의</label>
+                            </div>
+                        </li>
+                    </ul>
+                    </form>
+                </div>
+            </div>
+        </div>
+        <!--//customer_wrap-->
+
+        <!--btn_wrap-->
+        <div class="btn_wrap">
+            <a href="#" class="type1 save">보내기</a>
+        </div><br><br><br><br>
+        <!--//btn_wrap-->
+    </div>
+    <!--//body_layout-->
+    <!--foot_layout-->
+    <div id="foot_layout">
+		<th:block th:replace="layout/fragments/front/footer :: footerFragment"></th:block>
+    </div>
+    <!--//foot_layout-->
+</body>
+</html>
