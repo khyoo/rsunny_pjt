@@ -4,65 +4,83 @@
 <head>
 	<th:block th:replace="layout/fragments/front/head :: headFragment"></th:block>
 	<style>
-		.category_rtOnOff {
-			position: absolute;
-			top: 10px;
-			left: 10px;	
-			width: 92px;
-		    height: 30px;
-		    line-height: 30px;
-		    padding-left: 5px;
+		.temp_add_close:hover {
+			cursor: pointer;
+		}
+
+		.btn_meter_pyeong {
+			position: relative;
+			display: inline-block;
+			top: 5px;
+			width: 42px;
+			padding-left: 5px;
 			border-radius: 5px;
 			border: 1px solid #909090;
 			box-shadow: 0 1px 1px rgba(0, 0, 0, 0.4);
 			background: #fff;
 			overflow: hidden;
-			cursor: pointer;		
-			z-index: 2;
+			cursor: pointer;
 		}
-		
-		.category_rtOn {			
+
+		.category_rtOnOff {
 			position: absolute;
-		    top: 1px;
-		    left: 60px;
-		    width: 25px;
-		    height: 25px;
-		    color: #fff;
-		    line-height: 25px;
+			top: 10px;
+			left: 10px;
+			width: 92px;
+			height: 30px;
+			line-height: 30px;
+			padding-left: 5px;
 			border-radius: 5px;
 			border: 1px solid #909090;
 			box-shadow: 0 1px 1px rgba(0, 0, 0, 0.4);
-			background: #351EA7;			
+			background: #fff;
+			overflow: hidden;
+			cursor: pointer;
+			z-index: 2;
+		}
+
+		.category_rtOn {
+			position: absolute;
+			top: 1px;
+			left: 60px;
+			width: 25px;
+			height: 25px;
+			color: #fff;
+			line-height: 25px;
+			border-radius: 5px;
+			border: 1px solid #909090;
+			box-shadow: 0 1px 1px rgba(0, 0, 0, 0.4);
+			background: #351EA7;
 			z-index: 3;
 		}
-		
+
 		.category_rtOff {
 			display: none;
 			position: absolute;
-		    top: 1px;
-		    left: 60px;
-		    width: 25px;
-		    height: 25px;
-		    color: #fff;
-		    line-height: 25px;
+			top: 1px;
+			left: 60px;
+			width: 25px;
+			height: 25px;
+			color: #fff;
+			line-height: 25px;
 			border-radius: 5px;
 			border: 1px solid #909090;
 			box-shadow: 0 1px 1px rgba(0, 0, 0, 0.4);
-			background: #C1C1C1;			
+			background: #C1C1C1;
 			z-index: 3;
 		}
-		
+
 		.category_select {
 			position: absolute;
 			top: 10px;
-			left: 105px;			
+			left: 105px;
 			z-index: 2;
 		}
-		
-		
-		
-		
-		
+
+
+
+
+
 		.category_top {
 			position: absolute;
 			top: 50px;
@@ -216,19 +234,19 @@
 		.category_bottom li.on .category_bg {
 			background-position-x: -46px;
 		}
-		
+
 		.category_bottom li a {
-			width: 22px; 
-			height: 22px; 
-			background: url(../img/sub/ico_btn_close.png) no-repeat center center; 
-			text-indent: -9999px; 
+			width: 22px;
+			height: 22px;
+			background: url(../img/sub/ico_btn_close.png) no-repeat center center;
+			text-indent: -9999px;
 			display: inline-block;
 		}
-		
+
 		#cat_measure_sub_close {
 			display: none;
 		}
-		
+
 		#cat_around_sub_close {
 			display: none;
 		}
@@ -356,18 +374,18 @@
 			color: #1c1c1e
 		}
 
-		.map-tool-before-btn {			
+		.map-tool-before-btn {
 			font-size: 22px;
 			position: relative;
 			text-align: left;
 			top: -47px;
 		}
 
-		.map-tool-reset-btn {			
+		.map-tool-reset-btn {
 			font-size: 22px;
 			position: relative;
 			text-align: right;
-			top: -95px;
+			top: -45px;
 			pointer-events: none
 		}
 
@@ -482,7 +500,7 @@
 			font-weight: bold;
 			text-align: center;
 		}
-		
+
 		.overlay_info .overlay_titleD {
 			padding: 5px 0 0 0px;
 			height: 30px;
@@ -493,7 +511,7 @@
 			font-weight: bold;
 			text-align: center;
 		}
-		
+
 		.overlay_info .overlay_titleE {
 			padding: 5px 0 0 0px;
 			height: 30px;
@@ -504,7 +522,7 @@
 			font-weight: bold;
 			text-align: center;
 		}
-		
+
 		.overlay_info .overlay_titleF {
 			padding: 5px 0 0 0px;
 			height: 30px;
@@ -544,12 +562,28 @@
 			font-weight: bold;
 		}
 
-		.overlay_info .overlay_desc .area1 {
+		.overlay_info .overlay_desc .area_pyeong {
+			display: none;
+		}
+
+		.overlay_info .overlay_desc .area_meter {
 			display: inline-block;
 		}
 
-		.overlay_info .overlay_desc .area2 {
+		.overlay_info .overlay_desc .total_price {
 			display: none;
+		}
+
+		.overlay_info .overlay_desc .unit_meter_price {
+			display: inline-block;
+		}
+
+		.overlay_info .overlay_desc .unit_pyeong_price {
+			display: none;
+		}
+
+		.area_unit {
+			display: inline-block;
 		}
 
 		.overlay_desc .overlay_ellipsis {
@@ -780,21 +814,37 @@
 			font-size: 13px;
 			color: #48484a;
 		}
-		
-		.category_bg_area { display: block; margin: 0 auto 3px; width: 27px; height: 28px; background-position: center; background-repeat: no-repeat; background-image: url(/img/mobile/measure_area.png); }
-		.category_bg_len { display: block; margin: 0 auto 3px; width: 27px; height: 28px; background-position: center; background-repeat: no-repeat; background-image: url(/img/mobile/measure_len.png); } 
-		
+
+		.category_bg_area {
+			display: block;
+			margin: 0 auto 3px;
+			width: 27px;
+			height: 28px;
+			background-position: center;
+			background-repeat: no-repeat;
+			background-image: url(/img/mobile/measure_area.png);
+		}
+
+		.category_bg_len {
+			display: block;
+			margin: 0 auto 3px;
+			width: 27px;
+			height: 28px;
+			background-position: center;
+			background-repeat: no-repeat;
+			background-image: url(/img/mobile/measure_len.png);
+		}
 	</style>
-	
+
 	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.8.2/css/all.min.css">
-	
+
 	<script type="text/javascript"
 		src="//dapi.kakao.com/v2/maps/sdk.js?appkey=565d4d316c7e529f3ad7bd8265a31214&libraries=services,clusterer,drawing"></script>
 	<!-- Global site tag (gtag.js) - Google Analytics -->
 	<script async src="https://www.googletagmanager.com/gtag/js?id=G-6EHV3KH3XT"></script>
 	<script>
 		window.dataLayer = window.dataLayer || [];
-		function gtag() {dataLayer.push(arguments);}
+		function gtag() { dataLayer.push(arguments); }
 		gtag('js', new Date());
 
 		gtag('config', 'G-6EHV3KH3XT');
@@ -866,38 +916,41 @@
 			"일도1동": "일도일동",
 			"화북1동": "화북일동"
 		};
-		
+
 		// 천단위 콤마
-		function numComma(val) {			
+		function numComma(val) {
 			return val != null ? val.toString().replace(/\B(?<!\.\d*)(?=(\d{3})+(?!\d))/g, ",") : 0;
 		}
 
+		let polygon = null;
+
 		$(document).ready(function () {
-			
-			$( "#slider-range" ).slider({
+
+			$("#slider-range").slider({
 				range: true,
 				min: 2015,
 				max: 2023,
-				values: [ 2022, 2023 ],
-				slide: function( event, ui ) {console.log(ui.values[ 0 ]);
-					$( "#tradeYear" ).text( ui.values[ 0 ] );
-					$( "#tradeYearEnd" ).text( ui.values[ 1 ] );
-					
-					dealYearStart = ui.values[ 0 ];
-					dealYearEnd = ui.values[ 1 ];
-					
+				values: [2022, 2023],
+				slide: function (event, ui) {
+					console.log(ui.values[0]);
+					$("#tradeYear").text(ui.values[0]);
+					$("#tradeYearEnd").text(ui.values[1]);
+
+					dealYearStart = ui.values[0];
+					dealYearEnd = ui.values[1];
+
 					removeRealTrading();
 					getRealTrading();
 				}
 			});
-			
-			    
+
+
 			$('#mo-catAreaSub2').css("background", "#1263DF");
-			$('#mo-catAreaSub2').css("color", "#fff");			
-			
+			$('#mo-catAreaSub2').css("color", "#fff");
+
 			$('#mo-catPriceSub2').css("background", "#1263DF");
 			$('#mo-catPriceSub2').css("color", "#fff");
-		
+
 			Proj4js.defs["EPSG:5174"] = "+proj=tmerc +lat_0=38 +lon_0=127.0028902777778 +k=1 +x_0=200000 +y_0=500000 +ellps=bessel +units=m +no_defs +towgs84=-115.80,474.99,674.11,1.16,-2.31,-1.63,6.43";
 			Proj4js.defs["EPSG:4326"] = "+proj=longlat +ellps=WGS84 +datum=WGS84 +no_defs";
 			var s_srs = new Proj4js.Proj("EPSG:5174");
@@ -977,590 +1030,616 @@
 				},
 			});
 
-			let isOverlayClcik = false;
-			let polygon = null;
+
+			let isOverlayClick = false;
+			let isOverlayClickIdx = -1;
+			let isOverlayClickCnt = 0;
+			let isOverlayHide = false;
 			let jibunClickHandler = function (mouseEvent, aa) {
-				
-				isOverlayClcik = false;
-				
-				
+
+				if (isOverlayClickCnt == 0) {
+					isOverlayClick = false;
+				}
+
+				$('.overlay_wrap').off('click');
+
 				$('.overlay_wrap').on('click', function (e) {
-					isOverlayClcik = true;
-								
+					console.log(isOverlayClickIdx);
+					isOverlayClick = true;
+
 					let idx = $('.overlay_wrap').index(this);
 					$('.overlay_wrap').eq(idx).parent().css('z-index', zIdx++);
-					 					
+
+
+					if (isOverlayClickIdx != idx) {
+						console.log(isOverlayClickIdx);
+						isOverlayClickIdx = idx;
+						isOverlayClickCnt = 1;
+						console.log("dd");
+					} else {
+						if (isOverlayClickCnt == 1) {
+							console.log(isOverlayClickIdx);
+							$('.overlay_wrap').eq(idx).parent().hide();
+							$('.detail_wrap .saleNum a').trigger('click');
+
+							isOverlayHide = true;
+							isOverlayClickCnt = 0;
+						}
+					}
+					console.log(isOverlayClickIdx);
 					let posX = $('.overlay_wrap').eq(idx).find('.overlay_metaX').text();
 					let posY = $('.overlay_wrap').eq(idx).find('.overlay_metaY').text();
-					
+
 					$.get('https://polygon.disco.re/get_pnu_by_latlng2/?lat=' + posY + '&lng=' + posX + '&spec=goon', {}, function (pnu) {
-						console.log(pnu);						
-							// 토지대장
-							$.get('https://data.disco.re/home/land_by_pnu/?pnu=' + pnu.pnu, {}, function (data) {
-								console.log(data);
-								$('#land_forest_info_area').text(data.area);
-								$('#land_forest_info_purpose').text(data.purpose);
-								$('#p6').text(data.p6);
-								$('#p10').text(data.p10);
-								$('#owner_gbn').text(data.owner_gbn);
-								$('#days').text(data.days);
-								$('#why').text(data.why);
-								$('#p16').text(data.p16);
-								$('#p12').text(data.p12);
-								$('#p14').text(data.p14);
-		
-								let info_main = data.land_use_planning_info_main;
-								if (info_main != null && info_main.length > 0) {
-									info_main = info_main.split(',');
-								}
-		
-								let info_main_0 = info_main.filter(item => item.includes('포함')).map(item => item.replace('(포함)', ''));
-								let info_main_1 = info_main.filter(item => item.includes('저촉')).map(item => item.replace('(저촉)', ''));
-								let info_main_2 = info_main.filter(item => item.includes('접함')).map(item => item.replace('(접함)', ''));
-		
-								$('#info_main_0').text(info_main_0);
-								$('#info_main_1').text(info_main_1);
-								$('#info_main_2').text(info_main_2);
-		
-								let info_etc = data.land_use_planning_info_etc;
-								if (info_etc != null && info_etc.length > 0) {
-									info_etc = info_etc.split(',');
-								}
-		
-								let info_etc_0 = info_main.filter(item => item.includes('포함')).map(item => item.replace('(포함)', ''));
-								let info_etc_1 = info_main.filter(item => item.includes('저촉')).map(item => item.replace('(저촉)', ''));
-								let info_etc_2 = info_main.filter(item => item.includes('접함')).map(item => item.replace('(접함)', ''));
-		
-								$('#arch_info_0').text(info_etc_0);
-								$('#arch_info_1').text(info_etc_1);
-								$('#arch_info_2').text(info_etc_2);
-							});
-		
-							$.get('https://data.disco.re/home/arch_by_pnu/?pnu=' + pnu.pnu, {}, function (data) {
-								console.log(data);
-								let html = '';
-								if (data.overall_title_section.length > 0) {
-									let build_info = data.overall_title_section[0];
-		
-									$('#dpa_overall_b1').text(build_info.b10 != null ? build_info.b10 : "-");
-		
-									$('#dpa_overall_a1').text(build_info.b32 != null ? build_info.b32 : "-");
-									$('#dpa_overall_a1_1').text(build_info.b33 != null ? build_info.b33 : "-");
-		
-									$('.dpa-c-name').text(build_info.b32 != null ? build_info.b32 : "-");
-		
-									$('#dpa_overall_a2').text(build_info.b25 != null ? build_info.b25 + "㎡" : "-");
-		
-									html = '';
-									html += '<span>' + build_info.b26 + '㎡</span><br><span>(건폐율 ' + build_info.b27 + '%)</span>';
-									$('#dpa_overall_a3').html(html);
-		
-									$('#dpa_overall_b2').text(build_info.b28 != null ? build_info.b28 + "㎡" : "-");
-		
-									html = '';
-									html += '<span>' + build_info.b29 + '㎡</span><br><span>(용적률 ' + build_info.b30 + '%)</span>';
-									$('#dpa_overall_b3').html(html);
-		
-									$('#dpa_overall_c3_0').text(build_info.b34 != null ? build_info.b34 : "-");
-									$('#dpa_overall_c3_1').text(build_info.b35 != null ? build_info.b35 : "-");
-									$('#dpa_overall_c3_2').text(build_info.b56 != null ? build_info.b56 : "-");
-		
-									$('#dpa_overall_a5').text(build_info.b19 != null ? build_info.b19 : "-");
-		
-									$('#dpa_overall_g23').text(build_info.g23 != null ? build_info.g23 : "-");
-									$('#dpa_overall_g24').text(build_info.g24 != null ? build_info.g24 : "-");
-									$('#dpa_overall_g27').text(build_info.g27 != 0 ? build_info.g27 : "-");
-									$('#dpa_overall_g28').text(build_info.g28 != 0 ? build_info.g28 : "-");
-		
-									$('#dpaz_value_1').text(build_info.b44 != null ? build_info.b44 + "대" : "-");
-									$('#dpaz_value_2').text(build_info.b46 != null ? build_info.b46 + "대" : "-");
-									$('#dpaz_value_3').text(build_info.b40 != null ? build_info.b40 + "대" : "-");
-									$('#dpaz_value_4').text(build_info.b42 != null ? build_info.b42 + "대" : "-");
-		
-									let temp_b48 = build_info.b48.substr(0, 4) + "년 " + build_info.b48.substr(4, 2) + "월 " + build_info.b48.substr(6, 2) + "일";
-									$('#dpad_value1').text(build_info.b48 != null ? temp_b48 : "-");
-									let temp_b49 = build_info.b49.substr(0, 4) + "년 " + build_info.b49.substr(4, 2) + "월 " + build_info.b49.substr(6, 2) + "일";
-									$('#dpad_value2').text(build_info.b49 != null ? temp_b49 : "-");
-									let temp_b50 = build_info.b50.substr(0, 4) + "년 " + build_info.b50.substr(4, 2) + "월 " + build_info.b50.substr(6, 2) + "일";
-									$('#dpad_value3').text(build_info.b50 != null ? temp_b50 : "-");
-		
-								} else {
-									console.log(data.title_section)
-									let build_info = data.title_section[0];
-		
-									$('#dpa_overall_b1').text(build_info.a23 != null ? build_info.a23 : "-");
-		
-									$('#dpa_overall_a1').text(build_info.a36 != null ? build_info.a36 : "-");
-									$('#dpa_overall_a1_1').text(build_info.a37 != null ? build_info.a37 : "-");
-									$('#dpa_title_b5_1').text(build_info.a33 != null ? build_info.a33 : "-");
-									$('#dpa_title_b5_2').text(build_info.a39 != null ? build_info.a39 : "-");
-		
-									$('#dpa_overall_c2').text(build_info.a43 != null ? build_info.a43 + "m" : "-");
-									$('#dpa_overall_c5').text(build_info.a44 != null ? build_info.a44 + "/" + build_info.a45 : "-");
-		
-									$('.dpa-c-name').text(build_info.a36 != null ? build_info.a36 : "-");
-		
-									$('#dpa_overall_a2').text(build_info.a26 != null ? build_info.a26 + "㎡" : "-");
-		
-									html = '';
-									html += '<span>' + build_info.a27 + '㎡</span><br><span>(건폐율 ' + build_info.a28 + '%)</span>';
-									$('#dpa_overall_a3').html(html);
-		
-									$('#dpa_overall_b2').text(build_info.a29 != null ? build_info.a29 + "㎡" : "-");
-		
-									html = '';
-									html += '<span>' + build_info.a30 + '㎡</span><br><span>(용적률 ' + build_info.a31 + '%)</span>';
-									$('#dpa_overall_b3').html(html);
-		
-									$('#dpa_overall_c3_0').text(build_info.a41 != null ? build_info.a41 : "-");
-									$('#dpa_overall_c3_1').text(build_info.a42 != null ? build_info.a42 : "-");
-									$('#dpa_overall_c3_2').text(build_info.a67 != null ? build_info.a67 : "-");
-		
-									$('#dpa_overall_a5').text(build_info.a17 != null ? build_info.a17 : "-");
-		
-									$('#dpa_overall_g23').text(build_info.g23 != null ? build_info.g23 : "-");
-									$('#dpa_overall_g24').text(build_info.g24 != null ? build_info.g24 : "-");
-									$('#dpa_overall_g27').text(build_info.g27 != 0 ? build_info.g27 : "-");
-									$('#dpa_overall_g28').text(build_info.g28 != 0 ? build_info.g28 : "-");
-		
-									$('#dpaz_value_1').text(build_info.a55 != null ? build_info.a55 + "대" : "-");
-									$('#dpaz_value_2').text(build_info.a57 != null ? build_info.a57 + "대" : "-");
-									$('#dpaz_value_3').text(build_info.a51 != null ? build_info.a51 + "대" : "-");
-									$('#dpaz_value_4').text(build_info.a53 != null ? build_info.a53 + "대" : "-");
-		
-									$('#dpal_value1').text(build_info.a46 != null ? build_info.a46 : "-");
-									$('#dpal_value2').text(build_info.a47 != null ? build_info.a47 : "-");
-		
-									let temp_a59 = build_info.a59.substr(0, 4) + "년 " + build_info.a59.substr(4, 2) + "월 " + build_info.a59.substr(6, 2) + "일";
-									$('#dpad_value1').text(build_info.a59 != null ? temp_a59 : "-");
-									let temp_a60 = build_info.a60.substr(0, 4) + "년 " + build_info.a60.substr(4, 2) + "월 " + build_info.a60.substr(6, 2) + "일";
-									$('#dpad_value2').text(build_info.a60 != null ? temp_a60 : "-");
-									let temp_a61 = build_info.a61.substr(0, 4) + "년 " + build_info.a61.substr(4, 2) + "월 " + build_info.a61.substr(6, 2) + "일";
-									$('#dpad_value3').text(build_info.a61 != null ? temp_a61 : "-");
-		
-									$.get('https://data.disco.re/home/arch_floor_list/?key=' + build_info.a1, {}, function (subData) {
-										console.log(subData);
-										let subHtml = '';
-										if (subData.length > 0) {
-											subData.forEach(item => {
-												subHtml += '<div class="rfc-cool-grey" style="width:auto;padding:7px 20px;font-size:14px;">';
-												subHtml += '	<div style="display:table;">';
-												subHtml += '		<div style="position:relative;line-height:32px;display:table-row;">';
-												subHtml += '			<span style="display:table-cell;background:#afbed7;width:27px;display: inline-block;height: 20px;text-align: center;line-height:21px;color: #fff;border-radius:10px;">';
-												subHtml += item.d31.substr(0, 1);
-												subHtml += '			</span>';
-												subHtml += '			<span style="display:table-cell;min-width:70px;font-size: 16px; padding:0 5px;text-align:middle;" class="rf3_text1">';
-												subHtml += item.floor;
-												subHtml += '			</span>';
-												subHtml += '			<span style="display:table-cell;width:auto;text-align:left;line-height: 20px;">';
-												subHtml += item.d27 + ' · ' + item.d28;
-												subHtml += '			</span>';
-												subHtml += '		</div>';
-												subHtml += '	</div>';
-												subHtml += '	<div style="width:100%;">';
-												subHtml += item.d24;
-												subHtml += ' · ';
-												subHtml += '		<span style="display: inline-block;">';
-												subHtml += item.d29 + '㎡';
-												subHtml += '		</span>';
-												subHtml += '	</div>';
-												subHtml += '</div>';
-												subHtml += '<div class="ifs-tab-bar"></div>';
-											});
-		
-											$('#dpaf_data_list').html(subHtml);
-										}
-									});
-								}
-							});
-		
-							$.get('https://data.disco.re/home/get_land_history/?pnu=' + pnu.pnu, {}, function (data) {
-								console.log(data);
-		
-								let html = '';
-								data.reverse().forEach(item => {
-									html += '<div style="display: table-row;line-height: 48px;">';
-									html += '	<div style="display: table-cell;width:40%;text-align:left;font-size:14px;color:#50555a;padding-left:12px;">';
-									html += item.move_date;
-									html += '	</div>';
-									html += '	<div style="display: table-cell;width:60%;text-align:left;font-size:14px;color:#1e1e23;">';
-									html += item.reason;
-									html += '	</div>';
-									html += '</div>';
-								});
-								$('#land_history').html(html);
-							});
-		
-							// 실거래가 목록
-							$.get('/forsale/rest/tradings/getListFromPnu?pnu=' + pnu.pnu, {}, function (data) {
-								console.log("실거래가목록1");
-								console.log(data);
-		
-								$('#trp-detail-period-cnt').text('(' + data.length + '건)');
-								
-								let html = '';
-								if (data.length > 0) {
-									data.forEach(item => {
-										html += '<div class="trp-detail-table2">';
-										html += '	<div class="trp-detail-table-row">';
-										html += '		<div class="trp-detail-table-cell2" style="width: 22%;">';
-										html += '`' + item.dealMonth.substr(2, 2) + '.' + item.dealMonth.substr(4, 2) + '.' + item.dealDay;
-										html += '		</div>';
-										html += '		<div class="trp-detail-table-cell2" style="width: 20%;">';
-										html += '			<span data-area="total" style="display: inline;">';
-										html += 				numComma(item.dealAmount) + "만";
-										html += '			</span>';
-										html += '		</div>';
-										html += '		<div class="trp-detail-table-cell2" style="width: auto;">';
-										html += 				item.floor + '층 ' + item.floor + '**호';
-										html += '		</div>';
-										html += '		<div class="trp-detail-table-cell2" style="width: 90px;"></div>';
-										html += '	</div>';
-										html += '</div>';
-									});
-								}
-								$('#trp-detail-table').html(html);
-							});
-		
-		
-							$.get('https://data.disco.re/home/land_price/?pnu=' + pnu.pnu, {}, function (data) {
-								console.log(data);
-								xLabels.length = 0;
-								datapoints.length = 0;
-		
-								minValue = data[0][2];
-								maxValue = data[0][2];
-		
-								data.forEach(item => {
-									xLabels.push('`' + (item[0] + '').substr(2, 2) + '년');
-									datapoints.push(item[2]);
-									if (minValue > item[2])
-										minValue = item[2];
-									if (maxValue < item[2])
-										maxValue = item[2];
-								});
-		
-								gongChart.update();
-							});
-					});
-				});				
-				
-				
-					if (polygon != null)
-						polygon.setMap(null);
-	
-					// 클릭한 위도, 경도 정보를 가져옵니다 
-					var latlng = mouseEvent.latLng;
-	
-					$('[data-field=saleNo]').text('');
-					$('.btn_wrap').hide();
-					$('#slide_detail').hide();
-					$('.tag_wrap').hide();
-					$('.info_wrap').hide();
-	
-					$.get('https://polygon.disco.re/get_pnu_by_latlng2/?lat=' + latlng.getLat() + '&lng=' + latlng.getLng() + '&spec=goon', {}, function (pnu) {
 						console.log(pnu);
-						if (!isOverlayClcik) {
-							// 토지대장
-							$.get('https://data.disco.re/home/land_by_pnu/?pnu=' + pnu.pnu, {}, function (data) {
-								console.log(data);
-								$('#land_forest_info_area').text(data.area);
-								$('#land_forest_info_purpose').text(data.purpose);
-								$('#p6').text(data.p6);
-								$('#p10').text(data.p10);
-								$('#owner_gbn').text(data.owner_gbn);
-								$('#days').text(data.days);
-								$('#why').text(data.why);
-								$('#p16').text(data.p16);
-								$('#p12').text(data.p12);
-								$('#p14').text(data.p14);
-		
-								let info_main = data.land_use_planning_info_main;
-								if (info_main != null && info_main.length > 0) {
-									info_main = info_main.split(',');
-								}
-		
-								let info_main_0 = info_main.filter(item => item.includes('포함')).map(item => item.replace('(포함)', ''));
-								let info_main_1 = info_main.filter(item => item.includes('저촉')).map(item => item.replace('(저촉)', ''));
-								let info_main_2 = info_main.filter(item => item.includes('접함')).map(item => item.replace('(접함)', ''));
-		
-								$('#info_main_0').text(info_main_0);
-								$('#info_main_1').text(info_main_1);
-								$('#info_main_2').text(info_main_2);
-		
-								let info_etc = data.land_use_planning_info_etc;
-								if (info_etc != null && info_etc.length > 0) {
-									info_etc = info_etc.split(',');
-								}
-		
-								let info_etc_0 = info_main.filter(item => item.includes('포함')).map(item => item.replace('(포함)', ''));
-								let info_etc_1 = info_main.filter(item => item.includes('저촉')).map(item => item.replace('(저촉)', ''));
-								let info_etc_2 = info_main.filter(item => item.includes('접함')).map(item => item.replace('(접함)', ''));
-		
-								$('#arch_info_0').text(info_etc_0);
-								$('#arch_info_1').text(info_etc_1);
-								$('#arch_info_2').text(info_etc_2);
-							});
-		
-							$.get('https://data.disco.re/home/arch_by_pnu/?pnu=' + pnu.pnu, {}, function (data) {
-								console.log(data);
-								let html = '';
-								if (data.overall_title_section.length > 0) {
-									let build_info = data.overall_title_section[0];
-		
-									$('#dpa_overall_b1').text(build_info.b10 != null ? build_info.b10 : "-");
-		
-									$('#dpa_overall_a1').text(build_info.b32 != null ? build_info.b32 : "-");
-									$('#dpa_overall_a1_1').text(build_info.b33 != null ? build_info.b33 : "-");
-		
-									$('.dpa-c-name').text(build_info.b32 != null ? build_info.b32 : "-");
-		
-									$('#dpa_overall_a2').text(build_info.b25 != null ? build_info.b25 + "㎡" : "-");
-		
-									html = '';
-									html += '<span>' + build_info.b26 + '㎡</span><br><span>(건폐율 ' + build_info.b27 + '%)</span>';
-									$('#dpa_overall_a3').html(html);
-		
-									$('#dpa_overall_b2').text(build_info.b28 != null ? build_info.b28 + "㎡" : "-");
-		
-									html = '';
-									html += '<span>' + build_info.b29 + '㎡</span><br><span>(용적률 ' + build_info.b30 + '%)</span>';
-									$('#dpa_overall_b3').html(html);
-		
-									$('#dpa_overall_c3_0').text(build_info.b34 != null ? build_info.b34 : "-");
-									$('#dpa_overall_c3_1').text(build_info.b35 != null ? build_info.b35 : "-");
-									$('#dpa_overall_c3_2').text(build_info.b56 != null ? build_info.b56 : "-");
-		
-									$('#dpa_overall_a5').text(build_info.b19 != null ? build_info.b19 : "-");
-		
-									$('#dpa_overall_g23').text(build_info.g23 != null ? build_info.g23 : "-");
-									$('#dpa_overall_g24').text(build_info.g24 != null ? build_info.g24 : "-");
-									$('#dpa_overall_g27').text(build_info.g27 != 0 ? build_info.g27 : "-");
-									$('#dpa_overall_g28').text(build_info.g28 != 0 ? build_info.g28 : "-");
-		
-									$('#dpaz_value_1').text(build_info.b44 != null ? build_info.b44 + "대" : "-");
-									$('#dpaz_value_2').text(build_info.b46 != null ? build_info.b46 + "대" : "-");
-									$('#dpaz_value_3').text(build_info.b40 != null ? build_info.b40 + "대" : "-");
-									$('#dpaz_value_4').text(build_info.b42 != null ? build_info.b42 + "대" : "-");
-		
-									let temp_b48 = build_info.b48.substr(0, 4) + "년 " + build_info.b48.substr(4, 2) + "월 " + build_info.b48.substr(6, 2) + "일";
-									$('#dpad_value1').text(build_info.b48 != null ? temp_b48 : "-");
-									let temp_b49 = build_info.b49.substr(0, 4) + "년 " + build_info.b49.substr(4, 2) + "월 " + build_info.b49.substr(6, 2) + "일";
-									$('#dpad_value2').text(build_info.b49 != null ? temp_b49 : "-");
-									let temp_b50 = build_info.b50.substr(0, 4) + "년 " + build_info.b50.substr(4, 2) + "월 " + build_info.b50.substr(6, 2) + "일";
-									$('#dpad_value3').text(build_info.b50 != null ? temp_b50 : "-");
-		
-								} else {
-									console.log(data.title_section)
-									let build_info = data.title_section[0];
-		
-									$('#dpa_overall_b1').text(build_info.a23 != null ? build_info.a23 : "-");
-		
-									$('#dpa_overall_a1').text(build_info.a36 != null ? build_info.a36 : "-");
-									$('#dpa_overall_a1_1').text(build_info.a37 != null ? build_info.a37 : "-");
-									$('#dpa_title_b5_1').text(build_info.a33 != null ? build_info.a33 : "-");
-									$('#dpa_title_b5_2').text(build_info.a39 != null ? build_info.a39 : "-");
-		
-									$('#dpa_overall_c2').text(build_info.a43 != null ? build_info.a43 + "m" : "-");
-									$('#dpa_overall_c5').text(build_info.a44 != null ? build_info.a44 + "/" + build_info.a45 : "-");
-		
-									$('.dpa-c-name').text(build_info.a36 != null ? build_info.a36 : "-");
-		
-									$('#dpa_overall_a2').text(build_info.a26 != null ? build_info.a26 + "㎡" : "-");
-		
-									html = '';
-									html += '<span>' + build_info.a27 + '㎡</span><br><span>(건폐율 ' + build_info.a28 + '%)</span>';
-									$('#dpa_overall_a3').html(html);
-		
-									$('#dpa_overall_b2').text(build_info.a29 != null ? build_info.a29 + "㎡" : "-");
-		
-									html = '';
-									html += '<span>' + build_info.a30 + '㎡</span><br><span>(용적률 ' + build_info.a31 + '%)</span>';
-									$('#dpa_overall_b3').html(html);
-		
-									$('#dpa_overall_c3_0').text(build_info.a41 != null ? build_info.a41 : "-");
-									$('#dpa_overall_c3_1').text(build_info.a42 != null ? build_info.a42 : "-");
-									$('#dpa_overall_c3_2').text(build_info.a67 != null ? build_info.a67 : "-");
-		
-									$('#dpa_overall_a5').text(build_info.a17 != null ? build_info.a17 : "-");
-		
-									$('#dpa_overall_g23').text(build_info.g23 != null ? build_info.g23 : "-");
-									$('#dpa_overall_g24').text(build_info.g24 != null ? build_info.g24 : "-");
-									$('#dpa_overall_g27').text(build_info.g27 != 0 ? build_info.g27 : "-");
-									$('#dpa_overall_g28').text(build_info.g28 != 0 ? build_info.g28 : "-");
-		
-									$('#dpaz_value_1').text(build_info.a55 != null ? build_info.a55 + "대" : "-");
-									$('#dpaz_value_2').text(build_info.a57 != null ? build_info.a57 + "대" : "-");
-									$('#dpaz_value_3').text(build_info.a51 != null ? build_info.a51 + "대" : "-");
-									$('#dpaz_value_4').text(build_info.a53 != null ? build_info.a53 + "대" : "-");
-		
-									$('#dpal_value1').text(build_info.a46 != null ? build_info.a46 : "-");
-									$('#dpal_value2').text(build_info.a47 != null ? build_info.a47 : "-");
-		
-									let temp_a59 = build_info.a59.substr(0, 4) + "년 " + build_info.a59.substr(4, 2) + "월 " + build_info.a59.substr(6, 2) + "일";
-									$('#dpad_value1').text(build_info.a59 != null ? temp_a59 : "-");
-									let temp_a60 = build_info.a60.substr(0, 4) + "년 " + build_info.a60.substr(4, 2) + "월 " + build_info.a60.substr(6, 2) + "일";
-									$('#dpad_value2').text(build_info.a60 != null ? temp_a60 : "-");
-									let temp_a61 = build_info.a61.substr(0, 4) + "년 " + build_info.a61.substr(4, 2) + "월 " + build_info.a61.substr(6, 2) + "일";
-									$('#dpad_value3').text(build_info.a61 != null ? temp_a61 : "-");
-		
-									$.get('https://data.disco.re/home/arch_floor_list/?key=' + build_info.a1, {}, function (subData) {
-										console.log(subData);
-										let subHtml = '';
-										if (subData.length > 0) {
-											subData.forEach(item => {
-												subHtml += '<div class="rfc-cool-grey" style="width:auto;padding:7px 20px;font-size:14px;">';
-												subHtml += '	<div style="display:table;">';
-												subHtml += '		<div style="position:relative;line-height:32px;display:table-row;">';
-												subHtml += '			<span style="display:table-cell;background:#afbed7;width:27px;display: inline-block;height: 20px;text-align: center;line-height:21px;color: #fff;border-radius:10px;">';
-												subHtml += item.d31.substr(0, 1);
-												subHtml += '			</span>';
-												subHtml += '			<span style="display:table-cell;min-width:70px;font-size: 16px; padding:0 5px;text-align:middle;" class="rf3_text1">';
-												subHtml += item.floor;
-												subHtml += '			</span>';
-												subHtml += '			<span style="display:table-cell;width:auto;text-align:left;line-height: 20px;">';
-												subHtml += item.d27 + ' · ' + item.d28;
-												subHtml += '			</span>';
-												subHtml += '		</div>';
-												subHtml += '	</div>';
-												subHtml += '	<div style="width:100%;">';
-												subHtml += item.d24;
-												subHtml += ' · ';
-												subHtml += '		<span style="display: inline-block;">';
-												subHtml += item.d29 + '㎡';
-												subHtml += '		</span>';
-												subHtml += '	</div>';
-												subHtml += '</div>';
-												subHtml += '<div class="ifs-tab-bar"></div>';
-											});
-		
-											$('#dpaf_data_list').html(subHtml);
-										}
-									});
-								}
-							});
-		
-							$.get('https://data.disco.re/home/get_land_history/?pnu=' + pnu.pnu, {}, function (data) {
-								console.log(data);
-		
-								let html = '';
-								data.reverse().forEach(item => {
-									html += '<div style="display: table-row;line-height: 48px;">';
-									html += '	<div style="display: table-cell;width:40%;text-align:left;font-size:14px;color:#50555a;padding-left:12px;">';
-									html += item.move_date;
-									html += '	</div>';
-									html += '	<div style="display: table-cell;width:60%;text-align:left;font-size:14px;color:#1e1e23;">';
-									html += item.reason;
-									html += '	</div>';
-									html += '</div>';
+						// 토지대장
+						$.get('https://data.disco.re/home/land_by_pnu/?pnu=' + pnu.pnu, {}, function (data) {
+							console.log(data);
+							$('#land_forest_info_area').text(data.area);
+							$('#land_forest_info_purpose').text(data.purpose);
+							$('#p6').text(data.p6);
+							$('#p10').text(data.p10);
+							$('#owner_gbn').text(data.owner_gbn);
+							$('#days').text(data.days);
+							$('#why').text(data.why);
+							$('#p16').text(data.p16);
+							$('#p12').text(data.p12);
+							$('#p14').text(data.p14);
+
+							let info_main = data.land_use_planning_info_main;
+							if (info_main != null && info_main.length > 0) {
+								info_main = info_main.split(',');
+							}
+
+							let info_main_0 = info_main.filter(item => item.includes('포함')).map(item => item.replace('(포함)', ''));
+							let info_main_1 = info_main.filter(item => item.includes('저촉')).map(item => item.replace('(저촉)', ''));
+							let info_main_2 = info_main.filter(item => item.includes('접함')).map(item => item.replace('(접함)', ''));
+
+							$('#info_main_0').text(info_main_0);
+							$('#info_main_1').text(info_main_1);
+							$('#info_main_2').text(info_main_2);
+
+							let info_etc = data.land_use_planning_info_etc;
+							if (info_etc != null && info_etc.length > 0) {
+								info_etc = info_etc.split(',');
+							}
+
+							let info_etc_0 = info_main.filter(item => item.includes('포함')).map(item => item.replace('(포함)', ''));
+							let info_etc_1 = info_main.filter(item => item.includes('저촉')).map(item => item.replace('(저촉)', ''));
+							let info_etc_2 = info_main.filter(item => item.includes('접함')).map(item => item.replace('(접함)', ''));
+
+							$('#arch_info_0').text(info_etc_0);
+							$('#arch_info_1').text(info_etc_1);
+							$('#arch_info_2').text(info_etc_2);
+						});
+
+						$.get('https://data.disco.re/home/arch_by_pnu/?pnu=' + pnu.pnu, {}, function (data) {
+							console.log(data);
+							let html = '';
+							if (data.overall_title_section.length > 0) {
+								let build_info = data.overall_title_section[0];
+
+								$('#dpa_overall_b1').text(build_info.b10 != null ? build_info.b10 : "-");
+
+								$('#dpa_overall_a1').text(build_info.b32 != null ? build_info.b32 : "-");
+								$('#dpa_overall_a1_1').text(build_info.b33 != null ? build_info.b33 : "-");
+
+								$('.dpa-c-name').text(build_info.b32 != null ? build_info.b32 : "-");
+
+								$('#dpa_overall_a2').text(build_info.b25 != null ? build_info.b25 + "㎡" : "-");
+
+								html = '';
+								html += '<span>' + build_info.b26 + '㎡</span><br><span>(건폐율 ' + build_info.b27 + '%)</span>';
+								$('#dpa_overall_a3').html(html);
+
+								$('#dpa_overall_b2').text(build_info.b28 != null ? build_info.b28 + "㎡" : "-");
+
+								html = '';
+								html += '<span>' + build_info.b29 + '㎡</span><br><span>(용적률 ' + build_info.b30 + '%)</span>';
+								$('#dpa_overall_b3').html(html);
+
+								$('#dpa_overall_c3_0').text(build_info.b34 != null ? build_info.b34 : "-");
+								$('#dpa_overall_c3_1').text(build_info.b35 != null ? build_info.b35 : "-");
+								$('#dpa_overall_c3_2').text(build_info.b56 != null ? build_info.b56 : "-");
+
+								$('#dpa_overall_a5').text(build_info.b19 != null ? build_info.b19 : "-");
+
+								$('#dpa_overall_g23').text(build_info.g23 != null ? build_info.g23 : "-");
+								$('#dpa_overall_g24').text(build_info.g24 != null ? build_info.g24 : "-");
+								$('#dpa_overall_g27').text(build_info.g27 != 0 ? build_info.g27 : "-");
+								$('#dpa_overall_g28').text(build_info.g28 != 0 ? build_info.g28 : "-");
+
+								$('#dpaz_value_1').text(build_info.b44 != null ? build_info.b44 + "대" : "-");
+								$('#dpaz_value_2').text(build_info.b46 != null ? build_info.b46 + "대" : "-");
+								$('#dpaz_value_3').text(build_info.b40 != null ? build_info.b40 + "대" : "-");
+								$('#dpaz_value_4').text(build_info.b42 != null ? build_info.b42 + "대" : "-");
+
+								let temp_b48 = build_info.b48.substr(0, 4) + "년 " + build_info.b48.substr(4, 2) + "월 " + build_info.b48.substr(6, 2) + "일";
+								$('#dpad_value1').text(build_info.b48 != null ? temp_b48 : "-");
+								let temp_b49 = build_info.b49.substr(0, 4) + "년 " + build_info.b49.substr(4, 2) + "월 " + build_info.b49.substr(6, 2) + "일";
+								$('#dpad_value2').text(build_info.b49 != null ? temp_b49 : "-");
+								let temp_b50 = build_info.b50.substr(0, 4) + "년 " + build_info.b50.substr(4, 2) + "월 " + build_info.b50.substr(6, 2) + "일";
+								$('#dpad_value3').text(build_info.b50 != null ? temp_b50 : "-");
+
+							} else {
+								console.log(data.title_section)
+								let build_info = data.title_section[0];
+
+								$('#dpa_overall_b1').text(build_info.a23 != null ? build_info.a23 : "-");
+
+								$('#dpa_overall_a1').text(build_info.a36 != null ? build_info.a36 : "-");
+								$('#dpa_overall_a1_1').text(build_info.a37 != null ? build_info.a37 : "-");
+								$('#dpa_title_b5_1').text(build_info.a33 != null ? build_info.a33 : "-");
+								$('#dpa_title_b5_2').text(build_info.a39 != null ? build_info.a39 : "-");
+
+								$('#dpa_overall_c2').text(build_info.a43 != null ? build_info.a43 + "m" : "-");
+								$('#dpa_overall_c5').text(build_info.a44 != null ? build_info.a44 + "/" + build_info.a45 : "-");
+
+								$('.dpa-c-name').text(build_info.a36 != null ? build_info.a36 : "-");
+
+								$('#dpa_overall_a2').text(build_info.a26 != null ? build_info.a26 + "㎡" : "-");
+
+								html = '';
+								html += '<span>' + build_info.a27 + '㎡</span><br><span>(건폐율 ' + build_info.a28 + '%)</span>';
+								$('#dpa_overall_a3').html(html);
+
+								$('#dpa_overall_b2').text(build_info.a29 != null ? build_info.a29 + "㎡" : "-");
+
+								html = '';
+								html += '<span>' + build_info.a30 + '㎡</span><br><span>(용적률 ' + build_info.a31 + '%)</span>';
+								$('#dpa_overall_b3').html(html);
+
+								$('#dpa_overall_c3_0').text(build_info.a41 != null ? build_info.a41 : "-");
+								$('#dpa_overall_c3_1').text(build_info.a42 != null ? build_info.a42 : "-");
+								$('#dpa_overall_c3_2').text(build_info.a67 != null ? build_info.a67 : "-");
+
+								$('#dpa_overall_a5').text(build_info.a17 != null ? build_info.a17 : "-");
+
+								$('#dpa_overall_g23').text(build_info.g23 != null ? build_info.g23 : "-");
+								$('#dpa_overall_g24').text(build_info.g24 != null ? build_info.g24 : "-");
+								$('#dpa_overall_g27').text(build_info.g27 != 0 ? build_info.g27 : "-");
+								$('#dpa_overall_g28').text(build_info.g28 != 0 ? build_info.g28 : "-");
+
+								$('#dpaz_value_1').text(build_info.a55 != null ? build_info.a55 + "대" : "-");
+								$('#dpaz_value_2').text(build_info.a57 != null ? build_info.a57 + "대" : "-");
+								$('#dpaz_value_3').text(build_info.a51 != null ? build_info.a51 + "대" : "-");
+								$('#dpaz_value_4').text(build_info.a53 != null ? build_info.a53 + "대" : "-");
+
+								$('#dpal_value1').text(build_info.a46 != null ? build_info.a46 : "-");
+								$('#dpal_value2').text(build_info.a47 != null ? build_info.a47 : "-");
+
+								let temp_a59 = build_info.a59.substr(0, 4) + "년 " + build_info.a59.substr(4, 2) + "월 " + build_info.a59.substr(6, 2) + "일";
+								$('#dpad_value1').text(build_info.a59 != null ? temp_a59 : "-");
+								let temp_a60 = build_info.a60.substr(0, 4) + "년 " + build_info.a60.substr(4, 2) + "월 " + build_info.a60.substr(6, 2) + "일";
+								$('#dpad_value2').text(build_info.a60 != null ? temp_a60 : "-");
+								let temp_a61 = build_info.a61.substr(0, 4) + "년 " + build_info.a61.substr(4, 2) + "월 " + build_info.a61.substr(6, 2) + "일";
+								$('#dpad_value3').text(build_info.a61 != null ? temp_a61 : "-");
+
+								$.get('https://data.disco.re/home/arch_floor_list/?key=' + build_info.a1, {}, function (subData) {
+									console.log(subData);
+									let subHtml = '';
+									if (subData.length > 0) {
+										subData.forEach(item => {
+											subHtml += '<div class="rfc-cool-grey" style="width:auto;padding:7px 20px;font-size:14px;">';
+											subHtml += '	<div style="display:table;">';
+											subHtml += '		<div style="position:relative;line-height:32px;display:table-row;">';
+											subHtml += '			<span style="display:table-cell;background:#afbed7;width:27px;display: inline-block;height: 20px;text-align: center;line-height:21px;color: #fff;border-radius:10px;">';
+											subHtml += item.d31.substr(0, 1);
+											subHtml += '			</span>';
+											subHtml += '			<span style="display:table-cell;min-width:70px;font-size: 16px; padding:0 5px;text-align:middle;" class="rf3_text1">';
+											subHtml += item.floor;
+											subHtml += '			</span>';
+											subHtml += '			<span style="display:table-cell;width:auto;text-align:left;line-height: 20px;">';
+											subHtml += item.d27 + ' · ' + item.d28;
+											subHtml += '			</span>';
+											subHtml += '		</div>';
+											subHtml += '	</div>';
+											subHtml += '	<div style="width:100%;">';
+											subHtml += item.d24;
+											subHtml += ' · ';
+											subHtml += '		<span style="display: inline-block;">';
+											subHtml += item.d29 + '㎡';
+											subHtml += '		</span>';
+											subHtml += '	</div>';
+											subHtml += '</div>';
+											subHtml += '<div class="ifs-tab-bar"></div>';
+										});
+
+										$('#dpaf_data_list').html(subHtml);
+									}
 								});
-								$('#land_history').html(html);
+							}
+						});
+
+						$.get('https://data.disco.re/home/get_land_history/?pnu=' + pnu.pnu, {}, function (data) {
+							console.log(data);
+
+							let html = '';
+							data.reverse().forEach(item => {
+								html += '<div style="display: table-row;line-height: 48px;">';
+								html += '	<div style="display: table-cell;width:40%;text-align:left;font-size:14px;color:#50555a;padding-left:12px;">';
+								html += item.move_date;
+								html += '	</div>';
+								html += '	<div style="display: table-cell;width:60%;text-align:left;font-size:14px;color:#1e1e23;">';
+								html += item.reason;
+								html += '	</div>';
+								html += '</div>';
 							});
-		
-							// 실거래가 목록
-							$.get('/forsale/rest/tradings/getListFromPnu?pnu=' + pnu.pnu, {}, function (data) {
-								console.log("실거래가목록2");
-								console.log(data);
-		
-								$('#trp-detail-period-cnt').text('(' + data.length + '건)');
-								
-								let html = '';
-								if (data.length > 0) {
-									data.forEach(item => {
-										html += '<div class="trp-detail-table2">';
-										html += '	<div class="trp-detail-table-row">';
-										html += '		<div class="trp-detail-table-cell2" style="width: 22%;">';
-										html += '`' + item.dealMonth.substr(2, 2) + '.' + item.dealMonth.substr(4, 2) + '.' + item.dealDay;
-										html += '		</div>';
-										html += '		<div class="trp-detail-table-cell2" style="width: 20%;">';
-										html += '			<span data-area="total" style="display: inline;">';
-										html += 				numComma(item.dealAmount) + "만";
-										html += '			</span>';
-										html += '		</div>';
-										html += '		<div class="trp-detail-table-cell2" style="width: auto;">';
-										html += 				item.floor + '층 ' + item.floor + '**호';
-										html += '		</div>';
-										html += '		<div class="trp-detail-table-cell2" style="width: 90px;"></div>';
-										html += '	</div>';
-										html += '</div>';
-									});
-								} else {
+							$('#land_history').html(html);
+						});
+
+						// 실거래가 목록
+						$.get('/forsale/rest/tradings/getListFromPnu?pnu=' + pnu.pnu, {}, function (data) {
+							console.log("실거래가목록1");
+							console.log(data);
+
+							$('#trp-detail-period-cnt').text('(' + data.length + '건)');
+
+							let html = '';
+							if (data.length > 0) {
+								data.forEach(item => {
 									html += '<div class="trp-detail-table2">';
 									html += '	<div class="trp-detail-table-row">';
-									html += '실거래 내역이 없습니다.';
+									html += '		<div class="trp-detail-table-cell2" style="width: 22%;">';
+									html += '`' + item.dealMonth.substr(2, 2) + '.' + item.dealMonth.substr(4, 2) + '.' + item.dealDay;
+									html += '		</div>';
+									html += '		<div class="trp-detail-table-cell2" style="width: 20%;">';
+									html += '			<span data-area="total" style="display: inline;">';
+									html += numComma(item.dealAmount) + "만";
+									html += '			</span>';
+									html += '		</div>';
+									html += '		<div class="trp-detail-table-cell2" style="width: auto;">';
+									html += item.floor + '층 ' + item.floor + '**호';
+									html += '		</div>';
+									html += '		<div class="trp-detail-table-cell2" style="width: 90px;"></div>';
 									html += '	</div>';
 									html += '</div>';
-								}
-								$('#trp-detail-table').html(html);
-							});
-		
-		
-							$.get('https://data.disco.re/home/land_price/?pnu=' + pnu.pnu, {}, function (data) {
-								console.log(data);
-								xLabels.length = 0;
-								datapoints.length = 0;
-		
-								minValue = data[0][2];
-								maxValue = data[0][2];
-		
-								data.forEach(item => {
-									xLabels.push('`' + (item[0] + '').substr(2, 2) + '년');
-									datapoints.push(item[2]);
-									if (minValue > item[2])
-										minValue = item[2];
-									if (maxValue < item[2])
-										maxValue = item[2];
 								});
-		
-								gongChart.update();
+							}
+							$('#trp-detail-table').html(html);
+						});
+
+
+						$.get('https://data.disco.re/home/land_price/?pnu=' + pnu.pnu, {}, function (data) {
+							console.log(data);
+							xLabels.length = 0;
+							datapoints.length = 0;
+
+							minValue = data[0][2];
+							maxValue = data[0][2];
+
+							data.forEach(item => {
+								xLabels.push('`' + (item[0] + '').substr(2, 2) + '년');
+								datapoints.push(item[2]);
+								if (minValue > item[2])
+									minValue = item[2];
+								if (maxValue < item[2])
+									maxValue = item[2];
 							});
-						}
+
+							gongChart.update();
+						});
 					});
-	
-					$.get('https://polygon.disco.re/get_land_by_latlng/?lat=' + latlng.getLat() + '&lng=' + latlng.getLng(), {}, function (result) {
-						console.log(result);
-						if (!isOverlayClcik) {
-							let tempPoly = null;
-							tempPoly = parse_land_polygon_value(result.polygon);
-		
-							// 지도에 표시할 다각형을 생성합니다
-							polygon = new kakao.maps.Polygon({
-								path: tempPoly[0],//polygonPath, // 그려질 다각형의 좌표 배열입니다
-								strokeWeight: 5, // 선의 두께입니다 
-								strokeColor: '#75B8FA', // 선의 색깔입니다
-								strokeOpacity: 1, // 선의 불투명도 입니다 1에서 0 사이의 값이며 0에 가까울수록 투명합니다
-								strokeStyle: 'dashed', // 선의 스타일 입니다
-								fillColor: '#CFE7FF', // 채우기 색깔입니다
-								fillOpacity: 0.7  // 채우기 불투명도 입니다  
-		
+				});
+
+
+				if (polygon != null)
+					polygon.setMap(null);
+
+				// 클릭한 위도, 경도 정보를 가져옵니다 
+				var latlng = mouseEvent.latLng;
+
+				$('[data-field=saleNo]').text('');
+				$('.btn_wrap').hide();
+				$('#slide_detail').hide();
+				$('.tag_wrap').hide();
+				$('.info_wrap').hide();
+
+				$.get('https://polygon.disco.re/get_pnu_by_latlng2/?lat=' + latlng.getLat() + '&lng=' + latlng.getLng() + '&spec=goon', {}, function (pnu) {
+					console.log(pnu);
+					if (!isOverlayClick) {
+						// 토지대장
+						$.get('https://data.disco.re/home/land_by_pnu/?pnu=' + pnu.pnu, {}, function (data) {
+							console.log(data);
+							$('#land_forest_info_area').text(data.area);
+							$('#land_forest_info_purpose').text(data.purpose);
+							$('#p6').text(data.p6);
+							$('#p10').text(data.p10);
+							$('#owner_gbn').text(data.owner_gbn);
+							$('#days').text(data.days);
+							$('#why').text(data.why);
+							$('#p16').text(data.p16);
+							$('#p12').text(data.p12);
+							$('#p14').text(data.p14);
+
+							let info_main = data.land_use_planning_info_main;
+							if (info_main != null && info_main.length > 0) {
+								info_main = info_main.split(',');
+							}
+
+							let info_main_0 = info_main.filter(item => item.includes('포함')).map(item => item.replace('(포함)', ''));
+							let info_main_1 = info_main.filter(item => item.includes('저촉')).map(item => item.replace('(저촉)', ''));
+							let info_main_2 = info_main.filter(item => item.includes('접함')).map(item => item.replace('(접함)', ''));
+
+							$('#info_main_0').text(info_main_0);
+							$('#info_main_1').text(info_main_1);
+							$('#info_main_2').text(info_main_2);
+
+							let info_etc = data.land_use_planning_info_etc;
+							if (info_etc != null && info_etc.length > 0) {
+								info_etc = info_etc.split(',');
+							}
+
+							let info_etc_0 = info_main.filter(item => item.includes('포함')).map(item => item.replace('(포함)', ''));
+							let info_etc_1 = info_main.filter(item => item.includes('저촉')).map(item => item.replace('(저촉)', ''));
+							let info_etc_2 = info_main.filter(item => item.includes('접함')).map(item => item.replace('(접함)', ''));
+
+							$('#arch_info_0').text(info_etc_0);
+							$('#arch_info_1').text(info_etc_1);
+							$('#arch_info_2').text(info_etc_2);
+						});
+
+						$.get('https://data.disco.re/home/arch_by_pnu/?pnu=' + pnu.pnu, {}, function (data) {
+							console.log(data);
+							let html = '';
+							if (data.overall_title_section.length > 0) {
+								let build_info = data.overall_title_section[0];
+
+								$('#dpa_overall_b1').text(build_info.b10 != null ? build_info.b10 : "-");
+
+								$('#dpa_overall_a1').text(build_info.b32 != null ? build_info.b32 : "-");
+								$('#dpa_overall_a1_1').text(build_info.b33 != null ? build_info.b33 : "-");
+
+								$('.dpa-c-name').text(build_info.b32 != null ? build_info.b32 : "-");
+
+								$('#dpa_overall_a2').text(build_info.b25 != null ? build_info.b25 + "㎡" : "-");
+
+								html = '';
+								html += '<span>' + build_info.b26 + '㎡</span><br><span>(건폐율 ' + build_info.b27 + '%)</span>';
+								$('#dpa_overall_a3').html(html);
+
+								$('#dpa_overall_b2').text(build_info.b28 != null ? build_info.b28 + "㎡" : "-");
+
+								html = '';
+								html += '<span>' + build_info.b29 + '㎡</span><br><span>(용적률 ' + build_info.b30 + '%)</span>';
+								$('#dpa_overall_b3').html(html);
+
+								$('#dpa_overall_c3_0').text(build_info.b34 != null ? build_info.b34 : "-");
+								$('#dpa_overall_c3_1').text(build_info.b35 != null ? build_info.b35 : "-");
+								$('#dpa_overall_c3_2').text(build_info.b56 != null ? build_info.b56 : "-");
+
+								$('#dpa_overall_a5').text(build_info.b19 != null ? build_info.b19 : "-");
+
+								$('#dpa_overall_g23').text(build_info.g23 != null ? build_info.g23 : "-");
+								$('#dpa_overall_g24').text(build_info.g24 != null ? build_info.g24 : "-");
+								$('#dpa_overall_g27').text(build_info.g27 != 0 ? build_info.g27 : "-");
+								$('#dpa_overall_g28').text(build_info.g28 != 0 ? build_info.g28 : "-");
+
+								$('#dpaz_value_1').text(build_info.b44 != null ? build_info.b44 + "대" : "-");
+								$('#dpaz_value_2').text(build_info.b46 != null ? build_info.b46 + "대" : "-");
+								$('#dpaz_value_3').text(build_info.b40 != null ? build_info.b40 + "대" : "-");
+								$('#dpaz_value_4').text(build_info.b42 != null ? build_info.b42 + "대" : "-");
+
+								let temp_b48 = build_info.b48.substr(0, 4) + "년 " + build_info.b48.substr(4, 2) + "월 " + build_info.b48.substr(6, 2) + "일";
+								$('#dpad_value1').text(build_info.b48 != null ? temp_b48 : "-");
+								let temp_b49 = build_info.b49.substr(0, 4) + "년 " + build_info.b49.substr(4, 2) + "월 " + build_info.b49.substr(6, 2) + "일";
+								$('#dpad_value2').text(build_info.b49 != null ? temp_b49 : "-");
+								let temp_b50 = build_info.b50.substr(0, 4) + "년 " + build_info.b50.substr(4, 2) + "월 " + build_info.b50.substr(6, 2) + "일";
+								$('#dpad_value3').text(build_info.b50 != null ? temp_b50 : "-");
+
+							} else {
+								console.log(data.title_section)
+								let build_info = data.title_section[0];
+
+								$('#dpa_overall_b1').text(build_info.a23 != null ? build_info.a23 : "-");
+
+								$('#dpa_overall_a1').text(build_info.a36 != null ? build_info.a36 : "-");
+								$('#dpa_overall_a1_1').text(build_info.a37 != null ? build_info.a37 : "-");
+								$('#dpa_title_b5_1').text(build_info.a33 != null ? build_info.a33 : "-");
+								$('#dpa_title_b5_2').text(build_info.a39 != null ? build_info.a39 : "-");
+
+								$('#dpa_overall_c2').text(build_info.a43 != null ? build_info.a43 + "m" : "-");
+								$('#dpa_overall_c5').text(build_info.a44 != null ? build_info.a44 + "/" + build_info.a45 : "-");
+
+								$('.dpa-c-name').text(build_info.a36 != null ? build_info.a36 : "-");
+
+								$('#dpa_overall_a2').text(build_info.a26 != null ? build_info.a26 + "㎡" : "-");
+
+								html = '';
+								html += '<span>' + build_info.a27 + '㎡</span><br><span>(건폐율 ' + build_info.a28 + '%)</span>';
+								$('#dpa_overall_a3').html(html);
+
+								$('#dpa_overall_b2').text(build_info.a29 != null ? build_info.a29 + "㎡" : "-");
+
+								html = '';
+								html += '<span>' + build_info.a30 + '㎡</span><br><span>(용적률 ' + build_info.a31 + '%)</span>';
+								$('#dpa_overall_b3').html(html);
+
+								$('#dpa_overall_c3_0').text(build_info.a41 != null ? build_info.a41 : "-");
+								$('#dpa_overall_c3_1').text(build_info.a42 != null ? build_info.a42 : "-");
+								$('#dpa_overall_c3_2').text(build_info.a67 != null ? build_info.a67 : "-");
+
+								$('#dpa_overall_a5').text(build_info.a17 != null ? build_info.a17 : "-");
+
+								$('#dpa_overall_g23').text(build_info.g23 != null ? build_info.g23 : "-");
+								$('#dpa_overall_g24').text(build_info.g24 != null ? build_info.g24 : "-");
+								$('#dpa_overall_g27').text(build_info.g27 != 0 ? build_info.g27 : "-");
+								$('#dpa_overall_g28').text(build_info.g28 != 0 ? build_info.g28 : "-");
+
+								$('#dpaz_value_1').text(build_info.a55 != null ? build_info.a55 + "대" : "-");
+								$('#dpaz_value_2').text(build_info.a57 != null ? build_info.a57 + "대" : "-");
+								$('#dpaz_value_3').text(build_info.a51 != null ? build_info.a51 + "대" : "-");
+								$('#dpaz_value_4').text(build_info.a53 != null ? build_info.a53 + "대" : "-");
+
+								$('#dpal_value1').text(build_info.a46 != null ? build_info.a46 : "-");
+								$('#dpal_value2').text(build_info.a47 != null ? build_info.a47 : "-");
+
+								let temp_a59 = build_info.a59.substr(0, 4) + "년 " + build_info.a59.substr(4, 2) + "월 " + build_info.a59.substr(6, 2) + "일";
+								$('#dpad_value1').text(build_info.a59 != null ? temp_a59 : "-");
+								let temp_a60 = build_info.a60.substr(0, 4) + "년 " + build_info.a60.substr(4, 2) + "월 " + build_info.a60.substr(6, 2) + "일";
+								$('#dpad_value2').text(build_info.a60 != null ? temp_a60 : "-");
+								let temp_a61 = build_info.a61.substr(0, 4) + "년 " + build_info.a61.substr(4, 2) + "월 " + build_info.a61.substr(6, 2) + "일";
+								$('#dpad_value3').text(build_info.a61 != null ? temp_a61 : "-");
+
+								$.get('https://data.disco.re/home/arch_floor_list/?key=' + build_info.a1, {}, function (subData) {
+									console.log(subData);
+									let subHtml = '';
+									if (subData.length > 0) {
+										subData.forEach(item => {
+											subHtml += '<div class="rfc-cool-grey" style="width:auto;padding:7px 20px;font-size:14px;">';
+											subHtml += '	<div style="display:table;">';
+											subHtml += '		<div style="position:relative;line-height:32px;display:table-row;">';
+											subHtml += '			<span style="display:table-cell;background:#afbed7;width:27px;display: inline-block;height: 20px;text-align: center;line-height:21px;color: #fff;border-radius:10px;">';
+											subHtml += item.d31.substr(0, 1);
+											subHtml += '			</span>';
+											subHtml += '			<span style="display:table-cell;min-width:70px;font-size: 16px; padding:0 5px;text-align:middle;" class="rf3_text1">';
+											subHtml += item.floor;
+											subHtml += '			</span>';
+											subHtml += '			<span style="display:table-cell;width:auto;text-align:left;line-height: 20px;">';
+											subHtml += item.d27 + ' · ' + item.d28;
+											subHtml += '			</span>';
+											subHtml += '		</div>';
+											subHtml += '	</div>';
+											subHtml += '	<div style="width:100%;">';
+											subHtml += item.d24;
+											subHtml += ' · ';
+											subHtml += '		<span style="display: inline-block;">';
+											subHtml += item.d29 + '㎡';
+											subHtml += '		</span>';
+											subHtml += '	</div>';
+											subHtml += '</div>';
+											subHtml += '<div class="ifs-tab-bar"></div>';
+										});
+
+										$('#dpaf_data_list').html(subHtml);
+									}
+								});
+							}
+						});
+
+						$.get('https://data.disco.re/home/get_land_history/?pnu=' + pnu.pnu, {}, function (data) {
+							console.log(data);
+
+							let html = '';
+							data.reverse().forEach(item => {
+								html += '<div style="display: table-row;line-height: 48px;">';
+								html += '	<div style="display: table-cell;width:40%;text-align:left;font-size:14px;color:#50555a;padding-left:12px;">';
+								html += item.move_date;
+								html += '	</div>';
+								html += '	<div style="display: table-cell;width:60%;text-align:left;font-size:14px;color:#1e1e23;">';
+								html += item.reason;
+								html += '	</div>';
+								html += '</div>';
 							});
-		
-							// 지도에 다각형을 표시합니다
-							polygon.setMap(map);
-						}
-					});
-	
+							$('#land_history').html(html);
+						});
+
+						// 실거래가 목록
+						$.get('/forsale/rest/tradings/getListFromPnu?pnu=' + pnu.pnu, {}, function (data) {
+							console.log("실거래가목록2");
+							console.log(data);
+
+							$('#trp-detail-period-cnt').text('(' + data.length + '건)');
+
+							let html = '';
+							if (data.length > 0) {
+								data.forEach(item => {
+									html += '<div class="trp-detail-table2">';
+									html += '	<div class="trp-detail-table-row">';
+									html += '		<div class="trp-detail-table-cell2" style="width: 22%;">';
+									html += '`' + item.dealMonth.substr(2, 2) + '.' + item.dealMonth.substr(4, 2) + '.' + item.dealDay;
+									html += '		</div>';
+									html += '		<div class="trp-detail-table-cell2" style="width: 20%;">';
+									html += '			<span data-area="total" style="display: inline;">';
+									html += numComma(item.dealAmount) + "만";
+									html += '			</span>';
+									html += '		</div>';
+									html += '		<div class="trp-detail-table-cell2" style="width: auto;">';
+									html += item.floor + '층 ' + item.floor + '**호';
+									html += '		</div>';
+									html += '		<div class="trp-detail-table-cell2" style="width: 90px;"></div>';
+									html += '	</div>';
+									html += '</div>';
+								});
+							} else {
+								html += '<div class="trp-detail-table2">';
+								html += '	<div class="trp-detail-table-row">';
+								html += '실거래 내역이 없습니다.';
+								html += '	</div>';
+								html += '</div>';
+							}
+							$('#trp-detail-table').html(html);
+						});
+
+
+						$.get('https://data.disco.re/home/land_price/?pnu=' + pnu.pnu, {}, function (data) {
+							console.log(data);
+							xLabels.length = 0;
+							datapoints.length = 0;
+
+							minValue = data[0][2];
+							maxValue = data[0][2];
+
+							data.forEach(item => {
+								xLabels.push('`' + (item[0] + '').substr(2, 2) + '년');
+								datapoints.push(item[2]);
+								if (minValue > item[2])
+									minValue = item[2];
+								if (maxValue < item[2])
+									maxValue = item[2];
+							});
+
+							gongChart.update();
+						});
+					}
+				});
+
+				$.get('https://polygon.disco.re/get_land_by_latlng/?lat=' + latlng.getLat() + '&lng=' + latlng.getLng(), {}, function (result) {
+					console.log(result);
+					if (!isOverlayClick) {
+						let tempPoly = null;
+						tempPoly = parse_land_polygon_value(result.polygon);
+
+						// 지도에 표시할 다각형을 생성합니다
+						polygon = new kakao.maps.Polygon({
+							path: tempPoly[0],//polygonPath, // 그려질 다각형의 좌표 배열입니다
+							strokeWeight: 2, // 선의 두께입니다 
+							strokeColor: '#75B8FA', // 선의 색깔입니다
+							strokeOpacity: 1, // 선의 불투명도 입니다 1에서 0 사이의 값이며 0에 가까울수록 투명합니다
+							strokeStyle: 'shortdash', // 선의 스타일 입니다
+							fillColor: '#CFE7FF', // 채우기 색깔입니다
+							fillOpacity: 0.7  // 채우기 불투명도 입니다  
+
+						});
+
+						// 지도에 다각형을 표시합니다
+						polygon.setMap(map);
+					}
+				});
+
+				if (!isOverlayClick) {
 					var detailW = $(".detail_wrap").width();
 					var listW = $(".left_wrap").width();
 					$("#gis_layout").addClass("detailOn");
 					$(".detail_wrap").css("left", detailW * -1);
-					
-					
+
+
 					//$('.tabCon_wrap').hide();
-					
+
 					var isMini = $(".detail_wrap").hasClass("mini");
-					
+
 					if (isMini) {
 						$('.left_wrap').hide();
 						$('.detail_wrap').css("left", "0px");
 					} else {
-						$(".detail_wrap").animate({"left": listW}, 200, function () {
+						$(".detail_wrap").animate({ "left": listW }, 200, function () {
 							$("#gis_layout").removeClass("detailMov");
 						});
 					}
-				
+				}
+
 			};
-			
+
 			/*
 			$('#tradeYearSlider').on('change', function(e) {
 				//console.log($('#tradeYearSlider').val());
@@ -1570,10 +1649,11 @@
 				getRealTrading();
 			});
 			*/
-			
+
 
 			var w = /*[[${form.w}]]*/ '';
-			if ((w == null || w.length == 0) && keyword == null) {console.log("not search");
+			if ((w == null || w.length == 0) && keyword == null) {
+				console.log("not search");
 				//mapFromCurrentPosition(container);
 				var geocoder = new kakao.maps.services.Geocoder();
 				var callback = function (result, status) {
@@ -1616,69 +1696,77 @@
 						// 마우스 드래그로 지도 이동이 완료되었을 때 마지막 파라미터로 넘어온 함수를 호출하도록 이벤트를 등록합니다
 						kakao.maps.event.addListener(map, 'dragend', function () {
 							let level = map.getLevel();
-							
+
 							if (isRealTradings) {
-								removeRealTrading();
-								
+								//removeRealTrading();
+
 								//console.log(level);
 								//console.log(boundbox);
 								if (level >= 6) {
 									realTransCluster(map);
 								} else {
-									getRealTrading();	
+									getRealTrading();
 								}
 							}
-							
+
 							if (!isAreaExtent) {
-								$('.area1').css('display', 'inline-block');
-								$('.area2').css('display', 'none');
+								$('.area_meter').css('display', 'inline-block');
+								$('.area_pyeong').css('display', 'none');
 							} else {
-								$('.area2').css('display', 'inline-block');
-								$('.area1').css('display', 'none');
+								$('.area_pyeong').css('display', 'inline-block');
+								$('.area_meter').css('display', 'none');
 							}
 
-							$('.overlay_wrap').on('click', function (e) {alert("34");
+							/*
+							$('.overlay_wrap').off('click');
+									
+							$('.overlay_wrap').on('click', function (e) {
 								let idx = $('.overlay_wrap').index(this);
-								$('.overlay_wrap').eq(idx).parent().css('z-index', zIdx++);
+								$('.overlay_wrap').eq(idx).parent().css('z-index', zIdx++);								
 							});
+							*/
 						});
 
 						// 지도가 확대 또는 축소되면 마지막 파라미터로 넘어온 함수를 호출하도록 이벤트를 등록합니다
 						kakao.maps.event.addListener(map, 'zoom_changed', function () {
 							let level = map.getLevel();
-							
+
 							if (isRealTradings) {
 								removeRealTrading();
-								
+
 								console.log(level);
 								console.log(boundbox);
 								if (level >= 6) {
 									realTransCluster(map);
 								} else {
-									getRealTrading();	
+									getRealTrading();
 								}
 							}
 
 							if (!isAreaExtent) {
-								$('.area1').css('display', 'inline-block');
-								$('.area2').css('display', 'none');
+								$('.area_meter').css('display', 'inline-block');
+								$('.area_pyeong').css('display', 'none');
 							} else {
-								$('.area2').css('display', 'inline-block');
-								$('.area1').css('display', 'none');
+								$('.area_pyeong').css('display', 'inline-block');
+								$('.area_meter').css('display', 'none');
 							}
 
+							/*
+							$('.overlay_wrap').off('click');
+							
 							$('.overlay_wrap').on('click', function (e) {
 								let idx = $('.overlay_wrap').index(this);
 								$('.overlay_wrap').eq(idx).parent().css('z-index', zIdx++);
 							});
+							*/
 						});
 
-						
+
 						// 지도에 클릭 이벤트를 등록합니다
 						// 지도를 클릭하면 마지막 파라미터로 넘어온 함수를 호출합니다
 						kakao.maps.event.addListener(map, 'click', jibunClickHandler);
-						
-					
+
+
 						//centroid 알고리즘 (폴리곤 중심좌표 구하기 위함)
 						/*
 						function centroid(points) {
@@ -1769,7 +1857,7 @@
 				geocoder.addressSearch('쌍봉동', callback);
 
 			}
-			else {				
+			else {
 				var options = { //지도를 생성할 때 필요한 기본 옵션
 					center: new kakao.maps.LatLng(37.566826, 126.9786567), // 지도의 중심좌표
 					scrollwheel: true,
@@ -1787,19 +1875,19 @@
 				// 마우스 드래그로 지도 이동이 완료되었을 때 마지막 파라미터로 넘어온 함수를 호출하도록 이벤트를 등록합니다
 				kakao.maps.event.addListener(map, 'dragend', function () {
 					let level = map.getLevel();
-					
+
 					if (isRealTradings) {
 						removeRealTrading();
-						
+
 						console.log(level);
 						console.log(boundbox);
 						if (level >= 6) {
 							realTransCluster(map);
 						} else {
-							getRealTrading();	
+							getRealTrading();
 						}
 					}
-					
+
 					// 지도 중심좌표를 얻어옵니다 
 					var latlng = map.getCenter();
 
@@ -1818,16 +1906,16 @@
 
 					if (isRealTradings) {
 						removeRealTrading();
-						
+
 						console.log(level);
 						console.log(boundbox);
 						if (level >= 6) {
 							realTransCluster(map);
 						} else {
-							getRealTrading();	
+							getRealTrading();
 						}
 					}
-					
+
 					var message = '현재 지도 레벨은 ' + level + ' 입니다';
 					console.log(message);
 					console.log(map.getBounds().toString());
@@ -1983,7 +2071,7 @@
 			$('a.search').trigger('click');
 
 			//등록매물
-			var formdata = {saleType: $('#frmFilter').find('#saleType').val()};
+			var formdata = { saleType: $('#frmFilter').find('#saleType').val() };
 			$.get('/forsale/tab2', formdata, function (result) {
 				$('div.tab2').html(result);
 			});
@@ -1997,7 +2085,7 @@
 			$('a.getoffer').click(function () {
 				//alert( $(this).data('rid') );
 				var rid = $(this).data('rid');
-				var formdata = {rid: rid};
+				var formdata = { rid: rid };
 				$.get('/forsale/agentList', formdata, function (result) {
 					$('ul.agent-list').html(result);
 				});
@@ -2108,24 +2196,24 @@
 						// 지도 중심을 부드럽게 이동시킵니다
 						// 만약 이동할 거리가 지도 화면보다 크면 부드러운 효과 없이 이동합니다
 						map.panTo(moveLatLon);
-						
+
 						let level = map.getLevel();
-						
+
 						if (isRealTradings) {
 							removeRealTrading();
-							
+
 							//console.log(level);
 							//console.log(boundbox);
 							if (level >= 6) {
 								realTransCluster(map);
 							} else {
-								getRealTrading();	
+								getRealTrading();
 							}
 						}
 					}
 				}
-				
-				
+
+
 
 				/*
 				var geocoder = new kakao.maps.services.Geocoder();
@@ -2167,162 +2255,177 @@
 				xhr.send('');
 			}
 
-			function showRealTradingsMarker(item, itemIdx) {				
+			function showRealTradingsMarker(item, itemIdx) {
 				let tFillColor = '#15C4B2';
 				let tStrokeColor = '#15C4B2';
-				
+
 				let tradeType = '';
 				let saleDetailType = '';
-				
+
 				let contentStyle = '';
 				let price = '';
-				if (item.saleDetailType === 'a1') {	
+				if (item.saleDetailType === 'a1') {
 					saleDetailType = '아파트';
 					if (item.tradeType === 'A') {
 						tradeType = '매매';
-						
+
 						tFillColor = '#15C4B2';
 						tStrokeColor = '#15C4B2';
-						
+
 						contentStyle = 'overlay_titleA';
-						price = numComma(item.dealAmount);
+						//price = numComma(item.dealAmount);
+						price = item.dealAmount;
 					} else if (item.tradeType === 'B') {
 						tradeType = '월세';
-						
+
 						tFillColor = '#15C4B2';
 						tStrokeColor = '#15C4B2';
-						
+
 						contentStyle = 'overlay_titleB';
 						price = numComma(item.deposit) + '/' + numComma(item.monthlyRent);
 					} else if (item.tradeType === 'C') {
 						tradeType = '전세';
-						
+
 						tFillColor = '#15C4B2';
 						tStrokeColor = '#15C4B2';
-						
+
 						contentStyle = 'overlay_titleC';
-						price = numComma(item.deposit);
-					}					
+						//price = numComma(item.deposit);
+						price = item.deposit;
+					}
 				} else if (item.saleDetailType === 'a2') {
 					saleDetailType = '오피스텔';
 					if (item.tradeType === 'A') {
 						tradeType = '매매';
-						
-						tFillColor = '#15C4B2';
-						tStrokeColor = '#15C4B2';	
-						
-						contentStyle = 'overlay_titleA';
-						price = numComma(item.dealAmount);
-					} else if (item.tradeType === 'B') {
-						tradeType = '월세';
-						
+
 						tFillColor = '#15C4B2';
 						tStrokeColor = '#15C4B2';
-						
+
+						contentStyle = 'overlay_titleA';
+						//price = numComma(item.dealAmount);
+						price = item.dealAmount;
+					} else if (item.tradeType === 'B') {
+						tradeType = '월세';
+
+						tFillColor = '#15C4B2';
+						tStrokeColor = '#15C4B2';
+
 						contentStyle = 'overlay_titleB';
 						price = numComma(item.deposit) + '/' + numComma(item.monthlyRent);
 					} else if (item.tradeType === 'C') {
 						tradeType = '전세';
-						
+
 						tFillColor = '#15C4B2';
 						tStrokeColor = '#15C4B2';
-						
+
 						contentStyle = 'overlay_titleC';
-						price = numComma(item.deposit);
+						//price = numComma(item.deposit);
+						price = item.deposit;
 					}
 				} else if (item.saleDetailType === 'a3') {
 					saleDetailType = '분양·입주권';
 					tradeType = '매매';
-					
+
 					tFillColor = '#15C4B2';
 					tStrokeColor = '#15C4B2';
-					
+
 					contentStyle = 'overlay_titleA';
-					price = numComma(item.dealAmount);
+					//price = numComma(item.dealAmount);
+					price = item.dealAmount;
 				} else if (item.saleDetailType === 'h2') {
 					saleDetailType = '연립·다세대';
 					if (item.tradeType === 'A') {
 						tradeType = '매매';
-						
+
 						tFillColor = '#15C4B2';
 						tStrokeColor = '#15C4B2';
-						
+
 						contentStyle = 'overlay_titleA';
-						price = numComma(item.dealAmount);
+						//price = numComma(item.dealAmount);
+						price = item.dealAmount;
 					} else if (item.tradeType === 'B') {
 						tradeType = '월세';
-						
+
 						tFillColor = '#15C4B2';
 						tStrokeColor = '#15C4B2';
-						
+
 						contentStyle = 'overlay_titleB';
 						price = numComma(item.deposit) + '/' + numComma(item.monthlyRent);
 					} else if (item.tradeType === 'C') {
 						tradeType = '전세';
-						
+
 						tFillColor = '#15C4B2';
 						tStrokeColor = '#15C4B2';
-						
+
 						contentStyle = 'overlay_titleC';
-						price = numComma(item.deposit);
+						//price = numComma(item.deposit);
+						price = item.deposit;
 					}
 				} else if (item.saleDetailType === 'h1') {
 					saleDetailType = '단독·다가구';
 					if (item.tradeType === 'A') {
 						tradeType = '매매';
-						
+
 						tFillColor = '#15C4B2';
 						tStrokeColor = '#15C4B2';
-						
+
 						contentStyle = 'overlay_titleA';
-						price = numComma(item.dealAmount);
+						//price = numComma(item.dealAmount);
+						price = item.dealAmount;
 					} else if (item.tradeType === 'B') {
 						tradeType = '월세';
-						
+
 						tFillColor = '#15C4B2';
 						tStrokeColor = '#15C4B2';
-						
+
 						contentStyle = 'overlay_titleB';
 						price = numComma(item.deposit) + '/' + numComma(item.monthlyRent);
 					} else if (item.tradeType === 'C') {
 						tradeType = '전세';
-						
+
 						tFillColor = '#15C4B2';
 						tStrokeColor = '#15C4B2';
-						
+
 						contentStyle = 'overlay_titleC';
-						price = numComma(item.deposit);
+						//price = numComma(item.deposit);
+						price = item.dealAmount;
 					}
 				} else if (item.saleDetailType === 'l1') {
 					saleDetailType = '토지';
 					tradeType = '매매';
-					
+
 					tFillColor = '#15C4B2';
 					tStrokeColor = '#15C4B2';
-					
+
 					contentStyle = 'overlay_titleD';
-					price = numComma(item.dealAmount);
+					//price = numComma(item.dealAmount);
+					price = item.dealAmount;
 				} else if (item.saleDetailType === 'l3') {
 					saleDetailType = '공장·창고';
 					tradeType = '매매';
-					
+
 					tFillColor = '#15C4B2';
 					tStrokeColor = '#15C4B2';
-					
+
 					contentStyle = 'overlay_titleE';
-					price = numComma(item.dealAmount);
+					//price = numComma(item.dealAmount);
+					price = item.dealAmount;
 				} else if (item.saleDetailType === 's1') {
 					saleDetailType = '상가·업무';
 					tradeType = '매매';
-					
+
 					tFillColor = '#15C4B2';
 					tStrokeColor = '#15C4B2';
-					
+
 					contentStyle = 'overlay_titleF';
-					price = numComma(item.dealAmount);
-				}				
-				 
-				if (itemIdx < 5) {					
+					//price = numComma(item.dealAmount);
+					price = item.dealAmount;
+				}
+
+				let temp_meter = Number(item.useArea).toFixed(2);
+				let temp_pyeong = Number(item.useArea / 3.3058).toFixed(0);
+
+				if (itemIdx < 5) {
 					var circle = new kakao.maps.Circle({
 						center: new kakao.maps.LatLng(item.posY, item.posX),  // 원의 중심좌표 입니다 
 						radius: 5, // 미터 단위의 원의 반지름입니다 
@@ -2336,37 +2439,64 @@
 					realTradingPoiArr.push(circle);
 
 					// 마커가 지도 위에 표시되도록 설정합니다
-					circle.setMap(map);				
-					
+					circle.setMap(map);
+					kakao.maps.event.addListener(circle, 'click', function () {
+						if (isOverlayHide) {
+							$('.overlay_wrap').eq(isOverlayClickIdx).parent().show();
+
+							isOverlayClickCnt = 1;
+
+							let detailW = $(".detail_wrap").width();
+							let listW = $(".left_wrap").width();
+							$("#gis_layout").addClass("detailOn");
+							$(".detail_wrap").css("left", detailW * -1);
+
+							let isMini = $(".detail_wrap").hasClass("mini");
+
+							if (isMini) {
+								$('.left_wrap').hide();
+								$('.detail_wrap').css("left", "0px");
+							} else {
+								$(".detail_wrap").animate({ "left": listW }, 200, function () {
+									$("#gis_layout").removeClass("detailMov");
+								});
+							}
+						}
+					});
+
 					//console.log(item);`
 					let content = '<div class="overlay_wrap">' +
-					'    <div class="overlay_pnu" style="display:none;">' + item.pnu + '</div>' +
-					'    <div class="overlay_metaX" style="display:none;">' + item.posX + '</div>' +
-					'    <div class="overlay_metaY" style="display:none;">' + item.posY + '</div>' +				
-					'    <div class="overlay_info">' +
-					'        <div class="' + contentStyle + '">' +
-					'            ' + tradeType + ' | ' + saleDetailType + 
-					'        </div>' +
-					'        <div class="overlay_body">' +
-					'            <div class="overlay_desc">' +
-					'                <div>`' + item.dealMonth.substr(2, 2) + '.' + item.dealMonth.substr(4, 2) + '/' + '<span class="area1">' + Number(item.useArea).toFixed(2) + '㎡</span>' + '<span class="area2">' + Number(item.useArea / 3.3058).toFixed(0) + '평</span></div>' +
-					'                <div>' + price + '</div>' +
-					'            </div>' +
-					'        </div>' +
-					'    </div>' +
-					'</div>';
-	
+						'    <div class="overlay_pnu" style="display:none;">' + item.pnu + '</div>' +
+						'    <div class="overlay_metaX" style="display:none;">' + item.posX + '</div>' +
+						'    <div class="overlay_metaY" style="display:none;">' + item.posY + '</div>' +
+						'    <div class="overlay_info">' +
+						'        <div class="' + contentStyle + '">' +
+						'            ' + tradeType + ' | ' + saleDetailType +
+						'        </div>' +
+						'        <div class="overlay_body">' +
+						'            <div class="overlay_desc">' +
+						'                <div>`' + item.dealMonth.substr(2, 2) + '.' + item.dealMonth.substr(4, 2) + '/' + '<span class="area_meter">' + temp_meter + '</span>' + '<span class="area_pyeong">' + temp_pyeong + '</span><span class="area_unit">㎡</span></div>' +
+						'                <div>' +
+						'                	<span class="unit_meter_price">' + numComma((Number(price) / temp_meter).toFixed(0)) + '만원/㎡당</span>' +
+						'					<span class="unit_pyeong_price">' + numComma((Number(price) / temp_pyeong).toFixed(0)) + '만원/평당</span>' +
+						'					<span class="total_price">' + numComma(price) + '만원</span>' +
+						'				 </div>' +
+						'            </div>' +
+						'        </div>' +
+						'    </div>' +
+						'</div>';
+
 					// 커스텀 오버레이를 생성합니다
 					let customOverlay = new kakao.maps.CustomOverlay({
 						position: circle.getPosition(),
 						content: content,
 					});
-	
+
 					realTradingOverArr.push(customOverlay);
-	
+
 					// 커스텀 오버레이를 지도에 표시합니다
 					customOverlay.setMap(map);
-					
+
 				} else {
 					var circle = new kakao.maps.Circle({
 						center: new kakao.maps.LatLng(item.posY, item.posX),  // 원의 중심좌표 입니다 
@@ -2381,80 +2511,84 @@
 					realTradingPoiArr.push(circle);
 
 					// 마커가 지도 위에 표시되도록 설정합니다
-					circle.setMap(map);				
-				
+					circle.setMap(map);
+
 					kakao.maps.event.addListener(circle, 'mouseover', makeOverListener(map, circle, item));
 					kakao.maps.event.addListener(circle, 'mouseout', makeOutListener(map, circle, item));
 				}
-				
-				let customOverlaySub = null; 
-				
+
+				let customOverlaySub = null;
+
 				function makeOverListener() {
-				    return function() {
-				    	//console.log(item);`
+					return function () {
+						//console.log(item);`
 						let content = '<div class="overlay_wrap">' +
-						'    <div class="overlay_pnu" style="display:none;">' + item.pnu + '</div>' +
-						'    <div class="overlay_metaX" style="display:none;">' + item.posX + '</div>' +
-						'    <div class="overlay_metaY" style="display:none;">' + item.posY + '</div>' +				
-						'    <div class="overlay_info">' +
-						'        <div class="' + contentStyle + '">' +
-						'            ' + tradeType + ' | ' + saleDetailType + 
-						'        </div>' +
-						'        <div class="overlay_body">' +
-						'            <div class="overlay_desc">' +
-						'                <div>`' + item.dealMonth.substr(2, 2) + '.' + item.dealMonth.substr(4, 2) + '/' + '<span class="area1">' + Number(item.useArea).toFixed(2) + '㎡</span>' + '<span class="area2">' + Number(item.useArea / 3.3058).toFixed(0) + '평</span></div>' +
-						'                <div>' + price + '</div>' +
-						'            </div>' +
-						'        </div>' +
-						'    </div>' +
-						'</div>';
-		
+							'    <div class="overlay_pnu" style="display:none;">' + item.pnu + '</div>' +
+							'    <div class="overlay_metaX" style="display:none;">' + item.posX + '</div>' +
+							'    <div class="overlay_metaY" style="display:none;">' + item.posY + '</div>' +
+							'    <div class="overlay_info">' +
+							'        <div class="' + contentStyle + '">' +
+							'            ' + tradeType + ' | ' + saleDetailType +
+							'        </div>' +
+							'        <div class="overlay_body">' +
+							'            <div class="overlay_desc">' +
+							'                <div>`' + item.dealMonth.substr(2, 2) + '.' + item.dealMonth.substr(4, 2) + '/' + '<span class="area_meter">' + temp_meter + '</span>' + '<span class="area_pyeong">' + temp_pyeong + '</span><span class="area_unit">㎡</span></div>' +
+							'                <div>' +
+							'                	<span class="unit_meter_price">' + numComma((Number(price) / temp_meter).toFixed(0)) + '만원/㎡당</span>' +
+							'					<span class="unit_pyeong_price">' + numComma((Number(price) / temp_pyeong).toFixed(0)) + '만원/평당</span>' +
+							'					<span class="total_price">' + numComma(price) + '만원</span>' +
+							'				 </div>' +
+							'            </div>' +
+							'        </div>' +
+							'    </div>' +
+							'</div>';
+
 						// 커스텀 오버레이를 생성합니다
 						customOverlaySub = new kakao.maps.CustomOverlay({
 							position: circle.getPosition(),
 							content: content,
 						});
-		
+
 						// 커스텀 오버레이를 지도에 표시합니다
 						customOverlaySub.setMap(map);
-				    };
+					};
 				}
-				
+
 				function makeOutListener() {
-				    return function() {
-				    	customOverlaySub.setMap(null);
-				    };
+					return function () {
+						customOverlaySub.setMap(null);
+					};
 				}
-				
+
 			}
-			
-			$("#selSaleDetailType").on("change", function() {
-				if ($("#selSaleDetailType").val() != '') {					
+
+			$("#selSaleDetailType").on("change", function () {
+				if ($("#selSaleDetailType").val() != '') {
 					if ($("#selSaleDetailType").val() != 'all') {
-						selSaleDetailType = $("#selSaleDetailType").val();	
+						selSaleDetailType = $("#selSaleDetailType").val();
 					} else {
 						selSaleDetailType = '';
 					}
-				 				
+
 					removeRealTrading();
 					getRealTrading();
 				}
 			});
-			
-			$("#selTradeType").on("change", function() {
-				
-				if ($("#selTradeType").val() != '') {					
+
+			$("#selTradeType").on("change", function () {
+
+				if ($("#selTradeType").val() != '') {
 					if ($("#selTradeType").val() != 'all') {
-						selTradeType = $("#selTradeType").val();	
+						selTradeType = $("#selTradeType").val();
 					} else {
 						selTradeType = '';
-					}					
-					
+					}
+
 					removeRealTrading();
 					getRealTrading();
-				} 
+				}
 			});
-			
+
 			function removeRealTrading() {
 				if (realTradingPoiArr.length > 0) {
 					realTradingPoiArr.forEach(function (realTradingPoi) {
@@ -2467,39 +2601,42 @@
 					});
 				}
 			}
-			
+
 			let dealYear = '2023';
 			let dealYearStart = '2022';
 			let dealYearEnd = '2023';
 			let selSaleDetailType = '';
 			let selTradeType = 'A';
-			
+
+
+			let realTradingPoiRemoveArr = [];
 			// 실거래가 팝업
 			function getRealTrading() {
-				let boundbox = map.getBounds().toString().replace('((', '').replace('))', '').replace('(', '').replace(')', '').replaceAll(' ', '');			
+				let boundbox = map.getBounds().toString().replace('((', '').replace('))', '').replace('(', '').replace(')', '').replaceAll(' ', '');
 				let boxArr = boundbox.split(',');	//console.log(boxArr);				
 				let tempBox = 'BOX(' + boxArr[1] + ',' + boxArr[0] + ',' + boxArr[3] + ',' + boxArr[2] + ')';
-				
+
 				$.ajax({
 					type: "GET",
 					url: "http://api.vworld.kr/req/data",
 					dataType: "jsonp",
-					data: { 
-						request: "GetFeature", 
-//						data: "LT_C_ADEMD_INFO",
-						data: "LT_C_ADSIDO_INFO",						
-						key: "02B06AF9-304D-3935-A9C1-4E0E8E91D881", 
-						geomFilter: tempBox, 
-						crs: "EPSG:4326", 
-						size: 100, 
-						geometry: false 
+					data: {
+						request: "GetFeature",
+						//						data: "LT_C_ADEMD_INFO",
+						data: "LT_C_ADSIDO_INFO",
+						key: "0500925E-73CA-34F5-82C0-15E11488624A",
+						geomFilter: tempBox,
+						crs: "EPSG:4326",
+						size: 100,
+						geometry: false
 					},
 					async: false,
 					cache: false,
-					success: function (result) {console.log("test:::getRealTrading()");console.log(result);									
+					success: function (result) {
+						console.log("test:::getRealTrading()"); console.log(result);
 						if (result.response.status === 'OK' && result.response.record.total > 0) {
 							console.log(result.response.result.featureCollection);
-							
+
 							let level = map.getLevel();
 							/*
 							let emdArr = result.response.result.featureCollection.features;
@@ -2518,24 +2655,33 @@
 							cond += ")";
 							//console.log(cond);
 							*/
-							
+
 							let sidoArr = result.response.result.featureCollection.features;
-							
+
 							let rtDTO = new Object();
 							//rtDTO.emdCond = cond;
-							
+
 							rtDTO.selSaleDetailType = selSaleDetailType;
 							rtDTO.selTradeType = selTradeType;
 							rtDTO.dealYearStart = dealYearStart;
-							rtDTO.dealYearEnd = dealYearEnd;							
+							rtDTO.dealYearEnd = dealYearEnd;
 							rtDTO.posMinX = boxArr[1];
 							rtDTO.posMinY = boxArr[0];
 							rtDTO.posMaxX = boxArr[3];
 							rtDTO.posMaxY = boxArr[2];
-							
+							console.log(realTradingPoiArr.length);
+							if (realTradingPoiArr.length > 0) {
+								realTradingPoiArr.forEach(function (realTradingPoi, idx) {//console.log("realTradingPoi");console.log(realTradingPoi.getPosition().Ma);
+									//realTradingPoi.setMap(null);
+									if (boxArr[1] > realTradingPoi.getPosition().La || realTradingPoi.getPosition().La > boxArr[3] || boxArr[0] > realTradingPoi.getPosition().Ma || boxArr[2] < realTradingPoi.getPosition().Ma) {
+										realTradingPoiArr.splice(idx, 1);
+									}
+								});
+							}
+							console.log(realTradingPoiArr.length);
 							sidoArr.forEach((item, idx) => {
 								rtDTO.sidoCode = item.properties.ctprvn_cd;
-								
+
 								$.ajax({
 									url: '/forsale/rest/tradings/getListOfficetel1',
 									type: 'GET',
@@ -2546,13 +2692,26 @@
 									success: function (result) {
 										console.log(result);
 										result.forEach((item, itemIdx) => { //console.log("itemIdx : " + itemIdx);
-											if (item.posX != null && item.posY != null) {									
-												showRealTradingsMarker(item, itemIdx);
+											if (item.posX != null && item.posY != null) {
+												let boolPoi = false;
+												if (realTradingPoiArr.length > 0) {
+													realTradingPoiArr.forEach(function (realTradingPoi) {//console.log("realTradingPoi");console.log(realTradingPoi.getPosition().Ma);
+														//realTradingPoi.setMap(null);
+														if (realTradingPoi.getPosition().La == item.posX && realTradingPoi.getPosition().Ma == item.posY) {
+															boolPoi = true;
+														}
+													});
+												}
+												//console.log(item.posY);
+												if (!boolPoi) {
+													showRealTradingsMarker(item, itemIdx);
+												}
 											} else {
 												console.log("좌표 없음");
 												console.log(item.buildType);
 												//console.log(item.saleDetailType);
-												if (item.saleDetailType === 'l1') {												
+
+												if (item.saleDetailType === 'l1') {
 													let paramData = {
 														serviceKey: "d6jaYPOmc0Pa1m83x3zueNB3pF6MOKZireJOZo7dkIqOS+D7JakOH1FZjdaUTulBgFjU3TQaaXjFqhgmUomXKA==",
 														pnu: item.pnu0,
@@ -2577,14 +2736,14 @@
 																	type: "GET",
 																	url: "http://api.vworld.kr/req/address",
 																	dataType: "jsonp",
-																	data: { 
+																	data: {
 																		service: "address",
-																		request: "getCoord",																 
+																		request: "getCoord",
 																		format: "json",
 																		crs: "EPSG:4326",
-																		key: "02B06AF9-304D-3935-A9C1-4E0E8E91D881",
+																		key: "0500925E-73CA-34F5-82C0-15E11488624A",
 																		type: "parcel",
-																		address: item.sigungu + " " + temp[0].mnnmSlno																
+																		address: item.sigungu + " " + temp[0].mnnmSlno
 																	},
 																	async: false,
 																	cache: false,
@@ -2593,15 +2752,15 @@
 																			rtDTO.rid = item.rid;
 																			rtDTO.posX = result2.response.result.point.x;
 																			rtDTO.posY = result2.response.result.point.y;
-																			
-																			$.post("/forsale/rest/tradings/updateCoords", rtDTO, function(data, status){
+
+																			$.post("/forsale/rest/tradings/updateCoords", rtDTO, function (data, status) {
 																				console.log("Data: " + data + "\nStatus: " + status);
 																			});
-																			
-																			
+
+
 																			let tFillColor = '#15C4B2';
 																			let tStrokeColor = '#15C4B2';
-					
+
 																			var circle = new kakao.maps.Circle({
 																				center: new kakao.maps.LatLng(result2.response.result.point.y, result2.response.result.point.x),  // 원의 중심좌표 입니다 
 																				radius: 5, // 미터 단위의 원의 반지름입니다 
@@ -2611,12 +2770,12 @@
 																				fillColor: tFillColor, // 채우기 색깔입니다
 																				fillOpacity: 1  // 채우기 불투명도 입니다   
 																			});
-					
+
 																			realTradingPoiArr.push(circle);
-					
+
 																			// 마커가 지도 위에 표시되도록 설정합니다
 																			circle.setMap(map);
-					
+
 																			if (itemIdx < 5) {
 																				let content = '<div class="overlay_wrap">' +
 																					'    <div class="overlay_info">' +
@@ -2624,23 +2783,23 @@
 																					'            매매 | 토지' +
 																					'        </div>' +
 																					'        <div class="overlay_body">' +
-																					'            <div class="overlay_desc">' +																	 
+																					'            <div class="overlay_desc">' +
 																					'                <div>`' + item.dealMonth.substr(2, 2) + '.' + item.dealMonth.substr(4, 2) + '/' + '<span class="area1">' + Number(item.useArea).toFixed(2) + '㎡</span>' + '<span class="area2">' + Number(item.useArea / 3.3058).toFixed(0) + '평</span></div>' +
 																					'                <div>' + item.dealAmount + '</div>' +
 																					'            </div>' +
 																					'        </div>' +
 																					'    </div>' +
 																					'</div>';
-						
+
 																				// 커스텀 오버레이를 생성합니다
 																				let customOverlay = new kakao.maps.CustomOverlay({
 																					position: circle.getPosition(),
 																					content: content,
-						
+
 																				});
-						
+
 																				realTradingOverArr.push(customOverlay);
-						
+
 																				// 커스텀 오버레이를 지도에 표시합니다
 																				customOverlay.setMap(map);
 																			}
@@ -2650,7 +2809,7 @@
 															}
 														}
 													});
-												} else if (item.saleDetailType === 'l3' || item.saleDetailType === 's1') {												
+												} else if (item.saleDetailType === 'l3' || item.saleDetailType === 's1') {
 													let paramData = {
 														serviceKey: "d6jaYPOmc0Pa1m83x3zueNB3pF6MOKZireJOZo7dkIqOS+D7JakOH1FZjdaUTulBgFjU3TQaaXjFqhgmUomXKA==",
 														pnu: item.pnu0,
@@ -2675,14 +2834,14 @@
 																	type: "GET",
 																	url: "http://api.vworld.kr/req/address",
 																	dataType: "jsonp",
-																	data: { 
+																	data: {
 																		service: "address",
-																		request: "getCoord",																 
+																		request: "getCoord",
 																		format: "json",
 																		crs: "EPSG:4326",
-																		key: "02B06AF9-304D-3935-A9C1-4E0E8E91D881",
+																		key: "0500925E-73CA-34F5-82C0-15E11488624A",
 																		type: "parcel",
-																		address: item.sigungu + " " + temp[0].mnnmSlno																
+																		address: item.sigungu + " " + temp[0].mnnmSlno
 																	},
 																	async: false,
 																	cache: false,
@@ -2691,15 +2850,15 @@
 																			rtDTO.rid = item.rid;
 																			rtDTO.posX = result2.response.result.point.x;
 																			rtDTO.posY = result2.response.result.point.y;
-																			
-																			$.post("/forsale/rest/tradings/updateCoords", rtDTO, function(data, status){
+
+																			$.post("/forsale/rest/tradings/updateCoords", rtDTO, function (data, status) {
 																				console.log("Data: " + data + "\nStatus: " + status);
 																			});
-																			
-																			
+
+
 																			let tFillColor = '#15C4B2';
 																			let tStrokeColor = '#15C4B2';
-					
+
 																			var circle = new kakao.maps.Circle({
 																				center: new kakao.maps.LatLng(result2.response.result.point.y, result2.response.result.point.x),  // 원의 중심좌표 입니다 
 																				radius: 5, // 미터 단위의 원의 반지름입니다 
@@ -2709,12 +2868,12 @@
 																				fillColor: tFillColor, // 채우기 색깔입니다
 																				fillOpacity: 1  // 채우기 불투명도 입니다   
 																			});
-					
+
 																			realTradingPoiArr.push(circle);
-					
+
 																			// 마커가 지도 위에 표시되도록 설정합니다
 																			circle.setMap(map);
-																			
+
 																			if (itemIdx < 5) {
 																				let content = '<div class="overlay_wrap">' +
 																					'    <div class="overlay_info">' +
@@ -2722,23 +2881,23 @@
 																					'            매매 | 상가' +
 																					'        </div>' +
 																					'        <div class="overlay_body">' +
-																					'            <div class="overlay_desc">' +																	 
+																					'            <div class="overlay_desc">' +
 																					'                <div>`' + item.dealMonth.substr(2, 2) + '.' + item.dealMonth.substr(4, 2) + '/' + '<span class="area1">' + Number(item.useArea).toFixed(2) + '㎡</span>' + '<span class="area2">' + Number(item.useArea / 3.3058).toFixed(0) + '평</span></div>' +
 																					'                <div>' + item.dealAmount + '</div>' +
 																					'            </div>' +
 																					'        </div>' +
 																					'    </div>' +
 																					'</div>';
-						
+
 																				// 커스텀 오버레이를 생성합니다
 																				let customOverlay = new kakao.maps.CustomOverlay({
 																					position: circle.getPosition(),
 																					content: content,
-						
+
 																				});
-						
+
 																				realTradingOverArr.push(customOverlay);
-						
+
 																				// 커스텀 오버레이를 지도에 표시합니다
 																				customOverlay.setMap(map);
 																			}
@@ -2747,9 +2906,9 @@
 																});
 															}
 														}
-													});												
+													});
 												} else if (item.saleDetailType === 'h1') {
-													
+
 													let mainPrposCode = '01000';
 													let detailPrposCode = '';
 													if (item.buildType === '단독') {
@@ -2783,14 +2942,14 @@
 																	type: "GET",
 																	url: "http://api.vworld.kr/req/address",
 																	dataType: "jsonp",
-																	data: { 
+																	data: {
 																		service: "address",
-																		request: "getCoord",																 
+																		request: "getCoord",
 																		format: "json",
 																		crs: "EPSG:4326",
-																		key: "02B06AF9-304D-3935-A9C1-4E0E8E91D881",
+																		key: "0500925E-73CA-34F5-82C0-15E11488624A",
 																		type: "parcel",
-																		address: item.sigungu + " " + temp[0].mnnmSlno																
+																		address: item.sigungu + " " + temp[0].mnnmSlno
 																	},
 																	async: false,
 																	cache: false,
@@ -2799,15 +2958,15 @@
 																			rtDTO.rid = item.rid;
 																			rtDTO.posX = result2.response.result.point.x;
 																			rtDTO.posY = result2.response.result.point.y;
-																			
-																			$.post("/forsale/rest/tradings/updateCoords", rtDTO, function(data, status){
+
+																			$.post("/forsale/rest/tradings/updateCoords", rtDTO, function (data, status) {
 																				console.log("Data: " + data + "\nStatus: " + status);
 																			});
-																			
-																			
+
+
 																			let tFillColor = '#15C4B2';
 																			let tStrokeColor = '#15C4B2';
-					
+
 																			var circle = new kakao.maps.Circle({
 																				center: new kakao.maps.LatLng(result2.response.result.point.y, result2.response.result.point.x),  // 원의 중심좌표 입니다 
 																				radius: 5, // 미터 단위의 원의 반지름입니다 
@@ -2817,12 +2976,12 @@
 																				fillColor: tFillColor, // 채우기 색깔입니다
 																				fillOpacity: 1  // 채우기 불투명도 입니다   
 																			});
-					
+
 																			realTradingPoiArr.push(circle);
-					
+
 																			// 마커가 지도 위에 표시되도록 설정합니다
 																			circle.setMap(map);
-																			
+
 																			if (itemIdx < 5) {
 																				let content = '<div class="overlay_wrap">' +
 																					'    <div class="overlay_info">' +
@@ -2830,23 +2989,23 @@
 																					'            매매 | 단독·다가구' +
 																					'        </div>' +
 																					'        <div class="overlay_body">' +
-																					'            <div class="overlay_desc">' +																	 
+																					'            <div class="overlay_desc">' +
 																					'                <div>`' + item.dealMonth.substr(2, 2) + '.' + item.dealMonth.substr(4, 2) + '/' + '<span class="area1">' + Number(item.useArea).toFixed(2) + '㎡</span>' + '<span class="area2">' + Number(item.useArea / 3.3058).toFixed(0) + '평</span></div>' +
 																					'                <div>' + item.dealAmount + '</div>' +
 																					'            </div>' +
 																					'        </div>' +
 																					'    </div>' +
 																					'</div>';
-						
+
 																				// 커스텀 오버레이를 생성합니다
 																				let customOverlay = new kakao.maps.CustomOverlay({
 																					position: circle.getPosition(),
 																					content: content,
-						
+
 																				});
-						
+
 																				realTradingOverArr.push(customOverlay);
-						
+
 																				// 커스텀 오버레이를 지도에 표시합니다
 																				customOverlay.setMap(map);
 																			}
@@ -2855,21 +3014,21 @@
 																});
 															}
 														}
-															
+
 													});
 												} else {
 													$.ajax({
 														type: "GET",
 														url: "http://api.vworld.kr/req/address",
 														dataType: "jsonp",
-														data: { 
+														data: {
 															service: "address",
-															request: "getCoord",																 
+															request: "getCoord",
 															format: "json",
 															crs: "EPSG:4326",
-															key: "02B06AF9-304D-3935-A9C1-4E0E8E91D881",
+															key: "0500925E-73CA-34F5-82C0-15E11488624A",
 															type: "parcel",
-															address: item.sigungu + " " + item.jibun																
+															address: item.sigungu + " " + item.jibun
 														},
 														async: false,
 														cache: false,
@@ -2878,15 +3037,15 @@
 																rtDTO.rid = item.rid;
 																rtDTO.posX = result2.response.result.point.x;
 																rtDTO.posY = result2.response.result.point.y;
-																
-																$.post("/forsale/rest/tradings/updateCoords", rtDTO, function(data, status){
+
+																$.post("/forsale/rest/tradings/updateCoords", rtDTO, function (data, status) {
 																	console.log("Data: " + data + "\nStatus: " + status);
 																});
-																
-																
+
+
 																let tFillColor = '#15C4B2';
 																let tStrokeColor = '#15C4B2';
-		
+
 																var circle = new kakao.maps.Circle({
 																	center: new kakao.maps.LatLng(result2.response.result.point.y, result2.response.result.point.x),  // 원의 중심좌표 입니다 
 																	radius: 5, // 미터 단위의 원의 반지름입니다 
@@ -2896,12 +3055,12 @@
 																	fillColor: tFillColor, // 채우기 색깔입니다
 																	fillOpacity: 1  // 채우기 불투명도 입니다   
 																});
-		
+
 																realTradingPoiArr.push(circle);
-		
+
 																// 마커가 지도 위에 표시되도록 설정합니다
 																circle.setMap(map);
-																
+
 																if (itemIdx < 5) {
 																	let content = '<div class="overlay_wrap">' +
 																		'    <div class="overlay_info">' +
@@ -2909,23 +3068,23 @@
 																		'            매매 | 오피스텔' +
 																		'        </div>' +
 																		'        <div class="overlay_body">' +
-																		'            <div class="overlay_desc">' +																	 
+																		'            <div class="overlay_desc">' +
 																		'                <div>`' + item.dealMonth.substr(2, 2) + '.' + item.dealMonth.substr(4, 2) + '/' + '<span class="area1">' + Number(item.useArea).toFixed(2) + '㎡</span>' + '<span class="area2">' + Number(item.useArea / 3.3058).toFixed(0) + '평</span></div>' +
 																		'                <div>' + item.dealAmount + '</div>' +
 																		'            </div>' +
 																		'        </div>' +
 																		'    </div>' +
 																		'</div>';
-			
+
 																	// 커스텀 오버레이를 생성합니다
 																	let customOverlay = new kakao.maps.CustomOverlay({
 																		position: circle.getPosition(),
 																		content: content,
-			
+
 																	});
-			
+
 																	realTradingOverArr.push(customOverlay);
-			
+
 																	// 커스텀 오버레이를 지도에 표시합니다
 																	customOverlay.setMap(map);
 																}
@@ -2933,945 +3092,32 @@
 														}
 													});
 												}
-											}	
-										});									
+											}
+										});
 									},
 									error: function (json) {
 										console.log("error");
 									}
 								});
 							});
-							
-							
-							
-							
+
+
+
+
 						} else {
 							alert("OpenAPI(읍면동) 연결이 실패하였습니다.");
 						}
 					}
-				});  
-				
-				
+				});
+
+
 			}
-			
-			
-			
-			function getRealTrading22(boundbox) {
-				let coords = boundbox.split(',');
-				let rtDTO = new Object();
-				rtDTO.posMinX = coords[1];
-				rtDTO.posMinY = coords[0];
-				rtDTO.posMaxX = coords[3];
-				rtDTO.posMaxY = coords[2];
-//
-/*
-				$.ajax({
-					url: '/forsale/rest/tradings/getListApt1',
-					type: 'GET',
-					data: rtDTO,
-					dataType: "json",
-					async: false,
-					cache: false,
-					success: function (result) {
-						console.log(result);
-						result.forEach(item => {
-							if (item.posX != 0.0 && item.posY != 0.0) {
 
-								let tFillColor = '#15C4B2';
-								let tStrokeColor = '#15C4B2';
-
-								var circle = new kakao.maps.Circle({
-									center: new kakao.maps.LatLng(item.posY, item.posX),  // 원의 중심좌표 입니다 
-									radius: 5, // 미터 단위의 원의 반지름입니다 
-									strokeWeight: 2, // 선의 두께입니다 
-									strokeColor: tStrokeColor, // 선의 색깔입니다
-									strokeOpacity: 1, // 선의 불투명도 입니다 1에서 0 사이의 값이며 0에 가까울수록 투명합니다    
-									fillColor: tFillColor, // 채우기 색깔입니다
-									fillOpacity: 1  // 채우기 불투명도 입니다   
-								});
-
-								realTradingPoiArr.push(circle);
-
-								// 마커가 지도 위에 표시되도록 설정합니다
-								circle.setMap(map);
-								//console.log(moneyFormat(item['NSDI:F163']['NSDI:AVRG_PBLNTF_PC']));
-								// 커스텀 오버레이에 표시할 내용입니다     
-								// HTML 문자열 또는 Dom Element 입니다 
-								//let content = '<div class ="label"><span class="left"></span><span class="center">';
-								//content += moneyFormat(item['NSDI:F163']['NSDI:AVRG_PBLNTF_PC']); 
-								//content += '</span><span class="right"></span></div>';
-
-								let content = '<div class="overlay_wrap">' +
-									'    <div class="overlay_info">' +
-									'        <div class="overlay_titleA">' +
-									'            매매 | 아파트' +
-									'        </div>' +
-									'        <div class="overlay_body">' +
-									'            <div class="overlay_desc">' +
-									//'                <div><a href="https://www.kakaocorp.com/main" target="_blank" class="link"></a>' + item['NSDI:F163']['NSDI:AVRG_PBLNTF_PC'] + '</div>' + 
-									'                <div>`' + item.dealMonth.substr(2, 2) + '.' + item.dealMonth.substr(4, 2) + '/' + '<span class="area1">' + Number(item.useArea).toFixed(2) + '㎡</span>' + '<span class="area2">' + Number(item.useArea / 3.3058).toFixed(0) + '평</span></div>' +
-									'                <div>' + item.dealAmount + '</div>' +
-									'            </div>' +
-									'        </div>' +
-									'    </div>' +
-									'</div>';
-
-								// 커스텀 오버레이를 생성합니다
-								let customOverlay = new kakao.maps.CustomOverlay({
-									position: circle.getPosition(),
-									content: content,
-
-								});
-
-								realTradingOverArr.push(customOverlay);
-
-								// 커스텀 오버레이를 지도에 표시합니다
-								customOverlay.setMap(map);
-							}
-						});
-					},
-					error: function (json) {
-						console.log("error");
-					}
-				});
-
-				rtDTO.monthlyType = '월세';
-				$.ajax({
-					url: '/forsale/rest/tradings/getListApt2',
-					type: 'GET',
-					data: rtDTO,
-					dataType: "json",
-					async: false,
-					cache: false,
-					success: function (result) {
-						console.log(result);
-						result.forEach(item => {
-							if (item.posX != 0.0 && item.posY != 0.0) {
-
-								let tFillColor = '#15C4B2';
-								let tStrokeColor = '#15C4B2';
-
-								var circle = new kakao.maps.Circle({
-									center: new kakao.maps.LatLng(item.posY, item.posX),  // 원의 중심좌표 입니다 
-									radius: 5, // 미터 단위의 원의 반지름입니다 
-									strokeWeight: 2, // 선의 두께입니다 
-									strokeColor: tStrokeColor, // 선의 색깔입니다
-									strokeOpacity: 1, // 선의 불투명도 입니다 1에서 0 사이의 값이며 0에 가까울수록 투명합니다    
-									fillColor: tFillColor, // 채우기 색깔입니다
-									fillOpacity: 1  // 채우기 불투명도 입니다   
-								});
-
-								realTradingPoiArr.push(circle);
-
-								// 마커가 지도 위에 표시되도록 설정합니다
-								circle.setMap(map);
-
-								let content = '<div class="overlay_wrap">' +
-									'    <div class="overlay_info">' +
-									'        <div class="overlay_titleB">' +
-									'            월세 | 아파트' +
-									'        </div>' +
-									'        <div class="overlay_body">' +
-									'            <div class="overlay_desc">' +
-									'                <div>`' + item.dealMonth.substr(2, 2) + '.' + item.dealMonth.substr(4, 2) + '/' + '<span class="area1">' + Number(item.useArea).toFixed(2) + '㎡</span>' + '<span class="area2">' + Number(item.useArea / 3.3058).toFixed(0) + '평</span></div>' +
-									'                <div>' + item.deposit + '/' + item.monthlyRent + '</div>' +
-									'            </div>' +
-									'        </div>' +
-									'    </div>' +
-									'</div>';
-
-								// 커스텀 오버레이를 생성합니다
-								let customOverlay = new kakao.maps.CustomOverlay({
-									position: circle.getPosition(),
-									content: content
-								});
-
-								realTradingOverArr.push(customOverlay);
-
-								// 커스텀 오버레이를 지도에 표시합니다
-								customOverlay.setMap(map);
-							}
-						});
-					},
-					error: function (json) {
-						console.log("error");
-					}
-				});
-
-				rtDTO.monthlyType = '전세';
-				$.ajax({
-					url: '/forsale/rest/tradings/getListApt2',
-					type: 'GET',
-					data: rtDTO,
-					dataType: "json",
-					async: false,
-					cache: false,
-					success: function (result) {
-						console.log(result);
-						result.forEach(item => {
-							if (item.posX != 0.0 && item.posY != 0.0) {
-
-								let tFillColor = '#15C4B2';
-								let tStrokeColor = '#15C4B2';
-
-								var circle = new kakao.maps.Circle({
-									center: new kakao.maps.LatLng(item.posY, item.posX),  // 원의 중심좌표 입니다 
-									radius: 5, // 미터 단위의 원의 반지름입니다 
-									strokeWeight: 2, // 선의 두께입니다 
-									strokeColor: tStrokeColor, // 선의 색깔입니다
-									strokeOpacity: 1, // 선의 불투명도 입니다 1에서 0 사이의 값이며 0에 가까울수록 투명합니다    
-									fillColor: tFillColor, // 채우기 색깔입니다
-									fillOpacity: 1  // 채우기 불투명도 입니다   
-								});
-
-								realTradingPoiArr.push(circle);
-
-								// 마커가 지도 위에 표시되도록 설정합니다
-								circle.setMap(map);
-
-								let content = '<div class="overlay_wrap">' +
-									'    <div class="overlay_info">' +
-									'        <div class="overlay_titleC">' +
-									'            전세 | 아파트' +
-									'        </div>' +
-									'        <div class="overlay_body">' +
-									'            <div class="overlay_desc">' +
-									'                <div>`' + item.dealMonth.substr(2, 2) + '.' + item.dealMonth.substr(4, 2) + '/' + '<span class="area1">' + Number(item.useArea).toFixed(2) + '㎡</span>' + '<span class="area2">' + Number(item.useArea / 3.3058).toFixed(0) + '평</span></div>' +
-									'                <div>' + item.deposit + '</div>' +
-									'            </div>' +
-									'        </div>' +
-									'    </div>' +
-									'</div>';
-
-								// 커스텀 오버레이를 생성합니다
-								let customOverlay = new kakao.maps.CustomOverlay({
-									position: circle.getPosition(),
-									content: content
-								});
-
-								realTradingOverArr.push(customOverlay);
-
-								// 커스텀 오버레이를 지도에 표시합니다
-								customOverlay.setMap(map);
-							}
-						});
-					},
-					error: function (json) {
-						console.log("error");
-					}
-				});
-				
-				*/
-				// 오피스텔 매매
-				$.ajax({
-					url: '/forsale/rest/tradings/getListOfficetel1',
-					type: 'GET',
-					data: rtDTO,
-					dataType: "json",
-					async: false,
-					cache: false,
-					success: function (result) {
-						console.log(result);
-						result.forEach(item => {
-							if (item.posX != 0.0 && item.posY != 0.0) {
-
-								let tFillColor = '#15C4B2';
-								let tStrokeColor = '#15C4B2';
-
-								var circle = new kakao.maps.Circle({
-									center: new kakao.maps.LatLng(item.posY, item.posX),  // 원의 중심좌표 입니다 
-									radius: 5, // 미터 단위의 원의 반지름입니다 
-									strokeWeight: 2, // 선의 두께입니다 
-									strokeColor: tStrokeColor, // 선의 색깔입니다
-									strokeOpacity: 1, // 선의 불투명도 입니다 1에서 0 사이의 값이며 0에 가까울수록 투명합니다    
-									fillColor: tFillColor, // 채우기 색깔입니다
-									fillOpacity: 1  // 채우기 불투명도 입니다   
-								});
-
-								realTradingPoiArr.push(circle);
-
-								// 마커가 지도 위에 표시되도록 설정합니다
-								circle.setMap(map);
-								//console.log(moneyFormat(item['NSDI:F163']['NSDI:AVRG_PBLNTF_PC']));
-								// 커스텀 오버레이에 표시할 내용입니다     
-								// HTML 문자열 또는 Dom Element 입니다 
-								//let content = '<div class ="label"><span class="left"></span><span class="center">';
-								//content += moneyFormat(item['NSDI:F163']['NSDI:AVRG_PBLNTF_PC']); 
-								//content += '</span><span class="right"></span></div>';
-
-								let content = '<div class="overlay_wrap">' +
-									'    <div class="overlay_info">' +
-									'        <div class="overlay_titleA">' +
-									'            매매 | 오피스텔' +
-									'        </div>' +
-									'        <div class="overlay_body">' +
-									'            <div class="overlay_desc">' +
-									//'                <div><a href="https://www.kakaocorp.com/main" target="_blank" class="link"></a>' + item['NSDI:F163']['NSDI:AVRG_PBLNTF_PC'] + '</div>' + 
-									'                <div>`' + item.dealMonth.substr(2, 2) + '.' + item.dealMonth.substr(4, 2) + '/' + '<span class="area1">' + Number(item.useArea).toFixed(2) + '㎡</span>' + '<span class="area2">' + Number(item.useArea / 3.3058).toFixed(0) + '평</span></div>' +
-									'                <div>' + item.dealAmount + '</div>' +
-									'            </div>' +
-									'        </div>' +
-									'    </div>' +
-									'</div>';
-
-								// 커스텀 오버레이를 생성합니다
-								let customOverlay = new kakao.maps.CustomOverlay({
-									position: circle.getPosition(),
-									content: content,
-
-								});
-
-								realTradingOverArr.push(customOverlay);
-
-								// 커스텀 오버레이를 지도에 표시합니다
-								customOverlay.setMap(map);
-							}
-						});
-					},
-					error: function (json) {
-						console.log("error");
-					}
-				});
-				
-				// 오피스텔 월세
-				rtDTO.monthlyType = '월세';
-				$.ajax({
-					url: '/forsale/rest/tradings/getListOfficetel2',
-					type: 'GET',
-					data: rtDTO,
-					dataType: "json",
-					async: false,
-					cache: false,
-					success: function (result) {
-						console.log(result);
-						result.forEach(item => {
-							if (item.posX != 0.0 && item.posY != 0.0) {
-
-								let tFillColor = '#15C4B2';
-								let tStrokeColor = '#15C4B2';
-
-								var circle = new kakao.maps.Circle({
-									center: new kakao.maps.LatLng(item.posY, item.posX),  // 원의 중심좌표 입니다 
-									radius: 5, // 미터 단위의 원의 반지름입니다 
-									strokeWeight: 2, // 선의 두께입니다 
-									strokeColor: tStrokeColor, // 선의 색깔입니다
-									strokeOpacity: 1, // 선의 불투명도 입니다 1에서 0 사이의 값이며 0에 가까울수록 투명합니다    
-									fillColor: tFillColor, // 채우기 색깔입니다
-									fillOpacity: 1  // 채우기 불투명도 입니다   
-								});
-
-								realTradingPoiArr.push(circle);
-
-								// 마커가 지도 위에 표시되도록 설정합니다
-								circle.setMap(map);
-
-								let content = '<div class="overlay_wrap">' +
-									'    <div class="overlay_info">' +
-									'        <div class="overlay_titleB">' +
-									'            월세 | 오피스텔' +
-									'        </div>' +
-									'        <div class="overlay_body">' +
-									'            <div class="overlay_desc">' +
-									'                <div>`' + item.dealMonth.substr(2, 2) + '.' + item.dealMonth.substr(4, 2) + '/' + '<span class="area1">' + Number(item.useArea).toFixed(2) + '㎡</span>' + '<span class="area2">' + Number(item.useArea / 3.3058).toFixed(0) + '평</span></div>' +
-									'                <div>' + item.deposit + '/' + item.monthlyRent + '</div>' +
-									'            </div>' +
-									'        </div>' +
-									'    </div>' +
-									'</div>';
-
-								// 커스텀 오버레이를 생성합니다
-								let customOverlay = new kakao.maps.CustomOverlay({
-									position: circle.getPosition(),
-									content: content
-								});
-
-								realTradingOverArr.push(customOverlay);
-
-								// 커스텀 오버레이를 지도에 표시합니다
-								customOverlay.setMap(map);
-							}
-						});
-					},
-					error: function (json) {
-						console.log("error");
-					}
-				});
-
-				// 오피스텔 전세
-				rtDTO.monthlyType = '전세';
-				$.ajax({
-					url: '/forsale/rest/tradings/getListOfficetel2',
-					type: 'GET',
-					data: rtDTO,
-					dataType: "json",
-					async: false,
-					cache: false,
-					success: function (result) {
-						console.log(result);
-						result.forEach(item => {
-							if (item.posX != 0.0 && item.posY != 0.0) {
-
-								let tFillColor = '#15C4B2';
-								let tStrokeColor = '#15C4B2';
-
-								var circle = new kakao.maps.Circle({
-									center: new kakao.maps.LatLng(item.posY, item.posX),  // 원의 중심좌표 입니다 
-									radius: 5, // 미터 단위의 원의 반지름입니다 
-									strokeWeight: 2, // 선의 두께입니다 
-									strokeColor: tStrokeColor, // 선의 색깔입니다
-									strokeOpacity: 1, // 선의 불투명도 입니다 1에서 0 사이의 값이며 0에 가까울수록 투명합니다    
-									fillColor: tFillColor, // 채우기 색깔입니다
-									fillOpacity: 1  // 채우기 불투명도 입니다   
-								});
-
-								realTradingPoiArr.push(circle);
-
-								// 마커가 지도 위에 표시되도록 설정합니다
-								circle.setMap(map);
-
-								let content = '<div class="overlay_wrap">' +
-									'    <div class="overlay_info">' +
-									'        <div class="overlay_titleC">' +
-									'            전세 | 오피스텔' +
-									'        </div>' +
-									'        <div class="overlay_body">' +
-									'            <div class="overlay_desc">' +
-									'                <div>`' + item.dealMonth.substr(2, 2) + '.' + item.dealMonth.substr(4, 2) + '/' + '<span class="area1">' + Number(item.useArea).toFixed(2) + '㎡</span>' + '<span class="area2">' + Number(item.useArea / 3.3058).toFixed(0) + '평</span></div>' +
-									'                <div>' + item.deposit + '</div>' +
-									'            </div>' +
-									'        </div>' +
-									'    </div>' +
-									'</div>';
-
-								// 커스텀 오버레이를 생성합니다
-								let customOverlay = new kakao.maps.CustomOverlay({
-									position: circle.getPosition(),
-									content: content
-								});
-
-								realTradingOverArr.push(customOverlay);
-
-								// 커스텀 오버레이를 지도에 표시합니다
-								customOverlay.setMap(map);
-							}
-						});
-					},
-					error: function (json) {
-						console.log("error");
-					}
-				});
-				
-				/*
-				// 연립다세대 매매
-				$.ajax({
-					url: '/forsale/rest/tradings/getListMultihouse1',
-					type: 'GET',
-					data: rtDTO,
-					dataType: "json",
-					async: false,
-					cache: false,
-					success: function (result) {
-						console.log(result);
-						result.forEach(item => {
-							if (item.posX != 0.0 && item.posY != 0.0) {
-
-								let tFillColor = '#15C4B2';
-								let tStrokeColor = '#15C4B2';
-
-								var circle = new kakao.maps.Circle({
-									center: new kakao.maps.LatLng(item.posY, item.posX),  // 원의 중심좌표 입니다 
-									radius: 5, // 미터 단위의 원의 반지름입니다 
-									strokeWeight: 2, // 선의 두께입니다 
-									strokeColor: tStrokeColor, // 선의 색깔입니다
-									strokeOpacity: 1, // 선의 불투명도 입니다 1에서 0 사이의 값이며 0에 가까울수록 투명합니다    
-									fillColor: tFillColor, // 채우기 색깔입니다
-									fillOpacity: 1  // 채우기 불투명도 입니다   
-								});
-
-								realTradingPoiArr.push(circle);
-
-								// 마커가 지도 위에 표시되도록 설정합니다
-								circle.setMap(map);
-								//console.log(moneyFormat(item['NSDI:F163']['NSDI:AVRG_PBLNTF_PC']));
-								// 커스텀 오버레이에 표시할 내용입니다     
-								// HTML 문자열 또는 Dom Element 입니다 
-								//let content = '<div class ="label"><span class="left"></span><span class="center">';
-								//content += moneyFormat(item['NSDI:F163']['NSDI:AVRG_PBLNTF_PC']); 
-								//content += '</span><span class="right"></span></div>';
-
-								let content = '<div class="overlay_wrap">' +
-									'    <div class="overlay_info">' +
-									'        <div class="overlay_titleA">' +
-									'            매매 | 연립다세대' +
-									'        </div>' +
-									'        <div class="overlay_body">' +
-									'            <div class="overlay_desc">' +
-									//'                <div><a href="https://www.kakaocorp.com/main" target="_blank" class="link"></a>' + item['NSDI:F163']['NSDI:AVRG_PBLNTF_PC'] + '</div>' + 
-									'                <div>`' + item.dealMonth.substr(2, 2) + '.' + item.dealMonth.substr(4, 2) + '/' + '<span class="area1">' + Number(item.useArea).toFixed(2) + '㎡</span>' + '<span class="area2">' + Number(item.useArea / 3.3058).toFixed(0) + '평</span></div>' +
-									'                <div>' + item.dealAmount + '</div>' +
-									'            </div>' +
-									'        </div>' +
-									'    </div>' +
-									'</div>';
-
-								// 커스텀 오버레이를 생성합니다
-								let customOverlay = new kakao.maps.CustomOverlay({
-									position: circle.getPosition(),
-									content: content,
-
-								});
-
-								realTradingOverArr.push(customOverlay);
-
-								// 커스텀 오버레이를 지도에 표시합니다
-								customOverlay.setMap(map);
-							}
-						});
-					},
-					error: function (json) {
-						console.log("error");
-					}
-				});
-				
-				// 연립다세대 월세
-				rtDTO.monthlyType = '월세';
-				$.ajax({
-					url: '/forsale/rest/tradings/getListMultihouse2',
-					type: 'GET',
-					data: rtDTO,
-					dataType: "json",
-					async: false,
-					cache: false,
-					success: function (result) {
-						console.log(result);
-						result.forEach(item => {
-							if (item.posX != 0.0 && item.posY != 0.0) {
-
-								let tFillColor = '#15C4B2';
-								let tStrokeColor = '#15C4B2';
-
-								var circle = new kakao.maps.Circle({
-									center: new kakao.maps.LatLng(item.posY, item.posX),  // 원의 중심좌표 입니다 
-									radius: 5, // 미터 단위의 원의 반지름입니다 
-									strokeWeight: 2, // 선의 두께입니다 
-									strokeColor: tStrokeColor, // 선의 색깔입니다
-									strokeOpacity: 1, // 선의 불투명도 입니다 1에서 0 사이의 값이며 0에 가까울수록 투명합니다    
-									fillColor: tFillColor, // 채우기 색깔입니다
-									fillOpacity: 1  // 채우기 불투명도 입니다   
-								});
-
-								realTradingPoiArr.push(circle);
-
-								// 마커가 지도 위에 표시되도록 설정합니다
-								circle.setMap(map);
-
-								let content = '<div class="overlay_wrap">' +
-									'    <div class="overlay_info">' +
-									'        <div class="overlay_titleB">' +
-									'            월세 | 연립다세대' +
-									'        </div>' +
-									'        <div class="overlay_body">' +
-									'            <div class="overlay_desc">' +
-									'                <div>`' + item.dealMonth.substr(2, 2) + '.' + item.dealMonth.substr(4, 2) + '/' + '<span class="area1">' + Number(item.useArea).toFixed(2) + '㎡</span>' + '<span class="area2">' + Number(item.useArea / 3.3058).toFixed(0) + '평</span></div>' +
-									'                <div>' + item.deposit + '/' + item.monthlyRent + '</div>' +
-									'            </div>' +
-									'        </div>' +
-									'    </div>' +
-									'</div>';
-
-								// 커스텀 오버레이를 생성합니다
-								let customOverlay = new kakao.maps.CustomOverlay({
-									position: circle.getPosition(),
-									content: content
-								});
-
-								realTradingOverArr.push(customOverlay);
-
-								// 커스텀 오버레이를 지도에 표시합니다
-								customOverlay.setMap(map);
-							}
-						});
-					},
-					error: function (json) {
-						console.log("error");
-					}
-				});
-
-				// 연립다세대 전세
-				rtDTO.monthlyType = '전세';
-				$.ajax({
-					url: '/forsale/rest/tradings/getListMultihouse2',
-					type: 'GET',
-					data: rtDTO,
-					dataType: "json",
-					async: false,
-					cache: false,
-					success: function (result) {
-						console.log(result);
-						result.forEach(item => {
-							if (item.posX != 0.0 && item.posY != 0.0) {
-
-								let tFillColor = '#15C4B2';
-								let tStrokeColor = '#15C4B2';
-
-								var circle = new kakao.maps.Circle({
-									center: new kakao.maps.LatLng(item.posY, item.posX),  // 원의 중심좌표 입니다 
-									radius: 5, // 미터 단위의 원의 반지름입니다 
-									strokeWeight: 2, // 선의 두께입니다 
-									strokeColor: tStrokeColor, // 선의 색깔입니다
-									strokeOpacity: 1, // 선의 불투명도 입니다 1에서 0 사이의 값이며 0에 가까울수록 투명합니다    
-									fillColor: tFillColor, // 채우기 색깔입니다
-									fillOpacity: 1  // 채우기 불투명도 입니다   
-								});
-
-								realTradingPoiArr.push(circle);
-
-								// 마커가 지도 위에 표시되도록 설정합니다
-								circle.setMap(map);
-
-								let content = '<div class="overlay_wrap">' +
-									'    <div class="overlay_info">' +
-									'        <div class="overlay_titleC">' +
-									'            전세 | 연립다세대' +
-									'        </div>' +
-									'        <div class="overlay_body">' +
-									'            <div class="overlay_desc">' +
-									'                <div>`' + item.dealMonth.substr(2, 2) + '.' + item.dealMonth.substr(4, 2) + '/' + '<span class="area1">' + Number(item.useArea).toFixed(2) + '㎡</span>' + '<span class="area2">' + Number(item.useArea / 3.3058).toFixed(0) + '평</span></div>' +
-									'                <div>' + item.deposit + '</div>' +
-									'            </div>' +
-									'        </div>' +
-									'    </div>' +
-									'</div>';
-
-								// 커스텀 오버레이를 생성합니다
-								let customOverlay = new kakao.maps.CustomOverlay({
-									position: circle.getPosition(),
-									content: content
-								});
-
-								realTradingOverArr.push(customOverlay);
-
-								// 커스텀 오버레이를 지도에 표시합니다
-								customOverlay.setMap(map);
-							}
-						});
-					},
-					error: function (json) {
-						console.log("error");
-					}
-				});
-				*/
-			}
 
 			// 실거래가 표출
 			let realTradingPoiArr = [];
 			let realTradingOverArr = [];
-			function getRealTrading2(val) {
-				console.log(val);
-				let realTradingA = JSON.parse('[[${rtlist}]]');
-				let realTradingB = JSON.parse('[[${rtlist2}]]');
-				let realTradingC = JSON.parse('[[${rtlist3}]]');
-				//console.log(realTradingHis);
-				/*
-				realTradingHis.forEach(item => {//console.log(item);
-					//if (item.posX === 0.0 || item.posY === 0.0 || item.posX === null || item.posY === null ) {
-						// 장소 검색 객체를 생성합니다
-						var ps = new kakao.maps.services.Places(); 
-						let keywd = item.sigungu + ' ' + item.jibun;
-						console.log(keywd);
-						var rid = item.rid;
-						console.log(rid);
-						// 키워드로 장소를 검색합니다
-						setTimeout(() => ps.keywordSearch(keywd, placesSearchCB), 3000);						 
-						//ps.keywordSearch(keywd, placesSearchCB);
-						// 키워드 검색 완료 시 호출되는 콜백함수 입니다
-						function placesSearchCB (data, status, pagination) {
-							if (status === kakao.maps.services.Status.OK) {
-						console.log(data);
-								let rtDTO = new Object();
-								rtDTO.posX = data[0].x;
-								rtDTO.posY = data[0].y;
-							    
-								$.ajax({
-									url: '/forsale/rest/realtradings/tradings/save/'+rid,
-									type: 'POST',
-									data: rtDTO,									
-									dataType: "json",
-									async: false,
-									cache: false,
-									success: function (result) {
-										console.log(result);
-				
-									},
-									error: function (json) {
-										console.log("error");
-									}
-								});
-							} 
-						}
-					//}
-				});
-				*/
-				realTradingPoiArr = [];
-				realTradingOverArr = [];
 
-				realTradingA.forEach(item => {
-					if (item.posX != 0.0 && item.posY != 0.0) {
-
-						let tFillColor = '#15C4B2';
-						let tStrokeColor = '#15C4B2';
-
-						var circle = new kakao.maps.Circle({
-							center: new kakao.maps.LatLng(item.posY, item.posX),  // 원의 중심좌표 입니다 
-							radius: 5, // 미터 단위의 원의 반지름입니다 
-							strokeWeight: 2, // 선의 두께입니다 
-							strokeColor: tStrokeColor, // 선의 색깔입니다
-							strokeOpacity: 1, // 선의 불투명도 입니다 1에서 0 사이의 값이며 0에 가까울수록 투명합니다    
-							fillColor: tFillColor, // 채우기 색깔입니다
-							fillOpacity: 1  // 채우기 불투명도 입니다   
-						});
-
-						realTradingPoiArr.push(circle);
-
-						// 마커가 지도 위에 표시되도록 설정합니다
-						circle.setMap(map);
-						//console.log(moneyFormat(item['NSDI:F163']['NSDI:AVRG_PBLNTF_PC']));
-						// 커스텀 오버레이에 표시할 내용입니다     
-						// HTML 문자열 또는 Dom Element 입니다 
-						//let content = '<div class ="label"><span class="left"></span><span class="center">';
-						//content += moneyFormat(item['NSDI:F163']['NSDI:AVRG_PBLNTF_PC']); 
-						//content += '</span><span class="right"></span></div>';
-
-						let content = '<div class="overlay_wrap">' +
-							'    <div class="overlay_info">' +
-							'        <div class="overlay_titleA">' +
-							'            매매 | 아파트' +
-							'        </div>' +
-							'        <div class="overlay_body">' +
-							'            <div class="overlay_desc">' +
-							//'                <div><a href="https://www.kakaocorp.com/main" target="_blank" class="link"></a>' + item['NSDI:F163']['NSDI:AVRG_PBLNTF_PC'] + '</div>' + 
-							'                <div>`' + item.dealMonth.substr(2, 2) + '.' + item.dealMonth.substr(4, 2) + '/' + '<span class="area1">' + Number(item.useArea).toFixed(2) + '㎡</span>' + '<span class="area2">' + Number(item.useArea / 3.3058).toFixed(0) + '평</span></div>' +
-							'                <div>' + item.dealAmount + '</div>' +
-							'            </div>' +
-							'        </div>' +
-							'    </div>' +
-							'</div>';
-
-						// 커스텀 오버레이를 생성합니다
-						let customOverlay = new kakao.maps.CustomOverlay({
-							position: circle.getPosition(),
-							content: content,
-
-						});
-
-						realTradingOverArr.push(customOverlay);
-
-						// 커스텀 오버레이를 지도에 표시합니다
-						customOverlay.setMap(map);
-
-
-					}
-				});
-
-				realTradingB.forEach(item => {
-					if (item.posX != 0.0 && item.posY != 0.0) {
-
-						let tFillColor = '#15C4B2';
-						let tStrokeColor = '#15C4B2';
-
-						var circle = new kakao.maps.Circle({
-							center: new kakao.maps.LatLng(item.posY, item.posX),  // 원의 중심좌표 입니다 
-							radius: 5, // 미터 단위의 원의 반지름입니다 
-							strokeWeight: 2, // 선의 두께입니다 
-							strokeColor: tStrokeColor, // 선의 색깔입니다
-							strokeOpacity: 1, // 선의 불투명도 입니다 1에서 0 사이의 값이며 0에 가까울수록 투명합니다    
-							fillColor: tFillColor, // 채우기 색깔입니다
-							fillOpacity: 1  // 채우기 불투명도 입니다   
-						});
-
-						realTradingPoiArr.push(circle);
-
-						// 마커가 지도 위에 표시되도록 설정합니다
-						circle.setMap(map);
-
-						let content = '<div class="overlay_wrap">' +
-							'    <div class="overlay_info">' +
-							'        <div class="overlay_titleB">' +
-							'            월세 | 아파트' +
-							'        </div>' +
-							'        <div class="overlay_body">' +
-							'            <div class="overlay_desc">' +
-							'                <div>`' + item.dealMonth.substr(2, 2) + '.' + item.dealMonth.substr(4, 2) + '/' + '<span class="area1">' + Number(item.useArea).toFixed(2) + '㎡</span>' + '<span class="area2">' + Number(item.useArea / 3.3058).toFixed(0) + '평</span></div>' +
-							'                <div>' + item.deposit + '/' + item.monthlyRent + '</div>' +
-							'            </div>' +
-							'        </div>' +
-							'    </div>' +
-							'</div>';
-
-						// 커스텀 오버레이를 생성합니다
-						let customOverlay = new kakao.maps.CustomOverlay({
-							position: circle.getPosition(),
-							content: content
-						});
-
-						realTradingOverArr.push(customOverlay);
-
-						// 커스텀 오버레이를 지도에 표시합니다
-						customOverlay.setMap(map);
-					}
-				});
-
-				realTradingC.forEach(item => {
-					if (item.posX != 0.0 && item.posY != 0.0) {
-
-						let tFillColor = '#15C4B2';
-						let tStrokeColor = '#15C4B2';
-
-
-
-						var circle = new kakao.maps.Circle({
-							center: new kakao.maps.LatLng(item.posY, item.posX),  // 원의 중심좌표 입니다 
-							radius: 5, // 미터 단위의 원의 반지름입니다 
-							strokeWeight: 2, // 선의 두께입니다 
-							strokeColor: tStrokeColor, // 선의 색깔입니다
-							strokeOpacity: 1, // 선의 불투명도 입니다 1에서 0 사이의 값이며 0에 가까울수록 투명합니다    
-							fillColor: tFillColor, // 채우기 색깔입니다
-							fillOpacity: 1  // 채우기 불투명도 입니다   
-						});
-
-						realTradingPoiArr.push(circle);
-
-						// 마커가 지도 위에 표시되도록 설정합니다
-						circle.setMap(map);
-
-						let content = '<div class="overlay_wrap">' +
-							'    <div class="overlay_info">' +
-							'        <div class="overlay_titleC">' +
-							'            전세 | 아파트' +
-							'        </div>' +
-							'        <div class="overlay_body">' +
-							'            <div class="overlay_desc">' +
-							'                <div>`' + item.dealMonth.substr(2, 2) + '.' + item.dealMonth.substr(4, 2) + '/' + '<span class="area1">' + Number(item.useArea).toFixed(2) + '㎡</span>' + '<span class="area2">' + Number(item.useArea / 3.3058).toFixed(0) + '평</span></div>' +
-							'                <div>' + item.deposit + '</div>' +
-							'            </div>' +
-							'        </div>' +
-							'    </div>' +
-							'</div>';
-
-						// 커스텀 오버레이를 생성합니다
-						let customOverlay = new kakao.maps.CustomOverlay({
-							position: circle.getPosition(),
-							content: content
-						});
-
-						realTradingOverArr.push(customOverlay);
-
-						// 커스텀 오버레이를 지도에 표시합니다
-						customOverlay.setMap(map);
-					}
-				});
-
-				$('.overlay_wrap').on('click', function (e) {
-					let idx = $('.overlay_wrap').index(this);
-					$('.overlay_wrap').eq(idx).parent().css('z-index', zIdx++);
-				});
-
-				/*
-								var xhr = new XMLHttpRequest();
-								var url = 'http://apis.data.go.kr/1611000/nsdi/ApartHousingPriceService/wfs/getApartHousingPriceWFS'; 
-								var queryParams = '?' + encodeURIComponent('serviceKey') + '=' + 'd6jaYPOmc0Pa1m83x3zueNB3pF6MOKZireJOZo7dkIqOS%2BD7JakOH1FZjdaUTulBgFjU3TQaaXjFqhgmUomXKA%3D%3D'; 
-								queryParams += '&' + encodeURIComponent('typename') + '=' + encodeURIComponent('F163');
-								queryParams += '&' + encodeURIComponent('bbox') + '=' + encodeURIComponent(val + ',EPSG:4326');
-								queryParams += '&' + encodeURIComponent('maxFeatures') + '=' + encodeURIComponent('1000'); 
-								queryParams += '&' + encodeURIComponent('resultType') + '=' + encodeURIComponent('results');
-								queryParams += '&' + encodeURIComponent('srsName') + '=' + encodeURIComponent('EPSG:4326'); 				
-								xhr.open('GET', url + queryParams);
-								xhr.onreadystatechange = function () {
-									if (this.readyState == 4) {
-										//console.log('Status: '+this.status+'nHeaders: '+JSON.stringify(this.getAllResponseHeaders())+'nBody: '+this.responseText);
-				
-										let parseXML = new DOMParser();
-										let xmlDoc = parseXML.parseFromString(this.responseText, "text/xml");
-				
-										let results = xmlToJson(xmlDoc);console.log(results['wfs:FeatureCollection']['gml:featureMember']);
-										results = results['wfs:FeatureCollection']['gml:featureMember'];//console.log(results);
-										//let results = xmlDoc.getElementsByTagName("NSDI:F163");console.log(results);
-				
-										results.forEach(function (item) {
-											//console.log(item['NSDI:F163']['NSDI:X_CRDNT']);
-											let tempX = item['NSDI:F163']['NSDI:X_CRDNT'];
-											let tempY = item['NSDI:F163']['NSDI:Y_CRDNT'];
-				
-											let pt = new Proj4js.Point(tempX, tempY); //포인트 생성
-											//console.log(Proj4js.transform(s_srs, t_srs, pt)); //좌표계 변경
-											let trans = Proj4js.transform(s_srs, t_srs, pt);
-											
-											let tFillColor = '#15C4B2';
-											let tStrokeColor = '#15C4B2';
-											
-											if (item['NSDI:F163']['NSDI:APHUS_SE_CODE'] === '1') {
-												tFillColor = '#15C4B2';
-												tStrokeColor = '#15C4B2';
-											} else if (item['NSDI:F163']['NSDI:APHUS_SE_CODE'] === '3') {
-												tFillColor = '#6C6CF4';
-												tStrokeColor = '#6C6CF4';
-											} else if (item['NSDI:F163']['NSDI:APHUS_SE_CODE'] === '5') {
-												tFillColor = '#FC6707';
-												tStrokeColor = '#FC6707';
-											}
-				
-											var circle = new kakao.maps.Circle({
-												center : new kakao.maps.LatLng(trans.y, trans.x),  // 원의 중심좌표 입니다 
-												radius: 5, // 미터 단위의 원의 반지름입니다 
-												strokeWeight: 2, // 선의 두께입니다 
-												strokeColor: tStrokeColor, // 선의 색깔입니다
-												strokeOpacity: 1, // 선의 불투명도 입니다 1에서 0 사이의 값이며 0에 가까울수록 투명합니다    
-												fillColor: tFillColor, // 채우기 색깔입니다
-												fillOpacity: 1  // 채우기 불투명도 입니다   
-											}); 
-				
-											realTradingPoiArr.push(circle);
-				
-											// 마커가 지도 위에 표시되도록 설정합니다
-											circle.setMap(map);
-											//console.log(moneyFormat(item['NSDI:F163']['NSDI:AVRG_PBLNTF_PC']));
-											// 커스텀 오버레이에 표시할 내용입니다     
-											// HTML 문자열 또는 Dom Element 입니다 
-											//let content = '<div class ="label"><span class="left"></span><span class="center">';
-											//content += moneyFormat(item['NSDI:F163']['NSDI:AVRG_PBLNTF_PC']); 
-											//content += '</span><span class="right"></span></div>';
-											
-											let content =   '<div class="overlay_wrap">' + 
-															'    <div class="overlay_info">' + 
-															'        <div class="overlay_title">' + 
-															'            매매 | 단독' +
-															'        </div>' + 
-															'        <div class="overlay_body">' + 
-															'            <div class="overlay_desc">' +
-															//'                <div><a href="https://www.kakaocorp.com/main" target="_blank" class="link"></a>' + item['NSDI:F163']['NSDI:AVRG_PBLNTF_PC'] + '</div>' + 
-															'                <div>' + item['NSDI:F163']['NSDI:STDR_YEAR'] + '.' + item['NSDI:F163']['NSDI:STDR_MT'] + '</div>' +
-															'                <div>' + item['NSDI:F163']['NSDI:AVRG_PBLNTF_PC'] + '</div>' +
-															'            </div>' + 
-															'        </div>' + 
-															'    </div>' +    
-															'</div>';
-											
-											// 커스텀 오버레이를 생성합니다
-											let customOverlay = new kakao.maps.CustomOverlay({
-												position: circle.getPosition(),
-												content: content   
-											});
-											
-											realTradingOverArr.push(customOverlay);
-											
-											// 커스텀 오버레이를 지도에 표시합니다
-											customOverlay.setMap(map);
-										});
-									}
-								};
-								xhr.send('');
-								*/
-			}
 
 			const moneyFormat = (value) => {
 				const numbers = [
@@ -3907,10 +3153,10 @@
 			let isRealTradings = true;
 			$('#realTrans').click(function () {
 				isRealTradings = !isRealTradings;
-				
+
 				if (isRealTradings) {
 					$('.category_rtOn').css('display', 'block');
-					$('.category_rtOff').css('display', 'none');	
+					$('.category_rtOff').css('display', 'none');
 
 					let boundbox = map.getBounds().toString().replace('((', '').replace('))', '').replace('(', '').replace(')', '').replaceAll(' ', '');
 					getRealTrading(boundbox);
@@ -3921,83 +3167,84 @@
 					removeRealTrading();
 				}
 			});
-			
+
 			function realTransCluster(map) {
 				if (realTradingPoiArr.length > 0) {
 					realTradingPoiArr.forEach(function (realTradingPoi) {
 						realTradingPoi.setMap(null);
 					});
 				}
-				
+
 				if (realTradingOverArr.length > 0) {
 					// 마커 클러스터러를 생성합니다 
-				    let clusterer2 = new kakao.maps.MarkerClusterer({
-				        map: map, // 마커들을 클러스터로 관리하고 표시할 지도 객체 
-				        averageCenter: true, // 클러스터에 포함된 마커들의 평균 위치를 클러스터 마커 위치로 설정 
-				        minLevel: 6 // 클러스터 할 최소 지도 레벨 
-				    });	
-					
-				    clusterer2.addMarkers(realTradingOverArr);
+					let clusterer2 = new kakao.maps.MarkerClusterer({
+						map: map, // 마커들을 클러스터로 관리하고 표시할 지도 객체 
+						averageCenter: true, // 클러스터에 포함된 마커들의 평균 위치를 클러스터 마커 위치로 설정 
+						minLevel: 6 // 클러스터 할 최소 지도 레벨 
+					});
+
+					clusterer2.addMarkers(realTradingOverArr);
 				}
-				
-				let boundbox = map.getBounds().toString().replace('((', '').replace('))', '').replace('(', '').replace(')', '').replaceAll(' ', '');			
+
+				let boundbox = map.getBounds().toString().replace('((', '').replace('))', '').replace('(', '').replace(')', '').replaceAll(' ', '');
 				let boxArr = boundbox.split(',');	//console.log(boxArr);				
 				let tempBox = 'BOX(' + boxArr[1] + ',' + boxArr[0] + ',' + boxArr[3] + ',' + boxArr[2] + ')';
-				
+
 				$.ajax({
 					type: "GET",
 					url: "http://api.vworld.kr/req/data",
 					dataType: "jsonp",
-					data: { 
-						request: "GetFeature", 
+					data: {
+						request: "GetFeature",
 						data: "LT_C_ADEMD_INFO",
-						key: "02B06AF9-304D-3935-A9C1-4E0E8E91D881", 
-						geomFilter: tempBox, 
-						crs: "EPSG:4326", 
-						size: 100, 
-						geometry: true 
+						key: "0500925E-73CA-34F5-82C0-15E11488624A",
+						geomFilter: tempBox,
+						crs: "EPSG:4326",
+						size: 100,
+						geometry: true
 					},
 					async: false,
 					cache: false,
-					success: function (result) {console.log("test:::realTransCluster()");console.log(result);									
+					success: function (result) {
+						console.log("test:::realTransCluster()"); console.log(result);
 						if (result.response.status === 'OK' && result.response.record.total > 0) {
 							console.log(result.response.result.featureCollection);
-							
+
 							let level = map.getLevel();
 							let emdArr = result.response.result.featureCollection.features;
-							
+
 							emdArr.forEach((item, idx) => {
 								console.log(item.properties.emd_cd);
 								console.log(item.geometry.coordinates[0]);
 								console.log(level);
 								if (level >= 6 && item.geometry != null) {
 									var emdPolygonPath = [];
-									
+
 									let emdGeom = item.geometry.coordinates[0][0];
 									emdGeom.forEach((tempPOI, idx2) => {	//console.log(tempPOI);
 										emdPolygonPath.push(new kakao.maps.LatLng(tempPOI[1], tempPOI[0]));
 									});
-									
+
 									// 지도에 표시할 다각형을 생성합니다
 									let emdPolygon = new kakao.maps.Polygon({
-									    path:emdPolygonPath, // 그려질 다각형의 좌표 배열입니다
-									    strokeWeight: 3, // 선의 두께입니다
-									    strokeColor: '#00589A', // 선의 색깔입니다
-									    strokeOpacity: 0.8, // 선의 불투명도 입니다 1에서 0 사이의 값이며 0에 가까울수록 투명합니다
-									    strokeStyle: 'dashed', // 선의 스타일입니다
-									    fillColor: '#CFE7FF', // 채우기 색깔입니다
-									    fillOpacity: 0.0 // 채우기 불투명도 입니다
+										path: emdPolygonPath, // 그려질 다각형의 좌표 배열입니다
+										strokeWeight: 3, // 선의 두께입니다
+										strokeColor: '#00589A', // 선의 색깔입니다
+										strokeOpacity: 0.8, // 선의 불투명도 입니다 1에서 0 사이의 값이며 0에 가까울수록 투명합니다
+										strokeStyle: 'dashed', // 선의 스타일입니다
+										fillColor: '#CFE7FF', // 채우기 색깔입니다
+										fillOpacity: 0.0 // 채우기 불투명도 입니다
 									});
-									
+
 									emdPolygon.setMap(map);
-								}								
+								}
 							});
 						}
 					},
 					error: function (json) {
 						console.log("error:::realTransCluster()");
 					}
-				});						
+				});
 			}
 
 			// xml을 json으로 변환해주는 xmlToJson함수 선언
@@ -4092,8 +3339,8 @@
 			});
 
 			let lineDistanceArr = [];
-						
-			let polygonArr = [];			
+
+			let polygonArr = [];
 			let areaOverlayArr = [];
 			let areaAddressArr = [];
 
@@ -4140,8 +3387,6 @@
 							kakao.maps.event.addListener(map, 'click', jibunClickHandler);
 							kakao.maps.event.removeListener(map, 'click', measuerAreaClickHandler);
 
-							$('a.search').trigger('click');
-
 							$('#areaMeasure').css("color", "#000");
 							$('#areaMeasure').css("background-color", "#fff");
 						} else {
@@ -4170,7 +3415,9 @@
 							kakao.maps.event.addListener(map, 'click', measuerAreaClickHandler);
 
 							$(document).on('click', '.mt-slot-btn', function (e) {
-								let idx = $('.mt-slot-btn').index(this);console.log(idx);
+								let idx = $('.mt-slot-btn').index(this); console.log(idx);
+								let tempArea = polygonArr[idx].getArea().toFixed(1);
+								//alert(polygonArr[idx].getArea().toFixed(1));
 
 								polygonArr[idx].setMap(null);
 								polygonArr.splice(idx, 1);
@@ -4180,14 +3427,30 @@
 
 								areaAddressArr.splice(idx, 1);
 
+
+
 								$('.area-list').eq(idx).remove();
 
 								//console.log($('.areaListCnt').length);
 								for (let i = 0; i < $('.areaListCnt').length; i++) {
 									$('.areaListCnt').eq(i).text(i + 1);
 								}
-								
+
 								areaListCnt = $('.areaListCnt').length;
+
+								$('#mt_count').text(areaListCnt);
+
+
+								areaListSum = areaListSum - tempArea;
+
+
+								if (areaListCnt > 0) {
+									$('#mt_total_area').text(areaListSum.toFixed(1) + 'm²');
+									//$('#mt_total_gong_value').text(areaListSum.toFixed(1) + '억');
+								} else {
+									$('#mt_total_area').text('0 m²');
+									$('#mt_total_gong_value').text('0 원');
+								}
 							});
 
 							$('#lengthMeasure').css("color", "#000");
@@ -4220,7 +3483,7 @@
 						} else {
 							isArea = false;
 							isLength = true;
-							
+
 							test111('거리');
 
 							if (polygonArr.length > 0) {
@@ -4258,7 +3521,7 @@
 				subHtml += '	<div style="background: #fff;pointer-events:auto;">';
 				subHtml += '		<div class="map-tool-title-bar-div">';
 				subHtml += '			<div class="map-tool-name-title" id="map_tool_name_title">' + measureType + ' 측정</div>';
-				subHtml += '			<div class="map-tool-before-btn"><span class="map-tool-btns" style="padding-left:20px;" id="mt_close_btn"><img src="https://aurora.disco.re/static/common/img/ico_back_1_4x.png?ver=1681186936" style="width:20px;height:19px;"></span></div>';
+				//subHtml += '			<div class="map-tool-before-btn"><span class="map-tool-btns" style="padding-left:20px;" id="mt_close_btn"><img src="https://aurora.disco.re/static/common/img/ico_back_1_4x.png?ver=1681186936" style="width:20px;height:19px;"></span></div>';
 				subHtml += '			<div class="map-tool-reset-btn"><span class="map-tool-btns" style="pointer-events: auto; padding-right: 20px;" id="mt_length_reset_btn"><img src="https://aurora.disco.re/static/common/img/ico_reset_b.png?ver=1681186936" style="width:24px;"></span></div>';
 				//subHtml += '			<div style="text-align:right;position:relative; top:-152px; line-height:16px; height:0px; vertical-align: middle;margin-right:50px;padding-top:12px;"><div class="py-toggle-div" id="pyt_mt_total_area" style="padding-top: 1px; display: none;"><div style="width:76px;display: table;text-align: center;"><div class="detail_area_toogle" style="cursor: pointer;"><img style="width:16px;margin:-2px 4px 0 0;" src="https://aurora.disco.re/static/common/img/new/ic-change-blue@3x.png?ver=1681186936">m<sup>2</sup></div></div></div></div>';
 				subHtml += '		</div>';
@@ -4267,42 +3530,50 @@
 				subHtml += '	<div id="map_tool_field" style="position: relative; pointer-events: auto; top: 0px;"></div>';
 				subHtml += '</div>';
 
-				$('div.tab1').html(subHtml);
+				$('div.tab5').html(subHtml);
+				$('div.tab5').addClass('on');
 
+				$('div.tab1').removeClass('on');
+
+				/*
 				$('#mt_close_btn').click(function () {
 					$('a.search').trigger('click');
 				});
-				
-				$('#mt_length_reset_btn').click(function () {					
+				*/
+
+				$('#mt_length_reset_btn').click(function () {
+					drawingFlag = false;
+
 					lengthListCnt = 0;
 					lengthDisSum = 0;
-					
-					if (typeof(clickLine) != 'undefined') {
-						deleteAllCircleDot();			
+
+					if (typeof (clickLine) != 'undefined') {
+						deleteAllCircleDot();
 					}
-					
+
 					areaListCnt = 0;
 					areaListSum = 0;
 
-					for (let i=0; i<$('.areaListCnt').length; i++) {
+					for (let i = 0; i < $('.areaListCnt').length; i++) {
 						polygonArr[i].setMap(null);
 						areaOverlayArr[i].setMap(null);
 					}
-					
+
 					polygonArr = [];
 					areaOverlayArr = [];
 					areaAddressArr = [];
-					
-					for (let i = $('.areaListCnt').length-1; i >= 0 ; i--) {
+
+					for (let i = $('.areaListCnt').length - 1; i >= 0; i--) {
 						$('.area-list').eq(i).remove();
 					}
-					
+
 					$('#mt_count').text('0');
-					
-					$('#mt_total_area').text('0 m²');
-					$('#mt_total_gong_value').text('0 원');					
+
+					$('#mt_total_area').text('0');
+					$('#mt_total_area2').text('0');
+					$('#mt_total_gong_value').text('0 원');
 				});
-				
+
 			}
 
 			var isAreaList = false;
@@ -4314,21 +3585,26 @@
 				var latlng = mouseEvent.latLng;
 
 				let subHtml = '';
-				
+
 				subHtml += '<div class="rbc-cerulean" style="height: 80px;" id="mt_total_area_view">';
 				subHtml += '	<div style="height: 40px;line-height: 46px;font-size: 16px;color: #fff">총 <span id="mt_count" style="display: inline-block;"></span>개 필지가 선택됨</div>';
 				subHtml += '	<div style="height: 56px;position: relative;">';
-				subHtml += '		<div style="display: inline-block;width: 49%;padding-left: 16px;color: #fff;">';
+				subHtml += '		<div style="display: inline-block;width: 39%;padding-left: 16px;color: #fff;">';
 				subHtml += '			<span style="display: inline-block;font-size: 14px;color: #7eb6e7;margin-right: 10px;">면적 합계 </span>';
-				subHtml += '			<span style="display: inline-block;font-size: 20px;" id="mt_total_area"></span>';
+				subHtml += '			<span style="display: inline-block;font-size: 20px;" class="areaListInfo" id="mt_total_area"></span>';
+				subHtml += '			<span style="display: none;font-size: 20px;" class="areaListInfo2" id="mt_total_area2"></span>';
+				subHtml += '			<span class="area_unit"></span>';
+				subHtml += '		</div>';
+				subHtml += '		<div class="btn_meter_pyeong">';
+				subHtml += '			<button type="button">㎡/평</button>';
 				subHtml += '		</div>';
 				subHtml += '		<div style="display: inline-block;width: 49%;padding-right: 16px;color: #fff;">';
 				subHtml += '			<span style="display: inline-block;font-size: 14px;color: #7eb6e7;margin-right: 10px;">공시지가 합계</span>';
-				subHtml += '			<span style="display: inline-block;font-size: 20px;" id="mt_total_gong_value">387.15억</span>';
+				subHtml += '			<span style="display: inline-block;font-size: 20px;" id="mt_total_gong_value">-</span>';
 				subHtml += '		</div>';
 				subHtml += '	</div>';
 				subHtml += '</div>';
-				
+
 				subHtml += '<div class="rbc-cerulean" style="height:32px;position:relative;top:-1px;line-height:32px;color:#fff;font-size:12px;" id="mt_list_title">';
 				subHtml += '	<span style="width: 23%;text-align: center;display: inline-block;">번호</span>';
 				subHtml += '	<span style="width: 23%;text-align: center;display: inline-block;">지번</span>';
@@ -4337,12 +3613,64 @@
 				//subHtml += '<div id="mt_slot_list" style="overflow-y: scroll; height: 757px;">';
 				subHtml += '<div id="mt_slot_list">';
 				subHtml += '</div>';
-				
+
 				if (!isAreaList) {
 					isAreaList = true;
 
 					$('#map_tool_msg').hide();
 					$('#map_tool_field').append(subHtml);
+
+					$('.btn_meter_pyeong').on('click', function () {
+						if (!isAreaExtent) {
+							isAreaExtent = true;
+
+							$('.area_pyeong').css('display', 'inline-block');
+							$('.area_meter').css('display', 'none');
+
+							$('.areaInfo').css('display', 'none');
+							$('.areaInfo2').css('display', 'inline-block');
+
+							$('.areaListInfo').css('display', 'none');
+							$('.areaListInfo2').css('display', 'inline-block');
+
+							$('.area_unit').text("평");
+
+							if (!isPrice) {
+								$('.unit_meter_price').css('display', 'none');
+								$('.unit_pyeong_price').css('display', 'inline-block');
+							}
+
+							$('#mo-catAreaSub1').css("background", "#1263DF");
+							$('#mo-catAreaSub1').css("color", "#fff");
+
+							$('#mo-catAreaSub2').css("background", "#F5F5FC");
+							$('#mo-catAreaSub2').css("color", "#000");
+						} else {
+							isAreaExtent = false;
+
+							$('.area_meter').css('display', 'inline-block');
+							$('.area_pyeong').css('display', 'none');
+
+							$('.areaInfo2').css('display', 'none');
+							$('.areaInfo').css('display', 'inline-block');
+
+							$('.areaListInfo').css('display', 'inline-block');
+							$('.areaListInfo2').css('display', 'none');
+
+							$('.area_unit').text("㎡");
+
+							if (!isPrice) {
+								$('.unit_meter_price').css('display', 'inline-block');
+								$('.unit_pyeong_price').css('display', 'none');
+							}
+
+							$('#mo-catAreaSub2').css("background", "#1263DF");
+							$('#mo-catAreaSub2').css("color", "#fff");
+
+							$('#mo-catAreaSub1').css("background", "#F5F5FC");
+							$('#mo-catAreaSub1').css("color", "#000");
+						}
+					});
 				}
 
 				$.ajax({
@@ -4358,45 +3686,47 @@
 						areaAddressArr.forEach((item, idx) => {
 							if (item === result.address) {
 								isAddr = true;
-								
+
 								let tempPoly = null;
 								tempPoly = parse_land_polygon_value(result.polygon); //console.log(tempPoly);
 
 								// 지도에 표시할 다각형을 생성합니다
 								let polygon = new kakao.maps.Polygon({
 									path: tempPoly[0],//polygonPath, // 그려질 다각형의 좌표 배열입니다
-									strokeWeight: 5, // 선의 두께입니다 
+									strokeWeight: 2, // 선의 두께입니다 
 									strokeColor: '#75B8FA', // 선의 색깔입니다
 									strokeOpacity: 1, // 선의 불투명도 입니다 1에서 0 사이의 값이며 0에 가까울수록 투명합니다
-									strokeStyle: 'dashed', // 선의 스타일 입니다
+									strokeStyle: 'shortdash', // 선의 스타일 입니다
 									fillColor: '#CFE7FF', // 채우기 색깔입니다
 									fillOpacity: 0.7  // 채우기 불투명도 입니다  
 
 								});
-								
+
 								polygonArr[idx].setMap(null);
 								polygonArr.splice(idx, 1);
 
 								areaOverlayArr[idx].setMap(null);
 								areaOverlayArr.splice(idx, 1);
-								
+
 								areaAddressArr.splice(idx, 1);
-																
+
 								$('.area-list').eq($('.areaListCnt').length - idx - 1).remove();
-								
+
 								for (let i = 0; i < $('.areaListCnt').length; i++) {
 									$('.areaListCnt').eq(i).text($('.areaListCnt').length - i);
 								}
-								
+
 								areaListCnt = $('.areaListCnt').length;
 								areaListSum = areaListSum - polygon.getArea().toFixed(1);
-								
+
 								$('#mt_count').text(areaListCnt);
 								if (areaListCnt > 0) {
-									$('#mt_total_area').text(areaListSum.toFixed(1) + 'm²');
+									$('#mt_total_area').text(areaListSum.toFixed(1));
+									$('#mt_total_area2').text(Number(areaListSum / 3.3058).toFixed(0));
+									Number(polygon.getArea() / 3.3058).toFixed(0);
 									//$('#mt_total_gong_value').text(areaListSum.toFixed(1) + '억');
 								} else {
-									$('#mt_total_area').text('0 m²');
+									$('#mt_total_area').text('0');
 									$('#mt_total_gong_value').text('0 원');
 								}
 							}
@@ -4411,10 +3741,10 @@
 							// 지도에 표시할 다각형을 생성합니다
 							let polygon = new kakao.maps.Polygon({
 								path: tempPoly[0],//polygonPath, // 그려질 다각형의 좌표 배열입니다
-								strokeWeight: 5, // 선의 두께입니다 
+								strokeWeight: 2, // 선의 두께입니다 
 								strokeColor: '#75B8FA', // 선의 색깔입니다
 								strokeOpacity: 1, // 선의 불투명도 입니다 1에서 0 사이의 값이며 0에 가까울수록 투명합니다
-								strokeStyle: 'dashed', // 선의 스타일 입니다
+								strokeStyle: 'shortdash', // 선의 스타일 입니다
 								fillColor: '#CFE7FF', // 채우기 색깔입니다
 								fillOpacity: 0.7  // 채우기 불투명도 입니다  
 
@@ -4424,11 +3754,13 @@
 							// 지도에 다각형을 표시합니다
 							polygon.setMap(map);
 
-							var area = Math.round(polygon.getArea()), // 다각형의 총면적을 계산합니다
-								content = '<div class="areaInfo">총면적 <span class="areaNumber"> ' + area + '</span> ㎡</div>'; // 커스텀오버레이에 추가될 내용입니다
+							let area = Math.round(polygon.getArea());	// 다각형의 총면적을 계산합니다
+
+							let temp_html = '<div class="areaInfo">총면적 <span class="areaNumber"> ' + area + '</span> ㎡</div><div class="areaInfo2">총면적 <span class="areaNumber"> ' + Number(area / 3.3058).toFixed(0) + '</span> 평</div>';
+							let content = temp_html; // 커스텀오버레이에 추가될 내용입니다
 
 							var path = polygon.getPath();
-							//console.log(tempPoly[0][0][0]);
+							// console.log(tempPoly[0][0][0]);
 							// 면적정보를 지도에 표시합니다
 							var areaOverlay = new kakao.maps.CustomOverlay({
 								map: map, // 커스텀오버레이를 표시할 지도입니다 
@@ -4438,6 +3770,19 @@
 								position: latlng  // 커스텀오버레이를 표시할 위치입니다. 위치는 다각형의 마지막 좌표로 설정합니다
 							});
 							areaOverlayArr.push(areaOverlay);
+
+							let temp_area1 = 0.0;
+							let temp_area2 = 0.0;
+							temp_area1 = polygon.getArea().toFixed(1);
+							temp_area2 = Number(polygon.getArea() / 3.3058).toFixed(0);
+
+							if (!isAreaExtent) {
+								$('.areaInfo').css('display', 'inline-block');
+								$('.areaInfo2').css('display', 'none');
+							} else {
+								$('.areaInfo2').css('display', 'inline-block');
+								$('.areaInfo').css('display', 'none');
+							}
 
 							let subHtml = '';
 							subHtml += '<div class="area-list">';
@@ -4452,10 +3797,13 @@
 							subHtml += '		</span>';
 							subHtml += '		<span style="width:28%;text-align:center;display: inline-block;line-height:16px;">';
 							subHtml += '			<span style="bottom: -10px;position: relative;">';
-							subHtml += '				<span class="to-area-field" data-value="1575.5" data-type="none" data-p="0" data-p2="0" style="display: inline-block;">';
-							subHtml += polygon.getArea().toFixed(1);
+							subHtml += '				<span class="areaListMeter areaListInfo" style="display: inline-block;">';
+							subHtml += temp_area1;
 							subHtml += '				</span>';
-							subHtml += '				<span style="display: inline-block;"> m²</span>';							
+							subHtml += '				<span class="areaListPyeong areaListInfo2" style="display: none;">';
+							subHtml += temp_area2;
+							subHtml += '				</span>';
+							subHtml += '				<span class="area_unit"></span>';
 							subHtml += '			</span><br>';
 							subHtml += '			<span style="font-size: 12px;position: relative;top:9px;color:#73788c;">-</span>';
 							subHtml += '		</span>';
@@ -4465,21 +3813,37 @@
 							subHtml += '	</div>';
 							subHtml += '	<div style="height:1px;background:#000;opacity:0.05;"></div>';
 							subHtml += '</div>';
-							
+
 							areaListSum += parseFloat(polygon.getArea().toFixed(1));
 
-							$('#mt_slot_list').prepend(subHtml);
-							
+							//$('#mt_slot_list').prepend(subHtml);
+							$('#mt_slot_list').append(subHtml);
+
 							$('#mt_count').text(areaListCnt);
-							$('#mt_total_area').text(areaListSum.toFixed(1) + 'm²');
+							$('#mt_total_area').text(areaListSum.toFixed(1));
+							$('#mt_total_area2').text(Number(areaListSum / 3.3058).toFixed(0));
+
+							if (!isAreaExtent) {
+								$('.area_unit').text('㎡');
+
+								$('.areaListInfo').css('display', 'inline-block');
+								$('.areaListInfo2').css('display', 'none');
+							} else {
+								$('.area_unit').text('평');
+
+								$('.areaListInfo2').css('display', 'inline-block');
+								$('.areaListInfo').css('display', 'none');
+							}
 						} else {
-							
+
 						}
 					},
 					error: function (json) {
 						console.log("error");
 					}
 				});
+
+
 
 
 
@@ -4619,6 +3983,8 @@
 
 
 
+
+
 			$('#cat_around').click(function () {
 				if (isAround) {
 					isAround = false;
@@ -4643,7 +4009,7 @@
 					$('#cat_around_sub').show();
 
 					// 마커를 클릭했을 때 해당 장소의 상세정보를 보여줄 커스텀오버레이입니다
-					var placeOverlay = new kakao.maps.CustomOverlay({zIndex: 1}),
+					var placeOverlay = new kakao.maps.CustomOverlay({ zIndex: 1 }),
 						contentNode = document.createElement('div'), // 커스텀 오버레이의 컨텐츠 엘리먼트 입니다 
 						//markers = [], // 마커를 담을 배열입니다
 						currCategory = ''; // 현재 선택된 카테고리를 가지고 있을 변수입니다	
@@ -4688,7 +4054,7 @@
 						// 지도에 표시되고 있는 마커를 제거합니다
 						removeMarker();
 
-						ps.categorySearch(currCategory, placesSearchCB, {useMapBounds: true});
+						ps.categorySearch(currCategory, placesSearchCB, { useMapBounds: true });
 					}
 
 					// 장소검색이 완료됐을 때 호출되는 콜백함수 입니다
@@ -4825,73 +4191,128 @@
 					}
 				}
 			});
-			
+
 			$('#mo-catAreaSub1').click(function () {
-				$('.area2').css('display', 'inline-block');
-				$('.area1').css('display', 'none');
-				
+				isAreaExtent = true;
+
+				$('.area_pyeong').css('display', 'inline-block');
+				$('.area_meter').css('display', 'none');
+
+				$('.areaInfo').css('display', 'none');
+				$('.areaInfo2').css('display', 'inline-block');
+
+				$('.areaListInfo').css('display', 'none');
+				$('.areaListInfo2').css('display', 'inline-block');
+
+				$('.area_unit').text("평");
+
+				if (!isPrice) {
+					$('.unit_meter_price').css('display', 'none');
+					$('.unit_pyeong_price').css('display', 'inline-block');
+				}
+
 				$('#mo-catAreaSub1').css("background", "#1263DF");
 				$('#mo-catAreaSub1').css("color", "#fff");
-				
+
 				$('#mo-catAreaSub2').css("background", "#F5F5FC");
 				$('#mo-catAreaSub2').css("color", "#000");
 			});
-			
+
 			$('#mo-catAreaSub2').click(function () {
-				$('.area1').css('display', 'inline-block');
-				$('.area2').css('display', 'none');
-				
+				isAreaExtent = false;
+
+				$('.area_meter').css('display', 'inline-block');
+				$('.area_pyeong').css('display', 'none');
+
+				$('.areaInfo2').css('display', 'none');
+				$('.areaInfo').css('display', 'inline-block');
+
+				$('.areaListInfo').css('display', 'inline-block');
+				$('.areaListInfo2').css('display', 'none');
+
+				$('.area_unit').text("㎡");
+
+				if (!isPrice) {
+					$('.unit_meter_price').css('display', 'inline-block');
+					$('.unit_pyeong_price').css('display', 'none');
+				}
+
 				$('#mo-catAreaSub2').css("background", "#1263DF");
 				$('#mo-catAreaSub2').css("color", "#fff");
-				
+
 				$('#mo-catAreaSub1').css("background", "#F5F5FC");
 				$('#mo-catAreaSub1').css("color", "#000");
 			});
-			
+
 			$('#mo-catPriceSub1').click(function () {
-				//$('.area2').css('display', 'inline-block');
-				//$('.area1').css('display', 'none');
-				
+				isPrice = true;
+
+				$('.unit_meter_price').css('display', 'none');
+				$('.unit_pyeong_price').css('display', 'none');
+				$('.total_price').css('display', 'inline-block');
+
 				$('#mo-catPriceSub1').css("background", "#1263DF");
 				$('#mo-catPriceSub1').css("color", "#fff");
-				
+
 				$('#mo-catPriceSub2').css("background", "#F5F5FC");
 				$('#mo-catPriceSub2').css("color", "#000");
 			});
-			
+
 			$('#mo-catPriceSub2').click(function () {
-				//$('.area1').css('display', 'inline-block');
-				//$('.area2').css('display', 'none');
-				
+				isPrice = false;
+
+				if (!isAreaExtent) {	// 제곱미터일 경우
+					$('.unit_meter_price').css('display', 'inline-block');
+					$('.unit_pyeong_price').css('display', 'none');
+				} else {	// 평일 경우
+					$('.unit_meter_price').css('display', 'none');
+					$('.unit_pyeong_price').css('display', 'inline-block');
+				}
+				$('.total_price').css('display', 'none');
+
 				$('#mo-catPriceSub2').css("background", "#1263DF");
 				$('#mo-catPriceSub2').css("color", "#fff");
-				
+
 				$('#mo-catPriceSub1').css("background", "#F5F5FC");
 				$('#mo-catPriceSub1').css("color", "#000");
 			});
 
 			$('#cat_area').click(function () {
-				if (isAreaExtent) {
+				if (isAreaExtent) {	// 평에서 제곱미터로 변경
 					isAreaExtent = false;
 
-					$('.area1').css('display', 'inline-block');
-					$('.area2').css('display', 'none');
+					$('.area_meter').css('display', 'inline-block');
+					$('.area_pyeong').css('display', 'none');
+
+					$('.area_unit').text("㎡");
+
+					if (!isPrice) {
+						$('.unit_meter_price').css('display', 'inline-block');
+						$('.unit_pyeong_price').css('display', 'none');
+					}
 
 					$('#catAreaSub1').css("color", "#000");
 					$('#catAreaSub1').css("background-color", "#fff");
 
 					$('#catAreaSub2').css("color", "#fff");
 					$('#catAreaSub2').css("background-color", "#1263df");
-				} else {
+				} else {	// 제곱미터에서 평으로 변경
 					isMap = false;
 					isMeasure = false;
 					isAround = false;
-					isPrice = false;
+					//isPrice = false;
 
 					isAreaExtent = true;
 
-					$('.area2').css('display', 'inline-block');
-					$('.area1').css('display', 'none');
+					$('.area_pyeong').css('display', 'inline-block');
+					$('.area_meter').css('display', 'none');
+
+					$('.area_unit').text("평");
+
+					if (!isPrice) {
+						$('.unit_meter_price').css('display', 'none');
+						$('.unit_pyeong_price').css('display', 'inline-block');
+					}
 
 					$('#catAreaSub2').css("color", "#000");
 					$('#catAreaSub2').css("background-color", "#fff");
@@ -4902,21 +4323,34 @@
 			});
 
 			$('#cat_price').click(function () {
-				if (isPrice) {
+				if (isPrice) {	// 총액에서 단가로 변경
 					isPrice = false;
+
+					if (!isAreaExtent) {	// 제곱미터일 경우
+						$('.unit_meter_price').css('display', 'inline-block');
+						$('.unit_pyeong_price').css('display', 'none');
+					} else {	// 평일 경우
+						$('.unit_meter_price').css('display', 'none');
+						$('.unit_pyeong_price').css('display', 'inline-block');
+					}
+					$('.total_price').css('display', 'none');
 
 					$('#catPriceSub1').css("color", "#000");
 					$('#catPriceSub1').css("background-color", "#fff");
 
 					$('#catPriceSub2').css("color", "#fff");
 					$('#catPriceSub2').css("background-color", "#1263df");
-				} else {
+				} else {	// 단가에서 총액으로 변경
 					isMap = false;
 					isMeasure = false;
 					isAround = false;
-					isAreaExtent = false;
+					//isAreaExtent = false;
 
 					isPrice = true;
+
+					$('.unit_meter_price').css('display', 'none');
+					$('.unit_pyeong_price').css('display', 'none');
+					$('.total_price').css('display', 'inline-block');
 
 					$('#catPriceSub2').css("color", "#000");
 					$('#catPriceSub2').css("background-color", "#fff");
@@ -4942,14 +4376,14 @@
 						isSkyview = false;
 						$('#mapTypeChange1').css("color", "#000");
 						$('#mapTypeChange1').css("background-color", "#fff");
-						
+
 						$('.map-layer-icon2').css("border", "none");
 						map.setMapTypeId(kakao.maps.MapTypeId.ROADMAP);
 					} else {
 						isSkyview = true;
 						$('#mapTypeChange1').css("color", "#fff");
 						$('#mapTypeChange1').css("background-color", "#FF8080");
-						
+
 						$('.map-layer-icon2').css("border", "3px solid #E46C0A");
 						// maptype에 해당하는 지도타입을 지도에 추가합니다	
 						map.setMapTypeId(kakao.maps.MapTypeId.HYBRID);
@@ -4962,14 +4396,14 @@
 						isUseDistrict = false;
 						$('#mapTypeChange2').css("color", "#000");
 						$('#mapTypeChange2').css("background-color", "#fff");
-						
+
 						$('.map-layer-icon4').css("border", "none");
 						map.removeOverlayMapTypeId(changeMaptype);
 					} else {
 						isUseDistrict = true;
 						$('#mapTypeChange2').css("color", "#fff");
 						$('#mapTypeChange2').css("background-color", "#FF8080");
-						
+
 						$('.map-layer-icon4').css("border", "3px solid #5D39EE");
 						// maptype에 해당하는 지도타입을 지도에 추가합니다
 						map.addOverlayMapTypeId(changeMaptype);
@@ -4982,14 +4416,14 @@
 						isTerrain = false;
 						$('#mapTypeChange3').css("color", "#000");
 						$('#mapTypeChange3').css("background-color", "#fff");
-						
+
 						$('.map-layer-icon3').css("border", "none");
 						map.removeOverlayMapTypeId(changeMaptype);
 					} else {
 						isTerrain = true;
 						$('#mapTypeChange3').css("color", "#fff");
 						$('#mapTypeChange3').css("background-color", "#FF8080");
-						
+
 						$('.map-layer-icon3').css("border", "3px solid #5D39EE");
 						// maptype에 해당하는 지도타입을 지도에 추가합니다
 						map.addOverlayMapTypeId(changeMaptype);
@@ -5150,6 +4584,7 @@
 			var distanceOverlay; // 선의 거리정보를 표시할 커스텀오버레이 입니다
 			var dots = {}; // 선이 그려지고 있을때 클릭할 때마다 클릭 지점과 거리를 표시하는 커스텀 오버레이 배열입니다.
 
+			/*
 			function measuerLength() {
 				// 지도에 클릭 이벤트를 등록합니다
 				// 지도를 클릭하면 선 그리기가 시작됩니다 그려진 선이 있으면 지우고 다시 그립니다
@@ -5164,41 +4599,39 @@
 				//kakao.maps.event.addListener(map, 'rightclick', measuerLengthRightClickHandler);
 
 			}
+			*/
 
 			var isLengthList = false;
 			let lengthListCnt = 0;
 			let lengthDisSum = 0;
-			
+
 			var measuerLengthClickHandler = function (mouseEvent) {
 
 				// 마우스로 클릭한 위치입니다 
 				var clickPosition = mouseEvent.latLng;
-				
+
 				let subHtml = '';
-				
+
 				subHtml += '<div class="rbc-cerulean" style="display: none;height: 120px;" id="mt_total_area_view">';
-				subHtml += '	<div class="rfc-cerulean" style="background: #fff;width: 144px;display: inline-block;border-radius: 22px;height: 40px;position: relative;top:7px;line-height:40px;cursor:pointer;pointer-events:auto;" id="mt_last_btn">';
-				subHtml += '		<span style="display: inline-block;"><img src="https://aurora.disco.re/static/common/img/ico_close_b.png?ver=1688364125" style="width:16px;"></span>';
-				subHtml += '		<span style="display: inline-block;">마지막 지점 삭제</span>';
-				subHtml += '	</div>';
+				//subHtml += '	<div class="rfc-cerulean" style="background: #fff;width: 144px;display: inline-block;border-radius: 22px;height: 40px;position: relative;top:7px;line-height:40px;cursor:pointer;pointer-events:auto;" id="mt_last_btn">';
+				//subHtml += '		<span style="display: inline-block;"><img src="https://aurora.disco.re/static/common/img/ico_close_b.png?ver=1688364125" style="width:16px;"></span>';
+				//subHtml += '		<span style="display: inline-block;">마지막 지점 삭제</span>';
+				//subHtml += '	</div>';
 				subHtml += '	<div style="height: 40px;line-height: 46px;font-size: 16px;color: #fff;">선택된 지점 <span id="mt_count" style="display: inline-block;"></span>개</div>';
 				subHtml += '	<div style="height: 40px;position: relative;">';
 				subHtml += '		<div style="display: inline-block;width: 49%;padding-left: 16px;color: #fff;">';
 				subHtml += '			<span style="display: inline-block;font-size: 14px;color: #7eb6e7;margin-right: 10px;">거리 합계 </span>';
 				subHtml += '			<span style="display: inline-block;font-size: 20px;color: #fff;" id="mt_total_length"></span>';
-				subHtml += '		</div>';				
+				subHtml += '		</div>';
 				subHtml += '</div>';
-								
-				//subHtml += '<div id="mt_slot_list" style="overflow-y: scroll; height: 757px;">';
-				
-				
+
 				if (!isLengthList) {
 					isLengthList = true;
 
 					$('#map_tool_msg').hide();
 					$('#map_tool_field').append(subHtml);
-					
-					$('#mt_last_btn').on('click', function() {						
+
+					$('#mt_last_btn').on('click', function () {
 						// 그려지고 있는 선의 좌표 배열을 얻어옵니다
 						var path = clickLine.getPath();
 
@@ -5207,18 +4640,26 @@
 
 						// 다시 선에 좌표 배열을 설정하여 클릭 위치까지 선을 그리도록 설정합니다
 						clickLine.setPath(path);
-						
+
 						deleteLastCircleDot();
-						
+
 						if (lengthListCnt > 0) {
-							lengthDisSum = lengthDisSum - lineDistanceArr[lineDistanceArr.length-1];
 							lineDistanceArr.pop();
-							
-							$('#mt_count').text(--lengthListCnt);
+							lengthDisSum = lineDistanceArr[lineDistanceArr.length - 1];
+
+
+							$('#mt_count').text((--lengthListCnt) + 1);
 							$('#mt_total_length').text(lengthDisSum + 'm');
+						} else {
+							$('#mt_count').text(0);
+							drawingFlag = false;
 						}
 					});
 				}
+
+				let temp_html = '<span class="temp_add_close" style="display: inline-block; position: relative; top: -25px; right: 5px;">';
+				temp_html += '<img src="/img/sub/ico_btn_close.svg" width="20px" height="20px">';
+				temp_html += '</span>';
 
 				// 지도 클릭이벤트가 발생했는데 선을 그리고있는 상태가 아니면
 				if (!drawingFlag) {
@@ -5254,9 +4695,37 @@
 					});
 
 					// 클릭한 지점에 대한 정보를 지도에 표시합니다
-					displayCircleDot(clickPosition, 0);					
+					displayCircleDot(clickPosition, 0);
+
+					$('.dotOverlay').eq(0).html('시작 <span class="number">0</span>m');
+					$('.dotOverlay').eq(0).parent().append(temp_html);
+
+					$('.temp_add_close').on('contextmenu', function () {
+						// 그려지고 있는 선의 좌표 배열을 얻어옵니다
+						var path = clickLine.getPath();
+
+						// 좌표 배열에 마지막 요소 제거
+						path.pop();
+
+						// 다시 선에 좌표 배열을 설정하여 클릭 위치까지 선을 그리도록 설정합니다
+						clickLine.setPath(path);
+
+						deleteLastCircleDot();
+
+						if (lengthListCnt > 0) {
+							lineDistanceArr.pop();
+							lengthDisSum = lineDistanceArr[lineDistanceArr.length - 1];
+
+
+							$('#mt_count').text((--lengthListCnt) + 1);
+							$('#mt_total_length').text(lengthDisSum + 'm');
+						} else {
+							$('#mt_count').text(0);
+							drawingFlag = false;
+						}
+					});
 				} else { // 선이 그려지고 있는 상태이면
-					
+
 					// 그려지고 있는 선의 좌표 배열을 얻어옵니다
 					var path = clickLine.getPath();
 
@@ -5268,16 +4737,50 @@
 
 					var distance = Math.round(clickLine.getLength());
 					displayCircleDot(clickPosition, distance);
-					
+
 					lengthListCnt++;
-					lengthDisSum += distance;
-					
-					$('#mt_count').text(lengthListCnt);
+					lengthDisSum = distance;
+
+					$('#mt_count').text(lengthListCnt + 1);
 					$('#mt_total_length').text(lengthDisSum + 'm');
-					
+
 					$('#mt_total_area_view').css('display', 'block');
+
+					//console.log($('.dotOverlay').length);
+					$('.temp_add_close').hide();
+					$('.dotOverlay').eq($('.dotOverlay').length - 1).parent().append(temp_html);
+
+					$('.temp_add_close').off('contextmenu');
+					$('.temp_add_close').on('contextmenu', function () {
+						// 그려지고 있는 선의 좌표 배열을 얻어옵니다
+						var path = clickLine.getPath();
+
+						// 좌표 배열에 마지막 요소 제거
+						path.pop();
+
+						// 다시 선에 좌표 배열을 설정하여 클릭 위치까지 선을 그리도록 설정합니다
+						clickLine.setPath(path);
+
+						deleteLastCircleDot();
+
+						if (lengthListCnt > 0) {
+							lineDistanceArr.pop();
+							lengthDisSum = lineDistanceArr[lineDistanceArr.length - 1];
+
+
+							$('#mt_count').text((--lengthListCnt) + 1);
+							$('#mt_total_length').text(lengthDisSum + 'm');
+						} else {
+							$('#mt_count').text(0);
+							drawingFlag = false;
+						}
+
+						$('.temp_add_close').eq($('.dotOverlay').length - 1).show();
+					});
 				}
 			};
+
+
 
 			var measuerLengthMouseMoveHandler = function (mouseEvent) {
 
@@ -5426,21 +4929,21 @@
 
 				lineDistanceArr.push(distance);
 				// 배열에 추가합니다
-				dots.push({circle: circleOverlay, distance: distanceOverlay});
+				dots.push({ circle: circleOverlay, distance: distanceOverlay });
 			}
-			
+
 			// 마지막 지점 지도에서 제거하는 함수입니다
 			function deleteLastCircleDot() {
-				if (dots[dots.length-1].circle) {
-					dots[dots.length-1].circle.setMap(null);
+				if (dots[dots.length - 1].circle) {
+					dots[dots.length - 1].circle.setMap(null);
 				}
-				if (dots[dots.length-1].distance) {
-					dots[dots.length-1].distance.setMap(null);
+				if (dots[dots.length - 1].distance) {
+					dots[dots.length - 1].distance.setMap(null);
 				}
 				// 마지막 제거
 				dots.pop();
 			}
-			
+
 			// 전체 지점 지도에서 제거하는 함수입니다
 			function deleteAllCircleDot() {
 				// 그려지고 있는 선의 좌표 배열을 얻어옵니다
@@ -5451,14 +4954,14 @@
 
 				// 다시 선에 좌표 배열을 설정하여 클릭 위치까지 선을 그리도록 설정합니다
 				clickLine.setPath(path);
-				
-				for (let i=0; i<dots.length; i++) {
+
+				for (let i = 0; i < dots.length; i++) {
 					dots[i].circle.setMap(null);
 					dots[i].distance.setMap(null);
 				}
-				
+
 				$('#mt_count').text(0);
-				$('#mt_total_length').text('0 m');	
+				$('#mt_total_length').text('0 m');
 			}
 
 			// 클릭 지점에 대한 정보 (동그라미와 클릭 지점까지의 총거리)를 지도에서 모두 제거하는 함수입니다
@@ -5520,7 +5023,7 @@
 
 
 			function parse_land_polygon_value(e, r) {
-				var t = [0, 0];//get_rev_xy(r, "l");
+				var t = [19e-6, 0];//get_rev_xy(r, "l");
 				var a = new RegExp(/\(\(.+?\)\)/g);
 				var i = new RegExp(/\(.+?\)/g);
 				var l = [];
@@ -5614,7 +5117,7 @@
 					// 이미지 지도에서 마커가 표시될 위치입니다
 					var markerPosition = new kakao.maps.LatLng(data.posY, data.posX);
 					// 이미지 지도에 표시할 마커입니다
-					var staticMarker = {position: markerPosition};
+					var staticMarker = { position: markerPosition };
 
 					staticMapOption = {
 						center: new kakao.maps.LatLng(Number(data.posY) + (Math.random() / 300), Number(data.posX) + (Math.random() / 300)), // 이미지 지도의 중심좌표
@@ -5823,218 +5326,253 @@
 				map.setMapTypeId(kakao.maps.MapTypeId.ROADMAP);
 			});
 			*/
-			
-			$('#map-layer2').on('click', function() {
+
+			$('#map-layer2').on('click', function () {
 				setOverlayMapTypeId('skyview');
 			});
-			
-			$('#map-layer3').on('click', function() {
+
+			$('#map-layer3').on('click', function () {
 				setOverlayMapTypeId('terrain');
 			});
-			
-			$('#map-layer4').on('click', function() {
+
+			$('#map-layer4').on('click', function () {
 				setOverlayMapTypeId('use_district');
 			});
-			
-			$('#map-measure1').on('click', function() {
-				$("#gnb_tool_layout .gnb_tool_wrap").animate({"right":"-200px"},300);
-				$("#gnb_tool_layout .gnb_tool_close").animate({"right":"-220px"},300,function(){
-					$('#areaMeasure').css("color", "#000");
-					$('#areaMeasure').css("background-color", "#fff");
 
-					$('#lengthMeasure').css("color", "#000");
-					$('#lengthMeasure').css("background-color", "#fff");
-					
+			$('#map-measure1').on('click', function () {
+				$("#gnb_tool_layout .gnb_tool_wrap").animate({ "right": "-200px" }, 300);
+				$("#gnb_tool_layout .gnb_tool_close").animate({ "right": "-220px" }, 300, function () {
 					$("html").removeClass("gnbOn");
 					$("#gnb_tool_layout").css("display", "none");
 				});
-				
+
 				$('#cat_measure_sub').show();
 				$('.category_bottom').css("top", "80px");
-				$('.category_bottom').css("left", "10px");				
+				$('.category_bottom').css("left", "10px");
 				$('.category_bottom li').css("float", "none");
 				$('#cat_measure_sub_close').css("display", "block");
-								
+
 				//$('.left_wrap.mini').css("display", "none");
-				
+
 				let isArea = false;
 				let isLength = false;
-				
-					isMap = false;
-					isAround = false;
-					isAreaExtent = false;
-					isPrice = false;
 
-					isMeasure = true;
-					$('.category_top li').css("color", "#000");
-					$('.category_top li').css("background-color", "#fff");
+				isMap = false;
+				isAround = false;
+				//isAreaExtent = false;
+				//isPrice = false;
 
-					$('#cat_measure').css("color", "#fff");
-					$('#cat_measure').css("background-color", "#1263df");
+				isMeasure = true;
+				$('.category_top li').css("color", "#000");
+				$('.category_top li').css("background-color", "#fff");
 
-					$('.category_bottom').hide();
-					$('#cat_measure_sub').show();
+				$('#cat_measure').css("color", "#fff");
+				$('#cat_measure').css("background-color", "#1263df");
 
-					$('#areaMeasure').click(function () {
-						if (isArea) {
-							isArea = false;
+				$('.category_bottom').hide();
+				$('#cat_measure_sub').show();
 
-							if (polygonArr.length > 0) {
-								polygonArr.forEach(function (polygon) {
-									polygon.setMap(null);
-								});
+				$('#areaMeasure').click(function () {
+					if (isArea) {
+						isArea = false;
+						isAreaList = false;
 
-								areaOverlayArr.forEach(function (areaOverlay) {
-									areaOverlay.setMap(null);
-								});
-							}
-
-							kakao.maps.event.addListener(map, 'click', jibunClickHandler);
-							kakao.maps.event.removeListener(map, 'click', measuerAreaClickHandler);
-
-							$('a.search').trigger('click');
-
-							$('#areaMeasure').css("color", "#000");
-							$('#areaMeasure').css("background-color", "#fff");
-						} else {
-							isLength = false;
-							isArea = true;
-
-							test111('면적');
-
-							// 지도 위에 선이 표시되고 있다면 지도에서 제거합니다
-							deleteClickLine();
-							// 지도 위에 커스텀오버레이가 표시되고 있다면 지도에서 제거합니다
-							deleteDistnce();
-							// 지도 위에 선을 그리기 위해 클릭한 지점과 해당 지점의 거리정보가 표시되고 있다면 지도에서 제거합니다
-							deleteCircleDot();
-
-							kakao.maps.event.removeListener(map, 'click', measuerLengthClickHandler);
-							//kakao.maps.event.removeListener(map, 'mousemove', measuerLengthMouseMoveHandler);
-							//kakao.maps.event.removeListener(map, 'rightclick', measuerLengthRightClickHandler);
-
-
-							// 지도에 클릭 이벤트를 등록합니다
-							// 지도를 클릭하면 마지막 파라미터로 넘어온 함수를 호출합니다
-							if (polygon != null)
+						if (polygonArr.length > 0) {
+							polygonArr.forEach(function (polygon) {
 								polygon.setMap(null);
-							kakao.maps.event.removeListener(map, 'click', jibunClickHandler);
-							kakao.maps.event.addListener(map, 'click', measuerAreaClickHandler);
-
-							$(document).on('click', '.mt-slot-btn', function (e) {
-								let idx = $('.mt-slot-btn').index(this);
-
-								polygonArr[$('.areaListCnt').length - idx - 1].setMap(null);
-								polygonArr.splice($('.areaListCnt').length - idx - 1, 1);
-
-								areaOverlayArr[$('.areaListCnt').length - idx - 1].setMap(null);
-								areaOverlayArr.splice($('.areaListCnt').length - idx - 1, 1);
-
-								areaAddressArr.splice($('.areaListCnt').length - idx - 1, 1);
-								let selArea = parseFloat($('.to-area-field').eq(idx).text()); console.log(selArea);
-								$('.area-list').eq(idx).remove();
-
-								//console.log($('.areaListCnt').length);
-								for (let i = 0; i < $('.areaListCnt').length; i++) {
-									$('.areaListCnt').eq(i).text($('.areaListCnt').length - i);
-								}
-								
-								areaListCnt = $('.areaListCnt').length;
-								areaListSum = areaListSum - selArea;
-								
-								$('#mt_count').text(areaListCnt);
-								if (areaListCnt > 0) {
-									$('#mt_total_area').text(areaListSum.toFixed(1) + 'm²');
-									//$('#mt_total_gong_value').text(areaListSum.toFixed(1) + '억');
-								} else {
-									$('#mt_total_area').text('0 m²');
-									$('#mt_total_gong_value').text('0 원');
-								}								
 							});
 
-							$('#lengthMeasure').css("color", "#000");
-							$('#lengthMeasure').css("background-color", "#fff");
-
-							$('#areaMeasure').css("color", "#fff");
-							$('#areaMeasure').css("background-color", "#FF8080");
+							areaOverlayArr.forEach(function (areaOverlay) {
+								areaOverlay.setMap(null);
+							});
 						}
-					});
 
-					$('#lengthMeasure').click(function () {
-						if (isLength) {
-							isLength = false;
+						areaListCnt = 0;
+						areaListSum = 0;
 
-							// 지도 위에 선이 표시되고 있다면 지도에서 제거합니다
-							deleteClickLine();
-							// 지도 위에 커스텀오버레이가 표시되고 있다면 지도에서 제거합니다
-							deleteDistnce();
-							// 지도 위에 선을 그리기 위해 클릭한 지점과 해당 지점의 거리정보가 표시되고 있다면 지도에서 제거합니다
-							deleteCircleDot();
+						kakao.maps.event.addListener(map, 'click', jibunClickHandler);
+						kakao.maps.event.removeListener(map, 'click', measuerAreaClickHandler);
 
-							kakao.maps.event.addListener(map, 'click', jibunClickHandler);
+						$('div.tab1').addClass('on');
+						$('div.tab5').removeClass('on');
 
-							kakao.maps.event.removeListener(map, 'click', measuerLengthClickHandler);
-							//kakao.maps.event.removeListener(map, 'mousemove', measuerLengthMouseMoveHandler);
-							//kakao.maps.event.removeListener(map, 'rightclick', measuerLengthRightClickHandler);
+						$('#areaMeasure').css("color", "#000");
+						$('#areaMeasure').css("background-color", "#fff");
+					} else {
+						isLength = false;
+						isLengthList = false;
 
-							$('#lengthMeasure').css("color", "#000");
-							$('#lengthMeasure').css("background-color", "#fff");
-						} else {
-							isArea = false;
-							isLength = true;
-							
-							$('.left_wrap.mini').css('height', '172px');
-							
-							test111('거리');
+						drawingFlag = false;
 
-							if (polygonArr.length > 0) {
-								polygonArr.forEach(function (polygon) {
-									polygon.setMap(null);
-								});
+						lengthListCnt = 0;
+						lengthDisSum = 0;
 
-								areaOverlayArr.forEach(function (areaOverlay) {
-									areaOverlay.setMap(null);
-								});
+						isArea = true;
+
+						$('.detail_wrap .saleNum a').trigger('click');
+
+						test111('면적');
+
+						// 지도 위에 선이 표시되고 있다면 지도에서 제거합니다
+						deleteClickLine();
+						// 지도 위에 커스텀오버레이가 표시되고 있다면 지도에서 제거합니다
+						deleteDistnce();
+						// 지도 위에 선을 그리기 위해 클릭한 지점과 해당 지점의 거리정보가 표시되고 있다면 지도에서 제거합니다
+						deleteCircleDot();
+
+						kakao.maps.event.removeListener(map, 'click', measuerLengthClickHandler);
+						//kakao.maps.event.removeListener(map, 'mousemove', measuerLengthMouseMoveHandler);
+						//kakao.maps.event.removeListener(map, 'rightclick', measuerLengthRightClickHandler);
+
+
+						// 지도에 클릭 이벤트를 등록합니다
+						// 지도를 클릭하면 마지막 파라미터로 넘어온 함수를 호출합니다
+						if (polygon != null)
+							polygon.setMap(null);
+						kakao.maps.event.removeListener(map, 'click', jibunClickHandler);
+						kakao.maps.event.addListener(map, 'click', measuerAreaClickHandler);
+
+						$(document).on('click', '.mt-slot-btn', function (e) {
+							let idx = $('.mt-slot-btn').index(this);
+
+							//polygonArr[$('.areaListCnt').length - idx - 1].setMap(null);
+							//polygonArr.splice($('.areaListCnt').length - idx - 1, 1);
+
+							//areaOverlayArr[$('.areaListCnt').length - idx - 1].setMap(null);
+							//areaOverlayArr.splice($('.areaListCnt').length - idx - 1, 1);
+
+							//areaAddressArr.splice($('.areaListCnt').length - idx - 1, 1);
+							//let selArea = parseFloat($('.to-area-field').eq(idx).text()); console.log(selArea);
+							//$('.area-list').eq(idx).remove();
+
+							polygonArr[idx].setMap(null);
+							polygonArr.splice(idx, 1);
+
+							areaOverlayArr[idx].setMap(null);
+							areaOverlayArr.splice(idx, 1);
+
+							areaAddressArr.splice(idx, 1);
+							let selArea = parseFloat($('.areaListMeter').eq(idx).text()); //console.log(selArea);
+							let selArea2 = parseFloat($('.areaListPyeong').eq(idx).text()); //console.log(selArea);
+							$('.area-list').eq(idx).remove();
+
+							//console.log($('.areaListCnt').length);
+							for (let i = 0; i < $('.areaListCnt').length; i++) {
+								$('.areaListCnt').eq(i).text(i + 1);
 							}
 
-							kakao.maps.event.removeListener(map, 'click', jibunClickHandler);
-							kakao.maps.event.removeListener(map, 'click', measuerAreaClickHandler);
-														
-							//kakao.maps.event.addListener(map, 'click', measuerLengthClickHandler);
+							areaListCnt = $('.areaListCnt').length;
+							areaListSum = areaListSum - selArea;
+							let areaListSum2 = Number($('#mt_total_area2').text()) - selArea2;
 
-							//$('a.search').trigger('click');
+							$('#mt_count').text(areaListCnt);
+							if (areaListCnt > 0) {
+								$('#mt_total_area').text(areaListSum.toFixed(1));
+								$('#mt_total_area2').text(areaListSum2.toFixed(0));
+								//$('#mt_total_gong_value').text(areaListSum.toFixed(1) + '억');
+							} else {
+								$('#mt_total_area').text('0');
+								$('#mt_total_area2').text('0');
+								$('#mt_total_gong_value').text('0 원');
+							}
+						});
 
-							// 지도 위에 거리 측정하는 함수
-							measuerLength();
+						$('#lengthMeasure').css("color", "#000");
+						$('#lengthMeasure').css("background-color", "#fff");
 
-							$('#areaMeasure').css("color", "#000");
-							$('#areaMeasure').css("background-color", "#fff");
+						$('#areaMeasure').css("color", "#fff");
+						$('#areaMeasure').css("background-color", "#FF8080");
+					}
+				});
 
-							$('#lengthMeasure').css("color", "#fff");
-							$('#lengthMeasure').css("background-color", "#FF8080");
+				$('#lengthMeasure').click(function () {
+					if (isLength) {
+						isLength = false;
+						isLengthList = false;
+
+						drawingFlag = false;
+
+						lengthListCnt = 0;
+						lengthDisSum = 0;
+
+						// 지도 위에 선이 표시되고 있다면 지도에서 제거합니다
+						deleteClickLine();
+						// 지도 위에 커스텀오버레이가 표시되고 있다면 지도에서 제거합니다
+						deleteDistnce();
+						// 지도 위에 선을 그리기 위해 클릭한 지점과 해당 지점의 거리정보가 표시되고 있다면 지도에서 제거합니다
+						deleteCircleDot();
+
+						kakao.maps.event.addListener(map, 'click', jibunClickHandler);
+						kakao.maps.event.removeListener(map, 'click', measuerLengthClickHandler);
+						//kakao.maps.event.removeListener(map, 'mousemove', measuerLengthMouseMoveHandler);
+						//kakao.maps.event.removeListener(map, 'rightclick', measuerLengthRightClickHandler);
+
+						$('div.tab1').addClass('on');
+						$('div.tab5').removeClass('on');
+
+						$('#lengthMeasure').css("color", "#000");
+						$('#lengthMeasure').css("background-color", "#fff");
+					} else {
+						isArea = false;
+						isAreaList = false;
+
+						areaListCnt = 0;
+						areaListSum = 0;
+
+						isLength = true;
+
+						$('.detail_wrap .saleNum a').trigger('click');
+
+						test111('거리');
+
+						if (polygonArr.length > 0) {
+							polygonArr.forEach(function (polygon) {
+								polygon.setMap(null);
+							});
+
+							areaOverlayArr.forEach(function (areaOverlay) {
+								areaOverlay.setMap(null);
+							});
 						}
-					});
+
+						kakao.maps.event.removeListener(map, 'click', jibunClickHandler);
+						kakao.maps.event.removeListener(map, 'click', measuerAreaClickHandler);
+
+						//kakao.maps.event.addListener(map, 'click', measuerLengthClickHandler);
+
+						//$('a.search').trigger('click');
+
+						// 지도 위에 거리 측정하는 함수
+						kakao.maps.event.addListener(map, 'click', measuerLengthClickHandler);
+
+						$('#areaMeasure').css("color", "#000");
+						$('#areaMeasure').css("background-color", "#fff");
+
+						$('#lengthMeasure').css("color", "#fff");
+						$('#lengthMeasure').css("background-color", "#FF8080");
+					}
+				});
 			});
-			
-			
+
+
 			let around_markers = [];
-			$('#map-around').on('click', function() {
-				$("#gnb_tool_layout .gnb_tool_wrap").animate({"right":"-200px"},300);
-				$("#gnb_tool_layout .gnb_tool_close").animate({"right":"-220px"},300,function(){
+			$('#map-around').on('click', function () {
+				$("#gnb_tool_layout .gnb_tool_wrap").animate({ "right": "-200px" }, 300);
+				$("#gnb_tool_layout .gnb_tool_close").animate({ "right": "-220px" }, 300, function () {
 					$("html").removeClass("gnbOn");
 					$("#gnb_tool_layout").css("display", "none");
 				});
-				
+
 				$('#cat_around_sub').show();
 				$('.category_bottom').css("top", "80px");
-				$('.category_bottom').css("left", "10px");				
+				$('.category_bottom').css("left", "10px");
 				$('.category_bottom li').css("float", "none");
 				$('#cat_around_sub_close').css("display", "block");
-								
+
 				$('.left_wrap.mini').css("display", "none");
-				
+
 				// 마커를 클릭했을 때 해당 장소의 상세정보를 보여줄 커스텀오버레이입니다
-				var placeOverlay = new kakao.maps.CustomOverlay({zIndex: 1}),
+				var placeOverlay = new kakao.maps.CustomOverlay({ zIndex: 1 }),
 					contentNode = document.createElement('div'), // 커스텀 오버레이의 컨텐츠 엘리먼트 입니다 
 					//markers = [], // 마커를 담을 배열입니다
 					currCategory = ''; // 현재 선택된 카테고리를 가지고 있을 변수입니다	
@@ -6079,7 +5617,7 @@
 					// 지도에 표시되고 있는 마커를 제거합니다
 					removeMarker();
 
-					ps.categorySearch(currCategory, placesSearchCB, {useMapBounds: true});
+					ps.categorySearch(currCategory, placesSearchCB, { useMapBounds: true });
 				}
 
 				// 장소검색이 완료됐을 때 호출되는 콜백함수 입니다
@@ -6213,17 +5751,17 @@
 					if (el) {
 						el.className = 'on';
 					}
-				}				
+				}
 			});
-			
-			$(".category_bottom li a").on("click",function(){
+
+			$(".category_bottom li a").on("click", function () {
 				$('.category_bottom').hide();
-				
+
 				for (var i = 0; i < around_markers.length; i++) {
 					around_markers[i].setMap(null);
 				}
 				around_markers = [];
-				
+
 				if (polygonArr.length > 0) {
 					polygonArr.forEach(function (polygon) {
 						polygon.setMap(null);
@@ -6233,20 +5771,44 @@
 						areaOverlay.setMap(null);
 					});
 				}
-				
+
 				// 지도 위에 선이 표시되고 있다면 지도에서 제거합니다
 				deleteClickLine();
 				// 지도 위에 커스텀오버레이가 표시되고 있다면 지도에서 제거합니다
 				deleteDistnce();
 				// 지도 위에 선을 그리기 위해 클릭한 지점과 해당 지점의 거리정보가 표시되고 있다면 지도에서 제거합니다
 				deleteCircleDot();
-				
+
 				kakao.maps.event.addListener(map, 'click', jibunClickHandler);
+				kakao.maps.event.removeListener(map, 'click', measuerLengthClickHandler);
 				kakao.maps.event.removeListener(map, 'click', measuerAreaClickHandler);
 				//kakao.maps.event.removeListener(map, 'mousemove', measuerLengthMouseMoveHandler);
 				//kakao.maps.event.removeListener(map, 'rightclick', measuerLengthRightClickHandler);
-				
+
 				$('.left_wrap.mini').css("display", "block");
+
+				isLength = false;
+				isLengthList = false;
+
+				drawingFlag = false;
+
+				lengthListCnt = 0;
+				lengthDisSum = 0;
+
+				isArea = false;
+				isAreaList = false;
+
+				areaListCnt = 0;
+				areaListSum = 0;
+
+				$('#lengthMeasure').css("color", "#000");
+				$('#lengthMeasure').css("background-color", "#fff");
+
+				$('#areaMeasure').css("color", "#000");
+				$('#areaMeasure').css("background-color", "#fff");
+
+				$('div.tab1').addClass('on');
+				$('div.tab5').removeClass('on');
 			});
 		});
 
@@ -6264,7 +5826,7 @@
 	<div id="gis_layout">
 		<!--gis_wrap-->
 		<div class="gis_wrap">
-		<!--
+			<!--
 			<div class="location" id="realTrans" style="z-index: 9999;">
 				<img src="/img/main/ico_real_transact.png" />
 				<!--
@@ -6306,14 +5868,15 @@
 				</select>
 			</div>
 			<div class="category_tradeYear">
-			<!--
+				<!--
 				<div id="slider-range"></div> 
-  	 		--> 			 			
-			  	<label for="tradeYear" style="display: inline-block;">거래년도 : </label>
-			  	<div id="tradeYear" style="display: inline-block;">2022</div>
-			  	<div id="slider-range" style="display: inline-block; width: 95px; margin-left: 10px; margin-right: 10px;"></div>
-			  	<div id="tradeYearEnd" style="display: inline-block;">2023</div>
-			  	<!-- 
+  	 		-->
+				<label for="tradeYear" style="display: inline-block;">거래년도 : </label>
+				<div id="tradeYear" style="display: inline-block;">2022</div>
+				<div id="slider-range"
+					style="display: inline-block; width: 95px; margin-left: 10px; margin-right: 10px;"></div>
+				<div id="tradeYearEnd" style="display: inline-block;">2023</div>
+				<!-- 
 			  	<input type="range" id="tradeYearSlider" name="tradeYearSlider" style="display: inline-block; margin-left: 10px;" min="2015" max="2023" value="2023" step="1">
 			  	 -->
 			</div>
@@ -6368,7 +5931,7 @@
 				<li id="areaMeasure" data-order="0">
 					<span class="category_bg_area"></span>
 					면적
-				</li>				
+				</li>
 				<li id="cat_measure_sub_close">
 					<a class="gnb_tool_close" href="#">닫기</a>
 				</li>
@@ -6403,7 +5966,8 @@
 				</li>
 			</ul>
 			<div class="category_tool_mobile">
-				<img src="https://aurora.disco.re/static/common/img/new/ic-main-memu@3x.png?ver=1686201881" width="30px">				
+				<img src="https://aurora.disco.re/static/common/img/new/ic-main-memu@3x.png?ver=1686201881"
+					width="30px">
 			</div>
 
 			<div id="gis_container">
@@ -6660,6 +6224,11 @@
 				</div>
 			</div>
 			<!--//tab4-->
+
+			<!--tab5-->
+			<div class="tabCon_wrap tab5">
+			</div>
+			<!--//tab5-->
 			<th:block th:replace="layout/fragments/front/footer2 :: footerFragment"></th:block>
 		</div>
 		<!--//left_wrap-->
@@ -6765,8 +6334,8 @@
 					style="background-color: rgb(248, 248, 248); color: rgb(142, 142, 147);font-weight: 400;"><a
 						href="#dp_arch_prefix">건물</a></div>
 				<div class="foot-detail-panel-navi-cell" id="dp_navi_5"
-					style="background-color: rgb(248, 248, 248); color: rgb(142, 142, 147);font-weight: 400; border-right: 1px solid #ccc;"><a
-						href="#dp_cert">등기</a></div>
+					style="background-color: rgb(248, 248, 248); color: rgb(142, 142, 147);font-weight: 400; border-right: 1px solid #ccc;">
+					<a href="#dp_cert">등기</a></div>
 			</div>
 
 			<div class="btn_wrap">
@@ -6879,7 +6448,7 @@
 			</div>
 
 			<div class="map-detail-main-divider"></div>
-			
+
 			<div id="dp_land_prefix" style="height:80px;"></div>
 			<div class="map-detail-header" id="dp_land" name="dp_land" style="-webkit-transform: translate3d(0,0,0);">
 				<span class="map-detail-header-txt feed-text-highlight-blue">

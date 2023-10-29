@@ -160,6 +160,12 @@ $(document).ready(function(){
           $("#gis_layout").removeClass("detailMov").removeClass("detailOn");
           $(".tabCon_wrap .list .menu").removeClass("on");
         });
+        
+        $('.left_wrap').show();
+        
+        if (polygon != null) {
+        	polygon.setMap(null);
+        }
       }
     });
 

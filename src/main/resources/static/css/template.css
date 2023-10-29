@@ -663,6 +663,10 @@ html,body,#gis_layout{ height: 100%;}
 .areaInfo:nth-of-type(n) {border:0; box-shadow:0px 1px 2px #888;}    
 .areaInfo .label {display:inline-block;width:50px;}
 .areaNumber {display: inline-block;font-weight:bold;color:#00a0e9;}
+.areaInfo2 {display:none;position:relative;top:5px;left:5px;border-radius:6px;border: 1px solid #ccc;border-bottom:2px solid #ddd;font-size:12px;padding:5px;background:#fff;list-style:none;margin:0;} 
+.areaInfo2:nth-of-type(n) {border:0; box-shadow:0px 1px 2px #888;}    
+.areaInfo2 .label {display:inline-block;width:50px;}
+.areaNumber2 {display: inline-block;font-weight:bold;color:#00a0e9;}
 
 .category_tradeYear {
 			position: absolute;

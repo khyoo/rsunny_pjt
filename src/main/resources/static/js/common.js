@@ -13,7 +13,7 @@ $(document).ready(function(){
 		$("#gnb_tool_layout .gnb_tool_close").animate({"right":"10px"},300);	
 	});
 	
-	$("#gnb_tool_layout .gnb_tool_close").on("click",function(){				
+	$("#gnb_tool_layout .gnb_tool_close").on("click",function(){
 		$("#gnb_tool_layout .gnb_tool_wrap").animate({"right":"-200px"},300);
 		$("#gnb_tool_layout .gnb_tool_close").animate({"right":"-220px"},300,function(){
 			$("html").removeClass("gnbOn");
