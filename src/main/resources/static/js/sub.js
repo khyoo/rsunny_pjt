@@ -167,6 +167,8 @@ $(document).ready(function(){
         	polygon.setMap(null);
         }
       }
+      
+      realTradingOverlayClick = [false, false, false, false, false];
     });
 
     $(".gislp_open").on("click",function(){
