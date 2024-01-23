@@ -742,6 +742,26 @@
     </select>
 
 
+	<select id="getAddrSido" parameterType="com.regroup.rsunny.common.model.SaleDTO" resultType="com.regroup.rsunny.common.model.SaleDTO">
+		SELECT sido FROM addr 
+		GROUP BY sido
+		ORDER BY sido;		
+	</select>
+
+	<select id="getAddrSigungu" parameterType="com.regroup.rsunny.common.model.SaleDTO" resultType="com.regroup.rsunny.common.model.SaleDTO">
+		SELECT sigungu FROM addr
+		WHERE sido = #{sido}
+		GROUP BY sigungu; 		
+	</select>
+	
+	
+	<select id="getAddrEmd" parameterType="com.regroup.rsunny.common.model.SaleDTO" resultType="com.regroup.rsunny.common.model.SaleDTO">
+		SELECT emd FROM addr
+		WHERE sido = #{sido} AND sigungu = #{sigungu}
+		GROUP BY emd;	
+	</select>
+
+
 
 	<select id="getRealTradingsList" parameterType="com.regroup.rsunny.common.model.SaleDTO" resultType="com.regroup.rsunny.common.model.SaleDTO">		
 		SELECT 
@@ -819,7 +839,7 @@
     </select>
     
     <update id="updateRealTradings" parameterType="com.regroup.rsunny.common.model.SaleDTO">
-		UPDATE real_tradings_temp
+		UPDATE real_tradings_jeollanamdo
 		SET 
 			  pos_x = #{posX}
 			, pos_y = #{posY}
@@ -1578,7 +1598,7 @@
 	<select id="getRealTradingsJeollanamdoList" parameterType="com.regroup.rsunny.common.model.SaleDTO" resultType="com.regroup.rsunny.common.model.SaleDTO">
 		SELECT 
 			* 
-		FROM real_tradings_jeollanamdo		
+		FROM real_tradings_jeollanamdo_231112		
 		WHERE 1=1
 		<![CDATA[ 
 		  AND LEFT(deal_month, 4) >= #{dealYearStart} 
@@ -1642,6 +1662,20 @@
 			AND trade_type = #{selTradeType}
 		</if>
 		ORDER BY deal_date DESC
+	</select>
+	
+	
+	
+	
+	
+	<select id="getCollectCoords" parameterType="com.regroup.rsunny.common.model.SaleDTO" resultType="com.regroup.rsunny.common.model.SaleDTO">
+		SELECT 
+			* 
+		FROM real_tradings_jeollanamdo		
+		WHERE 1=1		
+		  AND LEFT(deal_month, 4) = #{dealYearStart}	
+		  and (pos_x is null or pos_y is null)
+			limit 100
 	</select>
 	
 </mapper>

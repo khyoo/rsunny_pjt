@@ -663,6 +663,33 @@ public class ForsaleServiceImpl implements ForsaleService {
 		return ResultDTO.of(0, "정상", forsale);
 	}
 
+	
+	
+	@Override
+	public List<SaleDTO> getAddrSido(SaleDTO form) {
+	
+		List<SaleDTO> rtlist = mapper.getAddrSido(form);
+		
+		return rtlist;
+	}
+	
+	@Override
+	public List<SaleDTO> getAddrSigungu(SaleDTO form) {
+	
+		List<SaleDTO> rtlist = mapper.getAddrSigungu(form);
+		
+		return rtlist;
+	}
+	
+	@Override
+	public List<SaleDTO> getAddrEmd(SaleDTO form) {
+	
+		List<SaleDTO> rtlist = mapper.getAddrEmd(form);
+		
+		return rtlist;
+	}
+	
+	
 	@Override
 	public List<SaleDTO> getRealTradingsList(SaleDTO form) {
 	
@@ -975,5 +1002,15 @@ public class ForsaleServiceImpl implements ForsaleService {
 		mapper.insertTest(form);
 		
 		return ResultDTO.of(0, "등록되었습니다.", (cnt==0)?"n":"m");
+	}
+	
+	
+	
+	@Override
+	public List<SaleDTO> getCollectCoords(SaleDTO form) {
+	
+		List<SaleDTO> rtlist = mapper.getCollectCoords(form);
+		
+		return rtlist;
 	}
 }

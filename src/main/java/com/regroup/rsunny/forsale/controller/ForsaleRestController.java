@@ -261,6 +261,52 @@ public class ForsaleRestController {
 	}
 	
 	/**
+	 * 주소 sido
+	 * @param SaleDTO
+	 * @return ResultDTO
+	 * @throws Exception
+	 */
+	@GetMapping("/addr/getSido")
+	public List<SaleDTO> getAddrSido(SaleDTO form, Model model) throws Exception {
+		log.info("/rest/addr/getSido");
+		
+       	List<SaleDTO> rtlist = service.getAddrSido(form);       	
+		
+		return rtlist;
+	}
+	
+	/**
+	 * 주소 sigungu
+	 * @param SaleDTO
+	 * @return ResultDTO
+	 * @throws Exception
+	 */
+	@GetMapping("/addr/getSigungu")
+	public List<SaleDTO> getAddrSigungu(SaleDTO form, Model model) throws Exception {
+		log.info("/rest/addr/getSigungu");
+		
+       	List<SaleDTO> rtlist = service.getAddrSigungu(form);       	
+		
+		return rtlist;
+	}
+	
+	/**
+	 * 주소 emd
+	 * @param SaleDTO
+	 * @return ResultDTO
+	 * @throws Exception
+	 */
+	@GetMapping("/addr/getEmd")
+	public List<SaleDTO> getAddrEmd(SaleDTO form, Model model) throws Exception {
+		log.info("/rest/addr/getEmd");
+		
+       	List<SaleDTO> rtlist = service.getAddrEmd(form);       	
+		
+		return rtlist;
+	}
+	
+	
+	/**
 	 * 실거래 데이터 좌표(posX, posY) 업데이트
 	 * @param SaleDTO
 	 * @return ResultDTO
@@ -417,6 +463,25 @@ public class ForsaleRestController {
 				break;
 				
 		}
+		
+		return rtlist;
+	}
+	
+	/**
+	 * 실거래 데이터 
+	 * @param RealTradingsDTO
+	 * @return ResultDTO
+	 * @throws Exception
+	 */
+	@GetMapping("/tradings/collectCoords")
+	public List<SaleDTO> collectCoords(SaleDTO form, Model model) throws Exception {
+		log.info("/rest/{}/tradings/collectCoords/{}");
+		//System.out.println(form.getSidoCode());
+       	//List<SaleDTO> rtlist = service.getRealTradingsListFromOfficetel1(form);
+		
+		List<SaleDTO> rtlist = null;
+	
+		rtlist = service.getCollectCoords(form);
 		
 		return rtlist;
 	}

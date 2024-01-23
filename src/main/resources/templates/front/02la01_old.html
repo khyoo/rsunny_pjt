@@ -30,62 +30,6 @@
 		
 		$(document).ready(function () {
 			
-			$('a.search_lp').click(function () {
-				if ($('#wy').val() == '') {
-					$('#wy').attr('placeholder', '주소지를 입력하세요.');
-					return;
-				}
-
-				location.href = '/02la01?t=r&keyword=' + $('#wy').val();
-								
-			});
-			
-			$( "#searchSido" ).selectmenu({
-				  change: function( event, ui ) {//console.log(ui.item.label);
-					  $.get('/forsale/rest/addr/getSigungu?sido=' + ui.item.label, {}, function (data) {									
-							//console.log(data);
-			
-							let options = [];
-			
-							let html = '';
-							if (data.length > 0) {
-								data.forEach((item, idx) => {
-									options.push("<option value='" + (idx+1) + "'>" + item.sigungu + "</option>");															
-								});
-							} else {
-								
-							}						
-							$('#sigungu').append(options.join("")).selectmenu();
-						});
-				  }
-				});
-				
-				$( "#searchSigungu" ).selectmenu({
-				  change: function( event, ui ) {//console.log(ui.item.label);
-					  $.get('/forsale/rest/addr/getEmd?sido=' + $('#sido').find(':selected').text() + '&sigungu=' + ui.item.label, {}, function (data) {									
-							//console.log(data);
-			
-							let options = [];
-			
-							let html = '';
-							if (data.length > 0) {
-								data.forEach((item, idx) => {
-									options.push("<option value='" + (idx+1) + "'>" + item.emd + "</option>");													
-								});
-							} else {
-								
-							}												
-							$('#emd').append(options.join("")).selectmenu();
-						});
-				  }
-				});
-				
-				$( "#searchEmd" ).selectmenu({
-				  change: function( event, ui ) {
-					  //alert('emd');
-				  }
-				});
-			
 			$("#slider-range").slider({
 				range: true,
 				min: 2015,
@@ -193,7 +137,7 @@
 
 			let isOverlayClick = false;			
 						
-			let jibunClickHandler = function (mouseEvent) {console.log("22333k");
+			let jibunClickHandler = function (mouseEvent) {
 				
 				if (polygon != null)
 					polygon.setMap(null);
@@ -202,7 +146,6 @@
 				var latlng = mouseEvent.latLng;
 
 				$('[data-field=saleNo]').text('');
-				$('.cell_hidden').hide();
 				$('.btn_wrap').hide();
 				$('#slide_detail').hide();
 				$('.tag_wrap').hide();
@@ -419,7 +362,7 @@
 		
 								// 실거래가 목록
 								$.get('/forsale/rest/tradings/getListFromPnu?pnu=' + pnu.pnu, {}, function (data) {
-									console.log("실거래가목록2-1");
+									console.log("실거래가목록2");
 									console.log(data);
 		
 									$('#trp-detail-period-cnt').text('(' + data.length + '건)');
@@ -427,33 +370,31 @@
 									let html = '';
 									if (data.length > 0) {
 										data.forEach(item => {
-											html += '<div class="detail_tradings_table2">';
-											html += '	<div class="detail_tradings_table_row">';
-											html += '		<div class="detail_tradings_table_cell2" style="width: 22%;">';
+											html += '<div class="trp-detail-table2">';
+											html += '	<div class="trp-detail-table-row">';
+											html += '		<div class="trp-detail-table-cell2" style="width: 22%;">';
 											html += '`' + item.dealMonth.substr(2, 2) + '.' + item.dealMonth.substr(4, 2) + '.' + item.dealDay;
 											html += '		</div>';
-											html += '		<div class="detail_tradings_table_cell2" style="width: 20%;">';
+											html += '		<div class="trp-detail-table-cell2" style="width: 20%;">';
 											html += '			<span data-area="total" style="display: inline;">';
 											html += numComma(item.dealAmount) + "만";
 											html += '			</span>';
 											html += '		</div>';
-											html += '		<div class="detail_tradings_table_cell2" style="width: auto;">';
+											html += '		<div class="trp-detail-table-cell2" style="width: auto;">';
 											html += item.floor + '층 ' + item.floor + '**호';
 											html += '		</div>';
-											html += '		<div class="detail_tradings_table_cell2" style="width: 90px;"></div>';
+											html += '		<div class="trp-detail-table-cell2" style="width: 90px;"></div>';
 											html += '	</div>';
 											html += '</div>';
 										});
 									} else {
-										html += '<div class="detail_tradings_table2">';
-										html += '	<div class="detail_tradings_table_row">';
-										html += '	<span>';
-										html += '		실거래 내역이 없습니다.';
-										html += '	</span>';
+										html += '<div class="trp-detail-table2">';
+										html += '	<div class="trp-detail-table-row">';
+										html += '실거래 내역이 없습니다.';
 										html += '	</div>';
 										html += '</div>';
 									}
-									$('#detail_tradings_table_conts').html(html);
+									$('#trp-detail-table').html(html);
 								});
 		
 		
@@ -504,7 +445,7 @@
 						var detailW = $(".detail_wrap").width();
 						var listW = $(".left_wrap").width();
 						$("#gis_layout").addClass("detailOn");
-						//$(".detail_wrap").css("left", detailW * -1);
+						$(".detail_wrap").css("left", detailW * -1);
 	
 	
 						//$('.tabCon_wrap').hide();
@@ -757,25 +698,25 @@
 								let html = '';
 								if (data.length > 0) {
 									data.forEach(item => {
-										html += '<div class="detail_tradings_table2">';
-										html += '	<div class="detail_tradings_table_row">';
-										html += '		<div class="detail_tradings_table_cell2" style="width: 22%;">';
+										html += '<div class="trp-detail-table2">';
+										html += '	<div class="trp-detail-table-row">';
+										html += '		<div class="trp-detail-table-cell2" style="width: 22%;">';
 										html += '`' + item.dealMonth.substr(2, 2) + '.' + item.dealMonth.substr(4, 2) + '.' + item.dealDay;
 										html += '		</div>';
-										html += '		<div class="detail_tradings_table_cell2" style="width: 20%;">';
+										html += '		<div class="trp-detail-table-cell2" style="width: 20%;">';
 										html += '			<span data-area="total" style="display: inline;">';
 										html += numComma(item.dealAmount) + "만";
 										html += '			</span>';
 										html += '		</div>';
-										html += '		<div class="detail_tradings_table_cell2" style="width: auto;">';
+										html += '		<div class="trp-detail-table-cell2" style="width: auto;">';
 										html += item.floor + '층 ' + item.floor + '**호';
 										html += '		</div>';
-										html += '		<div class="detail_tradings_table_cell2" style="width: 90px;"></div>';
+										html += '		<div class="trp-detail-table-cell2" style="width: 90px;"></div>';
 										html += '	</div>';
 										html += '</div>';
 									});
 								}
-								$('#detail_tradings_table_conts').html(html);
+								$('#trp-detail-table').html(html);
 							});
 
 
@@ -803,7 +744,7 @@
 						var detailW = $(".detail_wrap").width();
 						var listW = $(".left_wrap").width();
 						$("#gis_layout").addClass("detailOn");
-						//$(".detail_wrap").css("left", detailW * -1);
+						$(".detail_wrap").css("left", detailW * -1);
 
 
 						//$('.tabCon_wrap').hide();
@@ -1048,33 +989,31 @@
 								let html = '';
 								if (data.length > 0) {
 									data.forEach(item => {
-										html += '<div class="detail_tradings_table2">';
-										html += '	<div class="detail_tradings_table_row">';
-										html += '		<div class="detail_tradings_table_cell2" style="width: 22%;">';
+										html += '<div class="trp-detail-table2">';
+										html += '	<div class="trp-detail-table-row">';
+										html += '		<div class="trp-detail-table-cell2" style="width: 22%;">';
 										html += '`' + item.dealMonth.substr(2, 2) + '.' + item.dealMonth.substr(4, 2) + '.' + item.dealDay;
 										html += '		</div>';
-										html += '		<div class="detail_tradings_table_cell2" style="width: 20%;">';
+										html += '		<div class="trp-detail-table-cell2" style="width: 20%;">';
 										html += '			<span data-area="total" style="display: inline;">';
 										html += numComma(item.dealAmount) + "만";
 										html += '			</span>';
 										html += '		</div>';
-										html += '		<div class="detail_tradings_table_cell2" style="width: auto;">';
+										html += '		<div class="trp-detail-table-cell2" style="width: auto;">';
 										html += item.floor + '층 ' + item.floor + '**호';
 										html += '		</div>';
-										html += '		<div class="detail_tradings_table_cell2" style="width: 90px;"></div>';
+										html += '		<div class="trp-detail-table-cell2" style="width: 90px;"></div>';
 										html += '	</div>';
 										html += '</div>';
 									});
 								} else {
-									html += '<div class="detail_tradings_table2">';
-									html += '	<div class="detail_tradings_table_row">';
-									html += '	<span>';
-									html += '		실거래 내역이 없습니다.';
-									html += '	</span>';
+									html += '<div class="trp-detail-table2">';
+									html += '	<div class="trp-detail-table-row">';
+									html += '실거래 내역이 없습니다.';
 									html += '	</div>';
 									html += '</div>';
 								}
-								$('#detail_tradings_table_conts').html(html);
+								$('#trp-detail-table').html(html);
 							});
 	
 	
@@ -1125,7 +1064,7 @@
 					var detailW = $(".detail_wrap").width();
 					var listW = $(".left_wrap").width();
 					$("#gis_layout").addClass("detailOn");
-					//$(".detail_wrap").css("left", detailW * -1);
+					$(".detail_wrap").css("left", detailW * -1);
 
 
 					//$('.tabCon_wrap').hide();
@@ -1177,6 +1116,8 @@
 						// 지도 확대 축소를 제어할 수 있는  줌 컨트롤을 생성합니다
 						var zoomControl = new kakao.maps.ZoomControl();
 						map.addControl(zoomControl, kakao.maps.ControlPosition.RIGHT);
+
+						collectCoords();
 						
 						let boundbox = map.getBounds().toString().replace('((', '').replace('))', '').replace('(', '').replace(')', '').replaceAll(' ', '');
 						getRealTrading(boundbox);
@@ -1623,21 +1564,17 @@
 				});
 			});	//End-of-$('div.report_wrap').find('a.saveReport').click(function() {
 
-			/*	
 			$('#w').keypress(function () {
 				if (event.keyCode == 13) $('a.dongSearch').trigger('click');
 			});
-			*/
 
 			//동명으로 검색 이동.
 			$('a.dongSearch').click(function () {
-				/*			
 				if ($('#w').val() == '') {
 					alert('검색할 동명을 입력하세요.');
 					$('#w').focus();
 					return;
 				}
-				*/
 
 				// 장소 검색 객체를 생성합니다
 				var ps = new kakao.maps.services.Places();
@@ -1713,7 +1650,7 @@
 				xhr.send('');
 			}
 
-			function showRealTradingsMarker(item, itemIdx) {
+			function showRealTradingsMarker(item, itemIdx) {console.log("xx");
 				let tFillColor = '#15C4B2';
 				let tStrokeColor = '#15C4B2';
 
@@ -2581,6 +2518,93 @@
 			let realTradingPoiTopArr = [];		//실거래가 상위 5개 point 배열
 			let realTradingOverArr = new Array(5);	//실거래가 오버레이 팝업 배열
 			
+			function collectCoords() {
+				console.log("Start Collector ~~~~~~~~~~~");
+
+				let rtDTO = new Object();
+				
+				rtDTO.selSaleDetailType = 'l1';
+				rtDTO.selTradeType = 'A';
+				rtDTO.dealYearStart = '2015';
+				
+				$.ajax({
+					url: '/forsale/rest/tradings/collectCoords',
+					type: 'GET',
+					data: rtDTO,
+					dataType: "json",
+					async: false,
+					cache: false,
+					success: function (result) {
+						console.log(result);
+						result.forEach((item, itemIdx) => { //console.log("itemIdx : " + itemIdx);
+							console.log("좌표 없음");
+							console.log(item.buildType);
+							//console.log(item.saleDetailType);
+
+							if (item.saleDetailType === 'l1') {
+								let paramData = {
+									serviceKey: data_go_key,
+									pnu: item.pnu0,
+									//startDt: item.dealMonth,
+									stdrYear: item.dealMonth.substr(0, 4),
+									//endDt: "209909",
+									format: "json",
+									numOfRows: "10000",
+									pageNo: "1"
+								};
+								setTimeout(function() {
+									$.get('https://apis.data.go.kr/1611000/nsdi/LandCharacteristicsService/attr/getLandCharacteristics', paramData, function (data) {
+										console.log(data);
+										//console.log(item.useArea);
+										if (data.landCharacteristicss != 'undefined') {
+											let temp = data.landCharacteristicss.field.filter(subItem => {
+												//console.log(subItem);
+												return Number(subItem.lndpclAr) === Number(item.useArea) && subItem.lndcgrCodeNm === item.buildType;
+											});
+											console.log(temp);
+											if (temp.length > 0) {
+												$.ajax({
+													type: "GET",
+													url: "http://api.vworld.kr/req/address",
+													dataType: "jsonp",
+													data: {
+														service: "address",
+														request: "getCoord",
+														format: "json",
+														crs: "EPSG:4326",
+														key: vworld_key,
+														type: "parcel",
+														address: item.sigungu + " " + temp[0].mnnmSlno
+													},
+													async: false,
+													cache: false,
+													success: function (result2) {console.log(result2);	
+														if (result2.response.status === 'OK') {
+															rtDTO.rid = item.rid;
+															rtDTO.posX = result2.response.result.point.x;
+															rtDTO.posY = result2.response.result.point.y;
+
+															$.post("/forsale/rest/tradings/updateCoords", rtDTO, function (data, status) {
+																console.log("Data: " + data + "\nStatus: " + status);
+															});														
+														}
+													}
+												});
+											}
+										}
+									});
+								}, 500);
+							}
+						});
+					},
+					error: function (json) {
+						console.log("error");
+					}
+				});				
+				
+			}
+			
+			
 			// 실거래가 On/Off 클릭 이벤트
 			let isRealTradings = true;
 			$('#realTrans').click(function () {
@@ -2777,10 +2801,9 @@
 			let areaOverlayArr = [];
 			let areaAddressArr = [];
 
-			let isArea = false;
-			let isLength = false;
-			
 			$('#cat_measure').click(function () {
+				let isArea = false;
+				let isLength = false;
 
 				if (isMeasure) {
 					isMeasure = false;
@@ -2814,7 +2837,7 @@
 
 					// PC using
 					$('#areaMeasure').click(function () {//console.log("222");
-						if (isArea) {console.log("333");
+						if (isArea) {//console.log("333");
 							isArea = false;
 
 							if (polygonArr.length > 0) {
@@ -2835,7 +2858,7 @@
 
 							$('#areaMeasure').css("color", "#000");
 							$('#areaMeasure').css("background-color", "#fff");
-						} else {console.log("444");
+						} else {//console.log("444");
 							isLength = false;
 							isArea = true;
 							
@@ -2863,8 +2886,6 @@
 							kakao.maps.event.removeListener(map, 'click', jibunClickHandler);
 							kakao.maps.event.addListener(map, 'click', measuerAreaClickHandler);
 
-							$('.gis_sub_wrap').off('click');
-							
 							$(document).on('click', '.mt-slot-btn', function (e) {
 								let idx = $('.mt-slot-btn').index(this);
 								let tempArea = polygonArr[idx].getArea().toFixed(1);
@@ -2983,9 +3004,9 @@
 				subHtml += '<div class="mfs-list-div-view3 dsc-main-frame" id="map_tool_div_view" style="text-align: center; background: rgb(255, 255, 255); box-shadow: rgba(0, 0, 0, 0.15) 1px 0px 2px 0px;">';
 				subHtml += '	<div style="background: #fff;pointer-events:auto;">';
 				subHtml += '		<div class="map-tool-title-bar-div">';
-				subHtml += '			<div class="map-tool-name-title" id="map_tool_name_title">' + measureType + ' 측정</div>';				
-				subHtml += '			<div class="map-tool-before-btn"><span class="map-tool-btns" style="padding-left:20px;" id="mt_close_btn"><img src="/img/sub/ico_btn_close.png" style="width:20px;height:19px;"></span></div>';
-				//subHtml += '			<div class="map-tool-reset-btn"><span class="map-tool-btns" style="pointer-events: auto; padding-right: 20px;" id="mt_length_reset_btn"><img src="https://aurora.disco.re/static/common/img/ico_reset_b.png?ver=1681186936" style="width:24px;"></span></div>';
+				subHtml += '			<div class="map-tool-name-title" id="map_tool_name_title">' + measureType + ' 측정</div>';
+				//subHtml += '			<div class="map-tool-before-btn"><span class="map-tool-btns" style="padding-left:20px;" id="mt_close_btn"><img src="https://aurora.disco.re/static/common/img/ico_back_1_4x.png?ver=1681186936" style="width:20px;height:19px;"></span></div>';
+				subHtml += '			<div class="map-tool-reset-btn"><span class="map-tool-btns" style="pointer-events: auto; padding-right: 20px;" id="mt_length_reset_btn"><img src="https://aurora.disco.re/static/common/img/ico_reset_b.png?ver=1681186936" style="width:24px;"></span></div>';
 				//subHtml += '			<div style="text-align:right;position:relative; top:-152px; line-height:16px; height:0px; vertical-align: middle;margin-right:50px;padding-top:12px;"><div class="py-toggle-div" id="pyt_mt_total_area" style="padding-top: 1px; display: none;"><div style="width:76px;display: table;text-align: center;"><div class="detail_area_toogle" style="cursor: pointer;"><img style="width:16px;margin:-2px 4px 0 0;" src="https://aurora.disco.re/static/common/img/new/ic-change-blue@3x.png?ver=1681186936">m<sup>2</sup></div></div></div></div>';
 				subHtml += '		</div>';
 				subHtml += '	</div>';
@@ -2997,33 +3018,46 @@
 				$('div.tab5').addClass('on');
 
 				$('div.tab1').removeClass('on');
-				
+
+				/*
 				$('#mt_close_btn').click(function () {
-					//$('a.search').trigger('click');
-					
-					isArea = false;
+					$('a.search').trigger('click');
+				});
+				*/
 
-					if (polygonArr.length > 0) {
-						polygonArr.forEach(function (polygon) {
-							polygon.setMap(null);
-						});
+				$('#mt_length_reset_btn').click(function () {
+					drawingFlag = false;
 
-						areaOverlayArr.forEach(function (areaOverlay) {
-							areaOverlay.setMap(null);
-						});
+					lengthListCnt = 0;
+					lengthDisSum = 0;
+
+					if (typeof (clickLine) != 'undefined') {
+						deleteAllCircleDot();
 					}
 
-					kakao.maps.event.addListener(map, 'click', jibunClickHandler);
-					kakao.maps.event.removeListener(map, 'click', measuerAreaClickHandler);
-					console.log(isArea);
-					$('div.tab1').addClass('on');
-					$('div.tab5').removeClass('on');
+					areaListCnt = 0;
+					areaListSum = 0;
 
-					$('#areaMeasure').css("color", "#000");
-					$('#areaMeasure').css("background-color", "#fff");
-					
-					isAreaList = false;
+					for (let i = 0; i < $('.areaListCnt').length; i++) {
+						polygonArr[i].setMap(null);
+						areaOverlayArr[i].setMap(null);
+					}
+
+					polygonArr = [];
+					areaOverlayArr = [];
+					areaAddressArr = [];
+
+					for (let i = $('.areaListCnt').length - 1; i >= 0; i--) {
+						$('.area-list').eq(i).remove();
+					}
+
+					$('#mt_count').text('0');
+
+					$('#mt_total_area').text('0');
+					$('#mt_total_area2').text('0');
+					$('#mt_total_gong_value').text('0 원');
 				});
+
 			}
 
 			var isAreaList = false;
@@ -3037,8 +3071,7 @@
 				let subHtml = '';
 
 				subHtml += '<div class="rbc-cerulean" style="height: 80px;" id="mt_total_area_view">';
-				subHtml += '	<div style="height: 40px;line-height: 46px;font-size: 16px;color: #fff;display: inline-block;">총 <span id="mt_count" style="display: inline-block;"></span>개 필지가 선택됨</div>';
-				subHtml += '	<div class="map-tool-reset-btn"><span class="map-tool-btns" style="pointer-events: auto; padding-right: 20px; position: absolute; top: -18px; left: 10px;" id="mt_length_reset_btn"><img src="/img/sub/ico_reset_a.png" style="width:24px;"></span></div>';
+				subHtml += '	<div style="height: 40px;line-height: 46px;font-size: 16px;color: #fff">총 <span id="mt_count" style="display: inline-block;"></span>개 필지가 선택됨</div>';
 				subHtml += '	<div style="height: 56px;position: relative;">';
 				subHtml += '		<div style="display: inline-block;width: 39%;padding-left: 16px;color: #fff;">';
 				subHtml += '			<span style="display: inline-block;font-size: 14px;color: #7eb6e7;margin-right: 10px;">면적 합계 </span>';
@@ -3070,39 +3103,6 @@
 
 					$('#map_tool_msg').hide();
 					$('#map_tool_field').append(subHtml);
-					
-					$('#mt_length_reset_btn').click(function () {
-						drawingFlag = false;
-
-						lengthListCnt = 0;
-						lengthDisSum = 0;
-
-						if (typeof (clickLine) != 'undefined') {
-							deleteAllCircleDot();
-						}
-
-						areaListCnt = 0;
-						areaListSum = 0;
-
-						for (let i = 0; i < $('.areaListCnt').length; i++) {
-							polygonArr[i].setMap(null);
-							areaOverlayArr[i].setMap(null);
-						}
-
-						polygonArr = [];
-						areaOverlayArr = [];
-						areaAddressArr = [];
-
-						for (let i = $('.areaListCnt').length - 1; i >= 0; i--) {
-							$('.area-list').eq(i).remove();
-						}
-
-						$('#mt_count').text('0');
-
-						$('#mt_total_area').text('0');
-						$('#mt_total_area2').text('0');
-						$('#mt_total_gong_value').text('0 원');
-					});
 
 					$('.btn_meter_pyeong').on('click', function () {
 						if (!isAreaExtent) {
@@ -3171,7 +3171,6 @@
 							if (item === result.address) {
 								isAddr = true;
 
-								console.log("xx");
 								let tempPoly = null;
 								tempPoly = parse_land_polygon_value(result.polygon); //console.log(tempPoly);
 
@@ -3223,7 +3222,7 @@
 
 						if (!isAddr) {
 							areaAddressArr.push(result.address);
-							console.log("xx");
+
 							let tempPoly = null;
 							tempPoly = parse_land_polygon_value(result.polygon); //console.log(tempPoly);
 
@@ -4357,7 +4356,7 @@
 			}
 
 
-			function parse_land_polygon_value(e, r) {console.log('e, r/////////');console.log(e);console.log(r);
+			function parse_land_polygon_value(e, r) {
 				var t = [19e-6, 0];//get_rev_xy(r, "l");
 				var a = new RegExp(/\(\(.+?\)\)/g);
 				var i = new RegExp(/\(.+?\)/g);
@@ -4383,8 +4382,6 @@
 			}
 
 			function forsaleDetail(rid) {
-				
-				$('.cell_hidden').css('display', 'table-cell');			
 				$('.btn_wrap').show();
 				$('#slide_detail').show();
 				$('.tag_wrap').show();
@@ -5141,7 +5138,6 @@
 			});
 		});
 
-			
 	</script>
 
 </head>
@@ -5310,45 +5306,6 @@
 			<div class="headBox">
 				<div class="banner_wrap" th:if="${banner != null}">
 					<div class="search">
-						<div class="search_wrap">
-							<div class="searchBox">
-								<div class="selectBox">							
-									<select id="searchSido">
-										<option value="0">시·도</option>
-										<option value="01">강원특별자치도</option>
-										<option value="02">경기도</option>
-										<option value="03">경상남도</option>
-										<option value="04">경상북도</option>
-										<option value="05">광주광역시</option>
-										<option value="06">대구광역시</option>
-										<option value="07">대전광역시</option>
-										<option value="08">부산광역시</option>
-										<option value="09">서울특별시</option>
-										<option value="10">세종특별자치시</option>
-										<option value="11">울산광역시</option>
-										<option value="12">인천광역시</option>
-										<option value="13">전라남도</option>
-										<option value="14">전라북도</option>
-										<option value="15">제주특별자치도</option>
-										<option value="16">충청남도</option>
-										<option value="17">충청북도</option>
-									</select>							
-								</div>						
-								<div class="selectBox">
-									<select id="searchSigungu">
-										<option value="0">시·군·구</option>
-									</select>							
-								</div>
-								<div class="selectBox">
-									<select id="searchEmd">
-										<option value="0">읍·면·동</option>
-									</select>							
-								</div>
-								<div class="selectBox lp_open" style="line-height: 50px;font-size: 1.3em;text-align: center;cursor: pointer;" data-lp="04l00p">
-									직접입력
-								</div>
-							</div>
-						</div>
 						<input type="text" id="w" name="w" placeholder="지번·지역·지하철역 검색" />
 						<a href="javascript:void(0);" class="dongSearch">검색</a>
 					</div>
@@ -5681,20 +5638,22 @@
 				<p>매물번호<span data-field="saleNo"></span></p>
 				<a href="#">닫기</a>
 			</div>
-			
-			<div class="detail_info_navi">
-				<div class="detail_info_navi_cell cell_hidden">
-					<a href="#saleNum">매물정보</a>
+
+			<div id="detail_panel_navi" class="rbc-tint1"
+				style="position: sticky !important; top: 0;background-color:#f8f8f8;color:#8e8e93;font-size:14px;position:relative;display: table;width: 100%;height: 44px;box-shadow: 0px 6px 10px -6px inset #ccc;z-index:2;">
+				<div class="foot-detail-panel-navi-cell" id="dp_navi_1"
+					style="background-color: rgb(248, 248, 248); color: rgb(142, 142, 147);font-weight: 400;">
+					<a href="#saleNum">실거래</a>
 				</div>
-				<div class="detail_info_navi_cell">
-					<a href="#dp_sales_prefix">실거래가</a>
-				</div>
-				<div class="detail_info_navi_cell">
-					<a href="#dp_land_prefix">토지정보</a>
-				</div>
-				<div class="detail_info_navi_cell detail_info_navi_cell_right">
-					<a href="#dp_arch_prefix">건물정보</a>
-				</div>
+				<div class="foot-detail-panel-navi-cell" id="dp_navi_3"
+					style="background-color: rgb(248, 248, 248); color: rgb(142, 142, 147);font-weight: 400;"><a
+						href="#dp_land_prefix">토지</a></div>
+				<div class="foot-detail-panel-navi-cell" id="dp_navi_4"
+					style="background-color: rgb(248, 248, 248); color: rgb(142, 142, 147);font-weight: 400;"><a
+						href="#dp_arch_prefix">건물</a></div>
+				<div class="foot-detail-panel-navi-cell" id="dp_navi_5"
+					style="background-color: rgb(248, 248, 248); color: rgb(142, 142, 147);font-weight: 400; border-right: 1px solid #ccc;">
+					<a href="#dp_cert">등기</a></div>
 			</div>
 
 			<div class="btn_wrap">
@@ -5748,7 +5707,7 @@
 					<dd data-field="dongAddr"><!-- 서울시 강남구 삼성동 --></dd>
 					<dd data-field="info1"><!-- 원룸 | 면적 33㎡ | 2층 | 남동향 | 공용주차 --></dd>
 					<dd data-field="info2"><!-- 엘리베이터 있음 | 준공 2020년 | 입주협의 --></dd>
-					<dd data-field="info3"><!-- 반려동물 가능 | 단기 월 55만원 (2개월 이상) --></dd>
+					<dd data-field="info3"><!-- 반려동물 가능 | 단기 월 55만원 (2개월 이상) --></dd><br>
 					<dd data-field="info4"><!-- 매물정보 항목 --></dd>
 
 				</dl>
@@ -5770,403 +5729,595 @@
 				</dl>
 			</div>
 
-			<div class="detail_info_divider"></div>
-			
-			<div id="dp_sales_prefix" class="detail_info_header_prefix"></div>
+			<div class="map-detail-main-divider"></div>
 
-			<div class="detail_info_header">
-				<div>
-					<h3>실거래가</h3>
-				</div>				
+			<div class="map-detail-header" id="dp_real_price" style="-webkit-transform: translate3d(0,0,0);">
+				<span class="map-detail-header-txt feed-text-highlight-blue">
+					<h3 style="display:inline; font-size:inherit;">실거래가</h3>
+				</span>
+				<!-- <div class="py-toggle-div" id="pyt_dp_realprice"></div> -->
 			</div>
 
-			<div>				
+			<div style="padding: 20px 0 14px;">
+				<span style="padding-left: 25px; display: none;" id="trp-detail-period-before-padding"></span>
+				<img width="24" height="24" style="display: none; cursor: pointer;" class="trp-detail-period-navi"
+					id="trp-detail-period-before" data-value="-1"
+					src="https://aurora.disco.re/static/common/img/new/icon_left_1_3x.png?ver=1682320064">
 				<span class="ddiv-sub-title">
 					<span id="trp-detail-period" style="display:inline;">거래내역</span>
 					<span id="trp-detail-period-cnt" style="display:inline;"></span>
 				</span>
 			</div>
 
-			<div class="detail_tradings_table">
-				<div class="detail_tradings_table_row">					
-					<div class="detail_tradings_table_cell" style="width: 22%;">거래일</div>
-					<div class="detail_tradings_table_cell" style="width: 20%;">거래금액</div>
-					<div class="detail_tradings_table_cell" style="width: auto;">동/층/호</div>
-					<div class="detail_tradings_table_cell" style="width: 90px;"></div>
+			<div class="trp-detail-table" id="lrp_list_table_header">
+				<div class="trp-detail-table-row">
+					<!-- <div class="trp-detail-table-cell" style="width: 25%;">유형</div> -->
+					<div class="trp-detail-table-cell" style="width: 22%;" id="price_date_cell">거래일</div>
+					<div class="trp-detail-table-cell" style="width: 20%;" id="lrp_price_type"><span data-area="total"
+							style="display: inline;">거래금액</span><span data-area="land" style="display: none;">대지면적당
+							단가</span></div>
+					<div class="trp-detail-table-cell" style="width: auto;">동/층/호</div>
+					<div class="trp-detail-table-cell" style="width: 90px;"></div>
 				</div>
 			</div>
 
-			<div id="detail_tradings_table_conts">
+			<div id="trp-detail-table">
 
 			</div>
 
-			<div class="detail_info_divider"></div>
-			
-			<div id="dp_land_prefix" class="detail_info_header_prefix"></div>
-			
-			<div class="detail_info_header">
-				<div>
-					<h3>토지 정보</h3>
+			<div class="map-detail-main-divider"></div>
+
+			<div id="dp_land_prefix" style="height:80px;"></div>
+			<div class="map-detail-header" id="dp_land" name="dp_land" style="-webkit-transform: translate3d(0,0,0);">
+				<span class="map-detail-header-txt feed-text-highlight-blue">
+					<h3 style="display:inline; font-size:inherit;">토지 정보</h3>
+				</span>
+				<!-- <div class="py-toggle-div" id="pyt_dp_land"></div> -->
+			</div>
+			<div style="padding:0px 0px 15px 0px;-webkit-transform: translate3d(0,0,0);">
+				<div class="map-detail-no-data rf3_text3" id="tab_land_none" style="display: none;">
+					토지이동으로 일시적으로 정보를 볼 수 없습니다.
 				</div>
-			</div>
-			<div class="detail_info_body">
-				<div>
-					<div class="detail_info_body_sub">
-						<div class="detail_info_body_sub_detail">
-							<div class="detail_data_txt detail_data_txt_title">면적</div>
-							<div class="detail_data_txt detail_data_txt_conts">
-								<span id="land_forest_info_area" class="to-area-field"></span>
+				<div id="tab_land" class="row_skip">
+					<div class="mfs-detail-data-div-base" style="height:196px;">
+						<div class="mfs-agent-main-tab-div" style="position:relative;">
+							<div class="ifs-tab-txt rfc-cool-grey" style="padding-left:20px;">면적</div>
+							<div class="ifs-tab-txt rfc-dusk" style="right:0px;padding-right:20px;font-size:16px;">
+								<span id="land_forest_info_area"><span id="land_forest_info_area" class="to-area-field"
+										data-value="32108" data-type="none" data-p="2" data-p2="0"></span></span>
 							</div>
 						</div>
-						
-						<div class="detail_info_body_sub_detail_divider"></div>
-						
-						<div class="detail_info_body_sub_detail">
-							<div class="detail_data_txt detail_data_txt_title">지목</div>
-							<div class="detail_data_txt detail_data_txt_conts">
+						<div class="ifs-tab-bar"></div>
+						<div class="mfs-agent-main-tab-div" style="position:relative;">
+							<div class="ifs-tab-txt rfc-cool-grey" style="padding-left:20px;">지목</div>
+							<div class="ifs-tab-txt rfc-dusk" style="right:0px;padding-right:20px;font-size:16px;">
 								<span id="land_forest_info_purpose"></span>
 							</div>
 						</div>
-						
-						<div class="detail_info_body_sub_detail_divider"></div>
-						
-						<div class="detail_info_body_sub_detail">
-							<div class="detail_data_txt detail_data_txt_title">용도지역</div>
-							<div class="detail_data_txt detail_data_txt_conts">
+						<div class="ifs-tab-bar"></div>
+						<div class="mfs-agent-main-tab-div" style="position:relative;">
+							<div class="ifs-tab-txt rfc-cool-grey" style="padding-left:20px;">용도지역</div>
+							<div class="ifs-tab-txt rfc-dusk" style="right:0px;padding-right:20px;font-size:16px;">
 								<span id="p6"></span>
 							</div>
 						</div>
-						
-						<div class="detail_info_body_sub_detail_divider"></div>
-						
-						<div class="detail_info_body_sub_detail">
-							<div class="detail_data_txt detail_data_txt_title">이용상황</div>
-							<div class="detail_data_txt detail_data_txt_conts">
+						<div class="ifs-tab-bar"></div>
+						<div class="mfs-agent-main-tab-div" style="position:relative;">
+							<div class="ifs-tab-txt rfc-cool-grey" style="padding-left:20px;">이용상황</div>
+							<div class="ifs-tab-txt rfc-dusk" style="right:0px;padding-right:20px;font-size:16px;">
 								<span id="p10"></span>
 							</div>
 						</div>
 					</div>
-					<div class="detail_margin_div"></div>
-					<div class="detail_info_body_sub">
-						<div class="detail_info_body_sub_detail">
-							<div class="detail_data_txt detail_data_txt_title">소유구분</div>
-							<div class="detail_data_txt detail_data_txt_conts">
+					<div class="mfs-detail-margin-div" style="height:5px;border-top:0px;"></div>
+					<div class="mfs-detail-data-div-base" style="height:147px;">
+						<div class="mfs-agent-main-tab-div" style="position:relative;">
+							<div class="ifs-tab-txt rfc-cool-grey" style="padding-left:20px;">소유구분</div>
+							<div class="ifs-tab-txt rfc-dusk" style="right:0px;padding-right:20px;font-size:16px;">
 								<span id="owner_gbn"></span>
 							</div>
 						</div>
-						
-						<div class="detail_info_body_sub_detail_divider"></div>
-						
-						<div class="detail_info_body_sub_detail">
-							<div class="detail_data_txt detail_data_txt_title">소유권변동일자</div>
-							<div class="detail_data_txt detail_data_txt_conts">
+						<div class="ifs-tab-bar"></div>
+						<div class="mfs-agent-main-tab-div" style="position:relative;">
+							<div class="ifs-tab-txt rfc-cool-grey" style="padding-left:20px;">소유권변동일자</div>
+							<div class="ifs-tab-txt rfc-dusk" style="right:0px;padding-right:20px;font-size:16px;">
 								<span id="days"></span>
 							</div>
 						</div>
-						
-						<div class="detail_info_body_sub_detail_divider"></div>
-						
-						<div class="detail_info_body_sub_detail">
-							<div class="detail_data_txt detail_data_txt_title">소유권변동원인</div>
-							<div class="detail_data_txt detail_data_txt_conts">
+						<div class="ifs-tab-bar"></div>
+						<div class="mfs-agent-main-tab-div" style="position:relative;">
+							<div class="ifs-tab-txt rfc-cool-grey" style="padding-left:20px;">소유권변동원인</div>
+							<div class="ifs-tab-txt rfc-dusk" style="right:0px;padding-right:20px;font-size:16px;">
 								<span id="why"></span>
 							</div>
 						</div>
 					</div>
-					<div class="detail_margin_div"></div>
-					<div class="detail_info_body_sub">
-						<div class="detail_info_body_sub_detail">
-							<div class="detail_data_txt detail_data_txt_title">도로접면</div>
-							<div class="detail_data_txt detail_data_txt_conts">
+					<div class="mfs-detail-margin-div" style="height:5px;border-top:0px;"></div>
+					<div class="mfs-detail-data-div-base" style="height:147px;">
+						<div class="mfs-agent-main-tab-div" style="position:relative;">
+							<div class="ifs-tab-txt rfc-cool-grey" style="padding-left:20px;">도로접면</div>
+							<div class="ifs-tab-txt rfc-dusk" style="right:0px;padding-right:20px;font-size:16px;">
 								<span id="p16"></span>
 							</div>
 						</div>
-						
-						<div class="detail_info_body_sub_detail_divider"></div>
-						
-						<div class="detail_info_body_sub_detail">
-							<div class="detail_data_txt detail_data_txt_title">지형높이</div>
-							<div class="detail_data_txt detail_data_txt_conts">
+						<div class="ifs-tab-bar"></div>
+						<div class="mfs-agent-main-tab-div" style="position:relative;">
+							<div class="ifs-tab-txt rfc-cool-grey" style="padding-left:20px;">지형높이</div>
+							<div class="ifs-tab-txt rfc-dusk" style="right:0px;padding-right:20px;font-size:16px;">
 								<span id="p12"></span>
 							</div>
 						</div>
-						
-						<div class="detail_info_body_sub_detail_divider"></div>
-						
-						<div class="detail_info_body_sub_detail">
-							<div class="detail_data_txt detail_data_txt_title">지형형상</div>
-							<div class="detail_data_txt detail_data_txt_conts">
+						<div class="ifs-tab-bar"></div>
+						<div class="mfs-agent-main-tab-div" style="position:relative;">
+							<div class="ifs-tab-txt rfc-cool-grey" style="padding-left:20px;">지형형상</div>
+							<div class="ifs-tab-txt rfc-dusk" style="right:0px;padding-right:20px;font-size:16px;">
 								<span id="p14"></span>
 							</div>
 						</div>
 					</div>
-					<div class="detail_margin_div"></div>
-					<div class="detail_data_txt detail_data_txt_title2">토지이용계획</div>
-					<div class="detail_data_txt detail_data_txt_title2 detail_txt_black">국토의 계획 및 이용에 관한 법률</div>
-					
-					<div class="detail_info_body_sub">
-						<div class="detail_info_body_sub_detail">
-							<div class="detail_data_txt detail_data_txt_title">포함</div>
-							<div class="detail_data_txt detail_data_txt_conts">
-								<span id="info_main_0" class="detail_data_txt_conts_span"></span>
+					<div class="mfs-detail-margin-div" style="height:5px;border-top:0px;"></div>
+					<div class="mfs-detail-data-title rfc-dusk" style="padding-left:20px;">토지이용계획</div>
+					<div class="mfs-detail-data-title rfc-dusk" style="padding-left:20px;font-size:14px;">국토의 계획 및 이용에
+						관한 법률
+					</div>
+					<div class="mfs-detail-data-div-base" style="height:auto;">
+						<div class="mfs-agent-main-tab-div" style="position:relative;">
+							<div class="ifs-tab-txt rfc-cool-grey" style="padding-left:20px;height:auto;">포함</div>
+							<div class="ifs-tab-txt rfc-dusk mdv-auto-div"
+								style="font-size:16px;height:auto;position:relative;padding-right:20px;">
+								<span id="info_main_0" class="mdv-auto-span"></span>
 							</div>
 						</div>
-						
-						<div class="detail_info_body_sub_detail_divider"></div>
-						
-						<div class="detail_info_body_sub_detail">
-							<div class="detail_data_txt detail_data_txt_title">저촉</div>
-							<div class="detail_data_txt detail_data_txt_conts">
-								<span id="info_main_1" class="detail_data_txt_conts_span"></span>
+						<div class="ifs-tab-bar"></div>
+						<div class="mfs-agent-main-tab-div" style="position:relative;">
+							<div class="ifs-tab-txt rfc-cool-grey" style="padding-left:20px;height:auto;">저촉</div>
+							<div class="ifs-tab-txt rfc-dusk mdv-auto-div"
+								style="font-size:16px;height:auto;position:relative;padding-right:20px;">
+								<span id="info_main_1" class="mdv-auto-span"></span>
 							</div>
 						</div>
-						
-						<div class="detail_info_body_sub_detail_divider"></div>
-						
-						<div class="detail_info_body_sub_detail">
-							<div class="detail_data_txt detail_data_txt_title">접함</div>
-							<div class="detail_data_txt detail_data_txt_conts">
-								<span id="info_main_2" class="detail_data_txt_conts_span"></span>
+						<div class="ifs-tab-bar"></div>
+						<div class="mfs-agent-main-tab-div" style="position:relative;">
+							<div class="ifs-tab-txt rfc-cool-grey" style="padding-left:20px;height:auto;">접함</div>
+							<div class="ifs-tab-txt rfc-dusk mdv-auto-div"
+								style="font-size:16px;height:auto;position:relative;padding-right:20px;">
+								<span id="info_main_2" class="mdv-auto-span"></span>
 							</div>
 						</div>
 					</div>
-					<div class="detail_margin_div"></div>
-					<div class="detail_data_txt detail_data_txt_title2">기타법률</div>
-					<div class="detail_info_body_sub">
-						<div class="detail_info_body_sub_detail">
-							<div class="detail_data_txt detail_data_txt_title">포함</div>
-							<div class="detail_data_txt detail_data_txt_conts">
-								<span id="arch_info_0" class="detail_data_txt_conts_span"></span>
+					<div class="mfs-detail-margin-div" style="height:5px;border-top:0px;"></div>
+					<div class="mfs-detail-data-title rfc-dusk" style="padding-left:20px;font-size:14px;">기타법률</div>
+					<div class="mfs-detail-data-div-base" style="height:auto;">
+						<div class="mfs-agent-main-tab-div" style="position:relative;">
+							<div class="ifs-tab-txt rfc-cool-grey" style="padding-left:20px;height:auto;">포함</div>
+							<div class="ifs-tab-txt rfc-dusk mdv-auto-div"
+								style="font-size:16px;height:auto;position:relative;padding-right:20px;">
+								<span id="arch_info_0" class="mdv-auto-span"></span>
 							</div>
 						</div>
-						
-						<div class="detail_info_body_sub_detail_divider"></div>
-						
-						<div class="detail_info_body_sub_detail">
-							<div class="detail_data_txt detail_data_txt_title">저촉</div>
-							<div class="detail_data_txt detail_data_txt_conts">
-								<span id="arch_info_1" class="detail_data_txt_conts_span"></span>
+						<div class="ifs-tab-bar"></div>
+						<div class="mfs-agent-main-tab-div" style="position:relative;">
+							<div class="ifs-tab-txt rfc-cool-grey" style="padding-left:20px;height:auto;">저촉</div>
+							<div class="ifs-tab-txt rfc-dusk mdv-auto-div"
+								style="font-size:16px;height:auto;position:relative;padding-right:20px;">
+								<span id="arch_info_1" class="mdv-auto-span"></span>
 							</div>
 						</div>
-						
-						<div class="detail_info_body_sub_detail_divider"></div>
-						
-						<div class="detail_info_body_sub_detail">
-							<div class="detail_data_txt detail_data_txt_title">접함</div>
-							<div class="detail_data_txt detail_data_txt_conts">
-								<span id="arch_info_2" class="detail_data_txt_conts_span"></span>
+						<div class="ifs-tab-bar"></div>
+						<div class="mfs-agent-main-tab-div" style="position:relative;">
+							<div class="ifs-tab-txt rfc-cool-grey" style="padding-left:20px;height:auto;">접함</div>
+							<div class="ifs-tab-txt rfc-dusk mdv-auto-div"
+								style="font-size:16px;height:auto;position:relative;padding-right:20px;">
+								<span id="arch_info_2" class="mdv-auto-span"></span>
 							</div>
 						</div>
 					</div>
-					<div class="detail_margin_div"></div>
-					<div class="detail_data_txt detail_data_txt_title2">토지 이동(변동) 사유</div>
-					<div class="detail_land_history_info">
-						<div class="detail_land_history_info_table">
-							<div class="detail_land_history_info_table_row">
-								<div class="detail_land_history_info_table_cell1">일자</div>
-								<div class="detail_land_history_info_table_cell2">사유</div>
+					<div class="mfs-detail-margin-div" style="height:5px;border-top:0px;"></div>
+					<div class="mfs-detail-data-title rfc-dusk" style="padding-left:20px;">토지 이동(변동) 사유</div>
+					<div class="land-history-info" style="padding-left:8px; padding-right:8px;">
+						<div style="display:table;width:100%;">
+							<div style="display: table-row;line-height: 46px;">
+								<div
+									style="display: table-cell;width:40%;text-align:left;font-size:12px;color:#50555a;padding-left:12px;">
+									일자</div>
+								<div
+									style="display: table-cell;width:60%;text-align:left;font-size:12px;color:#50555a;">
+									사유</div>
 							</div>
 						</div>
-						
-						<div class="detail_info_body_sub_detail_divider"></div>
-						
-						<div id="land_history" class="detail_land_history_info_table"></div>
+						<div style="height:1px;background: #000;opacity: 0.1;"></div>
+
+						<div id="land_history" style="display:table;width:100%;">
+						</div>
 					</div>
 
-					<div class="detail_margin_div"></div>
-					<div>
-						<div class="detail_data_txt detail_data_txt_title2">개별공시지가</div>
-						<div id="mdv_chart_div">
-							<canvas id="mdv_chart_canvas" width="760" height="440" style="width: 380px; height: 220px;"></canvas>
-						</div>							
-					</div>
-				</div>
+					<div class="mfs-detail-margin-div" style="height:5px;border-top:0px;"></div>
+					<div id="mdv_gong_viewer">
+						<div class="mfs-detail-data-title rfc-dusk" style="padding-left:20px;">개별공시지가</div>
 
-			</div>
+						<div class="" style="padding-bottom:10px;">
+							<div class="real_price_chart" style="position:relative;margin-bottom:-10px;">
 
-			<div class="detail_info_divider"></div>
+								<div id="mdv_chart_div" style="width:100%;height:220px;">
+									<canvas id="mdv_chart_canvas" width="760" height="440"
+										style="width: 380px; height: 220px;"></canvas>
+								</div>
 
-			<div id="dp_arch_prefix" class="detail_info_header_prefix"></div>
-			<div class="detail_info_header">
-				<div>
-					<h3>건물 정보</h3>
-				</div>
-			</div>
-				
-			<div class="detail_list_btn">
-				<div class="detail_list_btn_sub">
-					<div class="detail_list_btn_sub_txt">
-						<span>표제부(주1)</span>
-						<span>
-							<img src="https://aurora.disco.re/static/common/img/ico_s_extend3_4x.png?ver=1681968257" width="12px" id="dpa_list_symbol">
-						</span>
-					</div>
-					<div class="detail_expand_txt detail_txt_blue"></div>
-				</div>
-			</div>
-
-			<div>
-				<div>
-					<div class="detail_info_body_sub">
-						<div class="detail_info_body_sub_detail">
-							<div class="detail_data_txt detail_data_txt_title">건물이름</div>
-							<div class="detail_data_txt detail_data_txt_conts">
-								<span id="dpa_overall_b1" class="detail_data_txt_conts_span"></span>
 							</div>
 						</div>
-						
-						<div class="detail_info_body_sub_detail_divider"></div>
-						
-						<div class="detail_info_body_sub_detail">
-							<div class="detail_data_txt detail_data_txt_title">주용도</div>
-							<div class="detail_data_txt detail_data_txt_conts">
-								<span id="dpa_overall_a1" class="detail_data_txt_conts_span"></span>
+					</div>
+
+
+
+					<!--
+					<div class="mfs-detail-margin-div" style="height:5px;border-top:0px;"></div>
+					<div id="mdv_gong_viewer">
+						<div class="mfs-detail-data-title rfc-dusk" style="padding-left:20px;">개별공시지가
+							
+						</div>
+						<div class="mfs-detail-data-div-base" style="height:auto;">
+							<div class="mfs-agent-main-tab-div" style="position:relative;">
+								<div style="padding:10px;">
+									<div class="rbc-cerulean" style="border-radius: 4px;position: relative;">
+										<div style="display:table;width:100%;">
+											<div style="display: table-row;line-height: 64px;">
+
+											</div>
+										</div>
+									</div>
+									<div class="rb3_text4" style="border-radius: 4px;position: relative;">
+										<div style="display:table;width:100%;height:80px;line-height:80px;">
+
+
+											<div style="display: table-cell;width:60px;text-align:left;padding-left:14px;cursor:pointer;"
+												id="mdv_gong_left_btn">
+												<img src="https://aurora.disco.re/static/common/img/new/ico-left-arrow-b-new%403x.png?ver=1681375591"
+													style="width:8px;">
+											</div>
+
+											<div class="rf3_blue5"
+												style="display: table-cell;vertical-align:middle;text-align: center;height:30px;line-height:26px;position:relative;">
+
+												<div id="mdv_gong_add_txt">2022년 01월 공시지가 (m<sup>2</sup>)</div>
+												<div style="font-size:20px;" id="mdv_gong_value_txt">480,300원</div>
+
+											</div>
+											<div style="display: table-cell;width:60px;text-align:right;padding-right:14px;cursor:pointer;"
+												id="mdv_gong_right_btn">
+												<img src="https://aurora.disco.re/static/common/img/new/ico-right-arrow-b-new%403x.png?ver=1681375591"
+													style="width:8px;">
+											</div>
+										</div>
+									</div>
+								</div>
 							</div>
 						</div>
-						
-						<div class="detail_info_body_sub_detail_divider"></div>
-						
-						<div class="detail_info_body_sub_detail">
+						<div class="" style="padding-bottom:10px;">
+							<div class="real_price_chart" style="position:relative;margin-bottom:-10px;">
+								
+
+								<div id="mdv_chart_div" style="width:100%;height:220px;"><canvas
+										id="mdv_chart_div_cc_69261" width="760" height="440"
+										style="width: 380px; height: 220px;"></canvas></div>
+
+							</div>
+
+
+						</div>
+
+
+						<div style="height:1px;background: #000;opacity: 0.1;"></div>
+						<div class="mdv_gong-list-table">
+
+						</div>
+
+						<div style="height: 8px;"></div>
+
+						<div style="display:table;width:100%;height: 34px;line-height: 32px;">
 							<div style="display:table-row;">
-								<div class="detail_data_txt detail_data_txt_title">기타용도</div>
-								<div class="detail_data_txt detail_data_txt_conts">
-									<span id="dpa_overall_a1_1" class="detail_data_txt_conts_span"></span>
+								<div style="display:table-cell;width:15px;">
+								</div>
+
+								<div style="display:table-cell;width:40px;text-align:center;" id="">
+									<div class="rf3_text3">보기</div>
+
+								</div>
+								<div style="display:table-cell;width:40px;text-align:right;cursor:pointer;"
+									id="mdv_gong_list_sb_btn1">
+									<div class="lrp-list-symbol-div rbc-cerulean2">5건</div>
+
+								</div>
+								<div style="display:table-cell;width:40px;text-align:center;cursor:pointer;"
+									id="mdv_gong_list_sb_btn2">
+									<div class="lrp-list-symbol-div rf3_text1">10건</div>
+								</div>
+								<div style="display:table-cell;width:40px;text-align:center;cursor:pointer;"
+									id="mdv_gong_list_sb_btn3">
+									<div class="lrp-list-symbol-div rf3_text1">20건</div>
+								</div>
+
+								<div style="display:table-cell;">
+									<div style="width:100%;text-align:right;padding-right:15px;font-size:12px;"
+										class="rfc-cerulean">
+										<div class="rf3_text3"
+											style="display:inline-block;width:120px;text-align:right;font-size: 10px;"
+											id="mdv_gong_list_last_updated">
+
+
+										</div>
+
+
+									</div>
+								</div>
+
+							</div>
+						</div>
+
+						<span id="mdv_gong_field_div">
+							<div
+								style="color:#ffffff; height: 32px;line-height:32px;display: table;width: 100%; padding-left:8px; padding-right:8px">
+								<div class="rb3_text3" style="display: table-row;">
+									<span style="width:50%;display:table-cell;text-align:center;">기준연도</span>
+									<span style="width:50%;display:table-cell;text-align:center;">공시지가 (<span
+											id="mdv_gong_field_unit">m<sup>2</sup></span>)</span>
+								</div>
+							</div>
+							<div class="ifs-tab-bar"></div>
+							<div id="mdv_gong_list_div">
+								<div style="height: 45px;line-height: 45px;display: table;width: 100%;">
+									<div style="display: table-row;"><span
+											style="width:50%;display:table-cell;text-align:center;">2022.01</span><span
+											style="width:50%;display:table-cell;text-align:center;">48만원</span></div>
+								</div>
+								<div style="height: 45px;line-height: 45px;display: table;width: 100%;">
+									<div style="display: table-row;"><span
+											style="width:50%;display:table-cell;text-align:center;">2021.01</span><span
+											style="width:50%;display:table-cell;text-align:center;">43만원</span></div>
+								</div>
+								<div style="height: 45px;line-height: 45px;display: table;width: 100%;">
+									<div style="display: table-row;"><span
+											style="width:50%;display:table-cell;text-align:center;">2020.01</span><span
+											style="width:50%;display:table-cell;text-align:center;">37만원</span></div>
+								</div>
+								<div style="height: 45px;line-height: 45px;display: table;width: 100%;">
+									<div style="display: table-row;"><span
+											style="width:50%;display:table-cell;text-align:center;">2019.01</span><span
+											style="width:50%;display:table-cell;text-align:center;">38만원</span></div>
+								</div>
+								<div style="height: 45px;line-height: 45px;display: table;width: 100%;">
+									<div style="display: table-row;"><span
+											style="width:50%;display:table-cell;text-align:center;">2018.01</span><span
+											style="width:50%;display:table-cell;text-align:center;">32만원</span></div>
+								</div>
+							</div>
+						</span>
+						<div style="display:table;width:100%;height: 18px;line-height: 18px;">
+							<div style="display:table-row;">
+
+
+
+
+								<div style="display:table-cell;">
+									<div style="width:100%;text-align:center;font-size:12px;margin-right:8px"
+										class="rfc-cerulean">
+										<div class="rb3_text3"
+											style="color:#ffffff; display:inline-block;/*width:65x;*/text-align:left;cursor:pointer; border-radius: 15px;font-size:10px;padding: 2px 4px 2px 4px;"
+											id="mdv_gong_list_left_btn">
+											<img src="https://aurora.disco.re/static/common/img/ico_left_arrow.png?ver=1681375591"
+												style="width:12px"> 이전페이지
+										</div>
+
+										<div class="rf3_text3" style="display:inline-block;text-align:center; width:35%"
+											id="mdv_gong_list_page">1/7</div>
+										<div style="width:5%; height:1px;display:inline-block"></div>
+										<div class="rb3_text3"
+											style="color:#ffffff; display:inline-block;/*width:65px;*/text-align:right;cursor:pointer; border-radius: 15px;font-size:10px;padding: 2px 4px 2px 4px;"
+											id="mdv_gong_list_right_btn">
+											다음페이지 <img
+												src="https://aurora.disco.re/static/common/img/ico_right_arrow.png?ver=1681375591"
+												style="width:12px">
+										</div>
+									</div>
+								</div>
+							</div>
+							<div class="mdv-gong-share-url-div">
+								<div class="mdv-gong-share-url-txt">디스코에서 확인할 수 있는 <br><span class="rf3_blue5">'최신
+										공시지가'</span>를 공유해보세요!</div>
+								<div class="mdv-gong-share-url-btn" id="mdv_gong_list_share">
+									<div class="disco-share-url-btn" style="padding:7px 9px 7px 14px;cursor:pointer;">
+										공유하기
+										<img src="https://aurora.disco.re/static/common/img/new/ic-link%403x.png?ver=1681375591"
+											class="disco-share-url-btn-img" style="margin-top:-1px;">
+									</div>
 								</div>
 							</div>
 						</div>
-						
-							
-							<div class="detail_info_body_sub_detail_divider"></div>
-							
-							<div class="detail_info_body_sub_detail">
-								<div class="detail_data_txt detail_data_txt_title">주구조</div>
-								<div class="detail_data_txt detail_data_txt_conts">
-									<span id="dpa_title_b5_1" class="detail_data_txt_conts_span"></span>
+					</div>
+					-->
+				</div>
+
+			</div>
+
+			<div class="map-detail-main-divider"></div>
+
+			<div id="dp_arch_prefix" style="height:80px;"></div>
+			<div class="map-detail-header" id="dp_arch" name="dp_arch" style="-webkit-transform: translate3d(0,0,0);">
+				<span class="map-detail-header-txt feed-text-highlight-blue">
+					<h3 style="display:inline; font-size:inherit;">건물 정보</h3>
+				</span>
+				<!-- <div class="py-toggle-div" id="pyt_dp_arch"></div> -->
+			</div>
+
+			<span id="dpa_title_list_div">
+				<!-- <div class="mfs-detail-margin-div" style="height:5px;"></div> -->
+				<div style="padding: 0px 20px 0px 20px;cursor:pointer;" id="dpa_title_list_btn">
+					<div style="font-size:18px;position:relative;height:48px;line-height:48px;">
+						<div class="rf3_text1" style="position:absolute;">
+							<span id="dpa_title_text" style="display: inline-block;">표제부(주1)</span>
+							<span style="display: inline-block;"><img
+									src="https://aurora.disco.re/static/common/img/ico_s_extend3_4x.png?ver=1681968257"
+									width="12px" id="dpa_list_symbol"></span>
+
+						</div>
+						<div class="dpa-c-name rf3_blue5"></div>
+					</div>
+				</div>
+			</span>
+
+			<div style="padding:10px 0px 0px 0px;" id="dpa_list_field">
+				<div class="row_skip">
+					<div class="mfs-detail-data-div-base" style="height:auto;" id="dpa_overall_alldiv1">
+						<div class="mfs-agent-main-tab-div" style="position:relative;">
+							<div class="ifs-tab-txt" style="padding-left:20px; color:#333c51;">건물이름</div>
+							<div class="ifs-tab-txt rfc-dusk" style="right:0px;padding-right:20px;font-size:16px;">
+								<span id="dpa_overall_b1" class="dpa-arch-slot-div"></span>
+							</div>
+						</div>
+						<div class="ifs-tab-bar"></div>
+						<div class="mfs-agent-main-tab-div" style="position:relative;">
+							<div class="ifs-tab-txt" style="padding-left:20px;color:#333c51;">주용도</div>
+							<div class="ifs-tab-txt rfc-dusk" style="right:0px;padding-right:20px;font-size:16px;">
+								<span id="dpa_overall_a1" class="dpa-arch-slot-div"></span>
+							</div>
+						</div>
+						<div class="ifs-tab-bar"></div>
+						<div class="mfs-agent-main-tab-div" style="position:relative;min-height:48px;">
+							<div style="display:table-row;">
+								<div class="ifs-tab-txt-etc-use-title">기타용도</div>
+								<div class="ifs-tab-txt-etc-use-content rfc-dusk">
+									<span id="dpa_overall_a1_1" class="dpa-arch-slot-div"
+										style="padding:20px 0px 20px 0px;"></span>
 								</div>
 							</div>
-							
-							<div class="detail_info_body_sub_detail_divider"></div>
-							
-							<div class="detail_info_body_sub_detail">
-								<div class="detail_data_txt detail_data_txt_title">지붕구조</div>
-								<div class="detail_data_txt detail_data_txt_conts">
-									<span id="dpa_title_b5_2" class="detail_data_txt_conts_span"></span>
+						</div>
+						<span id="dpa_title_b5_div">
+							<div class="ifs-tab-bar"></div>
+							<div class="mfs-agent-main-tab-div" style="position:relative;">
+								<div class="ifs-tab-txt" style="padding-left:20px;color:#333c51;">주구조</div>
+								<div class="ifs-tab-txt rfc-dusk" style="right:0px;padding-right:20px;font-size:16px;">
+									<span id="dpa_title_b5_1" class="dpa-arch-slot-div"></span>
 								</div>
 							</div>
-							
-							<div class="detail_info_body_sub_detail_divider"></div>
-							
-							<div class="detail_info_body_sub_detail">
-								<div class="detail_data_txt detail_data_txt_title">높이</div>
-								<div class="detail_data_txt detail_data_txt_conts">
+							<div class="ifs-tab-bar"></div>
+							<div class="mfs-agent-main-tab-div" style="position:relative;">
+								<div class="ifs-tab-txt" style="padding-left:20px;color:#333c51;">지붕구조</div>
+								<div class="ifs-tab-txt rfc-dusk" style="right:0px;padding-right:20px;font-size:16px;">
+									<span id="dpa_title_b5_2" class="dpa-arch-slot-div"></span>
+								</div>
+							</div>
+							<div class="ifs-tab-bar"></div>
+							<div class="mfs-agent-main-tab-div" style="position:relative;">
+								<div class="ifs-tab-txt" style="padding-left:20px;color:#333c51;">높이</div>
+								<div class="ifs-tab-txt rfc-dusk" style="right:0px;padding-right:20px;font-size:16px;">
 									<span id="dpa_overall_c2"></span>
 								</div>
 							</div>
-							
-							<div class="detail_info_body_sub_detail_divider"></div>
-							
-							<div class="detail_info_body_sub_detail">
-								<div class="detail_data_txt detail_data_txt_title">지상/지하</div>
-								<div class="detail_data_txt detail_data_txt_conts">
+							<div class="ifs-tab-bar"></div>
+							<div class="mfs-agent-main-tab-div" style="position:relative;">
+								<div class="ifs-tab-txt" style="padding-left:20px;color:#333c51;">지상/지하</div>
+								<div class="ifs-tab-txt rfc-dusk" style="right:0px;padding-right:20px;font-size:16px;">
 									<span id="dpa_overall_c5"></span>
 								</div>
 							</div>
-						
-						
-						<div class="detail_info_body_sub_detail_divider"></div>
-						
-						<div class="detail_info_body_sub_detail">
-							<div class="detail_data_txt detail_data_txt_title">대지면적</div>
-							<div class="detail_data_txt detail_data_txt_conts">
-								<span id="dpa_overall_a2" class="detail_data_txt_conts_span"></span>
+						</span>
+						<div class="ifs-tab-bar"></div>
+						<div class="mfs-agent-main-tab-div" style="position:relative;">
+							<div class="ifs-tab-txt" style="padding-left:20px;color:#333c51;">대지면적</div>
+							<div class="ifs-tab-txt rfc-dusk" style="right:0px;padding-right:20px;font-size:16px;">
+								<span id="dpa_overall_a2" class="dpa-arch-slot-div"></span>
 							</div>
 						</div>
-						
-						<div class="detail_info_body_sub_detail_divider"></div>
-						
-						<div class="detail_info_body_sub_detail">
-							<div class="detail_data_txt detail_data_txt_title">건축면적</div>
-							<div class="detail_data_txt detail_data_txt_conts">
-								<span id="dpa_overall_a3" class="detail_data_txt_conts_span"></span>
+						<div class="ifs-tab-bar"></div>
+						<div class="mfs-agent-main-tab-div" style="position:relative;">
+							<div class="ifs-tab-txt" style="padding-left:20px;color:#333c51;">건축면적</div>
+							<div class="ifs-tab-txt rfc-dusk" style="right:0px;padding-right:20px;font-size:16px;">
+								<span id="dpa_overall_a3" class="dpa-arch-slot-div"></span>
 							</div>
 						</div>
-						
-						<div class="detail_info_body_sub_detail_divider"></div>
-						
-						<div class="detail_info_body_sub_detail">
-							<div class="detail_data_txt detail_data_txt_title">연면적</div>
-							<div class="detail_data_txt detail_data_txt_conts">
-								<span id="dpa_overall_b2" class="detail_data_txt_conts_span"></span>
+						<div class="ifs-tab-bar"></div>
+						<div class="mfs-agent-main-tab-div" style="position:relative;">
+							<div class="ifs-tab-txt" style="padding-left:20px;color:#333c51;">연면적</div>
+							<div class="ifs-tab-txt rfc-dusk" style="right:0px;padding-right:20px;font-size:16px;">
+								<span id="dpa_overall_b2" class="dpa-arch-slot-div"></span>
 							</div>
 						</div>
-						
-						<div class="detail_info_body_sub_detail_divider"></div>
-						
-						<div class="detail_info_body_sub_detail">
-							<div class="detail_data_txt detail_data_txt_title">용적률산정연면적</div>
-							<div class="detail_data_txt detail_data_txt_conts">
-								<span id="dpa_overall_b3" class="detail_data_txt_conts_span"></span>
+						<div class="ifs-tab-bar"></div>
+						<div class="mfs-agent-main-tab-div" style="position:relative;">
+							<div class="ifs-tab-txt" style="padding-left:20px;color:#333c51;">용적률산정연면적</div>
+							<div class="ifs-tab-txt rfc-dusk" style="right:0px;padding-right:20px;font-size:16px;">
+								<span id="dpa_overall_b3" class="dpa-arch-slot-div"></span>
 							</div>
 						</div>
-						
-						<div class="detail_info_body_sub_detail_divider"></div>
-						
-						<div class="detail_info_body_sub_detail">
-							<div class="detail_data_txt detail_data_txt_title">세대 수</div>
-							<div class="detail_data_txt detail_data_txt_conts">
-								<div class="detail_data_txt_conts_sub">
-									<span>세대</span>
-									<span>가구</span>
-									<span>호수</span>
+						<div class="ifs-tab-bar"></div>
+						<div class="mfs-agent-main-tab-div" style="position:relative;">
+							<div class="ifs-tab-txt" style="padding-left:20px;color:#333c51;">세대 수</div>
+							<div class="ifs-tab-txt rfc-dusk" style="right:0px;padding-right:20px;font-size:16px;">
+								<div class="rf3_text2"
+									style="font-size: 12px;color: #666;height: 8px;line-height: 30px;">
+									<span style="width: 50px;text-align: right;display: inline-block;">세대</span>
+									<span style="width: 50px;text-align: right;display: inline-block;">가구</span>
+									<span id="dpa_overall_c3_div_1"
+										style="width: 50px;text-align: right;display: inline-block;">
+										<span style="width: 50px;text-align: right;display: inline-block;">호수</span>
+									</span>
 								</div>
-								<div class="detail_data_txt_conts_sub2">
-									<span id="dpa_overall_c3_0">0</span>
-									<span id="dpa_overall_c3_1">0</span>
-									<span id="dpa_overall_c3_2">0</span>
+								<div>
+									<span style="width: 50px;text-align: right;display: inline-block;"
+										id="dpa_overall_c3_0">0</span>
+									<span style="width: 50px;text-align: right;display: inline-block;"
+										id="dpa_overall_c3_1">15</span>
+									<span id="dpa_overall_c3_div_2"
+										style="width: 50px;text-align: right;display: inline-block;">
+										<span style="width: 50px;text-align: right;display: inline-block;"
+											id="dpa_overall_c3_2">0</span>
+									</span>
 								</div>
 							</div>
 						</div>
 
-						<div class="detail_info_body_sub_detail_divider"></div>
-						
-						<div class="detail_info_body_sub_detail">
-							<div class="detail_data_txt detail_data_txt_title">외필지 수</div>
-							<div class="detail_data_txt detail_data_txt_conts">
+						<div class="ifs-tab-bar"></div>
+						<div class="mfs-agent-main-tab-div" style="position:relative;">
+							<div class="ifs-tab-txt" style="padding-left:20px;color:#333c51;">외필지 수</div>
+							<div class="ifs-tab-txt rfc-dusk" style="right:0px;padding-right:20px;font-size:16px;">
 								<span id="dpa_overall_a5"></span>
 							</div>
 						</div>
-						
-						<div class="detail_info_body_sub_detail_divider"></div>
-						
-						<div class="detail_info_body_sub_detail">
-							<div class="detail_data_txt detail_data_txt_title">오수정화시설</div>
+						<div class="ifs-tab-bar"></div>
+						<div class="mfs-agent-main-tab-div" style="position:relative;">
+							<div class="ifs-tab-txt" style="padding-left:20px;color:#333c51;">오수정화시설</div>
 						</div>
-						<div class="detail_info_body_sub">
-							<div class="detail_info_body_sub_detail">
-								<div class="detail_data_txt detail_data_txt_title">형식</div>
-								<div class="detail_data_txt detail_data_txt_conts">
-									<span id="dpa_overall_g23" class="detail_data_txt_conts_span"></span>
+						<div class="mfs-detail-data-div-base" style="height:auto;">
+							<div class="mfs-agent-main-tab-div" style="position:relative;top:-11px;">
+								<div class="ifs-tab-txt rfc-cool-grey" style="padding-left:20px;">형식</div>
+								<div class="ifs-tab-txt rfc-dusk mdv-auto-div"
+									style="font-size:16px;padding-right:20px;height:auto;position:relative;">
+									<span id="dpa_overall_g23" class="mdv-auto-span"
+										style="float:right; width:233px;"></span>
 								</div>
 							</div>
-							<div class="detail_info_body_sub_detail">
-								<div class="detail_data_txt detail_data_txt_title">형식 (기타)
+							<div class="mfs-agent-main-tab-div" style="position:relative;top:-16px;">
+								<div class="ifs-tab-txt rfc-cool-grey" style="padding-left:20px;height:auto;">형식 (기타)
 								</div>
-								<div class="detail_data_txt detail_data_txt_conts">
-									<span id="dpa_overall_g24" class="detail_data_txt_conts_span"></span>
-								</div>
-							</div>
-							<div class="detail_info_body_sub_detail">
-								<div class="detail_data_txt detail_data_txt_title">용량 (인용)
-								</div>
-								<div class="detail_data_txt detail_data_txt_conts">
-									<span id="dpa_overall_g27" class="detail_data_txt_conts_span"></span>
+								<div class="ifs-tab-txt rfc-dusk mdv-auto-div"
+									style="font-size:16px;padding-right:20px;height:auto;position:relative;">
+									<span id="dpa_overall_g24" class="mdv-auto-span"
+										style="float:right; width:233px;"></span>
 								</div>
 							</div>
-							<div class="detail_info_body_sub_detail">
-								<div class="detail_data_txt detail_data_txt_title">용량 (루베)
+							<div class="mfs-agent-main-tab-div" style="position:relative;top:-16px;">
+								<div class="ifs-tab-txt rfc-cool-grey" style="padding-left:20px;height:auto;">용량 (인용)
 								</div>
-								<div class="detail_data_txt detail_data_txt_conts">
-									<span id="dpa_overall_g28" class="detail_data_txt_conts_span"></span>
+								<div class="ifs-tab-txt rfc-dusk mdv-auto-div"
+									style="font-size:16px;padding-right:20px;height:auto;position:relative;">
+									<span id="dpa_overall_g27" class="mdv-auto-span"></span>
+								</div>
+							</div>
+							<div class="mfs-agent-main-tab-div" style="position:relative;top:-16px;">
+								<div class="ifs-tab-txt rfc-cool-grey" style="padding-left:20px;height:auto;">용량 (루베)
+								</div>
+								<div class="ifs-tab-txt rfc-dusk mdv-auto-div"
+									style="font-size:16px;padding-right:20px;height:auto;position:relative;">
+									<span id="dpa_overall_g28" class="mdv-auto-span"></span>
 								</div>
 							</div>
 						</div>
@@ -6174,147 +6325,432 @@
 				</div>
 			</div>
 
-				<div class="detail_margin_div"></div>
-				<div class="detail_list_btn">
-					<div class="detail_list_btn_sub">
-						<div class="detail_list_btn_sub_txt">
-							<span>건축물현황</span>
-							<span>
-								<img src="https://aurora.disco.re/static/common/img/ico_s_extend3_4x.png?ver=1681968257" width="12px" id="dpaf_data_list_symbol">
-							</span>							
-						</div>
-						<div class="detail_expand_txt detail_txt_blue"></div>
-					</div>
-				</div>
-				<div class="detail_info_body_sub" id="dpaf_data_list"></div>
+			<span id="dpaf_box_field" style="position: relative;">
 
-				<div class="detail_margin_div"></div>
-				<div class="detail_list_btn">
-					<div class="detail_list_btn_sub">
-						<div class="detail_list_btn_sub_txt">
-							<span>주차장</span>
-							<span>
-								<img src="https://aurora.disco.re/static/common/img/ico_s_extend3_4x.png?ver=1681968257" width="12px" id="dpaz_data_list_symbol">
-							</span>
+				<div class="mfs-detail-margin-div" style="height:5px;"></div>
+				<div style="padding: 0px 20px 0px 20px;cursor:pointer;" id="dpaf_data_list_btn">
+					<div style="font-size:18px;position:relative;height:48px;line-height:48px;">
+						<div class="rf3_text1" style="position:absolute;">
+							<span style="display: inline-block;">건축물현황
+								<span style="display: inline-block;"><img
+										src="https://aurora.disco.re/static/common/img/ico_s_extend3_4x.png?ver=1681968257"
+										width="12px" id="dpaf_data_list_symbol"></span>
 						</div>
-						<div class="detail_expand_txt detail_txt_blue"></div>
+						<div class="dpa-c-name rf3_blue5"></div>
 					</div>
 				</div>
-				<div id="dpaz_data_list">
-					<div>
-						<div class="detail_info_body_sub">
-							<div class="detail_info_body_sub_detail">
-								<div class="detail_data_txt detail_data_txt_title">자주식</div>
-								<div class="detail_data_txt detail_data_txt_conts">
-									<div class="detail_data_txt_conts_sub">
-										<span>옥내</span>
-										<span>옥외</span>
+				<div id="dpaf_guide_div" style="display:none;position: absolute;top:2px;z-index:1;padding-left:92px;">
+					<div style="width: 180px;background: #fff;position: relative;display: inline-block;border-radius: 8px;box-shadow: 2px 2px 2px rgba(0,0,0,0.1);border: 1px solid rgba(0,0,0,0.3);pointer-events:all;pointer-events:all;cursor: auto;top: 36px;font-size:13px;height:64px;"
+						class="rf3_text2">
+						<span id="dpaf_guide_type1" style="display: none;">
+							<div style="position: relative;height:34px;line-height:34px;padding-left:16px;">
+								<span
+									style="background:#afbed7;color:#fff;width: 38px;height: 20px;display: inline-block;line-height: 22px;text-align: center;border-radius: 12px;">구분</span>&nbsp;&nbsp;
+								<span class="rf3_text1" style="font-size:16px;">명칭</span>&nbsp;&nbsp;
+								<span>용도</span>
+							</div>
+							<div style="position: relative;padding-left:16px;">주구조·지붕·층수·연면적</div>
+						</span>
+						<span id="dpaf_guide_type2">
+							<div style="position: relative;height:34px;line-height:34px;padding-left:16px;">
+								<span
+									style="background:#afbed7;color:#fff;width: 38px;height: 20px;display: inline-block;line-height: 22px;text-align: center;border-radius: 12px;">구분</span>&nbsp;&nbsp;
+								<span class="rf3_text1" style="font-size:16px;">층별</span>&nbsp;&nbsp;
+								<span>용도</span>
+							</div>
+							<div style="position: relative;padding-left:16px;">구조·면적</div>
+						</span>
+
+						<div style="position: absolute;top: 0px;width: 100%;text-align:right;">
+							<span
+								style="width:35px;height:35px;display:inline-block;text-align:center;line-height:35px;top:-6px;right:-4px;position:relative;cursor:pointer;"
+								id="dpaf_guide_close"><img
+									src="https://aurora.disco.re/static/common/img/ico_s_close3_4x.png?ver=1681968257"
+									width="12px"></span>
+						</div>
+					</div>
+				</div>
+				<div style="padding:10px 15px 0px 15px;" id="dpaf_list_field">
+					<div class="row">
+						<div class="mfs-detail-data-div-base" style="height:auto;" id="dpaf_data_list">
+
+						</div>
+						<!--
+						<div style="position: relative;height: 32px;">
+							<div class="rf3_blue5"
+								style="position: relative;width: 100%;text-align: center;height: 32px;line-height: 32px;cursor:pointer;"
+								id="dpaf_data_btn">접기 <span
+									style="position:relative;top:-2px;display: inline-block;"><img
+										src="https://aurora.disco.re/static/common/img/new/ico-s-close-blue-bold@3x.png?ver=1681968257"
+										width="10px" height="6px"></span></div>
+							<div class="rf3_blue5"
+								style="position: absolute;top: 0px;line-height: 32px;text-align: right;width: 100%;pointer-events:none;">
+								<span id="dpaf_data_total_c"
+									style="cursor:pointer;pointer-events:all;padding-right:20px;text-decoration:underline;display: inline-block;">전체보기
+									3</span>
+							</div>
+						</div>
+						-->
+					</div>
+				</div>
+			</span>
+
+			<span id="dpaz_data_div">
+				<div class="mfs-detail-margin-div" style="height:5px;"></div>
+				<div style="padding: 0px 20px 0px 20px;cursor:pointer;" id="dpaz_title_list_btn">
+					<div style="font-size:18px;position:relative;height:48px;line-height:48px;">
+						<div class="rf3_text1" style="position:absolute;">
+							<span style="display: inline-block;">주차장</span>
+							<span style="display: inline-block;"><img
+									src="https://aurora.disco.re/static/common/img/ico_s_extend3_4x.png?ver=1681968257"
+									width="12px" id="dpaz_data_list_symbol"></span>
+						</div>
+						<div class="dpa-c-name rf3_blue5"></div>
+					</div>
+				</div>
+				<div style="padding:0px 0px 15px 0px;" id="dpaz_data_list">
+					<div class="row_skip">
+						<div class="mfs-detail-data-div-base" style="height:148px;">
+							<div class="mfs-agent-main-tab-div" style="position:relative;height:72px;padding-top:8px;">
+								<div class="ifs-tab-txt rfc-cool-grey" style="padding-left:20px;">자주식</div>
+								<div class="ifs-tab-txt rfc-dusk" style="right:0px;padding-right:20px;font-size:16px;">
+									<div class="rf3_text2"
+										style="font-size: 12px;color: #666;height: 8px;line-height: 30px;">
+										<span style="width:80px;text-align:right;display:inline-block;">옥내</span>
+										<span style="width:80px;text-align:right;display:inline-block;">옥외</span>
 									</div>
-									<div class="detail_data_txt_conts_sub2">
-										<span id="dpaz_value_1"></span>
-										<span id="dpaz_value_2"></span>
+									<div style="top:4px;position:relative;">
+										<span style="width:80px;text-align: right;display: inline-block;"
+											id="dpaz_value_1"></span>
+										<span style="width:80px;text-align: right;display: inline-block;"
+											id="dpaz_value_2"></span>
 									</div>
 								</div>
 							</div>
-							
-							<div class="detail_info_body_sub_detail_divider"></div>
-							
-							<div class="detail_info_body_sub_detail">
-								<div class="detail_data_txt detail_data_txt_title">기계식</div>
-								<div class="detail_data_txt detail_data_txt_conts">
-									<div class="detail_data_txt_conts_sub">
-										<span>옥내</span>
-										<span>옥외</span>
+							<div class="ifs-tab-bar"></div>
+							<div class="mfs-agent-main-tab-div" style="position:relative;height:72px;padding-top:8px;">
+								<div class="ifs-tab-txt rfc-cool-grey" style="padding-left:20px;">기계식</div>
+								<div class="ifs-tab-txt rfc-dusk" style="right:0px;padding-right:20px;font-size:16px;">
+									<div class="rf3_text2"
+										style="font-size: 12px;color: #666;height: 8px;line-height: 30px;">
+										<span style="width:80px;text-align:right;display:inline-block;">옥내</span>
+										<span style="width:80px;text-align:right;display:inline-block;">옥외</span>
 									</div>
-									<div class="detail_data_txt_conts_sub2">
-										<span id="dpaz_value_3"></span>
-										<span id="dpaz_value_4"></span>
+									<div style="top:4px;position:relative;">
+										<span style="width:80px;text-align: right;display: inline-block;"
+											id="dpaz_value_3"></span>
+										<span style="width:80px;text-align: right;display: inline-block;"
+											id="dpaz_value_4"></span>
 									</div>
 								</div>
 							</div>
+							<!--
+							<div
+								style="position: relative;top: -12px;height: 0px;text-align: right;padding-right: 20px;">
+								<div id="dpaz_toggle_btn"
+									style="display:inline-block;width:80px;height:25px;padding-top:5px;cursor:pointer;">
+									<div style="width:80px;display: table;text-align: center;">
+										<div style="display: table-row;">
+											<div style="display: table-cell;font-size:11px;" class="rf3_blue5">댓수</div>
+											<div style="display: table-cell;" class="py-toggle-btn">
+												<div class="py-toggle-radius" style="left:0px;"></div>
+											</div>
+											<div style="display: table-cell;font-size:11px;" class="rf3_text2">면적</div>
+										</div>
+									</div>
+								</div>
+							</div>
+-->
 						</div>
 					</div>
 				</div>
+			</span>
 
-				<div class="detail_margin_div"></div>
-				<div class="detail_list_btn">
-					<div class="detail_list_btn_sub">
-						<div class="detail_list_btn_sub_txt">
-							<span>승강기</span>
-							<span>
-								<img src="https://aurora.disco.re/static/common/img/ico_s_extend3_4x.png?ver=1681968257" width="12px" id="dpal_data_list_symbol">
-							</span>
+			<span id="dpal_data_div">
+				<div class="mfs-detail-margin-div" style="height:5px;"></div>
+				<div style="padding: 0px 20px 0px 20px;cursor:pointer;" id="dpal_title_list_btn">
+					<div style="font-size:18px;position:relative;height:48px;line-height:48px;">
+						<div class="rf3_text1" style="position:absolute;">
+							<span style="display: inline-block;">승강기</span>
+							<span style="display: inline-block;"><img
+									src="https://aurora.disco.re/static/common/img/ico_s_extend3_4x.png?ver=1681968257"
+									width="12px" id="dpal_data_list_symbol"></span>
 						</div>
-						<div class="detail_expand_txt detail_txt_blue"></div>
+						<div class="dpa-c-name rf3_blue5"></div>
 					</div>
 				</div>
-				<div id="dpal_data_list">
-					<div>
-						<div class="detail_info_body_sub">
-							<div class="detail_info_body_sub_detail">
-								<div class="detail_data_txt detail_data_txt_title">승용</div>
-								<div class="detail_data_txt detail_data_txt_conts">
+				<div style="padding:15px;padding-top:0px;" id="dpal_data_list">
+					<div class="row">
+						<div class="mfs-detail-data-div-base" style="height:86px;">
+							<div class="mfs-agent-main-tab-div" style="position:relative;">
+								<div class="ifs-tab-txt rfc-cool-grey" style="padding-left:20px;">승용</div>
+								<div class="ifs-tab-txt rfc-dusk" style="right:0px;padding-right:20px;font-size:16px;">
 									<span id="dpal_value1"></span>
 								</div>
 							</div>
-							
-							<div class="detail_info_body_sub_detail_divider"></div>
-							
-							<div class="detail_info_body_sub_detail">
-								<div class="detail_data_txt detail_data_txt_title">비상용</div>
-								<div class="detail_data_txt detail_data_txt_conts">
+							<div class="ifs-tab-bar"></div>
+							<div class="mfs-agent-main-tab-div" style="position:relative;">
+								<div class="ifs-tab-txt rfc-cool-grey" style="padding-left:20px;">비상용</div>
+								<div class="ifs-tab-txt rfc-dusk" style="right:0px;padding-right:20px;font-size:16px;">
 									<span id="dpal_value2"></span>
 								</div>
 							</div>
 						</div>
 					</div>
 				</div>
-				
-				<div class="detail_margin_div"></div>
-				<div class="detail_list_btn">
-					<div class="detail_list_btn_sub">
-						<div class="detail_list_btn_sub_txt">
-							<span>일자정보</span>
-							<span>
-								<img src="https://aurora.disco.re/static/common/img/ico_s_extend3_4x.png?ver=1681968257" width="12px" id="dpad_data_list_symbol">
-							</span>
+			</span>
+
+			<span id="dpad_data_div">
+				<div class="mfs-detail-margin-div" style="height:5px;"></div>
+				<div style="padding: 0px 20px 0px 20px;cursor:pointer;" id="dpad_title_list_btn">
+					<div style="font-size:18px;position:relative;height:48px;line-height:48px;">
+						<div class="rf3_text1" style="position:absolute;">
+							<span style="display: inline-block;">일자정보</span>
+							<span style="display: inline-block;"><img
+									src="https://aurora.disco.re/static/common/img/ico_s_extend3_4x.png?ver=1681968257"
+									width="12px" id="dpad_data_list_symbol"></span>
 						</div>
-						<div class="detail_expand_txt detail_txt_blue"></div>
+						<div class="dpa-c-name rf3_blue5"></div>
 					</div>
 				</div>
 				<div id="dpad_data_list">
-					<div>
-						<div class="detail_info_body_sub">
-							<div class="detail_info_body_sub_detail">
-								<div class="detail_data_txt detail_data_txt_title">허가일</div>
-								<div class="detail_data_txt detail_data_txt_conts">
+					<div class="row_skip">
+						<div class="mfs-detail-data-div-base" style="height:148px;">
+							<div class="mfs-agent-main-tab-div" style="position:relative;">
+								<div class="ifs-tab-txt rfc-cool-grey" style="padding-left:20px;">허가일</div>
+								<div class="ifs-tab-txt rfc-dusk" style="right:0px;padding-right:20px;font-size:16px;">
 									<span id="dpad_value1"></span>
 								</div>
 							</div>
-							
-							<div class="detail_info_body_sub_detail_divider"></div>
-							
-							<div class="detail_info_body_sub_detail">
-								<div class="detail_data_txt detail_data_txt_title">착공일</div>
-								<div class="detail_data_txt detail_data_txt_conts">
+							<div class="ifs-tab-bar"></div>
+							<div class="mfs-agent-main-tab-div" style="position:relative;">
+								<div class="ifs-tab-txt rfc-cool-grey" style="padding-left:20px;">착공일</div>
+								<div class="ifs-tab-txt rfc-dusk" style="right:0px;padding-right:20px;font-size:16px;">
 									<span id="dpad_value2"></span>
 								</div>
 							</div>
-							
-							<div class="detail_info_body_sub_detail_divider"></div>
-							
-							<div class="detail_info_body_sub_detail">
-								<div class="detail_data_txt detail_data_txt_title">사용승인일</div>
-								<div class="detail_data_txt detail_data_txt_conts">
+							<div class="ifs-tab-bar"></div>
+							<div class="mfs-agent-main-tab-div" style="position:relative;">
+								<div class="ifs-tab-txt rfc-cool-grey" style="padding-left:20px;">사용승인일</div>
+								<div class="ifs-tab-txt rfc-dusk" style="right:0px;padding-right:20px;font-size:16px;">
 									<span id="dpad_value3"></span>
 								</div>
 							</div>
 						</div>
 					</div>
 				</div>
-			
-			<div class="detail_info_divider"></div>
-			
+			</span>
+			<!--
+			<div style="/*padding: 0px 15px 0px 15px;*/cursor:pointer;" id="dpah_title_list_btn">
+				<div class="mfs-detail-margin-div" style="height:5px;border-top:0px;"></div>
+				<div style="padding-left:20px;font-size:18px;position:relative;height:48px;line-height:48px;">
+					<div class="rf3_text1" style="position:absolute;">
+						<span style="display: inline-block;">호별정보</span>
+						<span style="display: inline-block;"><img src="https://aurora.disco.re/static/common/img/ico_s_extend3_4x.png?ver=1681968257"
+								width="12px" id="dpah_data_list_symbol"></span>
+					</div>
+				</div>
+			</div>
+
+			<div style="padding-top:0px;padding-bottom:0px;" id="dpah_data_list">
+				<div id="dpah_box" class="row_skip">
+					<div class="map-detail-no-data rf3_text3" id="dpah_box_no" style="display: block;">
+						전유부/대지권 정보가 존재하지 않습니다.
+					</div>
+				</div>
+				<div style="padding: 0px 15px; display: none;" id="dpah_box_field">
+					<div style="display:table;width:100%;">
+						<div style="display:table-row;">
+							<div style="display:table-cell;padding:0px 5px 0px 5px;width:33%;min-width: 110px; max-width: 110px;"
+								id="dpah_dong_slot">
+								<div class="rbc-cerulean2" style="border-radius: 4px;position: relative;">
+									<div style="display:table;height:42px;line-height:42px;cursor:pointer;pointer-events:all;"
+										id="dpah_dong_btn">
+										<div style="display:table-row;">
+											<div
+												style="display: table-cell;text-align: center;color: #fff;font-size:14px;">
+												<div style="overflow: auto; white-space: nowrap; -ms-overflow-style: none;scrollbar-width: none; padding-right:10px;"
+													id="dpah_dong_txt">-</div>
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+							<div style="display:table-cell;padding:0px 5px 0px 5px;width:33%;min-width: 110px; max-width: 110px;"
+								id="dpah_floor_slot">
+								<div class="rbc-cerulean2" style="border-radius: 4px;position: relative;">
+									<div style="display:table;height:42px;line-height:42px;cursor:pointer;pointer-events:all;"
+										id="dpah_floor_btn">
+										<div style="display:table-row;">
+											<div
+												style="display: table-cell;text-align: center;color: #fff;font-size:14px;">
+												<div style="overflow: auto; white-space: nowrap; -ms-overflow-style: none;scrollbar-width: none; padding-right:10px;"
+													id="dpah_floor_txt">-</div>
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+							<div style="display:table-cell;padding:0px 5px 0px 5px;width:33%;min-width: 110px; max-width: 110px;"
+								id="dpah_ho_slot">
+								<div class="rbc-cerulean2" style="border-radius: 4px;position: relative;">
+									<div style="display:table;height:42px;line-height:42px;cursor:pointer;pointer-events:all;"
+										id="dpah_ho_btn">
+										<div style="display:table-row;">
+											<div
+												style="display: table-cell;text-align: center;color: #fff;font-size:14px;">
+												<div style="overflow: auto; white-space: nowrap; -ms-overflow-style: none;scrollbar-width: none; padding-right:10px;"
+													id="dpah_ho_txt">-</div>
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="mfs-detail-margin-div" style="height:2px;margin-top:15.5px; border-top:0px;"></div>
+				<div style="padding: 10px 0px 15px; display: none;" id="dpah_list_field">
+					<div class="row_skip">
+						<div class="mfs-detail-data-div-base" id="dpah_list_height">
+							<div class="mfs-agent-main-tab-div" style="position:relative;">
+								<div class="ifs-tab-txt" style="padding-left:20px; color:#0868f4; font-size: 16px;">대지권
+									비율</div>
+								<div class="ifs-tab-txt rfc-dusk" style="right:0px;padding-right:20px;font-size:16px;">
+									<span id="dpah_value_1">-</span>
+								</div>
+							</div>
+							<div style="padding: 0px 15px 15px; display: none;" id="daeji_dpah_box_field">
+								<div style="display:table;width:100%;">
+									<div style="display:table-row;">
+										<div style="display:table-cell;padding:0px 5px 0px 5px;width:33%;"
+											id="daeji_dpah_dong_slot">
+											<div class=""
+												style="border-radius: 4px;position: relative; border: 1px solid #c7c7cc;">
+												<div style="display:table;width:100%;height:42px;line-height:42px;"
+													id="daeji_dpah_dong_btn">
+													<div style="display:table-row;">
+														<div style="display: table-cell;text-align: center;font-size:14px;padding-right:10px;"
+															id="daeji_dpah_dong_txt">-</div>
+													</div>
+												</div>
+											</div>
+										</div>
+										<div style="display:table-cell;padding:0px 5px 0px 5px;width:33%;"
+											id="daeji_dpah_floor_slot">
+											<div class=""
+												style="border-radius: 4px;position: relative; border: 1px solid #c7c7cc;">
+												<div style="display:table;width:100%;height:42px;line-height:42px;"
+													id="daeji_dpah_floor_btn">
+													<div style="display:table-row;">
+														<div style="display: table-cell;text-align: center;font-size:14px;padding-right:10px;"
+															id="daeji_dpah_floor_txt">-</div>
+													</div>
+												</div>
+											</div>
+										</div>
+										<div style="display:table-cell;padding:0px 5px 0px 5px;width:33%;"
+											id="daeji_dpah_ho_slot">
+											<div class=""
+												style="border-radius: 4px;position: relative; border: 1px solid #c7c7cc;">
+												<div style="display:table;width:100%;height:42px;line-height:42px;"
+													id="daeji_dpah_ho_btn">
+													<div style="display:table-row;">
+														<div style="display: table-cell;text-align: center;font-size:14px;padding-right:10px;"
+															id="daeji_dpah_ho_txt">-</div>
+													</div>
+												</div>
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+							<div class="mfs-detail-margin-div" style="height:2px;margin-top:10px; border-top:0px;">
+							</div>
+							<div class="" id="jeonyu_label"
+								style="padding-left:20px; margin-top: 17.5px; padding-bottom:18px; color:#0868f4; font-size: 16px;">
+								전유부</div>
+							<div style="padding: 0px 15px 15px; display: none;" id="jeonyu_dpah_box_field">
+								<div style="display:table;width:100%;">
+									<div style="display:table-row;">
+										<div style="display:table-cell;padding:0px 5px 0px 5px;width:33%;"
+											id="jeonyu_dpah_dong_slot">
+											<div class=""
+												style="border-radius: 4px;position: relative; border: 1px solid #c7c7cc;">
+												<div style="display:table;width:100%;height:42px;line-height:42px;"
+													id="jeonyu_dpah_dong_btn">
+													<div style="display:table-row;">
+														<div style="display: table-cell;text-align: center;font-size:14px;padding-right:10px;"
+															id="jeonyu_dpah_dong_txt">-</div>
+													</div>
+												</div>
+											</div>
+										</div>
+										<div style="display:table-cell;padding:0px 5px 0px 5px;width:33%;"
+											id="jeonyu_dpah_floor_slot">
+											<div class=""
+												style="border-radius: 4px;position: relative; border: 1px solid #c7c7cc;">
+												<div style="display:table;width:100%;height:42px;line-height:42px;"
+													id="jeonyu_dpah_floor_btn">
+													<div style="display:table-row;">
+														<div style="display: table-cell;text-align: center;font-size:14px;padding-right:10px;"
+															id="jeonyu_dpah_floor_txt">-</div>
+													</div>
+												</div>
+											</div>
+										</div>
+										<div style="display:table-cell;padding:0px 5px 0px 5px;width:33%;"
+											id="jeonyu_dpah_ho_slot">
+											<div class=""
+												style="border-radius: 4px;position: relative; border: 1px solid #c7c7cc;">
+												<div style="display:table;width:100%;height:42px;line-height:42px;"
+													id="jeonyu_dpah_ho_btn">
+													<div style="display:table-row;">
+														<div style="display: table-cell;text-align: center;font-size:14px;padding-right:10px;"
+															id="jeonyu_dpah_ho_txt">-</div>
+													</div>
+												</div>
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+							<div class="mfs-agent-main-tab-div rf3_text2" id="dpah_list_div_title"
+								style="position:relative;line-height:32px;height:32px;font-size:13px;border-top: solid 1px #e5e5e5;">
+								<div style="display:table-row;">
+									<span style="width:20%;display:table-cell;text-align: center;">구분</span>
+									<span style="width:12%;display:table-cell;text-align: center;">층</span>
+									<span style="width:20%;display:table-cell;text-align: center;">면적</span>
+									<span style="width:12%;display:table-cell;text-align: center;">건축물</span>
+									<span style="width:36%;display:table-cell;text-align: center;">용도</span>
+								</div>
+							</div>
+							<div class="ifs-tab-bar"></div>
+							<span style="font-size:14px;display:table;width:100%;" id="dpah_list_div">
+							</span>
+						</div>
+					</div>
+				</div>
+			</div>
+-->
+			<div class="map-detail-main-divider"></div>
+
+			<!--
+			<div class="cert-main-tab" id="dp_cert" name="dp_cert" style="position:relative;">
+				<div class="map-detail-header" style="-webkit-transform: translate3d(0,0,0);">
+					<span class="map-detail-header-txt">
+						<h3 style="display:inline; font-size:inherit; font-family:'GmarketSansBold_';">등기</h3>
+					</span>
+					
+				</div>
+				<div style="padding:2px 17px 120px 20px;border-radius:4px;" id="n_cert_data_list">
+					<div id="n_cert_address"
+						style="display: flex; flex-direction:column; justify-content:center; align-items:center; padding:14px 0px;color: #48484a;background-color:#fafafa;border-radius:4px;font-size:16px;">
+						전라남도 여수시 문수동 457-7</div>
+
+				</div>
+			</div>
+-->
 		</div>
 		<!--//detail_wrap-->
 		<!--broker_wrap-->

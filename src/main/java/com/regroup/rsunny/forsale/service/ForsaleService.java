@@ -42,12 +42,16 @@ public interface ForsaleService {
 	ResultDTO doOffer(SaleDTO form);
 
 	
-	List<SaleDTO> getRealTradingsList(SaleDTO form);
 	
-	List<SaleDTO> getRealTradingsAllList(SaleDTO form);
+	List<SaleDTO> getAddrSido(SaleDTO form);
+	List<SaleDTO> getAddrSigungu(SaleDTO form);
+	List<SaleDTO> getAddrEmd(SaleDTO form);
 	
-	ResultDTO updateRealTradings(SaleDTO form);
 	
+	
+	List<SaleDTO> getRealTradingsList(SaleDTO form);	
+	List<SaleDTO> getRealTradingsAllList(SaleDTO form);	
+	ResultDTO updateRealTradings(SaleDTO form);	
 	SaleDTO getRealTradingsListFromPnu(SaleDTO form);
 	
 	List<SaleDTO> getRealTradingsAptListFromPnu(SaleDTO form);
@@ -92,4 +96,7 @@ public interface ForsaleService {
 	List<SaleDTO> getRealTradingsGyeongsangnamdoList(SaleDTO form);
 	
 	ResultDTO insertTest(SaleDTO form);
+	
+	
+	List<SaleDTO> getCollectCoords(SaleDTO form);
 }

@@ -41,9 +41,9 @@ $(document).ready(function(){
 		}
 	});
 
-	$("body").on("click", ".lp_open", function(){
+	$("body").on("click", ".lp_open", function(){console.log("222aaa");
 		var lpID = $(this).attr("data-lp");
-		$("#lp_layout").addClass("on");
+		$("#lp_layout").addClass("on");console.log(lpID);
 		$("#lp_"+lpID).addClass("on");
 		$("html").css("overflow","hidden");
 	});

@@ -98,6 +98,7 @@ public class SaleDTO extends PagingDTO {
 	private String jibunAddr;				//지번주소
 	private String sido;					//광역시도
 	private String sigungu;					//시도군
+	private String emd;					//읍면동
 	private String dong;					//동(법정동)
 	private String hdong;					//동(행정동)
 	private String bcode;					//법정동코드

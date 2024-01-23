@@ -122,7 +122,12 @@ $(document).ready(function(){
       var detailW = $(".detail_wrap").width();
       var listW = $(".left_wrap").width();
       var isMo = $("#top_layout .moBtn").css("display");
+      /*
       if(isMo != "none"){
+        listW = 0;
+      }
+      */
+	 if(listW <= 360){
         listW = 0;
       }
       if(!isOn){
@@ -140,7 +145,7 @@ $(document).ready(function(){
             });
           }else{
             $("#gis_layout").addClass("detailOn");
-            $(".detail_wrap").css("left",detailW*-1);
+            $(".detail_wrap").css("left",detailW*-1);            
             $(".detail_wrap").animate({"left":listW},200,function(){
               $("#gis_layout").removeClass("detailMov");
             });
@@ -171,7 +176,7 @@ $(document).ready(function(){
       realTradingOverlayClick = [false, false, false, false, false];
     });
 
-    $(".gislp_open").on("click",function(){
+    $(".gislp_open").on("click",function(){console.log("222bbb");
       var lp = $(this).attr("data-lp");
       var isLp1 = $(".lp_gis").hasClass("lp1");
       var isOpen = $("#gis_layout").hasClass(lp+"On");

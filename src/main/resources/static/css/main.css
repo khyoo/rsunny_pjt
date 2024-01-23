@@ -13,6 +13,11 @@
 .search_wrap a{ width: 126px; background-color: #454480; font-size: 16px; color: #fff; text-align: center; line-height: 50px; border-radius: 3px;}
 .search_wrap a::before{ width: 19px; height: 19px; background: url(../img/main/search_ico_btn.png) no-repeat center center; content: ""; margin: 15.5px 4px 15.5px 0; display: inline-block; vertical-align: top;}
 
+.search_lp_wrap .searchBox input{ width: 230px; font-size: 1.2em; color: #000; line-height: 50px; padding: 0 15px; flex: 1; border: 0;}
+.search_lp_wrap .searchBox{ background-color: #fff; padding: 10px 10px; display: flex; border: 1px solid #b3b3b3; border-radius: 4px;}
+.search_lp_wrap .search_lp{ width: 126px; background-color: #454480; font-size: 16px; color: #fff; text-align: center; line-height: 50px; border-radius: 3px;}
+.search_lp_wrap .search_lp::before{ width: 19px; height: 19px; background: url(../img/main/search_ico_btn.png) no-repeat center center; content: ""; margin: 15.5px 4px 15.5px 0; display: inline-block; vertical-align: top;}
+
 
 .ads_wrap{ padding: 100px 0 100px;}
 .ads_wrap .inner{ position: relative;}

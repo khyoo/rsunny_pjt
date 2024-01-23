@@ -49,12 +49,14 @@ public interface ForsaleMapper {
 	int updateOpenCount(SaleDTO form);
 
 	
-	List<SaleDTO> getRealTradingsList(SaleDTO form);
+	List<SaleDTO> getAddrSido(SaleDTO form);
+	List<SaleDTO> getAddrSigungu(SaleDTO form);
+	List<SaleDTO> getAddrEmd(SaleDTO form);
 	
-	List<SaleDTO> getRealTradingsAllList(SaleDTO form);
 	
-	int updateRealTradings(SaleDTO form);
-	
+	List<SaleDTO> getRealTradingsList(SaleDTO form);	
+	List<SaleDTO> getRealTradingsAllList(SaleDTO form);	
+	int updateRealTradings(SaleDTO form);	
 	SaleDTO getRealTradingsListFromPnu(SaleDTO form);
 	
 	List<SaleDTO> getRealTradingsAptListFromPnu(SaleDTO form);
@@ -100,4 +102,7 @@ public interface ForsaleMapper {
 	
 	
 	int insertTest(SaleDTO form);
+	
+	
+	List<SaleDTO> getCollectCoords(SaleDTO form);
 }

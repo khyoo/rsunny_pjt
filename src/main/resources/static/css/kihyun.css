@@ -373,22 +373,22 @@
 .map-tool-before-btn {
 	font-size: 22px;
 	position: relative;
-	text-align: left;
+	text-align: right;
 	top: -47px;
 }
 
 .map-tool-reset-btn {
 	font-size: 22px;
 	position: relative;
-	text-align: right;
-	top: -45px;
-	pointer-events: none
+	text-align: right;	
+	pointer-events: none;
+	display: inline-block;
 }
 
 .map-tool-btns {
 	cursor: pointer;
 	width: 50px;
-	display: inline-block
+	display: inline-block;
 }
 
 .rbc-cerulean {
@@ -620,213 +620,59 @@
 	color: #5085BB;
 }
 
-.foot-detail-panel-navi-cell {
-	cursor: pointer;
-	display: table-cell;
-	width: 16%;
-	text-align: center;
-	border-top: 1px solid #ccc;
-	border-left: 1px solid #ccc;
-	border-bottom: 1px solid #ccc;
-	line-height: 44px;
-	height: 100%;
-}
+.category_bg_area { display: block; margin: 0 auto 3px; width: 27px; height: 28px; background-position: center; background-repeat: no-repeat; background-image: url(/img/mobile/measure_area.png); }
+.category_bg_len { display: block; margin: 0 auto 3px; width: 27px; height: 28px; background-position: center; background-repeat: no-repeat; background-image: url(/img/mobile/measure_len.png); }
+		
+.detail_info_navi { position: sticky !important; top: 0;background-color:#f8f8f8;color:#8e8e93;font-size:14px;position:relative;display: table;width: 100%;height: 44px;box-shadow: 0px 6px 10px -6px inset #ccc;z-index:2; }
+.detail_info_navi_cell { cursor: pointer;display: table-cell;width: 16%;text-align: center;border-top: 1px solid #ccc;border-left: 1px solid #ccc;border-bottom: 1px solid #ccc;line-height: 44px;height: 100%;background-color: rgb(248, 248, 248);color: rgb(142, 142, 147);font-weight: 400; }
+.detail_info_navi_cell_right { border-right: 1px solid #ccc; }
+.cell_hidden { display:none; }
+		
+.detail_info_divider { height: 16px;background-color: #e6e9eb;border-top: 1px solid #d6d6d6; }
 
-.map-detail-main-divider {
-	height: 16px;
-	background-color: #e6e9eb;
-	border-top: 1px solid #d6d6d6;
-}
+.detail_info_header { height: 28px;margin: 16px 20px 12px 20px;font-size: 24px;line-height: 1.17;display: inline-block;-webkit-transform: translate3d(0,0,0); } 		
+.detail_info_header h3 { display:inline; font-size:24px;}
+		
+.detail_info_header_prefix { height:100px; } 
 
-.mfs-detail-margin-div {
-	height: 16px;
-	background-color: #e6e9eb;
-	border-top: 1px solid #d6d6d6;
-}
+.detail_info_body_sub { height:auto; }		
+.detail_info_body_sub_detail { display: table;width: 100%;height: 48px;position:relative;font-size: 14px; }
+.detail_info_body_sub_detail_divider { height: 1px;background: rgba(0, 0, 0, 0.1); }
+		
+.detail_data_txt { padding-left:20px;position: absolute;height: 48px;line-height: 48px; }
+.detail_data_txt_title { padding-left:20px;color: #828ca5; }
+.detail_data_txt_title2 { padding-left:20px;position: relative;color: #828ca5;font-size: 16px; }
+.detail_data_txt_conts { padding-right:20px;right:0px;color: #1E1E23; }
+.detail_data_txt_conts_sub { font-size: 12px;color: #666;height: 8px;line-height: 30px; }
+.detail_data_txt_conts_sub span { width:80px;text-align:right;display:inline-block; }
+.detail_data_txt_conts_sub2 { top:4px;position:relative; }
+.detail_data_txt_conts_sub2 span { width:80px;text-align:right;display:inline-block; }
+		
+.detail_list_btn { padding: 0px 20px 0px 20px;cursor:pointer; }
+.detail_list_btn_sub { font-size:18px;position:relative;height:48px;line-height:48px; }		
+.detail_list_btn_sub_txt { position: absolute; }
+.detail_list_btn_sub_txt span { display: inline-block; }
+				
+.detail_data_txt_conts_span { display: inline-block;line-height: 12px;padding-left: 65px;margin-top: 7px;text-align: right; }
+		
+.detail_tradings_table { display: table;width: 100%;height: 36px;border-radius: 4px;background-color: #f8f8f8; }
+.detail_tradings_table2 { display: table;width: 100%;height: 40px;border-radius: 4px;border-bottom: solid 1px #f2f2f2; }
+.detail_tradings_table_row { display: table-row; }
+.detail_tradings_table_row span { width: 100%;height: 50px;line-height: 50px;text-align: center; }
+.detail_tradings_table_cell { display: table-cell;text-align: center;vertical-align: middle;color: #8e8e93;font-size: 14px;font-weight: 500; }				
+.detail_tradings_table_cell2 { display: table-cell;text-align: center;vertical-align: middle;color: #48484a;font-size: 13px;position: relative; }
+				
+.detail_land_history_info { padding-left:8px; padding-right:8px; }
+.detail_land_history_info_table { display:table;width:100%; }
+.detail_land_history_info_table_row { display: table-row;line-height: 46px; }
+.detail_land_history_info_table_cell1 { display: table-cell;width:40%;text-align:left;font-size:12px;color:#50555a;padding-left:12px; }
+.detail_land_history_info_table_cell2 { display: table-cell;width:40%;text-align:left;font-size:12px;color:#50555a; }
 
-.map-detail-header {
-	height: 28px;
-	margin: 16px 20px 12px 20px;
-	font-size: 24px;
-	line-height: 1.17;
-	display: inline-block;
-}
-
-.feed-text-highlight-blue {
-	position: relative;
-}
-
-.feed-text-highlight-blue:after {
-	content: '';
-	display: inline-block;
-	width: 100%;
-	position: absolute;
-	height: 12px;
-	background-color: rgba(18, 99, 223, 0.1);
-	top: 50%;
-	left: 0
-}
-
-.mfs-agent-main-tab-div {
-	display: table;
-	width: 100%;
-	height: 48px;
-}
-
-.rfc-cool-grey {
-	color: #828ca5;
-}
-
-.ifs-tab-txt {
-	position: absolute;
-	height: 48px;
-	line-height: 48px;
-	font-size: 14px;
-}
-
-.ifs-tab-bar {
-	height: 1px;
-	background: rgba(0, 0, 0, 0.1);
-}
-
-.rfc-dusk {
-	color: #1E1E23;
-}
-
-.mfs-detail-data-title {
-	height: 48px;
-	line-height: 48px;
-	font-size: 16px;
-}
-
-.mdv-auto-span {
-	display: block;
-	line-height: 20px;
-	position: relative;
-	padding-left: 52px;
-	height: auto;
-	margin-top: 14px;
-	margin-bottom: 14px;
-	text-align: right;
-}
-
-.rf3_blue5 {
-	color: #0868f4;
-}
-
-.dpa-c-name {
-	width: auto;
-	right: 0;
-	position: absolute;
-	font-size: .75rem;
-	text-align: right;
-	text-decoration: underline;
-}
-
-.mfs-agent-main-tab-div {
-	display: table;
-	width: 100%;
-	height: 48px;
-}
-
-.dpa-arch-slot-div {
-	line-height: 12px;
-	position: relative;
-	display: inline-block;
-	vertical-align: middle;
-	text-align: right;
-	padding-left: 65px;
-}
-
-.ifs-tab-txt-etc-use-title {
-	display: table-cell;
-	position: relative;
-	padding-left: 16px;
-	color: #333c51;
-	min-width: 70px;
-	height: 100%;
-	line-height: 100%;
-	font-size: 14px;
-	vertical-align: middle;
-}
-
-.ifs-tab-txt-etc-use-content {
-	display: table-cell;
-	position: relative;
-	right: 0;
-	padding: 0 16px 0 20px;
-	line-height: 48px;
-	font-size: 16px;
-	text-align: right;
-	vertical-align: middle;
-}
-
-.map-detail-no-data {
-	height: 72px;
-	text-align: center;
-	line-height: 62px;
-	font-size: 15px;
-}
-
-.trp-detail-table {
-	width: 100%;
-	height: 36px;
-	display: table;
-	background-color: #f8f8f8;
-	border-radius: 4px;
-}
-
-.trp-detail-table-row {
-	display: table-row;
-}
-
-.trp-detail-table-cell {
-	display: table-cell;
-	text-align: center;
-	vertical-align: middle;
-	color: #8e8e93;
-	font-size: 14px;
-	font-weight: 500;
-}
-
-.trp-detail-table2 {
-	width: 100%;
-	display: table;
-	border-radius: 4px;
-	border-bottom: solid 1px #f2f2f2;
-	height: 40px;
-}
-
-.trp-detail-table-row {
-	display: table-row;
-}
-
-.trp-detail-table-cell2 {
-	display: table-cell;
-	position: relative;
-	text-align: center;
-	vertical-align: middle;
-	text-align: center;
-	font-size: 13px;
-	color: #48484a;
-}
-
-.category_bg_area {
-	display: block;
-	margin: 0 auto 3px;
-	width: 27px;
-	height: 28px;
-	background-position: center;
-	background-repeat: no-repeat;
-	background-image: url(/img/mobile/measure_area.png);
-}
-
-.category_bg_len {
-	display: block;
-	margin: 0 auto 3px;
-	width: 27px;
-	height: 28px;
-	background-position: center;
-	background-repeat: no-repeat;
-	background-image: url(/img/mobile/measure_len.png);
-}
+.detail_margin_div { height:5px;border-top:0px;background-color: #e6e9eb;border-top: 1px solid #d6d6d6; }
+.detail_expand_txt { width: auto;right: 0;position: absolute;font-size: .75rem;text-align: right;text-decoration: underline; }		
+		
+.detail_txt_grey { color: #828ca5; }
+.detail_txt_black { color: #1E1E23; }
+.detail_txt_blue { color: #0868f4; }
+		
+#mdv_chart_div { width:100%;height:auto; }
