@@ -35,39 +35,42 @@
 					$('#wy').attr('placeholder', '주소지를 입력하세요.');
 					return;
 				}
-
-				location.href = '/02la01?t=r&keyword=' + $('#wy').val();
-								
+				location.href = '/02la01?t=r&keyword=' + $('#wy').val();								
 			});
 			
 			$( "#searchSido" ).selectmenu({
-				  change: function( event, ui ) {//console.log(ui.item.label);
+				  change: function( event, ui ) {console.log(ui.item.label);
 					  $.get('/forsale/rest/addr/getSigungu?sido=' + ui.item.label, {}, function (data) {									
-							//console.log(data);
+							console.log(data);
 			
-							let options = [];
-			
-							let html = '';
+							$('#searchSigungu option').remove();
+							
+							$('#searchEmd option').remove();
+							$('#searchEmd').append('<option value="0">읍·면·동</option>').selectmenu('refresh');
+													
+							let options = [];	
+							options.push('<option value="0">시·군·구</option>');	
 							if (data.length > 0) {
 								data.forEach((item, idx) => {
 									options.push("<option value='" + (idx+1) + "'>" + item.sigungu + "</option>");															
 								});
 							} else {
 								
-							}						
-							$('#sigungu').append(options.join("")).selectmenu();
+							}					
+							$('#searchSigungu').append(options.join("")).selectmenu('refresh');						
 						});
 				  }
 				});
 				
 				$( "#searchSigungu" ).selectmenu({
 				  change: function( event, ui ) {//console.log(ui.item.label);
-					  $.get('/forsale/rest/addr/getEmd?sido=' + $('#sido').find(':selected').text() + '&sigungu=' + ui.item.label, {}, function (data) {									
+					  $.get('/forsale/rest/addr/getEmd?sido=' + $('#searchSido').find(':selected').text() + '&sigungu=' + ui.item.label, {}, function (data) {									
 							//console.log(data);
 			
+							$('#searchEmd option').remove();
+		
 							let options = [];
-			
-							let html = '';
+							options.push('<option value="0">읍·면·동</option>');
 							if (data.length > 0) {
 								data.forEach((item, idx) => {
 									options.push("<option value='" + (idx+1) + "'>" + item.emd + "</option>");													
@@ -75,7 +78,7 @@
 							} else {
 								
 							}												
-							$('#emd').append(options.join("")).selectmenu();
+							$('#searchEmd').append(options.join("")).selectmenu('refresh');							
 						});
 				  }
 				});
@@ -1622,33 +1625,41 @@
 					}
 				});
 			});	//End-of-$('div.report_wrap').find('a.saveReport').click(function() {
-
-			/*	
-			$('#w').keypress(function () {
-				if (event.keyCode == 13) $('a.dongSearch').trigger('click');
-			});
-			*/
+			
 
 			//동명으로 검색 이동.
 			$('a.dongSearch').click(function () {
-				/*			
-				if ($('#w').val() == '') {
-					alert('검색할 동명을 입력하세요.');
-					$('#w').focus();
+				if ($('#searchSido').val() == '0') {
+					alert('시·도를 선택해주세요.');
 					return;
 				}
-				*/
+				//location.href = '/02la01?t=r&keyword=' + ($('#sido').val() != 0 ? $('#sido').find(':selected').text() : '') + ($('#searchSigungu').val() != 0 ? $('#searchSigungu').find(':selected').text() : '') + ($('#searchEmd').val() != 0 ? $('#searchEmd').find(':selected').text() : '');
 
+				let kw = $('#searchSido').find(':selected').text() + ($('#searchSigungu').val() != 0 ? $('#searchSigungu').find(':selected').text() : '') + ($('#searchEmd').val() != 0 ? $('#searchEmd').find(':selected').text() : '');
+				
 				// 장소 검색 객체를 생성합니다
 				var ps = new kakao.maps.services.Places();
 
 				// 키워드로 장소를 검색합니다
-				ps.keywordSearch($('#w').val(), placesSearchCB);
+				ps.keywordSearch(kw, placesSearchCB);
 
 				// 키워드 검색 완료 시 호출되는 콜백함수 입니다
 				function placesSearchCB(data, status, pagination) {
 					if (status === kakao.maps.services.Status.OK) {
 
+						// 검색된 장소 위치를 기준으로 지도 범위를 재설정하기위해
+						// LatLngBounds 객체에 좌표를 추가합니다
+						var bounds = new kakao.maps.LatLngBounds();
+
+						for (var i = 0; i < data.length; i++) {
+							//displayMarker(data[i]);    
+							bounds.extend(new kakao.maps.LatLng(data[i].y, data[i].x));
+						}
+
+						// 검색된 장소 위치를 기준으로 지도 범위를 재설정합니다
+						map.setBounds(bounds);
+						
+						/*
 						var moveLatLon = new kakao.maps.LatLng(data[0].y, data[0].x);
 
 						// 지도 중심을 부드럽게 이동시킵니다
@@ -1668,10 +1679,9 @@
 								getRealTrading();
 							}
 						}
+						*/
 					}
 				}
-
-
 
 				/*
 				var geocoder = new kakao.maps.services.Geocoder();
@@ -2090,9 +2100,8 @@
 					url: "http://api.vworld.kr/req/data",
 					dataType: "jsonp",
 					data: {
-						request: "GetFeature",
-						//						data: "LT_C_ADEMD_INFO",
-						data: "LT_C_ADSIDO_INFO",
+						request: "GetFeature",						
+						data: "LT_C_ADSIDO_INFO",	//광역시도 검색
 						key: vworld_key,
 						geomFilter: tempBox,
 						crs: "EPSG:4326",
@@ -4358,7 +4367,7 @@
 
 
 			function parse_land_polygon_value(e, r) {console.log('e, r/////////');console.log(e);console.log(r);
-				var t = [19e-6, 0];//get_rev_xy(r, "l");
+				var t = [19e-6, 0];//get_rev_xy(r, "l");				
 				var a = new RegExp(/\(\(.+?\)\)/g);
 				var i = new RegExp(/\(.+?\)/g);
 				var l = [];
@@ -5344,13 +5353,12 @@
 										<option value="0">읍·면·동</option>
 									</select>							
 								</div>
-								<div class="selectBox lp_open" style="line-height: 50px;font-size: 1.3em;text-align: center;cursor: pointer;" data-lp="04l00p">
+								<div class="selectBox lp_open" style="line-height: 50px;font-size: 1.2em;text-align: center;cursor: pointer;" data-lp="04l00p">
 									직접입력
 								</div>
+								<a href="javascript:void(0);" class="dongSearch">검색</a>
 							</div>
 						</div>
-						<input type="text" id="w" name="w" placeholder="지번·지역·지하철역 검색" />
-						<a href="javascript:void(0);" class="dongSearch">검색</a>
 					</div>
 					<!--
                     <a class="thumb" th:href="${banner.linkUrl}" target="_blank">

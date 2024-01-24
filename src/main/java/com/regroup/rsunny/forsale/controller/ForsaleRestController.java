@@ -400,65 +400,61 @@ public class ForsaleRestController {
 	@GetMapping("/tradings/getListOfficetel1")
 	public List<SaleDTO> getRealTradingsListFromOfficetel1(SaleDTO form, Model model) throws Exception {
 		log.info("/rest/{}/tradings/getListOfficetel1/{}");
-		//System.out.println(form.getSidoCode());
+		System.out.println(form.getSidoCode());
        	//List<SaleDTO> rtlist = service.getRealTradingsListFromOfficetel1(form);
 		
 		List<SaleDTO> rtlist = null;
 	
 		switch(form.getSidoCode()) {
-			case "11"://서울
+			case "11"://서울(old:11)
 				rtlist = service.getRealTradingsSeoulList(form);
 				break;
-			case "41"://경기
+			case "41"://경기(old:41)
 				rtlist = service.getRealTradingsGyeonggiList(form);
 				break;
-			case "28"://인천
+			case "28"://인천(old:28)
 				rtlist = service.getRealTradingsIncheonList(form);
 				break;
-			
-			
-			case "27"://대구
+			case "27"://대구(old:27)
 				rtlist = service.getRealTradingsDaeguList(form);
 				break;
-			case "30"://대전
+			case "30"://대전(old:30)
 				rtlist = service.getRealTradingsDaejeonList(form);
 				break;
-			case "29"://광주
+			case "29"://광주(old:29)
 				rtlist = service.getRealTradingsGwangjuList(form);
 				break;
-			case "26"://부산
+			case "26"://부산(old:26)
 				rtlist = service.getRealTradingsBusanList(form);
 				break;
-			case "31"://울산
+			case "31"://울산(old:31)
 				rtlist = service.getRealTradingsUlsanList(form);
 				break;
-			case "36"://세종
+			case "36"://세종(old:36)
 				rtlist = service.getRealTradingsSejongList(form);
 				break;
-			case "42"://강원
+			case "51"://강원(old:42)
 				rtlist = service.getRealTradingsGangwonList(form);
 				break;
-			case "50"://제주
+			case "50"://제주(old:50)
 				rtlist = service.getRealTradingsJejuList(form);
 				break;
-			case "43"://충북
+			case "43"://충북(old:43)
 				rtlist = service.getRealTradingsChungcheongbukdoList(form);
 				break;
-			case "44"://충남
+			case "44"://충남(old:44)
 				rtlist = service.getRealTradingsChungcheongnamdoList(form);
 				break;
-			
-			
-			case "45"://전북
+			case "52"://전북(old:45)
 				rtlist = service.getRealTradingsJeollabukdoList(form);
 				break;
-			case "46"://전남
+			case "46"://전남(old:46)
 				rtlist = service.getRealTradingsJeollanamdoList(form);
 				break;
-			case "47"://경북
+			case "47"://경북(old:47)
 				rtlist = service.getRealTradingsGyeongsangbukdoList(form);
 				break;
-			case "48"://경남
+			case "48"://경남(old:48)
 				rtlist = service.getRealTradingsGyeongsangnamdoList(form);
 				break;
 				
