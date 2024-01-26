@@ -708,9 +708,19 @@ html,body,#gis_layout{ height: 100%;}
 
 .search_lp_wrap .searchBox input{ width: 230px; font-size: 1em; color: #000; line-height: 50px; padding: 0 15px; flex: 1; border: 0;}
 .search_lp_wrap .searchBox{ background-color: #fff; padding: 10px 10px; display: flex; border: 1px solid #b3b3b3; border-radius: 4px;}
+.search_lp_wrap .searchBox .selectBox{ width: 130px;}
+.search_lp_wrap .searchBox .ui-selectmenu-button.ui-button{ width: 100%; height: 50px; background-color: #fff; padding: 0; margin: 0; border: 0;}
+.search_lp_wrap .searchBox .ui-selectmenu-text{ font-size: 18px; color: #000; line-height: 50px; padding: 0 0 0 13px;}
+.search_lp_wrap .searchBox .ui-button .ui-icon{ width: 14px; height: 14px; background: url(../img/main/search_ico_select.png) no-repeat center center; margin: 3px 0 0 0;}
 .search_lp_wrap .search_lp{ width: 126px; background-color: #454480; font-size: 16px; color: #fff; text-align: center; line-height: 50px; border-radius: 3px;}
 .search_lp_wrap .search_lp::before{ width: 19px; height: 19px; background: url(../img/main/search_ico_btn.png) no-repeat center center; content: ""; margin: 15.5px 4px 15.5px 0; display: inline-block; vertical-align: top;}		
 
+#minimap_container {overflow:hidden;height:300px;position:relative;}
+#minimap_btnRoadview,  #minimap_btnMap {position:absolute;top:10px;right:10px;padding:7px 12px;font-size:14px;color: #fff;border: 1px solid #dbdbdb;background-color: #454480;border-radius: 5px;box-shadow: 0 1px 1px rgba(0,0,0,.04);z-index:1;cursor:pointer;}
+#minimap_container.view_map #minimap_mapWrapper {z-index: 10;}
+#minimap_container.view_map #minimap_btnMap {display: none;}
+#minimap_container.view_roadview #minimap_mapWrapper {z-index: 0;}
+#minimap_container.view_roadview #minimap_btnRoadview {display: none;}
 
 @media (max-width:1055px){
     #gis_layout{ padding-top: 56px; padding-left: 360px; margin-top: -56px;}

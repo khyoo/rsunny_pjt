@@ -17,9 +17,12 @@
 					$('#wy').attr('placeholder', '주소지를 입력하세요.');
 					return;
 				}
-
-				location.href = '/02la01?t=r&keyword=' + $('#wy').val();
-								
+				
+				if ($('#wt').val() == '1') {
+					location.href = '/02la01?t=r&init=jibun&keyword=' + $('#wy').val();
+				} else {
+					location.href = '/02la01?t=r&init=none&keyword=' + $('#wy').val();
+				}								
 			});
 
 			$('a.search').click(function () {								

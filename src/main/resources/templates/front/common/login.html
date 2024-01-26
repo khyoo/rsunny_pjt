@@ -46,8 +46,15 @@
        		<div id="lp_04l00p" class="lp_wrap type1">
 	       		<div class="search_lp_wrap">
 		            <div class="searchBox">
-						<input type="text" id="wy" name="wy" placeholder="지번·지역·지하철역 검색" autocomplete="off" />						
-						<a href="javascript:void(0);" class="search_lp">검색</a>						
+			            <div class="selectBox">
+			            	<select id="wt" name="wt">                            
+								<option value="1">지번</option>
+								<option value="2">지역</option>
+								<option value="3">지하철역</option>								
+							</select>
+						</div>		
+							<input type="text" id="wy" name="wy" placeholder="지번·지역·지하철역 검색" autocomplete="off" />						
+							<a href="javascript:void(0);" class="search_lp">검색</a>										
 					</div>
 				</div>
 		        <a class="lp_close" href="#">닫기</a>	            

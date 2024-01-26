@@ -1598,7 +1598,7 @@
 	<select id="getRealTradingsJeollanamdoList" parameterType="com.regroup.rsunny.common.model.SaleDTO" resultType="com.regroup.rsunny.common.model.SaleDTO">
 		SELECT 
 			* 
-		FROM real_tradings_jeollanamdo_src		
+		FROM real_tradings_jeollanamdo		
 		WHERE 1=1
 		<![CDATA[ 
 		  AND LEFT(deal_month, 4) >= #{dealYearStart} 

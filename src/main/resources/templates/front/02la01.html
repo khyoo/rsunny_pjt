@@ -35,7 +35,12 @@
 					$('#wy').attr('placeholder', '주소지를 입력하세요.');
 					return;
 				}
-				location.href = '/02la01?t=r&keyword=' + $('#wy').val();								
+				
+				if ($('#wt').val() == '1') {
+					location.href = '/02la01?t=r&init=jibun&keyword=' + $('#wy').val();
+				} else {
+					location.href = '/02la01?t=r&init=none&keyword=' + $('#wy').val();
+				}												
 			});
 			
 			$( "#searchSido" ).selectmenu({
@@ -120,6 +125,8 @@
 
 			const urlParams = new URL(location.href).searchParams;
 
+			const jibun = urlParams.get('init');
+			
 			const keyword = urlParams.get('keyword');
 
 			//console.log(keyword)
@@ -196,14 +203,13 @@
 
 			let isOverlayClick = false;			
 						
-			let jibunClickHandler = function (mouseEvent) {console.log("22333k");
-				
+			let jibunClickHandler = function (mouseEvent) {console.log("22333k");							
 				if (polygon != null)
 					polygon.setMap(null);
 				
 				// 클릭한 위도, 경도 정보를 가져옵니다 
 				var latlng = mouseEvent.latLng;
-
+								
 				$('[data-field=saleNo]').text('');
 				$('.cell_hidden').hide();
 				$('.btn_wrap').hide();
@@ -482,7 +488,9 @@
 						});
 		
 						$.get('https://polygon.disco.re/get_land_by_latlng/?lat=' + latlng.getLat() + '&lng=' + latlng.getLng(), {}, function (result) {
-							console.log(result);
+							console.log(result.address);
+							$('#saleNumSub').hide();
+							$('#saleNumAddress').text(result.address);
 							console.log("zz");
 								let tempPoly = null;
 								tempPoly = parse_land_polygon_value(result.polygon);
@@ -524,6 +532,8 @@
 						}
 						
 						realTradingOverlayClick = [false, false, false, false, false];
+						
+						minimapShow(latlng);
 					}
 				});				
 				
@@ -821,6 +831,8 @@
 								$("#gis_layout").removeClass("detailMov");
 							});
 						}
+						
+						minimapShow(latlng);
 					}					
 					//console.log(realTradingOverlayClick);
 				});
@@ -1152,8 +1164,9 @@
 			var w = /*[[${form.w}]]*/ '';
 			if ((w == null || w.length == 0) && keyword == null) {
 				//console.log("not search");				
-				var geocoder = new kakao.maps.services.Geocoder();
-				var callback = function (result, status) {
+				let geocoder = new kakao.maps.services.Geocoder();
+				
+				let callback = function (result, status) {
 					if (status === kakao.maps.services.Status.OK) {
 						var address = result[0];
 
@@ -1380,6 +1393,10 @@
 					//resultDiv.innerHTML = message;
 
 				});
+				
+				// 지도에 클릭 이벤트를 등록합니다
+				// 지도를 클릭하면 마지막 파라미터로 넘어온 함수를 호출합니다
+				kakao.maps.event.addListener(map, 'click', jibunClickHandler);
 
 				// 장소 검색 객체를 생성합니다
 				var ps = new kakao.maps.services.Places();
@@ -1421,6 +1438,9 @@
 						infowindow.open(map, marker);
 					});
 				}
+				
+				
+				
 			}
 
 			$('a.share').click(function () {
@@ -1526,6 +1546,50 @@
 
 			//로딩시 매물목록
 			$('a.search').trigger('click');
+			
+			if (jibun == 'jibun') {
+				var detailW = $(".detail_wrap").width();
+				var listW = $(".left_wrap").width();
+				$("#gis_layout").addClass("detailOn");
+				//$(".detail_wrap").css("left", detailW * -1);
+
+
+				//$('.tabCon_wrap').hide();
+
+				var isMini = $(".detail_wrap").hasClass("mini");
+
+				if (isMini) {
+					$('.left_wrap').hide();
+					$('.detail_wrap').css("left", "0px");
+				} else {
+					$(".detail_wrap").animate({ "left": listW }, 200, function () {
+						$("#gis_layout").removeClass("detailMov");
+					});
+				}
+				
+				realTradingOverlayClick = [false, false, false, false, false];
+				
+				
+				
+				// 주소-좌표 변환 객체를 생성합니다
+				let geocoder = new kakao.maps.services.Geocoder();
+
+				// 주소로 좌표를 검색합니다
+				geocoder.addressSearch(keyword, function(result, status) {
+
+				    // 정상적으로 검색이 완료됐으면 
+				     if (status === kakao.maps.services.Status.OK) {				    	
+				        var coords = new kakao.maps.LatLng(result[0].y, result[0].x);
+				        
+				        // 지도의 중심을 결과값으로 받은 위치로 이동시킵니다
+				        map.setCenter(coords);
+				        
+				        minimapShow(coords);
+				    } else {
+				    	console.log("검색 실패");
+				    }
+				});    
+			}
 
 			//등록매물
 			var formdata = { saleType: $('#frmFilter').find('#saleType').val() };
@@ -3808,6 +3872,15 @@
 					}
 				}
 			}
+			
+
+			$('#roadViewBtn').click(function () {
+				changeMaptype = kakao.maps.MapTypeId.ROADVIEW;
+
+				map.addOverlayMapTypeId(changeMaptype);
+				setRoadviewRoad();
+			});
+			
 
 			// 마커 이미지를 생성합니다
 			var markImage = new kakao.maps.MarkerImage(
@@ -4455,7 +4528,7 @@
 					$('[data-field=optionItems]').text(data.optionItems.replace(/\|/g, ','));
 
 					viewArea.find('div.hashtag').empty().append(data.hashtag);
-
+					console.log(data.posY);
 					//이미지 지도.
 					$('#staticMap').empty();	//기존 내용 지우기.
 					var staticMapContainer = document.getElementById('staticMap'); // 이미지 지도를 표시할 div
@@ -5148,7 +5221,104 @@
 				$('div.tab1').addClass('on');
 				$('div.tab5').removeClass('on');
 			});
+			
+			
+			function minimapShow2(latlng) {console.log(latlng.getLat());
+				// 지도와 로드뷰 위에 마커로 표시할 특정 장소의 좌표입니다 
+				//let minimap_placePosition = new kakao.maps.LatLng(latlng.getLat(), latlng.getLng());
+			    
+				$('#staticMap').empty();	//기존 내용 지우기.
+				var staticMapContainer = document.getElementById('staticMap'); // 이미지 지도를 표시할 div
+				//alert(staticMapContainer + '...' + data.posY + '...' + data.posX);
+				// 이미지 지도에서 마커가 표시될 위치입니다
+				var markerPosition = new kakao.maps.LatLng(latlng.getLat(), latlng.getLng());
+				// 이미지 지도에 표시할 마커입니다
+				var staticMarker = { position: markerPosition };
+
+				staticMapOption = {
+					center: new kakao.maps.LatLng(Number(latlng.getLat()) + (Math.random() / 300), Number(latlng.getLng()) + (Math.random() / 300)), // 이미지 지도의 중심좌표
+					level: 5, // 이미지 지도의 확대 레벨
+					//marker: staticMarker // 이미지 지도에 표시할 마커
+				};
+				// 이미지 지도를 표시할 div와 옵션으로 이미지 지도를 생성합니다
+				var staticMap = new kakao.maps.StaticMap(staticMapContainer, staticMapOption);
+			}
+			
+			function minimapShow(latlng) {
+				let minimap_container = document.getElementById('minimap_container'), // 지도와 로드뷰를 감싸고 있는 div 입니다
+				minimap_mapWrapper = document.getElementById('minimap_mapWrapper'), // 지도를 감싸고 있는 div 입니다
+				minimap_btnRoadview = document.getElementById('minimap_btnRoadview'), // 지도 위의 로드뷰 버튼, 클릭하면 지도는 감춰지고 로드뷰가 보입니다 
+				minimap_btnMap = document.getElementById('minimap_btnMap'), // 로드뷰 위의 지도 버튼, 클릭하면 로드뷰는 감춰지고 지도가 보입니다 
+				minimap_rvContainer = document.getElementById('minimap_roadview'); // 로드뷰를 표시할 div 입니다
+					
+				// 지도와 로드뷰 위에 마커로 표시할 특정 장소의 좌표입니다 
+				let minimap_placePosition = new kakao.maps.LatLng(latlng.getLat(), latlng.getLng());
+			    
+				let marker = {
+				    position: minimap_placePosition
+				};
+				
+				// 지도 옵션입니다 
+				let minimap_mapOption = {
+				    center: minimap_placePosition, // 지도의 중심좌표 
+				    level: 5, // 지도의 확대 레벨
+				    marker: marker
+				};
+				
+				$('#minimap_map').empty();	//기존 내용 지우기.
+				let minimap_mapContainer = document.getElementById('minimap_map'); // 지도를 표시할 div 입니다
+				
+				// 지도를 표시할 div와 지도 옵션으로 지도를 생성합니다
+				let minimap_map = new kakao.maps.StaticMap(minimap_mapContainer, minimap_mapOption);
+				
+				// 로드뷰 객체를 생성합니다 
+				let minimap_roadview = new kakao.maps.Roadview(minimap_rvContainer);				
+		
+				let roadviewClient = new kakao.maps.RoadviewClient(); //좌표로부터 로드뷰 파노ID를 가져올 로드뷰 helper객체
+			    // 특정 위치의 좌표와 가까운 로드뷰의 panoId를 추출하여 로드뷰를 띄운다.
+			    roadviewClient.getNearestPanoId(minimap_placePosition, 100, function(panoId) {
+			    	minimap_roadview.setPanoId(panoId, minimap_placePosition); //panoId와 중심좌표를 통해 로드뷰 실행
+			    });
+				
+				// 특정 장소가 잘보이도록 로드뷰의 적절한 시점(ViewPoint)을 설정합니다 
+				// Wizard를 사용하면 적절한 로드뷰 시점(ViewPoint)값을 쉽게 확인할 수 있습니다
+				minimap_roadview.setViewpoint({
+				    pan: 321,
+				    tilt: 0,
+				    zoom: 0
+				});
+		
+				// 지도 중심을 표시할 마커를 생성하고 특정 장소 위에 표시합니다 
+				let minimap_mapMarker = new kakao.maps.Marker({
+				    position: minimap_placePosition,
+				    map: minimap_map
+				});
+		
+				// 로드뷰 초기화가 완료되면 
+				kakao.maps.event.addListener(minimap_roadview, 'init', function() {
+		
+				    // 로드뷰에 특정 장소를 표시할 마커를 생성하고 로드뷰 위에 표시합니다 
+				    let rvMarker = new kakao.maps.Marker({
+				        position: minimap_placePosition,
+				        map: minimap_roadview
+				    });
+				});				
+			}
+			
 		});
+				
+		// 지도와 로드뷰를 감싸고 있는 div의 class를 변경하여 지도를 숨기거나 보이게 하는 함수입니다 
+		function toggleMap2(active) {
+		    if (active) {
+
+		        // 지도가 보이도록 지도와 로드뷰를 감싸고 있는 div의 class를 변경합니다
+		        minimap_container.className = "view_map"
+		    } else {
+
+		        // 지도가 숨겨지도록 지도와 로드뷰를 감싸고 있는 div의 class를 변경합니다
+		        minimap_container.className = "view_roadview"   
+		    }
+		}
 
 			
 	</script>
@@ -5686,7 +5856,8 @@
 		<!--detail_wrap-->
 		<div class="detail_wrap">
 			<div id="saleNum" class="saleNum">
-				<p>매물번호<span data-field="saleNo"></span></p>
+				<p id="saleNumSub">매물번호<span data-field="saleNo"></span></p>
+				<p id="saleNumAddress"></p>
 				<a href="#">닫기</a>
 			</div>
 			
@@ -5777,7 +5948,29 @@
 					</dd>
 				</dl>
 			</div>
-
+			
+			<div class="detail_info_divider"></div>
+			
+			<!-- 
+			<div style="position: relative;">
+				<div style="position: absolute;top: 10px;right: 10px;z-index: 1;">
+					<button type="button" id="roadViewBtn" style="width: 60px;height: 30px;border-radius: 5px;border: 1px solid #bcbcbc;background: #454480;color: #fff;">로드뷰</button>
+				</div>
+				<div id="staticMap2" style="width:100%;height:280px;"></div>
+			</div>
+			 -->
+			  
+			<div id="minimap_container" class="view_map">
+			    <div id="minimap_mapWrapper" style="width:100%;height:300px;position:relative;">
+			        <div id="minimap_map" style="width:100%;height:100%"></div> 
+			        <input type="button" id="minimap_btnRoadview" onclick="toggleMap2(false)" title="로드뷰 보기" value="로드뷰">
+			    </div>
+			    <div id="minimap_rvWrapper" style="width:100%;height:300px;position:absolute;top:0;left:0;">
+			        <div id="minimap_roadview" style="height:100%"></div> 
+			        <input type="button" id="minimap_btnMap" onclick="toggleMap2(true)" title="지도 보기" value="지도">
+			    </div>
+			</div>
+ 			
 			<div class="detail_info_divider"></div>
 			
 			<div id="dp_sales_prefix" class="detail_info_header_prefix"></div>
