@@ -176,7 +176,7 @@ $(document).ready(function(){
       realTradingOverlayClick = [false, false, false, false, false];
     });
 
-    $(".gislp_open").on("click",function(){console.log("222bbb");
+    $(".gislp_open").on("click",function(){
       var lp = $(this).attr("data-lp");
       var isLp1 = $(".lp_gis").hasClass("lp1");
       var isOpen = $("#gis_layout").hasClass(lp+"On");

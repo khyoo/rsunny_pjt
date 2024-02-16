@@ -785,7 +785,21 @@ public class ForsaleServiceImpl implements ForsaleService {
 		List<SaleDTO> rtlist = mapper.getRealTradingsPresaleListFromPnu(form);
 		
 		return rtlist;
+	}	
+	@Override
+	public List<SaleDTO> getRealTradingsSinglehouseListFromPnu(SaleDTO form) {
+	
+		List<SaleDTO> rtlist = mapper.getRealTradingsSinglehouseListFromPnu(form);
+		
+		return rtlist;
 	}
+	@Override
+	public List<SaleDTO> getRealTradingsSinglehouse2ListFromPnu(SaleDTO form) {
+	
+		List<SaleDTO> rtlist = mapper.getRealTradingsSinglehouse2ListFromPnu(form);
+		
+		return rtlist;
+	}	
 	@Override
 	public List<SaleDTO> getRealTradingsMultihouseListFromPnu(SaleDTO form) {
 	

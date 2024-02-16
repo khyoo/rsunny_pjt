@@ -24,7 +24,12 @@
 		function numComma(val) {
 			return val != null ? val.toString().replace(/\B(?<!\.\d*)(?=(\d{3})+(?!\d))/g, ",") : 0;
 		}
+		
+		
 
+		
+		let _roadviewMarker = null;
+		
 		let polygon = null;
 		let realTradingOverlayClick = [false, false, false, false, false]; 	//실거래가 오버레이 팝업 클릭 배열
 		
@@ -43,10 +48,14 @@
 				}												
 			});
 			
+			$('#wy').keyup(function () {
+				if (event.keyCode == 13) $('a.search_lp').trigger('click');
+			});
+			
 			$( "#searchSido" ).selectmenu({
 				  change: function( event, ui ) {console.log(ui.item.label);
 					  $.get('/forsale/rest/addr/getSigungu?sido=' + ui.item.label, {}, function (data) {									
-							console.log(data);
+							//console.log(data);
 			
 							$('#searchSigungu option').remove();
 							
@@ -59,9 +68,7 @@
 								data.forEach((item, idx) => {
 									options.push("<option value='" + (idx+1) + "'>" + item.sigungu + "</option>");															
 								});
-							} else {
-								
-							}					
+							}				
 							$('#searchSigungu').append(options.join("")).selectmenu('refresh');						
 						});
 				  }
@@ -80,27 +87,19 @@
 								data.forEach((item, idx) => {
 									options.push("<option value='" + (idx+1) + "'>" + item.emd + "</option>");													
 								});
-							} else {
-								
 							}												
 							$('#searchEmd').append(options.join("")).selectmenu('refresh');							
 						});
 				  }
 				});
-				
-				$( "#searchEmd" ).selectmenu({
-				  change: function( event, ui ) {
-					  //alert('emd');
-				  }
-				});
-			
+							
 			$("#slider-range").slider({
 				range: true,
 				min: 2015,
 				max: 2023,
 				values: [2022, 2023],
 				slide: function (event, ui) {
-					console.log(ui.values[0]);
+					//console.log(ui.values[0]);
 					$("#tradeYear").text(ui.values[0]);
 					$("#tradeYearEnd").text(ui.values[1]);
 
@@ -110,6 +109,53 @@
 					removeRealTrading();
 					getRealTrading();
 				}
+			});
+			
+			$('#searchSido').on('selectmenuchange', function() {			     
+			    $.get('/forsale/rest/addr/getSigungu?sido=' + paramSido, {}, function (data) {
+					$('#searchSigungu option').remove();
+					
+					$('#searchEmd option').remove();
+					$('#searchEmd').append('<option value="0">읍·면·동</option>').selectmenu('refresh');
+											
+					let options = [];	
+					options.push('<option value="0">시·군·구</option>');	
+					if (data.length > 0) {
+						data.forEach((item, idx) => {
+							options.push("<option value='" + (idx+1) + "'>" + item.sigungu + "</option>");															
+						});
+					}				
+					$('#searchSigungu').append(options.join("")).selectmenu('refresh');
+					
+					$( "#searchSigungu option" ).each(function() {							
+						if ($(this).text() == paramSigungu) {
+							$( "#searchSigungu" ).val($(this).val()).attr("selected", true);
+							$( "#searchSigungu" ).selectmenu('refresh').trigger("selectmenuchange");
+						}
+					});
+				});
+			});
+			
+			$('#searchSigungu').on('selectmenuchange', function() {
+				 $.get('/forsale/rest/addr/getEmd?sido=' + paramSido + '&sigungu=' + paramSigungu, {}, function (data) {
+						$('#searchEmd option').remove();
+	
+						let options = [];
+						options.push('<option value="0">읍·면·동</option>');
+						if (data.length > 0) {
+							data.forEach((item, idx) => {
+								options.push("<option value='" + (idx+1) + "'>" + item.emd + "</option>");													
+							});
+						}												
+						$('#searchEmd').append(options.join("")).selectmenu('refresh');	
+						
+						$( "#searchEmd option" ).each(function() {
+							if ($(this).text() == paramEmd) {	
+								$( "#searchEmd" ).val($(this).val()).attr("selected", true);
+								$( "#searchEmd" ).selectmenu('refresh');
+							}
+						});
+				});
 			});
 
 			$('#mo-catAreaSub2').css("background", "#1263DF");
@@ -128,7 +174,17 @@
 			const jibun = urlParams.get('init');
 			
 			const keyword = urlParams.get('keyword');
-
+			let paramSido = urlParams.get('sido');
+			let paramSigungu = urlParams.get('sigungu');
+			let paramEmd = urlParams.get('emd');
+			
+			$( "#searchSido option" ).each(function() {
+				if ($(this).text() == paramSido) {
+					$( "#searchSido" ).val($(this).val()).attr("selected", true);
+					$( "#searchSido" ).selectmenu('refresh').trigger("selectmenuchange");
+				}
+			});
+			
 			//console.log(keyword)
 			let zIdx = 1;
 
@@ -138,12 +194,14 @@
 			let map = null;
 			var clusterer = null;
 
+			/*
 			function sido_trans_full(e) {
 				for (var t in dong_trans) {
 					e = e.replace(t, dong_trans[t])
 				}
 				return sido_trans_table[e.split(" ")[0]] == undefined ? e : e.replace(e.split(" ")[0], sido_trans_table[e.split(" ")[0]])
 			}
+			*/
 
 			/**  개별공시지가 차트 : START  **/
 			let xLabels = [];
@@ -201,21 +259,24 @@
 			});
 			/**  개별공시지가 차트 : END  **/
 
+			// 마커 레이어
 			let isOverlayClick = false;			
 						
-			let jibunClickHandler = function (mouseEvent) {console.log("22333k");							
+			let jibunClickHandler = function (mouseEvent) {							
 				if (polygon != null)
 					polygon.setMap(null);
 				
 				// 클릭한 위도, 경도 정보를 가져옵니다 
 				var latlng = mouseEvent.latLng;
 								
-				$('[data-field=saleNo]').text('');
 				$('.cell_hidden').hide();
 				$('.btn_wrap').hide();
 				$('#slide_detail').hide();
 				$('.tag_wrap').hide();
 				$('.info_wrap').hide();
+				
+				$('.saleDetail').hide();
+				$('.jibunDetail').show();
 				
 				if ($('#map').children().eq(0).children().eq(0).children().eq(4).hasClass('gis_sub_wrap') == false) {
 					$('#map').children().eq(0).children().eq(0).children().eq(4).addClass('gis_sub_wrap');	
@@ -489,9 +550,9 @@
 		
 						$.get('https://polygon.disco.re/get_land_by_latlng/?lat=' + latlng.getLat() + '&lng=' + latlng.getLng(), {}, function (result) {
 							console.log(result.address);
-							$('#saleNumSub').hide();
-							$('#saleNumAddress').text(result.address);
-							console.log("zz");
+							
+							$('#jibunAddress').text(result.address);
+							
 								let tempPoly = null;
 								tempPoly = parse_land_polygon_value(result.polygon);
 		
@@ -762,9 +823,14 @@
 
 							// 실거래가 목록
 							$.get('/forsale/rest/tradings/getListFromPnu?pnu=' + pnu.pnu, {}, function (data) {
-								console.log("실거래가목록1");
-								console.log(data);
+								console.log("실거래가목록1222");
+								//console.log(data);
+								//console.log(data[0].posX);
 
+								let geocoder = new kakao.maps.services.Geocoder();
+								
+								
+								 
 								$('#trp-detail-period-cnt').text('(' + data.length + '건)');
 
 								let html = '';
@@ -786,6 +852,27 @@
 										html += '		<div class="detail_tradings_table_cell2" style="width: 90px;"></div>';
 										html += '	</div>';
 										html += '</div>';
+										
+										geocoder.coord2Address(item.posX, item.posY, function(result, status) {
+									        if (status === kakao.maps.services.Status.OK) {									        	
+									        	console.log(item.rid);
+									        	console.log(result[0].address);
+									        	console.log(result[0].address.address_name);
+									        	let pnu = item.pnu + '1' + result[0].address.main_address_no.padStart(4, '0')  + result[0].address.sub_address_no.padStart(4, '0');
+									        	console.log(pnu);
+									        	
+												let jibun1 = result[0].address.main_address_no;
+												let jibun2 = result[0].address.sub_address_no != '' ? '-' + result[0].address.sub_address_no : '';
+									        	let rtDTO = new Object();
+									        	rtDTO.rid = item.rid;
+									        	rtDTO.pnu = pnu;
+												rtDTO.jibun = jibun1 + jibun2;
+												
+									        	$.post("/forsale/rest/tradings/updateCoords", rtDTO, function (data, status) {
+													console.log("Data: " + data + "\nStatus: " + status);
+												});
+									        }
+										});
 									});
 								}
 								$('#detail_tradings_table_conts').html(html);
@@ -833,333 +920,12 @@
 						}
 						
 						minimapShow(latlng);
-					}					
-					//console.log(realTradingOverlayClick);
+					}		
 				});
+				
+				$('.saleDetail').hide();
 			}
 			
-			let jibunClickHandler2 = function (mouseEvent) {
-				
-
-				if (!isOverlayClick) {console.log("yy");
-					if (polygon != null)
-						polygon.setMap(null);
-	
-					// 클릭한 위도, 경도 정보를 가져옵니다 
-					var latlng = mouseEvent.latLng;
-	
-					$('[data-field=saleNo]').text('');
-					$('.btn_wrap').hide();
-					$('#slide_detail').hide();
-					$('.tag_wrap').hide();
-					$('.info_wrap').hide();
-	
-					$.get('https://polygon.disco.re/get_pnu_by_latlng2/?lat=' + latlng.getLat() + '&lng=' + latlng.getLng() + '&spec=goon', {}, function (pnu) {
-						console.log(pnu);
-						
-							// 토지대장
-							$.get('https://data.disco.re/home/land_by_pnu/?pnu=' + pnu.pnu, {}, function (data) {
-								console.log(data);
-								$('#land_forest_info_area').text(data.area);
-								$('#land_forest_info_purpose').text(data.purpose);
-								$('#p6').text(data.p6);
-								$('#p10').text(data.p10);
-								$('#owner_gbn').text(data.owner_gbn);
-								$('#days').text(data.days);
-								$('#why').text(data.why);
-								$('#p16').text(data.p16);
-								$('#p12').text(data.p12);
-								$('#p14').text(data.p14);
-	
-								let info_main = data.land_use_planning_info_main;
-								if (info_main != null && info_main.length > 0) {
-									info_main = info_main.split(',');
-								}
-	
-								let info_main_0 = info_main.filter(item => item.includes('포함')).map(item => item.replace('(포함)', ''));
-								let info_main_1 = info_main.filter(item => item.includes('저촉')).map(item => item.replace('(저촉)', ''));
-								let info_main_2 = info_main.filter(item => item.includes('접함')).map(item => item.replace('(접함)', ''));
-	
-								$('#info_main_0').text(info_main_0);
-								$('#info_main_1').text(info_main_1);
-								$('#info_main_2').text(info_main_2);
-	
-								let info_etc = data.land_use_planning_info_etc;
-								if (info_etc != null && info_etc.length > 0) {
-									info_etc = info_etc.split(',');
-								}
-	
-								let info_etc_0 = info_main.filter(item => item.includes('포함')).map(item => item.replace('(포함)', ''));
-								let info_etc_1 = info_main.filter(item => item.includes('저촉')).map(item => item.replace('(저촉)', ''));
-								let info_etc_2 = info_main.filter(item => item.includes('접함')).map(item => item.replace('(접함)', ''));
-	
-								$('#arch_info_0').text(info_etc_0);
-								$('#arch_info_1').text(info_etc_1);
-								$('#arch_info_2').text(info_etc_2);
-							});
-	
-							$.get('https://data.disco.re/home/arch_by_pnu/?pnu=' + pnu.pnu, {}, function (data) {
-								console.log(data);
-								let html = '';
-								if (data.overall_title_section.length > 0) {
-									let build_info = data.overall_title_section[0];
-	
-									$('#dpa_overall_b1').text(build_info.b10 != null ? build_info.b10 : "-");
-	
-									$('#dpa_overall_a1').text(build_info.b32 != null ? build_info.b32 : "-");
-									$('#dpa_overall_a1_1').text(build_info.b33 != null ? build_info.b33 : "-");
-	
-									$('.dpa-c-name').text(build_info.b32 != null ? build_info.b32 : "-");
-	
-									$('#dpa_overall_a2').text(build_info.b25 != null ? build_info.b25 + "㎡" : "-");
-	
-									html = '';
-									html += '<span>' + build_info.b26 + '㎡</span><br><span>(건폐율 ' + build_info.b27 + '%)</span>';
-									$('#dpa_overall_a3').html(html);
-	
-									$('#dpa_overall_b2').text(build_info.b28 != null ? build_info.b28 + "㎡" : "-");
-	
-									html = '';
-									html += '<span>' + build_info.b29 + '㎡</span><br><span>(용적률 ' + build_info.b30 + '%)</span>';
-									$('#dpa_overall_b3').html(html);
-	
-									$('#dpa_overall_c3_0').text(build_info.b34 != null ? build_info.b34 : "-");
-									$('#dpa_overall_c3_1').text(build_info.b35 != null ? build_info.b35 : "-");
-									$('#dpa_overall_c3_2').text(build_info.b56 != null ? build_info.b56 : "-");
-	
-									$('#dpa_overall_a5').text(build_info.b19 != null ? build_info.b19 : "-");
-	
-									$('#dpa_overall_g23').text(build_info.g23 != null ? build_info.g23 : "-");
-									$('#dpa_overall_g24').text(build_info.g24 != null ? build_info.g24 : "-");
-									$('#dpa_overall_g27').text(build_info.g27 != 0 ? build_info.g27 : "-");
-									$('#dpa_overall_g28').text(build_info.g28 != 0 ? build_info.g28 : "-");
-	
-									$('#dpaz_value_1').text(build_info.b44 != null ? build_info.b44 + "대" : "-");
-									$('#dpaz_value_2').text(build_info.b46 != null ? build_info.b46 + "대" : "-");
-									$('#dpaz_value_3').text(build_info.b40 != null ? build_info.b40 + "대" : "-");
-									$('#dpaz_value_4').text(build_info.b42 != null ? build_info.b42 + "대" : "-");
-	
-									let temp_b48 = build_info.b48.substr(0, 4) + "년 " + build_info.b48.substr(4, 2) + "월 " + build_info.b48.substr(6, 2) + "일";
-									$('#dpad_value1').text(build_info.b48 != null ? temp_b48 : "-");
-									let temp_b49 = build_info.b49.substr(0, 4) + "년 " + build_info.b49.substr(4, 2) + "월 " + build_info.b49.substr(6, 2) + "일";
-									$('#dpad_value2').text(build_info.b49 != null ? temp_b49 : "-");
-									let temp_b50 = build_info.b50.substr(0, 4) + "년 " + build_info.b50.substr(4, 2) + "월 " + build_info.b50.substr(6, 2) + "일";
-									$('#dpad_value3').text(build_info.b50 != null ? temp_b50 : "-");
-	
-								} else {
-									console.log(data.title_section)
-									let build_info = data.title_section[0];
-	
-									$('#dpa_overall_b1').text(build_info.a23 != null ? build_info.a23 : "-");
-	
-									$('#dpa_overall_a1').text(build_info.a36 != null ? build_info.a36 : "-");
-									$('#dpa_overall_a1_1').text(build_info.a37 != null ? build_info.a37 : "-");
-									$('#dpa_title_b5_1').text(build_info.a33 != null ? build_info.a33 : "-");
-									$('#dpa_title_b5_2').text(build_info.a39 != null ? build_info.a39 : "-");
-	
-									$('#dpa_overall_c2').text(build_info.a43 != null ? build_info.a43 + "m" : "-");
-									$('#dpa_overall_c5').text(build_info.a44 != null ? build_info.a44 + "/" + build_info.a45 : "-");
-	
-									$('.dpa-c-name').text(build_info.a36 != null ? build_info.a36 : "-");
-	
-									$('#dpa_overall_a2').text(build_info.a26 != null ? build_info.a26 + "㎡" : "-");
-	
-									html = '';
-									html += '<span>' + build_info.a27 + '㎡</span><br><span>(건폐율 ' + build_info.a28 + '%)</span>';
-									$('#dpa_overall_a3').html(html);
-	
-									$('#dpa_overall_b2').text(build_info.a29 != null ? build_info.a29 + "㎡" : "-");
-	
-									html = '';
-									html += '<span>' + build_info.a30 + '㎡</span><br><span>(용적률 ' + build_info.a31 + '%)</span>';
-									$('#dpa_overall_b3').html(html);
-	
-									$('#dpa_overall_c3_0').text(build_info.a41 != null ? build_info.a41 : "-");
-									$('#dpa_overall_c3_1').text(build_info.a42 != null ? build_info.a42 : "-");
-									$('#dpa_overall_c3_2').text(build_info.a67 != null ? build_info.a67 : "-");
-	
-									$('#dpa_overall_a5').text(build_info.a17 != null ? build_info.a17 : "-");
-	
-									$('#dpa_overall_g23').text(build_info.g23 != null ? build_info.g23 : "-");
-									$('#dpa_overall_g24').text(build_info.g24 != null ? build_info.g24 : "-");
-									$('#dpa_overall_g27').text(build_info.g27 != 0 ? build_info.g27 : "-");
-									$('#dpa_overall_g28').text(build_info.g28 != 0 ? build_info.g28 : "-");
-	
-									$('#dpaz_value_1').text(build_info.a55 != null ? build_info.a55 + "대" : "-");
-									$('#dpaz_value_2').text(build_info.a57 != null ? build_info.a57 + "대" : "-");
-									$('#dpaz_value_3').text(build_info.a51 != null ? build_info.a51 + "대" : "-");
-									$('#dpaz_value_4').text(build_info.a53 != null ? build_info.a53 + "대" : "-");
-	
-									$('#dpal_value1').text(build_info.a46 != null ? build_info.a46 : "-");
-									$('#dpal_value2').text(build_info.a47 != null ? build_info.a47 : "-");
-	
-									let temp_a59 = build_info.a59.substr(0, 4) + "년 " + build_info.a59.substr(4, 2) + "월 " + build_info.a59.substr(6, 2) + "일";
-									$('#dpad_value1').text(build_info.a59 != null ? temp_a59 : "-");
-									let temp_a60 = build_info.a60.substr(0, 4) + "년 " + build_info.a60.substr(4, 2) + "월 " + build_info.a60.substr(6, 2) + "일";
-									$('#dpad_value2').text(build_info.a60 != null ? temp_a60 : "-");
-									let temp_a61 = build_info.a61.substr(0, 4) + "년 " + build_info.a61.substr(4, 2) + "월 " + build_info.a61.substr(6, 2) + "일";
-									$('#dpad_value3').text(build_info.a61 != null ? temp_a61 : "-");
-	
-									$.get('https://data.disco.re/home/arch_floor_list/?key=' + build_info.a1, {}, function (subData) {
-										console.log(subData);
-										let subHtml = '';
-										if (subData.length > 0) {
-											subData.forEach(item => {
-												subHtml += '<div class="rfc-cool-grey" style="width:auto;padding:7px 20px;font-size:14px;">';
-												subHtml += '	<div style="display:table;">';
-												subHtml += '		<div style="position:relative;line-height:32px;display:table-row;">';
-												subHtml += '			<span style="display:table-cell;background:#afbed7;width:27px;display: inline-block;height: 20px;text-align: center;line-height:21px;color: #fff;border-radius:10px;">';
-												subHtml += item.d31.substr(0, 1);
-												subHtml += '			</span>';
-												subHtml += '			<span style="display:table-cell;min-width:70px;font-size: 16px; padding:0 5px;text-align:middle;" class="rf3_text1">';
-												subHtml += item.floor;
-												subHtml += '			</span>';
-												subHtml += '			<span style="display:table-cell;width:auto;text-align:left;line-height: 20px;">';
-												subHtml += item.d27 + ' · ' + item.d28;
-												subHtml += '			</span>';
-												subHtml += '		</div>';
-												subHtml += '	</div>';
-												subHtml += '	<div style="width:100%;">';
-												subHtml += item.d24;
-												subHtml += ' · ';
-												subHtml += '		<span style="display: inline-block;">';
-												subHtml += item.d29 + '㎡';
-												subHtml += '		</span>';
-												subHtml += '	</div>';
-												subHtml += '</div>';
-												subHtml += '<div class="ifs-tab-bar"></div>';
-											});
-	
-											$('#dpaf_data_list').html(subHtml);
-										}
-									});
-								}
-							});
-	
-							$.get('https://data.disco.re/home/get_land_history/?pnu=' + pnu.pnu, {}, function (data) {
-								console.log(data);
-	
-								let html = '';
-								data.reverse().forEach(item => {
-									html += '<div style="display: table-row;line-height: 48px;">';
-									html += '	<div style="display: table-cell;width:40%;text-align:left;font-size:14px;color:#50555a;padding-left:12px;">';
-									html += item.move_date;
-									html += '	</div>';
-									html += '	<div style="display: table-cell;width:60%;text-align:left;font-size:14px;color:#1e1e23;">';
-									html += item.reason;
-									html += '	</div>';
-									html += '</div>';
-								});
-								$('#land_history').html(html);
-							});
-	
-							// 실거래가 목록
-							$.get('/forsale/rest/tradings/getListFromPnu?pnu=' + pnu.pnu, {}, function (data) {
-								console.log("실거래가목록2");
-								console.log(data);
-	
-								$('#trp-detail-period-cnt').text('(' + data.length + '건)');
-	
-								let html = '';
-								if (data.length > 0) {
-									data.forEach(item => {
-										html += '<div class="detail_tradings_table2">';
-										html += '	<div class="detail_tradings_table_row">';
-										html += '		<div class="detail_tradings_table_cell2" style="width: 22%;">';
-										html += '`' + item.dealMonth.substr(2, 2) + '.' + item.dealMonth.substr(4, 2) + '.' + item.dealDay;
-										html += '		</div>';
-										html += '		<div class="detail_tradings_table_cell2" style="width: 20%;">';
-										html += '			<span data-area="total" style="display: inline;">';
-										html += numComma(item.dealAmount) + "만";
-										html += '			</span>';
-										html += '		</div>';
-										html += '		<div class="detail_tradings_table_cell2" style="width: auto;">';
-										html += item.floor + '층 ' + item.floor + '**호';
-										html += '		</div>';
-										html += '		<div class="detail_tradings_table_cell2" style="width: 90px;"></div>';
-										html += '	</div>';
-										html += '</div>';
-									});
-								} else {
-									html += '<div class="detail_tradings_table2">';
-									html += '	<div class="detail_tradings_table_row">';
-									html += '	<span>';
-									html += '		실거래 내역이 없습니다.';
-									html += '	</span>';
-									html += '	</div>';
-									html += '</div>';
-								}
-								$('#detail_tradings_table_conts').html(html);
-							});
-	
-	
-							$.get('https://data.disco.re/home/land_price/?pnu=' + pnu.pnu, {}, function (data) {
-								console.log(data);
-								xLabels.length = 0;
-								datapoints.length = 0;
-	
-								minValue = data[0][2];
-								maxValue = data[0][2];
-	
-								data.forEach(item => {
-									xLabels.push('`' + (item[0] + '').substr(2, 2) + '년');
-									datapoints.push(item[2]);
-									if (minValue > item[2])
-										minValue = item[2];
-									if (maxValue < item[2])
-										maxValue = item[2];
-								});
-	
-								gongChart.update();
-							});
-					});
-	
-					$.get('https://polygon.disco.re/get_land_by_latlng/?lat=' + latlng.getLat() + '&lng=' + latlng.getLng(), {}, function (result) {
-						console.log(result);
-						console.log("zz");
-							let tempPoly = null;
-							tempPoly = parse_land_polygon_value(result.polygon);
-	
-							// 지도에 표시할 다각형을 생성합니다
-							polygon = new kakao.maps.Polygon({
-								path: tempPoly[0],//polygonPath, // 그려질 다각형의 좌표 배열입니다
-								strokeWeight: 2, // 선의 두께입니다 
-								strokeColor: '#75B8FA', // 선의 색깔입니다
-								strokeOpacity: 1, // 선의 불투명도 입니다 1에서 0 사이의 값이며 0에 가까울수록 투명합니다
-								strokeStyle: 'shortdash', // 선의 스타일 입니다
-								fillColor: '#CFE7FF', // 채우기 색깔입니다
-								fillOpacity: 0.7  // 채우기 불투명도 입니다  
-	
-							});
-	
-							// 지도에 다각형을 표시합니다
-							polygon.setMap(map);
-						
-					});	
-				
-					var detailW = $(".detail_wrap").width();
-					var listW = $(".left_wrap").width();
-					$("#gis_layout").addClass("detailOn");
-					//$(".detail_wrap").css("left", detailW * -1);
-
-
-					//$('.tabCon_wrap').hide();
-
-					var isMini = $(".detail_wrap").hasClass("mini");
-
-					if (isMini) {
-						$('.left_wrap').hide();
-						$('.detail_wrap').css("left", "0px");
-					} else {
-						$(".detail_wrap").animate({ "left": listW }, 200, function () {
-							$("#gis_layout").removeClass("detailMov");
-						});
-					}
-				}
-			};
-
-			
-
 
 			var w = /*[[${form.w}]]*/ '';
 			if ((w == null || w.length == 0) && keyword == null) {
@@ -1287,7 +1053,7 @@
 							var markers = $(data.positions).map(function (i, position) {
 								//alert(position.lat + '...' + position.lng);
 								return new kakao.maps.Marker({
-									position: new kakao.maps.LatLng(position.lat, position.lng)
+									position: new kakao.maps.LatLng(position.lat + (Math.random() / 300), position.lng + (Math.random() / 300))
 								});
 							});
 
@@ -1324,8 +1090,7 @@
 
 				geocoder.addressSearch('쌍봉동', callback);
 
-			}
-			else {
+			} else {
 				var options = { //지도를 생성할 때 필요한 기본 옵션
 					center: new kakao.maps.LatLng(37.566826, 126.9786567), // 지도의 중심좌표
 					scrollwheel: true,
@@ -1403,6 +1168,9 @@
 
 				// 키워드로 장소를 검색합니다
 				ps.keywordSearch(keyword, placesSearchCB);
+				
+				//let geocoder = new kakao.maps.services.Geocoder();
+				//geocoder.addressSearch(keyword, placesSearchCB);
 
 				// 키워드 검색 완료 시 호출되는 콜백함수 입니다
 				function placesSearchCB(data, status, pagination) {
@@ -1410,18 +1178,99 @@
 
 						// 검색된 장소 위치를 기준으로 지도 범위를 재설정하기위해
 						// LatLngBounds 객체에 좌표를 추가합니다
-						var bounds = new kakao.maps.LatLngBounds();
+						let bounds = new kakao.maps.LatLngBounds();
+						let addr = '';
 
 						for (var i = 0; i < data.length; i++) {
-							//displayMarker(data[i]);    
+							//console.log(data[i]);    
 							bounds.extend(new kakao.maps.LatLng(data[i].y, data[i].x));
+							addr = data[i].address_name;
 						}
-
+						addr = addr.split(' ');
+						console.log(addr);
 						// 검색된 장소 위치를 기준으로 지도 범위를 재설정합니다
 						map.setBounds(bounds);
+						
+						let sido_trans = {
+							'전북' : '전라북도',
+							'전남' : '전라남도'
+						}
+						
+						paramSido = addr[0];						
+						paramSigungu = addr[1];
+						paramEmd = addr[2];
+						
+						paramSido = sido_trans[paramSido];
+						
+						$( "#searchSido option" ).each(function() {
+							if ($(this).text() == paramSido) {
+								$( "#searchSido" ).val($(this).val()).attr("selected", true);
+								$( "#searchSido" ).selectmenu('refresh').trigger("selectmenuchange");
+							}
+						});
+						
+						if (jibun == 'jibun') {
+							$('.cell_hidden').hide();
+							$('.btn_wrap').hide();
+							$('#slide_detail').hide();
+							$('.tag_wrap').hide();
+							$('.info_wrap').hide();
+							
+							$('.saleDetail').hide();
+							$('.jibunDetail').show();
+						
+							var detailW = $(".detail_wrap").width();
+							var listW = $(".left_wrap").width();
+							$("#gis_layout").addClass("detailOn");
+							//$(".detail_wrap").css("left", detailW * -1);
+
+
+							//$('.tabCon_wrap').hide();
+
+							var isMini = $(".detail_wrap").hasClass("mini");
+
+							if (isMini) {
+								$('.left_wrap').hide();
+								$('.detail_wrap').css("left", "0px");
+							} else {
+								$(".detail_wrap").animate({ "left": listW }, 200, function () {
+									$("#gis_layout").removeClass("detailMov");
+								});
+							}
+										
+							realTradingOverlayClick = [false, false, false, false, false];
+							
+							var coords = new kakao.maps.LatLng(data[0].y, data[0].x);
+							
+							jibunDetails(coords);
+					        minimapShow(coords);		
+					        
+					        getRealTrading();
+					        
+							/*
+							// 주소-좌표 변환 객체를 생성합니다
+							let geocoder = new kakao.maps.services.Geocoder();
+
+							// 주소로 좌표를 검색합니다
+							geocoder.addressSearch(keyword, function(result, status) {				    
+							     if (status === kakao.maps.services.Status.OK) {				    	
+							        var coords = new kakao.maps.LatLng(result[0].y, result[0].x);
+							        map.setCenter(coords);
+							        
+							        jibunDetails(coords);
+							        minimapShow(coords);		
+							        
+							        getRealTrading();
+							    } else {
+							    	console.log("주소 검색 실패");
+							    }
+							});
+							*/
+						}
 					}
 				}
 
+				/*
 				// 지도에 마커를 표시하는 함수입니다
 				function displayMarker(place) {
 
@@ -1438,13 +1287,12 @@
 						infowindow.open(map, marker);
 					});
 				}
-				
-				
-				
+				*/
 			}
+			
+			
 
-			$('a.share').click(function () {
-				//alert(EXTERNAL_LINK_URL);
+			$('a.share').click(function () {				
 				var sampleTextarea = document.createElement("textarea");
 				document.body.appendChild(sampleTextarea);
 				sampleTextarea.value = EXTERNAL_LINK_URL; //save main text in it
@@ -1459,7 +1307,7 @@
 				if (level <= 2) return;
 
 				map.setLevel(level - 1);
-				console.log(map.getLevel());
+				//console.log(map.getLevel());
 			});
 
 			$('a.zoom_out').click(function () {
@@ -1467,7 +1315,7 @@
 				if (level >= 10) return;
 
 				map.setLevel(level + 1);
-				console.log(map.getLevel());
+				//console.log(map.getLevel());
 			});
 
 			$('a.search').click(function () {
@@ -1486,6 +1334,8 @@
 					//console.log(result);
 					$('div.tab1').html(result);
 					imgResizeOut(".tabCon_wrap .thumb img");
+					
+					//$('#minimap_container').hide();
 				});
 
 				//마커 그리기.
@@ -1538,57 +1388,295 @@
 				history.replaceState(null, '', location.href.replace('&rid=', '&r='));	//새로고침시 상세정보가 다시 뜨지 않도록 히스토리를 변경해줌.
 			}
 
-			/*
-			$('div.detail_wrap').find('a').click(function() {
-				//alert( $(this).attr('class') + '...' + $(this).data('rid') );
-			});
-			*/
-
 			//로딩시 매물목록
 			$('a.search').trigger('click');
 			
-			if (jibun == 'jibun') {
-				var detailW = $(".detail_wrap").width();
-				var listW = $(".left_wrap").width();
-				$("#gis_layout").addClass("detailOn");
-				//$(".detail_wrap").css("left", detailW * -1);
+			
+			
+			function jibunDetails(latlng) {
+				$.get('https://polygon.disco.re/get_pnu_by_latlng2/?lat=' + latlng.getLat() + '&lng=' + latlng.getLng() + '&spec=goon', {}, function (pnu) {
+					console.log(pnu);
+					
+						// 토지대장
+						$.get('https://data.disco.re/home/land_by_pnu/?pnu=' + pnu.pnu, {}, function (data) {
+							console.log(data);
+							$('#land_forest_info_area').text(data.area);
+							$('#land_forest_info_purpose').text(data.purpose);
+							$('#p6').text(data.p6);
+							$('#p10').text(data.p10);
+							$('#owner_gbn').text(data.owner_gbn);
+							$('#days').text(data.days);
+							$('#why').text(data.why);
+							$('#p16').text(data.p16);
+							$('#p12').text(data.p12);
+							$('#p14').text(data.p14);
+
+							let info_main = data.land_use_planning_info_main;
+							if (info_main != null && info_main.length > 0) {
+								info_main = info_main.split(',');
+							}
+
+							let info_main_0 = info_main.filter(item => item.includes('포함')).map(item => item.replace('(포함)', ''));
+							let info_main_1 = info_main.filter(item => item.includes('저촉')).map(item => item.replace('(저촉)', ''));
+							let info_main_2 = info_main.filter(item => item.includes('접함')).map(item => item.replace('(접함)', ''));
+
+							$('#info_main_0').text(info_main_0);
+							$('#info_main_1').text(info_main_1);
+							$('#info_main_2').text(info_main_2);
+
+							let info_etc = data.land_use_planning_info_etc;
+							if (info_etc != null && info_etc.length > 0) {
+								info_etc = info_etc.split(',');
+							}
+
+							let info_etc_0 = info_main.filter(item => item.includes('포함')).map(item => item.replace('(포함)', ''));
+							let info_etc_1 = info_main.filter(item => item.includes('저촉')).map(item => item.replace('(저촉)', ''));
+							let info_etc_2 = info_main.filter(item => item.includes('접함')).map(item => item.replace('(접함)', ''));
+
+							$('#arch_info_0').text(info_etc_0);
+							$('#arch_info_1').text(info_etc_1);
+							$('#arch_info_2').text(info_etc_2);
+						});
+
+						$.get('https://data.disco.re/home/arch_by_pnu/?pnu=' + pnu.pnu, {}, function (data) {
+							console.log(data);
+							let html = '';
+							if (data.overall_title_section.length > 0) {
+								let build_info = data.overall_title_section[0];
+
+								$('#dpa_overall_b1').text(build_info.b10 != null ? build_info.b10 : "-");
+
+								$('#dpa_overall_a1').text(build_info.b32 != null ? build_info.b32 : "-");
+								$('#dpa_overall_a1_1').text(build_info.b33 != null ? build_info.b33 : "-");
+
+								$('.dpa-c-name').text(build_info.b32 != null ? build_info.b32 : "-");
+
+								$('#dpa_overall_a2').text(build_info.b25 != null ? build_info.b25 + "㎡" : "-");
+
+								html = '';
+								html += '<span>' + build_info.b26 + '㎡</span><br><span>(건폐율 ' + build_info.b27 + '%)</span>';
+								$('#dpa_overall_a3').html(html);
+
+								$('#dpa_overall_b2').text(build_info.b28 != null ? build_info.b28 + "㎡" : "-");
+
+								html = '';
+								html += '<span>' + build_info.b29 + '㎡</span><br><span>(용적률 ' + build_info.b30 + '%)</span>';
+								$('#dpa_overall_b3').html(html);
+
+								$('#dpa_overall_c3_0').text(build_info.b34 != null ? build_info.b34 : "-");
+								$('#dpa_overall_c3_1').text(build_info.b35 != null ? build_info.b35 : "-");
+								$('#dpa_overall_c3_2').text(build_info.b56 != null ? build_info.b56 : "-");
+
+								$('#dpa_overall_a5').text(build_info.b19 != null ? build_info.b19 : "-");
+
+								$('#dpa_overall_g23').text(build_info.g23 != null ? build_info.g23 : "-");
+								$('#dpa_overall_g24').text(build_info.g24 != null ? build_info.g24 : "-");
+								$('#dpa_overall_g27').text(build_info.g27 != 0 ? build_info.g27 : "-");
+								$('#dpa_overall_g28').text(build_info.g28 != 0 ? build_info.g28 : "-");
+
+								$('#dpaz_value_1').text(build_info.b44 != null ? build_info.b44 + "대" : "-");
+								$('#dpaz_value_2').text(build_info.b46 != null ? build_info.b46 + "대" : "-");
+								$('#dpaz_value_3').text(build_info.b40 != null ? build_info.b40 + "대" : "-");
+								$('#dpaz_value_4').text(build_info.b42 != null ? build_info.b42 + "대" : "-");
+
+								let temp_b48 = build_info.b48.substr(0, 4) + "년 " + build_info.b48.substr(4, 2) + "월 " + build_info.b48.substr(6, 2) + "일";
+								$('#dpad_value1').text(build_info.b48 != null ? temp_b48 : "-");
+								let temp_b49 = build_info.b49.substr(0, 4) + "년 " + build_info.b49.substr(4, 2) + "월 " + build_info.b49.substr(6, 2) + "일";
+								$('#dpad_value2').text(build_info.b49 != null ? temp_b49 : "-");
+								let temp_b50 = build_info.b50.substr(0, 4) + "년 " + build_info.b50.substr(4, 2) + "월 " + build_info.b50.substr(6, 2) + "일";
+								$('#dpad_value3').text(build_info.b50 != null ? temp_b50 : "-");
+
+							} else {
+								console.log(data.title_section)
+								let build_info = data.title_section[0];
+
+								$('#dpa_overall_b1').text(build_info.a23 != null ? build_info.a23 : "-");
+
+								$('#dpa_overall_a1').text(build_info.a36 != null ? build_info.a36 : "-");
+								$('#dpa_overall_a1_1').text(build_info.a37 != null ? build_info.a37 : "-");
+								$('#dpa_title_b5_1').text(build_info.a33 != null ? build_info.a33 : "-");
+								$('#dpa_title_b5_2').text(build_info.a39 != null ? build_info.a39 : "-");
+
+								$('#dpa_overall_c2').text(build_info.a43 != null ? build_info.a43 + "m" : "-");
+								$('#dpa_overall_c5').text(build_info.a44 != null ? build_info.a44 + "/" + build_info.a45 : "-");
+
+								$('.dpa-c-name').text(build_info.a36 != null ? build_info.a36 : "-");
+
+								$('#dpa_overall_a2').text(build_info.a26 != null ? build_info.a26 + "㎡" : "-");
+
+								html = '';
+								html += '<span>' + build_info.a27 + '㎡</span><br><span>(건폐율 ' + build_info.a28 + '%)</span>';
+								$('#dpa_overall_a3').html(html);
+
+								$('#dpa_overall_b2').text(build_info.a29 != null ? build_info.a29 + "㎡" : "-");
+
+								html = '';
+								html += '<span>' + build_info.a30 + '㎡</span><br><span>(용적률 ' + build_info.a31 + '%)</span>';
+								$('#dpa_overall_b3').html(html);
+
+								$('#dpa_overall_c3_0').text(build_info.a41 != null ? build_info.a41 : "-");
+								$('#dpa_overall_c3_1').text(build_info.a42 != null ? build_info.a42 : "-");
+								$('#dpa_overall_c3_2').text(build_info.a67 != null ? build_info.a67 : "-");
+
+								$('#dpa_overall_a5').text(build_info.a17 != null ? build_info.a17 : "-");
+
+								$('#dpa_overall_g23').text(build_info.g23 != null ? build_info.g23 : "-");
+								$('#dpa_overall_g24').text(build_info.g24 != null ? build_info.g24 : "-");
+								$('#dpa_overall_g27').text(build_info.g27 != 0 ? build_info.g27 : "-");
+								$('#dpa_overall_g28').text(build_info.g28 != 0 ? build_info.g28 : "-");
+
+								$('#dpaz_value_1').text(build_info.a55 != null ? build_info.a55 + "대" : "-");
+								$('#dpaz_value_2').text(build_info.a57 != null ? build_info.a57 + "대" : "-");
+								$('#dpaz_value_3').text(build_info.a51 != null ? build_info.a51 + "대" : "-");
+								$('#dpaz_value_4').text(build_info.a53 != null ? build_info.a53 + "대" : "-");
+
+								$('#dpal_value1').text(build_info.a46 != null ? build_info.a46 : "-");
+								$('#dpal_value2').text(build_info.a47 != null ? build_info.a47 : "-");
+
+								let temp_a59 = build_info.a59.substr(0, 4) + "년 " + build_info.a59.substr(4, 2) + "월 " + build_info.a59.substr(6, 2) + "일";
+								$('#dpad_value1').text(build_info.a59 != null ? temp_a59 : "-");
+								let temp_a60 = build_info.a60.substr(0, 4) + "년 " + build_info.a60.substr(4, 2) + "월 " + build_info.a60.substr(6, 2) + "일";
+								$('#dpad_value2').text(build_info.a60 != null ? temp_a60 : "-");
+								let temp_a61 = build_info.a61.substr(0, 4) + "년 " + build_info.a61.substr(4, 2) + "월 " + build_info.a61.substr(6, 2) + "일";
+								$('#dpad_value3').text(build_info.a61 != null ? temp_a61 : "-");
+
+								$.get('https://data.disco.re/home/arch_floor_list/?key=' + build_info.a1, {}, function (subData) {
+									console.log(subData);
+									let subHtml = '';
+									if (subData.length > 0) {
+										subData.forEach(item => {
+											subHtml += '<div class="rfc-cool-grey" style="width:auto;padding:7px 20px;font-size:14px;">';
+											subHtml += '	<div style="display:table;">';
+											subHtml += '		<div style="position:relative;line-height:32px;display:table-row;">';
+											subHtml += '			<span style="display:table-cell;background:#afbed7;width:27px;display: inline-block;height: 20px;text-align: center;line-height:21px;color: #fff;border-radius:10px;">';
+											subHtml += item.d31.substr(0, 1);
+											subHtml += '			</span>';
+											subHtml += '			<span style="display:table-cell;min-width:70px;font-size: 16px; padding:0 5px;text-align:middle;" class="rf3_text1">';
+											subHtml += item.floor;
+											subHtml += '			</span>';
+											subHtml += '			<span style="display:table-cell;width:auto;text-align:left;line-height: 20px;">';
+											subHtml += item.d27 + ' · ' + item.d28;
+											subHtml += '			</span>';
+											subHtml += '		</div>';
+											subHtml += '	</div>';
+											subHtml += '	<div style="width:100%;">';
+											subHtml += item.d24;
+											subHtml += ' · ';
+											subHtml += '		<span style="display: inline-block;">';
+											subHtml += item.d29 + '㎡';
+											subHtml += '		</span>';
+											subHtml += '	</div>';
+											subHtml += '</div>';
+											subHtml += '<div class="ifs-tab-bar"></div>';
+										});
+
+										$('#dpaf_data_list').html(subHtml);
+									}
+								});
+							}
+						});
+
+						$.get('https://data.disco.re/home/get_land_history/?pnu=' + pnu.pnu, {}, function (data) {
+							console.log(data);
+
+							let html = '';
+							data.reverse().forEach(item => {
+								html += '<div style="display: table-row;line-height: 48px;">';
+								html += '	<div style="display: table-cell;width:40%;text-align:left;font-size:14px;color:#50555a;padding-left:12px;">';
+								html += item.move_date;
+								html += '	</div>';
+								html += '	<div style="display: table-cell;width:60%;text-align:left;font-size:14px;color:#1e1e23;">';
+								html += item.reason;
+								html += '	</div>';
+								html += '</div>';
+							});
+							$('#land_history').html(html);
+						});
+
+						// 실거래가 목록
+						$.get('/forsale/rest/tradings/getListFromPnu?pnu=' + pnu.pnu, {}, function (data) {
+							console.log("실거래가목록2-1");
+							console.log(data);
+
+							$('#trp-detail-period-cnt').text('(' + data.length + '건)');
+
+							let html = '';
+							if (data.length > 0) {
+								data.forEach(item => {
+									html += '<div class="detail_tradings_table2">';
+									html += '	<div class="detail_tradings_table_row">';
+									html += '		<div class="detail_tradings_table_cell2" style="width: 22%;">';
+									html += '`' + item.dealMonth.substr(2, 2) + '.' + item.dealMonth.substr(4, 2) + '.' + item.dealDay;
+									html += '		</div>';
+									html += '		<div class="detail_tradings_table_cell2" style="width: 20%;">';
+									html += '			<span data-area="total" style="display: inline;">';
+									html += numComma(item.dealAmount) + "만";
+									html += '			</span>';
+									html += '		</div>';
+									html += '		<div class="detail_tradings_table_cell2" style="width: auto;">';
+									html += item.floor + '층 ' + item.floor + '**호';
+									html += '		</div>';
+									html += '		<div class="detail_tradings_table_cell2" style="width: 90px;"></div>';
+									html += '	</div>';
+									html += '</div>';
+								});
+							} else {
+								html += '<div class="detail_tradings_table2">';
+								html += '	<div class="detail_tradings_table_row">';
+								html += '	<span>';
+								html += '		실거래 내역이 없습니다.';
+								html += '	</span>';
+								html += '	</div>';
+								html += '</div>';
+							}
+							$('#detail_tradings_table_conts').html(html);
+						});
 
 
-				//$('.tabCon_wrap').hide();
+						$.get('https://data.disco.re/home/land_price/?pnu=' + pnu.pnu, {}, function (data) {
+							console.log(data);
+							xLabels.length = 0;
+							datapoints.length = 0;
 
-				var isMini = $(".detail_wrap").hasClass("mini");
+							minValue = data[0][2];
+							maxValue = data[0][2];
 
-				if (isMini) {
-					$('.left_wrap').hide();
-					$('.detail_wrap').css("left", "0px");
-				} else {
-					$(".detail_wrap").animate({ "left": listW }, 200, function () {
-						$("#gis_layout").removeClass("detailMov");
-					});
-				}
-				
-				realTradingOverlayClick = [false, false, false, false, false];
-				
-				
-				
-				// 주소-좌표 변환 객체를 생성합니다
-				let geocoder = new kakao.maps.services.Geocoder();
+							data.forEach(item => {
+								xLabels.push('`' + (item[0] + '').substr(2, 2) + '년');
+								datapoints.push(item[2]);
+								if (minValue > item[2])
+									minValue = item[2];
+								if (maxValue < item[2])
+									maxValue = item[2];
+							});
 
-				// 주소로 좌표를 검색합니다
-				geocoder.addressSearch(keyword, function(result, status) {
+							gongChart.update();
+						});
+				});
 
-				    // 정상적으로 검색이 완료됐으면 
-				     if (status === kakao.maps.services.Status.OK) {				    	
-				        var coords = new kakao.maps.LatLng(result[0].y, result[0].x);
-				        
-				        // 지도의 중심을 결과값으로 받은 위치로 이동시킵니다
-				        map.setCenter(coords);
-				        
-				        minimapShow(coords);
-				    } else {
-				    	console.log("검색 실패");
-				    }
-				});    
+				$.get('https://polygon.disco.re/get_land_by_latlng/?lat=' + latlng.getLat() + '&lng=' + latlng.getLng(), {}, function (result) {
+					console.log(result.address);
+					
+					$('#jibunAddress').text(result.address);
+					
+						let tempPoly = null;
+						tempPoly = parse_land_polygon_value(result.polygon);
+
+						// 지도에 표시할 다각형을 생성합니다
+						polygon = new kakao.maps.Polygon({
+							path: tempPoly[0],//polygonPath, // 그려질 다각형의 좌표 배열입니다
+							strokeWeight: 2, // 선의 두께입니다 
+							strokeColor: '#75B8FA', // 선의 색깔입니다
+							strokeOpacity: 1, // 선의 불투명도 입니다 1에서 0 사이의 값이며 0에 가까울수록 투명합니다
+							strokeStyle: 'shortdash', // 선의 스타일 입니다
+							fillColor: '#CFE7FF', // 채우기 색깔입니다
+							fillOpacity: 0.7  // 채우기 불투명도 입니다  
+
+						});
+
+						// 지도에 다각형을 표시합니다
+						polygon.setMap(map);					
+				});	
 			}
 
 			//등록매물
@@ -1697,8 +1785,7 @@
 					alert('시·도를 선택해주세요.');
 					return;
 				}
-				//location.href = '/02la01?t=r&keyword=' + ($('#sido').val() != 0 ? $('#sido').find(':selected').text() : '') + ($('#searchSigungu').val() != 0 ? $('#searchSigungu').find(':selected').text() : '') + ($('#searchEmd').val() != 0 ? $('#searchEmd').find(':selected').text() : '');
-
+				
 				let kw = $('#searchSido').find(':selected').text() + ($('#searchSigungu').val() != 0 ? $('#searchSigungu').find(':selected').text() : '') + ($('#searchEmd').val() != 0 ? $('#searchEmd').find(':selected').text() : '');
 				
 				// 장소 검색 객체를 생성합니다
@@ -2806,42 +2893,39 @@
 			let isAround = false;
 			let isAreaExtent = false;
 			let isPrice = false;
-			$('#cat_map').click(function () {
+			$('#cat_map').click(function () {				
 				if (isMap) {
-					isMap = false;
-					$('#cat_map').css("color", "#000");
-					$('#cat_map').css("background-color", "#fff");
+					$('#cat_map').removeClass("on");
 
 					$('.category_bottom').hide();
+					
+					clearCategory();
 				} else {
 					isMeasure = false;
 					isAround = false;
 					isAreaExtent = false;
 					isPrice = false;
-
-					isMap = true;
-					$('.category_top li').css("color", "#000");
-					$('.category_top li').css("background-color", "#fff");
-
-					$('#cat_map').css("color", "#fff");
-					$('#cat_map').css("background-color", "#1263df");
-
+					
+					$('.category_top li').removeClass("on");
+					$('#cat_map').addClass("on");
+					
 					$('.category_bottom').hide();
-					$('#cat_map_sub').show();
-
-					$('#mapTypeChange1').click(function () {
-						setOverlayMapTypeId('skyview');
-					});
-					$('#mapTypeChange2').click(function () {
-						setOverlayMapTypeId('use_district');
-					});
-					$('#mapTypeChange3').click(function () {
-						setOverlayMapTypeId('terrain');
-					});
-					$('#mapTypeChange4').click(function () {
-						setOverlayMapTypeId('roadview');
-					});
-				}
+					$('#cat_map_sub').show();					
+				}				
+				isMap = !isMap;
+			});
+			
+			$('#mapTypeChange1').click(function () {
+				setOverlayMapTypeId('skyview', map);
+			});
+			$('#mapTypeChange2').click(function () {
+				setOverlayMapTypeId('use_district', map);
+			});
+			$('#mapTypeChange3').click(function () {
+				setOverlayMapTypeId('terrain', map);
+			});
+			$('#mapTypeChange4').click(function () {
+				setOverlayMapTypeId('roadview', map);
 			});
 
 			let lineDistanceArr = [];
@@ -2854,10 +2938,7 @@
 			let isLength = false;
 			
 			$('#cat_measure').click(function () {
-
 				if (isMeasure) {
-					isMeasure = false;
-					
 					kakao.maps.event.addListener(map, 'click', jibunClickHandler);
 					kakao.maps.event.removeListener(map, 'click', measuerAreaClickHandler);
 					kakao.maps.event.removeListener(map, 'click', measuerLengthClickHandler);
@@ -2865,8 +2946,7 @@
 					$('div.tab1').addClass('on');
 					$('div.tab5').removeClass('on');
 					
-					$('#cat_measure').css("color", "#000");
-					$('#cat_measure').css("background-color", "#fff");
+					$('#cat_measure').removeClass("on");
 
 					$('.category_bottom').hide();
 				} else {
@@ -2875,178 +2955,175 @@
 					isAreaExtent = false;
 					isPrice = false;
 
-					isMeasure = true;
-					$('.category_top li').css("color", "#000");
-					$('.category_top li').css("background-color", "#fff");
-
-					$('#cat_measure').css("color", "#fff");
-					$('#cat_measure').css("background-color", "#1263df");
+					$('.category_top li').removeClass("on");
+					$('#cat_measure').addClass("on");
 
 					$('.category_bottom').hide();
-					$('#cat_measure_sub').show();
-
-					// PC using
-					$('#areaMeasure').click(function () {//console.log("222");
-						if (isArea) {console.log("333");
-							isArea = false;
-
-							if (polygonArr.length > 0) {
-								polygonArr.forEach(function (polygon) {
-									polygon.setMap(null);
-								});
-
-								areaOverlayArr.forEach(function (areaOverlay) {
-									areaOverlay.setMap(null);
-								});
-							}
-
-							kakao.maps.event.addListener(map, 'click', jibunClickHandler);
-							kakao.maps.event.removeListener(map, 'click', measuerAreaClickHandler);
-							
-							$('div.tab1').addClass('on');
-							$('div.tab5').removeClass('on');
-
-							$('#areaMeasure').css("color", "#000");
-							$('#areaMeasure').css("background-color", "#fff");
-						} else {console.log("444");
-							isLength = false;
-							isArea = true;
-							
-							drawingFlag = false;
-
-							measureSet('면적');
-
-							// 지도 위에 선이 표시되고 있다면 지도에서 제거합니다
-							deleteClickLine();
-							// 지도 위에 커스텀오버레이가 표시되고 있다면 지도에서 제거합니다
-							deleteDistnce();
-							// 지도 위에 선을 그리기 위해 클릭한 지점과 해당 지점의 거리정보가 표시되고 있다면 지도에서 제거합니다
-							deleteCircleDot();
-
-							kakao.maps.event.removeListener(map, 'click', measuerLengthClickHandler);
-							//kakao.maps.event.removeListener(map, 'mousemove', measuerLengthMouseMoveHandler);
-							//kakao.maps.event.removeListener(map, 'rightclick', measuerLengthRightClickHandler);
-
-
-							// 지도에 클릭 이벤트를 등록합니다
-							// 지도를 클릭하면 마지막 파라미터로 넘어온 함수를 호출합니다
-							if (polygon != null)
-								polygon.setMap(null);
-							
-							kakao.maps.event.removeListener(map, 'click', jibunClickHandler);
-							kakao.maps.event.addListener(map, 'click', measuerAreaClickHandler);
-
-							$('.gis_sub_wrap').off('click');
-							
-							$(document).on('click', '.mt-slot-btn', function (e) {
-								let idx = $('.mt-slot-btn').index(this);
-								let tempArea = polygonArr[idx].getArea().toFixed(1);
-								//alert(polygonArr[idx].getArea().toFixed(1));
-
-								polygonArr[idx].setMap(null);
-								polygonArr.splice(idx, 1);
-
-								areaOverlayArr[idx].setMap(null);
-								areaOverlayArr.splice(idx, 1);
-
-								areaAddressArr.splice(idx, 1);
-
-
-
-								$('.area-list').eq(idx).remove();
-
-								//console.log($('.areaListCnt').length);
-								for (let i = 0; i < $('.areaListCnt').length; i++) {
-									$('.areaListCnt').eq(i).text(i + 1);
-								}
-
-								areaListCnt = $('.areaListCnt').length;
-
-								$('#mt_count').text(areaListCnt);
-
-
-								areaListSum = areaListSum - tempArea;
-
-
-								if (areaListCnt > 0) {
-									$('#mt_total_area').text(areaListSum.toFixed(1) + 'm²');
-									//$('#mt_total_gong_value').text(areaListSum.toFixed(1) + '억');
-								} else {
-									$('#mt_total_area').text('0 m²');
-									$('#mt_total_gong_value').text('0 원');
-								}
-							});
-
-							$('#lengthMeasure').css("color", "#000");
-							$('#lengthMeasure').css("background-color", "#fff");
-
-							$('#areaMeasure').css("color", "#fff");
-							$('#areaMeasure').css("background-color", "#FF8080");
-						}
-					});
-
-					//PC using
-					$('#lengthMeasure').click(function () {
-						if (isLength) {
-							isLength = false;
-							
-							drawingFlag = false;
-
-							// 지도 위에 선이 표시되고 있다면 지도에서 제거합니다
-							deleteClickLine();
-							// 지도 위에 커스텀오버레이가 표시되고 있다면 지도에서 제거합니다
-							deleteDistnce();
-							// 지도 위에 선을 그리기 위해 클릭한 지점과 해당 지점의 거리정보가 표시되고 있다면 지도에서 제거합니다
-							deleteCircleDot();
-
-							kakao.maps.event.addListener(map, 'click', jibunClickHandler);
-							kakao.maps.event.removeListener(map, 'click', measuerLengthClickHandler);
-							
-							$('div.tab1').addClass('on');
-							$('div.tab5').removeClass('on');
-
-							$('#lengthMeasure').css("color", "#000");
-							$('#lengthMeasure').css("background-color", "#fff");
-						} else {
-							isArea = false;
-							isLength = true;
-
-							measureSet('거리');
-
-							if (polygonArr.length > 0) {
-								polygonArr.forEach(function (polygon) {
-									polygon.setMap(null);
-								});
-
-								areaOverlayArr.forEach(function (areaOverlay) {
-									areaOverlay.setMap(null);
-								});
-							}
-
-							kakao.maps.event.removeListener(map, 'click', jibunClickHandler);
-							kakao.maps.event.removeListener(map, 'click', measuerAreaClickHandler);
-
-							//$('a.search').trigger('click');
-
-							// 지도 위에 거리 측정하는 함수
-							// 지도를 클릭하면 선 그리기가 시작됩니다 그려진 선이 있으면 지우고 다시 그립니다
-							kakao.maps.event.addListener(map, 'click', measuerLengthClickHandler);
-
-							// 지도에 마우스무브 이벤트를 등록합니다
-							// 선을 그리고있는 상태에서 마우스무브 이벤트가 발생하면 그려질 선의 위치를 동적으로 보여주도록 합니다
-							//kakao.maps.event.addListener(map, 'mousemove', measuerLengthMouseMoveHandler);
+					$('#cat_measure_sub').show();				
+				}
+				isMeasure = !isMeasure; 
+			});
 			
-							// 지도에 마우스 오른쪽 클릭 이벤트를 등록합니다
-							// 선을 그리고있는 상태에서 마우스 오른쪽 클릭 이벤트가 발생하면 선 그리기를 종료합니다
-							//kakao.maps.event.addListener(map, 'rightclick', measuerLengthRightClickHandler);
+			// PC using
+			$('#areaMeasure').click(function () {
+				if (isArea) {
+					isArea = false;
 
-							$('#areaMeasure').css("color", "#000");
-							$('#areaMeasure').css("background-color", "#fff");
+					if (polygonArr.length > 0) {
+						polygonArr.forEach(function (polygon) {
+							polygon.setMap(null);
+						});
 
-							$('#lengthMeasure').css("color", "#fff");
-							$('#lengthMeasure').css("background-color", "#FF8080");
+						areaOverlayArr.forEach(function (areaOverlay) {
+							areaOverlay.setMap(null);
+						});
+					}
+
+					kakao.maps.event.addListener(map, 'click', jibunClickHandler);
+					kakao.maps.event.removeListener(map, 'click', measuerAreaClickHandler);
+					
+					$('div.tab1').addClass('on');
+					$('div.tab5').removeClass('on');
+
+					$('#areaMeasure').css("color", "#000");
+					$('#areaMeasure').css("background-color", "#fff");
+				} else {console.log("444");
+					isLength = false;
+					isArea = true;
+					
+					drawingFlag = false;
+
+					measureSet('면적');
+
+					// 지도 위에 선이 표시되고 있다면 지도에서 제거합니다
+					deleteClickLine();
+					// 지도 위에 커스텀오버레이가 표시되고 있다면 지도에서 제거합니다
+					deleteDistnce();
+					// 지도 위에 선을 그리기 위해 클릭한 지점과 해당 지점의 거리정보가 표시되고 있다면 지도에서 제거합니다
+					deleteCircleDot();
+
+					kakao.maps.event.removeListener(map, 'click', measuerLengthClickHandler);
+					//kakao.maps.event.removeListener(map, 'mousemove', measuerLengthMouseMoveHandler);
+					//kakao.maps.event.removeListener(map, 'rightclick', measuerLengthRightClickHandler);
+
+
+					// 지도에 클릭 이벤트를 등록합니다
+					// 지도를 클릭하면 마지막 파라미터로 넘어온 함수를 호출합니다
+					if (polygon != null)
+						polygon.setMap(null);
+					
+					kakao.maps.event.removeListener(map, 'click', jibunClickHandler);
+					kakao.maps.event.addListener(map, 'click', measuerAreaClickHandler);
+
+					$('.gis_sub_wrap').off('click');
+					
+					$(document).on('click', '.mt-slot-btn', function (e) {
+						let idx = $('.mt-slot-btn').index(this);
+						let tempArea = polygonArr[idx].getArea().toFixed(1);
+						//alert(polygonArr[idx].getArea().toFixed(1));
+
+						polygonArr[idx].setMap(null);
+						polygonArr.splice(idx, 1);
+
+						areaOverlayArr[idx].setMap(null);
+						areaOverlayArr.splice(idx, 1);
+
+						areaAddressArr.splice(idx, 1);
+
+
+
+						$('.area-list').eq(idx).remove();
+
+						//console.log($('.areaListCnt').length);
+						for (let i = 0; i < $('.areaListCnt').length; i++) {
+							$('.areaListCnt').eq(i).text(i + 1);
+						}
+
+						areaListCnt = $('.areaListCnt').length;
+
+						$('#mt_count').text(areaListCnt);
+
+
+						areaListSum = areaListSum - tempArea;
+
+
+						if (areaListCnt > 0) {
+							$('#mt_total_area').text(areaListSum.toFixed(1) + 'm²');
+							//$('#mt_total_gong_value').text(areaListSum.toFixed(1) + '억');
+						} else {
+							$('#mt_total_area').text('0 m²');
+							$('#mt_total_gong_value').text('0 원');
 						}
 					});
+
+					$('#lengthMeasure').css("color", "#000");
+					$('#lengthMeasure').css("background-color", "#fff");
+
+					$('#areaMeasure').css("color", "#fff");
+					$('#areaMeasure').css("background-color", "#FF8080");
+				}
+			});
+
+			//PC using
+			$('#lengthMeasure').click(function () {
+				if (isLength) {
+					isLength = false;
+					
+					drawingFlag = false;
+
+					// 지도 위에 선이 표시되고 있다면 지도에서 제거합니다
+					deleteClickLine();
+					// 지도 위에 커스텀오버레이가 표시되고 있다면 지도에서 제거합니다
+					deleteDistnce();
+					// 지도 위에 선을 그리기 위해 클릭한 지점과 해당 지점의 거리정보가 표시되고 있다면 지도에서 제거합니다
+					deleteCircleDot();
+
+					kakao.maps.event.addListener(map, 'click', jibunClickHandler);
+					kakao.maps.event.removeListener(map, 'click', measuerLengthClickHandler);
+					
+					$('div.tab1').addClass('on');
+					$('div.tab5').removeClass('on');
+
+					$('#lengthMeasure').css("color", "#000");
+					$('#lengthMeasure').css("background-color", "#fff");
+				} else {
+					isArea = false;
+					isLength = true;
+
+					measureSet('거리');
+
+					if (polygonArr.length > 0) {
+						polygonArr.forEach(function (polygon) {
+							polygon.setMap(null);
+						});
+
+						areaOverlayArr.forEach(function (areaOverlay) {
+							areaOverlay.setMap(null);
+						});
+					}
+
+					kakao.maps.event.removeListener(map, 'click', jibunClickHandler);
+					kakao.maps.event.removeListener(map, 'click', measuerAreaClickHandler);
+
+					//$('a.search').trigger('click');
+
+					// 지도 위에 거리 측정하는 함수
+					// 지도를 클릭하면 선 그리기가 시작됩니다 그려진 선이 있으면 지우고 다시 그립니다
+					kakao.maps.event.addListener(map, 'click', measuerLengthClickHandler);
+
+					// 지도에 마우스무브 이벤트를 등록합니다
+					// 선을 그리고있는 상태에서 마우스무브 이벤트가 발생하면 그려질 선의 위치를 동적으로 보여주도록 합니다
+					//kakao.maps.event.addListener(map, 'mousemove', measuerLengthMouseMoveHandler);
+	
+					// 지도에 마우스 오른쪽 클릭 이벤트를 등록합니다
+					// 선을 그리고있는 상태에서 마우스 오른쪽 클릭 이벤트가 발생하면 선 그리기를 종료합니다
+					//kakao.maps.event.addListener(map, 'rightclick', measuerLengthRightClickHandler);
+
+					$('#areaMeasure').css("color", "#000");
+					$('#areaMeasure').css("background-color", "#fff");
+
+					$('#lengthMeasure').css("color", "#fff");
+					$('#lengthMeasure').css("background-color", "#FF8080");
 				}
 			});
 
@@ -3412,9 +3489,7 @@
 
 			$('#cat_around').click(function () {
 				if (isAround) {
-					isAround = false;
-					$('#cat_around').css("color", "#000");
-					$('#cat_around').css("background-color", "#fff");
+					$('#cat_around').removeClass("on");
 
 					$('.category_bottom').hide();
 				} else {
@@ -3423,199 +3498,172 @@
 					isAreaExtent = false;
 					isPrice = false;
 
-					isAround = true;
-					$('.category_top li').css("color", "#000");
-					$('.category_top li').css("background-color", "#fff");
-
-					$('#cat_around').css("color", "#fff");
-					$('#cat_around').css("background-color", "#1263df");
+					$('.category_top li').removeClass("on");
+					$('#cat_around').addClass("on");
 
 					$('.category_bottom').hide();
 					$('#cat_around_sub').show();
-
-					// 마커를 클릭했을 때 해당 장소의 상세정보를 보여줄 커스텀오버레이입니다
-					var placeOverlay = new kakao.maps.CustomOverlay({ zIndex: 1 }),
-						contentNode = document.createElement('div'), // 커스텀 오버레이의 컨텐츠 엘리먼트 입니다 
-						//markers = [], // 마커를 담을 배열입니다
-						currCategory = ''; // 현재 선택된 카테고리를 가지고 있을 변수입니다	
-					// 장소 검색 객체를 생성합니다
-					var ps = new kakao.maps.services.Places(map);
-
-					// 지도에 idle 이벤트를 등록합니다
+					
 					kakao.maps.event.addListener(map, 'idle', searchPlaces);
 
-					// 커스텀 오버레이의 컨텐츠 노드에 css class를 추가합니다 
 					contentNode.className = 'placeinfo_wrap';
-
-					// 커스텀 오버레이의 컨텐츠 노드에 mousedown, touchstart 이벤트가 발생했을때
-					// 지도 객체에 이벤트가 전달되지 않도록 이벤트 핸들러로 kakao.maps.event.preventMap 메소드를 등록합니다 
+		 
 					addEventHandle(contentNode, 'mousedown', kakao.maps.event.preventMap);
 					addEventHandle(contentNode, 'touchstart', kakao.maps.event.preventMap);
+					
 
-					// 커스텀 오버레이 컨텐츠를 설정합니다
 					placeOverlay.setContent(contentNode);
 
-					// 각 카테고리에 클릭 이벤트를 등록합니다
 					addCategoryClickEvent();
 
-					// 엘리먼트에 이벤트 핸들러를 등록하는 함수입니다
-					function addEventHandle(target, type, callback) {
-						if (target.addEventListener) {
-							target.addEventListener(type, callback);
-						} else {
-							target.attachEvent('on' + type, callback);
-						}
-					}
-
-					// 카테고리 검색을 요청하는 함수입니다
-					function searchPlaces() {
-						if (!currCategory) {
-							return;
-						}
-
-						// 커스텀 오버레이를 숨깁니다 
-						placeOverlay.setMap(null);
-
-						// 지도에 표시되고 있는 마커를 제거합니다
-						removeMarker();
-
-						ps.categorySearch(currCategory, placesSearchCB, { useMapBounds: true });
-					}
-
-					// 장소검색이 완료됐을 때 호출되는 콜백함수 입니다
-					function placesSearchCB(data, status, pagination) {
-						if (status === kakao.maps.services.Status.OK) {
-
-							// 정상적으로 검색이 완료됐으면 지도에 마커를 표출합니다
-							displayPlaces(data);
-						} else if (status === kakao.maps.services.Status.ZERO_RESULT) {
-							// 검색결과가 없는경우 해야할 처리가 있다면 이곳에 작성해 주세요
-
-						} else if (status === kakao.maps.services.Status.ERROR) {
-							// 에러로 인해 검색결과가 나오지 않은 경우 해야할 처리가 있다면 이곳에 작성해 주세요
-
-						}
-					}
-
-					// 지도에 마커를 표출하는 함수입니다
-					function displayPlaces(places) {
-
-						// 몇번째 카테고리가 선택되어 있는지 얻어옵니다
-						// 이 순서는 스프라이트 이미지에서의 위치를 계산하는데 사용됩니다
-						var order = document.getElementById(currCategory).getAttribute('data-order');
-
-
-
-						for (var i = 0; i < places.length; i++) {
-
-							// 마커를 생성하고 지도에 표시합니다
-							var marker = addMarker(new kakao.maps.LatLng(places[i].y, places[i].x), order);
-
-							// 마커와 검색결과 항목을 클릭 했을 때
-							// 장소정보를 표출하도록 클릭 이벤트를 등록합니다
-							(function (marker, place) {
-								kakao.maps.event.addListener(marker, 'click', function () {
-									displayPlaceInfo(place);
-								});
-							})(marker, places[i]);
-						}
-					}
-
-					// 마커를 생성하고 지도 위에 마커를 표시하는 함수입니다
-					function addMarker(position, order) {
-						var imageSrc = 'https://t1.daumcdn.net/localimg/localimages/07/mapapidoc/places_category.png', // 마커 이미지 url, 스프라이트 이미지를 씁니다
-							imageSize = new kakao.maps.Size(27, 28),  // 마커 이미지의 크기
-							imgOptions = {
-								spriteSize: new kakao.maps.Size(72, 208), // 스프라이트 이미지의 크기
-								spriteOrigin: new kakao.maps.Point(46, (order * 36)), // 스프라이트 이미지 중 사용할 영역의 좌상단 좌표
-								offset: new kakao.maps.Point(11, 28) // 마커 좌표에 일치시킬 이미지 내에서의 좌표
-							},
-							markerImage = new kakao.maps.MarkerImage(imageSrc, imageSize, imgOptions),
-							marker = new kakao.maps.Marker({
-								position: position, // 마커의 위치
-								image: markerImage
-							});
-
-						marker.setMap(map); // 지도 위에 마커를 표출합니다
-						around_markers.push(marker);  // 배열에 생성된 마커를 추가합니다
-
-						return marker;
-					}
-
-					// 지도 위에 표시되고 있는 마커를 모두 제거합니다
-					function removeMarker() {
-						for (var i = 0; i < around_markers.length; i++) {
-							around_markers[i].setMap(null);
-						}
-						around_markers = [];
-					}
-
-					// 클릭한 마커에 대한 장소 상세정보를 커스텀 오버레이로 표시하는 함수입니다
-					function displayPlaceInfo(place) {
-						var content = '<div class="placeinfo">' +
-							'   <a class="title" href="' + place.place_url + '" target="_blank" title="' + place.place_name + '">' + place.place_name + '</a>';
-
-						if (place.road_address_name) {
-							content += '    <span title="' + place.road_address_name + '">' + place.road_address_name + '</span>' +
-								'  <span class="jibun" title="' + place.address_name + '">(지번 : ' + place.address_name + ')</span>';
-						} else {
-							content += '    <span title="' + place.address_name + '">' + place.address_name + '</span>';
-						}
-
-						content += '    <span class="tel">' + place.phone + '</span>' +
-							'</div>' +
-							'<div class="after"></div>';
-
-						contentNode.innerHTML = content;
-						placeOverlay.setPosition(new kakao.maps.LatLng(place.y, place.x));
-						placeOverlay.setMap(map);
-					}
-
-
-					// 각 카테고리에 클릭 이벤트를 등록합니다
-					function addCategoryClickEvent() {
-						var category = document.getElementById('cat_around_sub'),
-							children = category.children;
-
-						for (var i = 0; i < children.length; i++) {
-							children[i].onclick = onClickCategory;
-						}
-					}
-
-					// 카테고리를 클릭했을 때 호출되는 함수입니다
-					function onClickCategory() {
-						var id = this.id,
-							className = this.className;
-
-						placeOverlay.setMap(null);
-
-						if (className === 'on') {
-							currCategory = '';
-							changeCategoryClass();
-							removeMarker();
-						} else {
-							currCategory = id;
-							changeCategoryClass(this);
-							searchPlaces();
-						}
-					}
-
-					// 클릭된 카테고리에만 클릭된 스타일을 적용하는 함수입니다
-					function changeCategoryClass(el) {
-						var category = document.getElementById('cat_around_sub'),
-							children = category.children,
-							i;
-
-						for (i = 0; i < children.length; i++) {
-							children[i].className = '';
-						}
-
-						if (el) {
-							el.className = 'on';
-						}
-					}
 				}
+				isAround = !isAround;
 			});
+			
+			// 마커를 클릭했을 때 해당 장소의 상세정보를 보여줄 커스텀오버레이입니다
+			let placeOverlay = new kakao.maps.CustomOverlay({ zIndex: 1 }),
+				contentNode = document.createElement('div'),
+				currCategory = '';	
+			
+			// 장소 검색 객체를 생성합니다
+			let _ps = new kakao.maps.services.Places(map);
+
+			
+			// 엘리먼트에 이벤트 핸들러를 등록하는 함수입니다
+			function addEventHandle(target, type, callback) {
+				if (target.addEventListener) {
+					target.addEventListener(type, callback);
+				} else {
+					target.attachEvent('on' + type, callback);
+				}
+			}
+
+			// 카테고리 검색을 요청하는 함수입니다
+			function searchPlaces() {
+				if (!currCategory) {
+					return;
+				} 
+				placeOverlay.setMap(null);
+				removeMarker();
+
+				_ps.categorySearch(currCategory, placesSearchCB, { useMapBounds: true });
+			}
+
+			// 장소검색이 완료됐을 때 호출되는 콜백함수 입니다
+			function placesSearchCB(data, status, pagination) {
+				if (status === kakao.maps.services.Status.OK) {
+					displayPlaces(data);
+				} else if (status === kakao.maps.services.Status.ZERO_RESULT) {
+					// 검색결과가 없는경우 해야할 처리가 있다면 이곳에 작성해 주세요
+				} else if (status === kakao.maps.services.Status.ERROR) {
+					// 에러로 인해 검색결과가 나오지 않은 경우 해야할 처리가 있다면 이곳에 작성해 주세요
+				}
+			}
+
+			// 지도에 마커를 표출하는 함수입니다
+			function displayPlaces(places) {
+				let order = document.getElementById(currCategory).getAttribute('data-order');
+
+				for (let i = 0; i < places.length; i++) {
+					let marker = addMarker(new kakao.maps.LatLng(places[i].y, places[i].x), order);
+
+					(function (marker, place) {
+						kakao.maps.event.addListener(marker, 'click', function () {
+							displayPlaceInfo(place);
+						});
+					})(marker, places[i]);
+				}
+			}
+
+			// 마커를 생성하고 지도 위에 마커를 표시하는 함수입니다
+			function addMarker(position, order) {
+				let imageSrc = 'https://t1.daumcdn.net/localimg/localimages/07/mapapidoc/places_category.png', // 마커 이미지 url, 스프라이트 이미지를 씁니다
+					imageSize = new kakao.maps.Size(27, 28),  // 마커 이미지의 크기
+					imgOptions = {
+						spriteSize: new kakao.maps.Size(72, 208), // 스프라이트 이미지의 크기
+						spriteOrigin: new kakao.maps.Point(46, (order * 36)), // 스프라이트 이미지 중 사용할 영역의 좌상단 좌표
+						offset: new kakao.maps.Point(11, 28) // 마커 좌표에 일치시킬 이미지 내에서의 좌표
+					},
+					markerImage = new kakao.maps.MarkerImage(imageSrc, imageSize, imgOptions),
+					marker = new kakao.maps.Marker({
+						position: position, // 마커의 위치
+						image: markerImage
+					});
+				marker.setMap(map); // 지도 위에 마커를 표출합니다
+				around_markers.push(marker);  // 배열에 생성된 마커를 추가합니다
+
+				return marker;
+			}
+
+			// 지도 위에 표시되고 있는 마커를 모두 제거합니다
+			function removeMarker() {
+				for (let i = 0; i < around_markers.length; i++) {
+					around_markers[i].setMap(null);
+				}
+				around_markers = [];
+			}
+
+			// 클릭한 마커에 대한 장소 상세정보를 커스텀 오버레이로 표시하는 함수입니다
+			function displayPlaceInfo(place) {
+				let content = '<div class="placeinfo">' +
+					'   <a class="title" href="' + place.place_url + '" target="_blank" title="' + place.place_name + '">' + place.place_name + '</a>';
+
+				if (place.road_address_name) {
+					content += '    <span title="' + place.road_address_name + '">' + place.road_address_name + '</span>' +
+						'  <span class="jibun" title="' + place.address_name + '">(지번 : ' + place.address_name + ')</span>';
+				} else {
+					content += '    <span title="' + place.address_name + '">' + place.address_name + '</span>';
+				}
+				content += '    <span class="tel">' + place.phone + '</span>' +
+					'</div>' +
+					'<div class="after"></div>';
+
+				contentNode.innerHTML = content;
+				placeOverlay.setPosition(new kakao.maps.LatLng(place.y, place.x));
+				placeOverlay.setMap(map);
+			}
+
+			// 각 카테고리에 클릭 이벤트를 등록합니다
+			function addCategoryClickEvent() {
+				let category = document.getElementById('cat_around_sub'),
+					children = category.children;
+
+				for (let i = 0; i < children.length; i++) {
+					children[i].onclick = onClickCategory;
+				}
+			}
+
+			// 카테고리를 클릭했을 때 호출되는 함수입니다
+			function onClickCategory() {
+				let id = this.id,
+					className = this.className;
+
+				placeOverlay.setMap(null);
+
+				if (className === 'on') {
+					currCategory = '';
+					changeCategoryClass();
+					removeMarker();
+				} else {
+					currCategory = id;
+					changeCategoryClass(this);
+					searchPlaces();
+				}
+			}
+
+			// 클릭된 카테고리에만 클릭된 스타일을 적용하는 함수입니다
+			function changeCategoryClass(el) {
+				let category = document.getElementById('cat_around_sub'),
+					children = category.children;
+
+				for (let i = 0; i < children.length; i++) {
+					children[i].className = '';
+				}
+
+				if (el) {
+					el.className = 'on';
+				}
+			}
 
 			$('#mo-catAreaSub1').click(function () {
 				isAreaExtent = true;
@@ -3784,659 +3832,10 @@
 					$('#catPriceSub1').css("background-color", "#1263df");
 				}
 			});
-
-
-			let isSkyview = false;
-			let isTerrain = false;
-			let isUseDistrict = false;
-			let isRoadView = false;
-			function setOverlayMapTypeId(maptype) {
-				var changeMaptype;
-
-				// maptype에 따라 지도에 추가할 지도타입을 결정합니다
-				if (maptype === 'skyview') {
-					// 위성사진 지도타입
-
-					if (isSkyview) {
-						isSkyview = false;
-						$('#mapTypeChange1').css("color", "#000");
-						$('#mapTypeChange1').css("background-color", "#fff");
-
-						$('.map-layer-icon2').css("border", "none");
-						map.setMapTypeId(kakao.maps.MapTypeId.ROADMAP);
-					} else {
-						isSkyview = true;
-						$('#mapTypeChange1').css("color", "#fff");
-						$('#mapTypeChange1').css("background-color", "#FF8080");
-
-						$('.map-layer-icon2').css("border", "3px solid #E46C0A");
-						// maptype에 해당하는 지도타입을 지도에 추가합니다	
-						map.setMapTypeId(kakao.maps.MapTypeId.HYBRID);
-					}
-				} else if (maptype === 'use_district') {
-					// 지적편집도 지도타입
-					changeMaptype = kakao.maps.MapTypeId.USE_DISTRICT;
-
-					if (isUseDistrict) {
-						isUseDistrict = false;
-						$('#mapTypeChange2').css("color", "#000");
-						$('#mapTypeChange2').css("background-color", "#fff");
-
-						$('.map-layer-icon4').css("border", "none");
-						map.removeOverlayMapTypeId(changeMaptype);
-					} else {
-						isUseDistrict = true;
-						$('#mapTypeChange2').css("color", "#fff");
-						$('#mapTypeChange2').css("background-color", "#FF8080");
-
-						$('.map-layer-icon4').css("border", "3px solid #5D39EE");
-						// maptype에 해당하는 지도타입을 지도에 추가합니다
-						map.addOverlayMapTypeId(changeMaptype);
-					}
-				} else if (maptype === 'terrain') {
-					// 지형정보 지도타입
-					changeMaptype = kakao.maps.MapTypeId.TERRAIN;
-
-					if (isTerrain) {
-						isTerrain = false;
-						$('#mapTypeChange3').css("color", "#000");
-						$('#mapTypeChange3').css("background-color", "#fff");
-
-						$('.map-layer-icon3').css("border", "none");
-						map.removeOverlayMapTypeId(changeMaptype);
-					} else {
-						isTerrain = true;
-						$('#mapTypeChange3').css("color", "#fff");
-						$('#mapTypeChange3').css("background-color", "#FF8080");
-
-						$('.map-layer-icon3').css("border", "3px solid #5D39EE");
-						// maptype에 해당하는 지도타입을 지도에 추가합니다
-						map.addOverlayMapTypeId(changeMaptype);
-					}
-				} else if (maptype === 'roadview') {
-					// 로드뷰 도로정보 지도타입
-					changeMaptype = kakao.maps.MapTypeId.ROADVIEW;
-
-					if (isRoadView) {
-						isRoadView = false;
-						$('#mapTypeChange4').css("color", "#000");
-						$('#mapTypeChange4').css("background-color", "#fff");
-						closeRoadview();
-						map.removeOverlayMapTypeId(changeMaptype);
-					} else {
-						isRoadView = true;
-						$('#mapTypeChange4').css("color", "#fff");
-						$('#mapTypeChange4').css("background-color", "#FF8080");
-						map.addOverlayMapTypeId(changeMaptype);
-						setRoadviewRoad();
-					}
-				}
-			}
 			
 
-			$('#roadViewBtn').click(function () {
-				changeMaptype = kakao.maps.MapTypeId.ROADVIEW;
 
-				map.addOverlayMapTypeId(changeMaptype);
-				setRoadviewRoad();
-			});
 			
-
-			// 마커 이미지를 생성합니다
-			var markImage = new kakao.maps.MarkerImage(
-				'https://t1.daumcdn.net/localimg/localimages/07/2018/pc/roadview_minimap_wk_2018.png',
-				new kakao.maps.Size(26, 46),
-				{
-					// 스프라이트 이미지를 사용합니다.
-					// 스프라이트 이미지 전체의 크기를 지정하고
-					spriteSize: new kakao.maps.Size(1666, 168),
-					// 사용하고 싶은 영역의 좌상단 좌표를 입력합니다.
-					// background-position으로 지정하는 값이며 부호는 반대입니다.
-					spriteOrigin: new kakao.maps.Point(705, 114),
-					offset: new kakao.maps.Point(13, 46)
-				}
-			);
-
-			let roadviewMarker = null;
-			let rvContainer = document.getElementById('roadview'); //로드뷰를 표시할 div 입니다
-			var rv = new kakao.maps.Roadview(rvContainer); // 로드뷰 객체를 생성합니다 
-			var rvClient = new kakao.maps.RoadviewClient(); // 좌표로부터 로드뷰 파노라마 ID를 가져올 로드뷰 클라이언트 객체를 생성합니다 
-
-			kakao.maps.event.addListener(rv, 'position_changed', function () {
-
-				// 현재 로드뷰의 위치 좌표를 얻어옵니다 
-				var rvPosition = rv.getPosition();
-
-				// 지도의 중심을 현재 로드뷰의 위치로 설정합니다
-				map.setCenter(rvPosition);
-
-				// 지도 위에 로드뷰 도로 오버레이가 추가된 상태이면
-				if (isRoadView) {
-					// 마커의 위치를 현재 로드뷰의 위치로 설정합니다
-					roadviewMarker.setPosition(rvPosition);
-				}
-			});
-
-
-			// 전달받은 좌표(position)에 가까운 로드뷰의 파노라마 ID를 추출하여
-			// 로드뷰를 설정하는 함수입니다
-			function toggleRoadview(position) {
-				rvClient.getNearestPanoId(position, 50, function (panoId) {
-					// 파노라마 ID가 null 이면 로드뷰를 숨깁니다
-					if (panoId === null) {
-						toggleMapWrapper(true, position);
-					} else {
-						toggleMapWrapper(false, position);
-
-						// panoId로 로드뷰를 설정합니다
-						rv.setPanoId(panoId, position);
-					}
-				});
-			}
-
-			// 지도를 감싸고 있는 div의 크기를 조정하는 함수입니다
-			function toggleMapWrapper(active, position) {
-				let container = document.getElementById('gis_container');
-				if (active) {
-
-					// 지도를 감싸고 있는 div의 너비가 100%가 되도록 class를 변경합니다 
-					container.className = '';
-
-					// 지도의 크기가 변경되었기 때문에 relayout 함수를 호출합니다
-					map.relayout();
-
-					// 지도의 너비가 변경될 때 지도중심을 입력받은 위치(position)로 설정합니다
-					map.setCenter(position);
-				} else {
-
-					// 지도만 보여지고 있는 상태이면 지도의 너비가 50%가 되도록 class를 변경하여
-					// 로드뷰가 함께 표시되게 합니다
-					if (container.className.indexOf('view_roadview') === -1) {
-						container.className = 'view_roadview';
-
-						// 지도의 크기가 변경되었기 때문에 relayout 함수를 호출합니다
-						map.relayout();
-
-						// 지도의 너비가 변경될 때 지도중심을 입력받은 위치(position)로 설정합니다
-						map.setCenter(position);
-					}
-				}
-			}
-
-			// 지도 위의 로드뷰 버튼을 눌렀을 때 호출되는 함수입니다
-			function setRoadviewRoad() {
-				let mapCenter = map.getCenter();
-
-				// 드래그가 가능한 로드뷰 마커를 생성합니다
-				roadviewMarker = new kakao.maps.Marker({
-					image: markImage,
-					position: mapCenter,
-					draggable: true
-				});
-
-				roadviewMarker.setMap(map); // 지도에 로드뷰 마커를 표시합니다.
-
-				toggleRoadview(map.getCenter());  // 로드뷰의 위치를 지도 중심으로 설정합니다
-
-				// 마커에 dragend 이벤트를 등록합니다
-				kakao.maps.event.addListener(roadviewMarker, 'dragend', function (mouseEvent) {
-					// 현재 마커가 놓인 자리의 좌표입니다 
-					var position = roadviewMarker.getPosition();
-
-					// 마커가 놓인 위치를 기준으로 로드뷰를 설정합니다
-					toggleRoadview(position);
-				});
-
-				//지도에 클릭 이벤트를 등록합니다
-				kakao.maps.event.addListener(map, 'click', function (mouseEvent) {
-					// 지도 위에 로드뷰 도로 오버레이가 추가된 상태가 아니면 클릭이벤트를 무시합니다 
-					if (!isRoadView) {
-						return;
-					}
-
-					// 클릭한 위치의 좌표입니다 
-					var position = mouseEvent.latLng;
-
-					// 마커를 클릭한 위치로 옮깁니다
-					roadviewMarker.setPosition(position);
-
-					// 클락한 위치를 기준으로 로드뷰를 설정합니다
-					toggleRoadview(position);
-				});
-			}
-
-			//로드뷰를 지도 뒤로 숨기는 함수입니다
-			function closeRoadview() {
-				roadviewMarker.setMap(null); // 지도에 로드뷰 마커를 없앱니다.			   
-				toggleMapWrapper(true, roadviewMarker.getPosition()); // 로드뷰 div를 숨기기
-			}
-
-
-			let drawingFlag = false; // 선이 그려지고 있는 상태를 가지고 있을 변수입니다
-			let moveLine; // 선이 그려지고 있을때 마우스 움직임에 따라 그려질 선 객체 입니다
-			let clickLine // 마우스로 클릭한 좌표로 그려질 선 객체입니다
-			let distanceOverlay; // 선의 거리정보를 표시할 커스텀오버레이 입니다
-			let dots = {}; // 선이 그려지고 있을때 클릭할 때마다 클릭 지점과 거리를 표시하는 커스텀 오버레이 배열입니다.
-
-			let isLengthList = false;
-			let lengthListCnt = 0;
-			let lengthDisSum = 0;
-
-			var measuerLengthClickHandler = function (mouseEvent) {
-
-				// 마우스로 클릭한 위치입니다 
-				var clickPosition = mouseEvent.latLng;
-
-				let subHtml = '';
-
-				subHtml += '<div class="rbc-cerulean" style="display: none;height: 120px;" id="mt_total_area_view">';
-				//subHtml += '	<div class="rfc-cerulean" style="background: #fff;width: 144px;display: inline-block;border-radius: 22px;height: 40px;position: relative;top:7px;line-height:40px;cursor:pointer;pointer-events:auto;" id="mt_last_btn">';
-				//subHtml += '		<span style="display: inline-block;"><img src="https://aurora.disco.re/static/common/img/ico_close_b.png?ver=1688364125" style="width:16px;"></span>';
-				//subHtml += '		<span style="display: inline-block;">마지막 지점 삭제</span>';
-				//subHtml += '	</div>';
-				subHtml += '	<div style="height: 40px;line-height: 46px;font-size: 16px;color: #fff;">선택된 지점 <span id="mt_count" style="display: inline-block;"></span>개</div>';
-				subHtml += '	<div style="height: 40px;position: relative;">';
-				subHtml += '		<div style="display: inline-block;width: 49%;padding-left: 16px;color: #fff;">';
-				subHtml += '			<span style="display: inline-block;font-size: 14px;color: #7eb6e7;margin-right: 10px;">거리 합계 </span>';
-				subHtml += '			<span style="display: inline-block;font-size: 20px;color: #fff;" id="mt_total_length"></span>';
-				subHtml += '		</div>';
-				subHtml += '</div>';
-
-				if (!isLengthList) {
-					isLengthList = true;
-
-					$('#map_tool_msg').hide();
-					$('#map_tool_field').append(subHtml);
-
-					$('#mt_last_btn').on('click', function () {
-						// 그려지고 있는 선의 좌표 배열을 얻어옵니다
-						var path = clickLine.getPath();
-
-						// 좌표 배열에 마지막 요소 제거
-						path.pop();
-
-						// 다시 선에 좌표 배열을 설정하여 클릭 위치까지 선을 그리도록 설정합니다
-						clickLine.setPath(path);
-
-						deleteLastCircleDot();
-
-						if (lengthListCnt > 0) {
-							lineDistanceArr.pop();
-							lengthDisSum = lineDistanceArr[lineDistanceArr.length - 1];
-
-
-							$('#mt_count').text((--lengthListCnt) + 1);
-							$('#mt_total_length').text(lengthDisSum + 'm');
-						} else {
-							$('#mt_count').text(0);
-							drawingFlag = false;
-						}
-					});
-				}
-
-				let temp_html = '<span class="temp_add_close" style="display: inline-block; position: relative; top: -25px; right: 5px;">';
-				temp_html += '<img src="/img/sub/ico_btn_close.svg" width="20px" height="20px">';
-				temp_html += '</span>';
-
-				// 지도 클릭이벤트가 발생했는데 선을 그리고있는 상태가 아니면
-				if (!drawingFlag) {
-
-					// 상태를 true로, 선이 그리고있는 상태로 변경합니다
-					drawingFlag = true;
-
-					// 지도 위에 선이 표시되고 있다면 지도에서 제거합니다
-					deleteClickLine();
-
-					// 지도 위에 커스텀오버레이가 표시되고 있다면 지도에서 제거합니다
-					deleteDistnce();
-
-					// 지도 위에 선을 그리기 위해 클릭한 지점과 해당 지점의 거리정보가 표시되고 있다면 지도에서 제거합니다
-					deleteCircleDot();
-
-					// 클릭한 위치를 기준으로 선을 생성하고 지도위에 표시합니다
-					clickLine = new kakao.maps.Polyline({
-						map: map, // 선을 표시할 지도입니다 
-						path: [clickPosition], // 선을 구성하는 좌표 배열입니다 클릭한 위치를 넣어줍니다
-						strokeWeight: 3, // 선의 두께입니다 
-						strokeColor: '#db4040', // 선의 색깔입니다
-						strokeOpacity: 1, // 선의 불투명도입니다 0에서 1 사이값이며 0에 가까울수록 투명합니다
-						strokeStyle: 'solid' // 선의 스타일입니다
-					});
-
-					// 선이 그려지고 있을 때 마우스 움직임에 따라 선이 그려질 위치를 표시할 선을 생성합니다
-					moveLine = new kakao.maps.Polyline({
-						strokeWeight: 3, // 선의 두께입니다 
-						strokeColor: '#db4040', // 선의 색깔입니다
-						strokeOpacity: 0.5, // 선의 불투명도입니다 0에서 1 사이값이며 0에 가까울수록 투명합니다
-						strokeStyle: 'solid' // 선의 스타일입니다    
-					});
-
-					// 클릭한 지점에 대한 정보를 지도에 표시합니다
-					displayCircleDot(clickPosition, 0);
-
-					$('.dotOverlay').eq(0).html('시작 <span class="number">0</span>m');
-					$('.dotOverlay').eq(0).parent().append(temp_html);
-
-					$('.temp_add_close').on('contextmenu', function () {
-						// 그려지고 있는 선의 좌표 배열을 얻어옵니다
-						var path = clickLine.getPath();
-
-						// 좌표 배열에 마지막 요소 제거
-						path.pop();
-
-						// 다시 선에 좌표 배열을 설정하여 클릭 위치까지 선을 그리도록 설정합니다
-						clickLine.setPath(path);
-
-						deleteLastCircleDot();
-
-						if (lengthListCnt > 0) {
-							lineDistanceArr.pop();
-							lengthDisSum = lineDistanceArr[lineDistanceArr.length - 1];
-
-
-							$('#mt_count').text((--lengthListCnt) + 1);
-							$('#mt_total_length').text(lengthDisSum + 'm');
-						} else {
-							$('#mt_count').text(0);
-							drawingFlag = false;
-						}
-					});
-				} else { // 선이 그려지고 있는 상태이면
-
-					// 그려지고 있는 선의 좌표 배열을 얻어옵니다
-					var path = clickLine.getPath();
-
-					// 좌표 배열에 클릭한 위치를 추가합니다
-					path.push(clickPosition);
-
-					// 다시 선에 좌표 배열을 설정하여 클릭 위치까지 선을 그리도록 설정합니다
-					clickLine.setPath(path);
-
-					var distance = Math.round(clickLine.getLength());
-					displayCircleDot(clickPosition, distance);
-
-					lengthListCnt++;
-					lengthDisSum = distance;
-
-					$('#mt_count').text(lengthListCnt + 1);
-					$('#mt_total_length').text(lengthDisSum + 'm');
-
-					$('#mt_total_area_view').css('display', 'block');
-
-					//console.log($('.dotOverlay').length);
-					$('.temp_add_close').hide();
-					$('.dotOverlay').eq($('.dotOverlay').length - 1).parent().append(temp_html);
-
-					$('.temp_add_close').off('contextmenu');
-					$('.temp_add_close').on('contextmenu', function () {
-						// 그려지고 있는 선의 좌표 배열을 얻어옵니다
-						var path = clickLine.getPath();
-
-						// 좌표 배열에 마지막 요소 제거
-						path.pop();
-
-						// 다시 선에 좌표 배열을 설정하여 클릭 위치까지 선을 그리도록 설정합니다
-						clickLine.setPath(path);
-
-						deleteLastCircleDot();
-
-						if (lengthListCnt > 0) {
-							lineDistanceArr.pop();
-							lengthDisSum = lineDistanceArr[lineDistanceArr.length - 1];
-
-
-							$('#mt_count').text((--lengthListCnt) + 1);
-							$('#mt_total_length').text(lengthDisSum + 'm');
-						} else {
-							$('#mt_count').text(0);
-							drawingFlag = false;
-						}
-
-						$('.temp_add_close').eq($('.dotOverlay').length - 1).show();
-					});
-				}
-			};
-
-
-
-			var measuerLengthMouseMoveHandler = function (mouseEvent) {
-
-				// 지도 마우스무브 이벤트가 발생했는데 선을 그리고있는 상태이면
-				if (drawingFlag) {
-
-					// 마우스 커서의 현재 위치를 얻어옵니다 
-					var mousePosition = mouseEvent.latLng;
-
-					// 마우스 클릭으로 그려진 선의 좌표 배열을 얻어옵니다
-					var path = clickLine.getPath();
-
-					// 마우스 클릭으로 그려진 마지막 좌표와 마우스 커서 위치의 좌표로 선을 표시합니다
-					var movepath = [path[path.length - 1], mousePosition];
-					moveLine.setPath(movepath);
-					moveLine.setMap(map);
-
-					var distance = Math.round(clickLine.getLength() + moveLine.getLength()), // 선의 총 거리를 계산합니다
-						content = '<div class="dotOverlay distanceInfo">총거리 <span class="number">' + distance + '</span>m</div>'; // 커스텀오버레이에 추가될 내용입니다
-
-					// 거리정보를 지도에 표시합니다
-					showDistance(content, mousePosition);
-				}
-			};
-
-
-			var measuerLengthRightClickHandler = function (mouseEvent) {
-
-				// 지도 오른쪽 클릭 이벤트가 발생했는데 선을 그리고있는 상태이면
-				if (drawingFlag) {
-
-					// 마우스무브로 그려진 선은 지도에서 제거합니다
-					moveLine.setMap(null);
-					moveLine = null;
-
-					// 마우스 클릭으로 그린 선의 좌표 배열을 얻어옵니다
-					var path = clickLine.getPath();
-
-					// 선을 구성하는 좌표의 개수가 2개 이상이면
-					if (path.length > 1) {
-
-						// 마지막 클릭 지점에 대한 거리 정보 커스텀 오버레이를 지웁니다
-						if (dots[dots.length - 1].distance) {
-							dots[dots.length - 1].distance.setMap(null);
-							dots[dots.length - 1].distance = null;
-						}
-
-						var distance = Math.round(clickLine.getLength()), // 선의 총 거리를 계산합니다
-							content = getTimeHTML(distance); // 커스텀오버레이에 추가될 내용입니다
-
-						// 그려진 선의 거리정보를 지도에 표시합니다
-						showDistance(content, path[path.length - 1]);
-
-					} else {
-
-						// 선을 구성하는 좌표의 개수가 1개 이하이면 
-						// 지도에 표시되고 있는 선과 정보들을 지도에서 제거합니다.
-						deleteClickLine();
-						deleteCircleDot();
-						deleteDistnce();
-
-					}
-
-					// 상태를 false로, 그리지 않고 있는 상태로 변경합니다
-					drawingFlag = false;
-				}
-			};
-
-			// 클릭으로 그려진 선을 지도에서 제거하는 함수입니다
-			function deleteClickLine() {
-				if (clickLine) {
-					clickLine.setMap(null);
-					clickLine = null;
-				}
-			}
-
-			// 마우스 드래그로 그려지고 있는 선의 총거리 정보를 표시하거
-			// 마우스 오른쪽 클릭으로 선 그리가 종료됐을 때 선의 정보를 표시하는 커스텀 오버레이를 생성하고 지도에 표시하는 함수입니다
-			function showDistance(content, position) {
-
-				if (distanceOverlay) { // 커스텀오버레이가 생성된 상태이면
-
-					// 커스텀 오버레이의 위치와 표시할 내용을 설정합니다
-					distanceOverlay.setPosition(position);
-					distanceOverlay.setContent(content);
-
-				} else { // 커스텀 오버레이가 생성되지 않은 상태이면
-
-					// 커스텀 오버레이를 생성하고 지도에 표시합니다
-					distanceOverlay = new kakao.maps.CustomOverlay({
-						map: map, // 커스텀오버레이를 표시할 지도입니다
-						content: content,  // 커스텀오버레이에 표시할 내용입니다
-						position: position, // 커스텀오버레이를 표시할 위치입니다.
-						xAnchor: 0,
-						yAnchor: 0,
-						zIndex: 3
-					});
-				}
-			}
-
-			// 그려지고 있는 선의 총거리 정보와 
-			// 선 그리가 종료됐을 때 선의 정보를 표시하는 커스텀 오버레이를 삭제하는 함수입니다
-			function deleteDistnce() {
-				if (distanceOverlay) {
-					distanceOverlay.setMap(null);
-					distanceOverlay = null;
-				}
-			}
-
-			// 선이 그려지고 있는 상태일 때 지도를 클릭하면 호출하여 
-			// 클릭 지점에 대한 정보 (동그라미와 클릭 지점까지의 총거리)를 표출하는 함수입니다
-			function displayCircleDot(position, distance) {
-
-				// 클릭 지점을 표시할 빨간 동그라미 커스텀오버레이를 생성합니다
-				var circleOverlay = new kakao.maps.CustomOverlay({
-					content: '<span class="dot"></span>',
-					position: position,
-					zIndex: 1
-				});
-
-				// 지도에 표시합니다
-				circleOverlay.setMap(map);
-
-				if (distance > 0) {
-					// 클릭한 지점까지의 그려진 선의 총 거리를 표시할 커스텀 오버레이를 생성합니다
-					var distanceOverlay = new kakao.maps.CustomOverlay({
-						content: '<div class="dotOverlay">거리 <span class="number">' + distance + '</span>m</div>',
-						position: position,
-						yAnchor: 1,
-						zIndex: 2
-					});
-
-					// 지도에 표시합니다
-					distanceOverlay.setMap(map);
-				} else {
-					var distanceOverlay = new kakao.maps.CustomOverlay({
-						content: '<div class="dotOverlay">시작</div>',
-						position: position,
-						yAnchor: 1,
-						zIndex: 2
-					});
-
-					// 지도에 표시합니다
-					distanceOverlay.setMap(map);
-				}
-
-				lineDistanceArr.push(distance);
-				// 배열에 추가합니다
-				dots.push({ circle: circleOverlay, distance: distanceOverlay });
-			}
-
-			// 마지막 지점 지도에서 제거하는 함수입니다
-			function deleteLastCircleDot() {
-				if (dots[dots.length - 1].circle) {
-					dots[dots.length - 1].circle.setMap(null);
-				}
-				if (dots[dots.length - 1].distance) {
-					dots[dots.length - 1].distance.setMap(null);
-				}
-				// 마지막 제거
-				dots.pop();
-			}
-
-			// 전체 지점 지도에서 제거하는 함수입니다
-			function deleteAllCircleDot() {
-				// 그려지고 있는 선의 좌표 배열을 얻어옵니다
-				var path = clickLine.getPath();
-
-				// 좌표 배열 모든 요소 제거
-				path = [];
-
-				// 다시 선에 좌표 배열을 설정하여 클릭 위치까지 선을 그리도록 설정합니다
-				clickLine.setPath(path);
-
-				for (let i = 0; i < dots.length; i++) {
-					dots[i].circle.setMap(null);
-					dots[i].distance.setMap(null);
-				}
-
-				$('#mt_count').text(0);
-				$('#mt_total_length').text('0m');
-			}
-
-			// 클릭 지점에 대한 정보 (동그라미와 클릭 지점까지의 총거리)를 지도에서 모두 제거하는 함수입니다
-			function deleteCircleDot() {
-				var i;
-
-				for (i = 0; i < dots.length; i++) {
-					if (dots[i].circle) {
-						dots[i].circle.setMap(null);
-					}
-
-					if (dots[i].distance) {
-						dots[i].distance.setMap(null);
-					}
-				}
-				dots = [];
-			}
-
-			// 마우스 우클릭 하여 선 그리기가 종료됐을 때 호출하여 
-			// 그려진 선의 총거리 정보와 거리에 대한 도보, 자전거 시간을 계산하여
-			// HTML Content를 만들어 리턴하는 함수입니다
-			function getTimeHTML(distance) {
-
-				// 도보의 시속은 평균 4km/h 이고 도보의 분속은 67m/min입니다
-				var walkkTime = distance / 67 | 0;
-				var walkHour = '', walkMin = '';
-
-				// 계산한 도보 시간이 60분 보다 크면 시간으로 표시합니다
-				if (walkkTime > 60) {
-					walkHour = '<span class="number">' + Math.floor(walkkTime / 60) + '</span>시간 '
-				}
-				walkMin = '<span class="number">' + walkkTime % 60 + '</span>분'
-
-				// 자전거의 평균 시속은 16km/h 이고 이것을 기준으로 자전거의 분속은 267m/min입니다
-				var bycicleTime = distance / 227 | 0;
-				var bycicleHour = '', bycicleMin = '';
-
-				// 계산한 자전거 시간이 60분 보다 크면 시간으로 표출합니다
-				if (bycicleTime > 60) {
-					bycicleHour = '<span class="number">' + Math.floor(bycicleTime / 60) + '</span>시간 '
-				}
-				bycicleMin = '<span class="number">' + bycicleTime % 60 + '</span>분'
-
-				// 거리와 도보 시간, 자전거 시간을 가지고 HTML Content를 만들어 리턴합니다
-				var content = '<ul class="dotOverlay distanceInfo">';
-				content += '    <li>';
-				content += '        <span class="label">총거리</span><span class="number">' + distance + '</span>m';
-				content += '    </li>';
-				content += '    <li>';
-				content += '        <span class="label">도보</span>' + walkHour + walkMin;
-				content += '    </li>';
-				content += '    <li>';
-				content += '        <span class="label">자전거</span>' + bycicleHour + bycicleMin;
-				content += '    </li>';
-				content += '</ul>'
-
-				return content;
-			}
 
 
 			function parse_land_polygon_value(e, r) {console.log('e, r/////////');console.log(e);console.log(r);
@@ -4471,6 +3870,9 @@
 				$('#slide_detail').show();
 				$('.tag_wrap').show();
 				$('.info_wrap').show();
+				
+				$('.saleDetail').show();
+				$('.jibunDetail').hide();				
 
 				var url = $.validator.format('/forsale/rest/view/{0}', rid);
 				$.get(url, {}, function (data) {
@@ -4528,7 +3930,7 @@
 					$('[data-field=optionItems]').text(data.optionItems.replace(/\|/g, ','));
 
 					viewArea.find('div.hashtag').empty().append(data.hashtag);
-					console.log(data.posY);
+					
 					//이미지 지도.
 					$('#staticMap').empty();	//기존 내용 지우기.
 					var staticMapContainer = document.getElementById('staticMap'); // 이미지 지도를 표시할 div
@@ -4553,6 +3955,19 @@
 						var option = $.validator.format('<option value="{0}">{1}</option>', user.userid, user.usernm);
 						obj.append(option);
 					});
+					
+					$('#trp-detail-period-cnt').text('(0 건)');
+					
+					let html = '';
+					html += '<div class="detail_tradings_table2">';
+					html += '	<div class="detail_tradings_table_row">';
+					html += '	<span>';
+					html += '		실거래 내역이 없습니다.';
+					html += '	</span>';
+					html += '	</div>';
+					html += '</div>';
+					
+					$('#detail_tradings_table_conts').html(html);					
 
 					$.get('https://polygon.disco.re/get_pnu_by_latlng2/?lat=' + data.posY + '&lng=' + data.posX + '&spec=goon', {}, function (pnu) {
 						console.log(pnu);
@@ -4707,6 +4122,26 @@
 								html += '</div>';
 							});
 							$('#land_history').html(html);
+						});
+						
+						$.get('https://data.disco.re/home/land_price/?pnu=' + pnu.pnu, {}, function (data) {
+							console.log(data);
+							xLabels.length = 0;
+							datapoints.length = 0;
+
+							minValue = data[0][2];
+							maxValue = data[0][2];
+
+							data.forEach(item => {
+								xLabels.push('`' + (item[0] + '').substr(2, 2) + '년');
+								datapoints.push(item[2]);
+								if (minValue > item[2])
+									minValue = item[2];
+								if (maxValue < item[2])
+									maxValue = item[2];
+							});
+
+							gongChart.update();
 						});
 					});
 
@@ -5222,103 +4657,11 @@
 				$('div.tab5').removeClass('on');
 			});
 			
-			
-			function minimapShow2(latlng) {console.log(latlng.getLat());
-				// 지도와 로드뷰 위에 마커로 표시할 특정 장소의 좌표입니다 
-				//let minimap_placePosition = new kakao.maps.LatLng(latlng.getLat(), latlng.getLng());
-			    
-				$('#staticMap').empty();	//기존 내용 지우기.
-				var staticMapContainer = document.getElementById('staticMap'); // 이미지 지도를 표시할 div
-				//alert(staticMapContainer + '...' + data.posY + '...' + data.posX);
-				// 이미지 지도에서 마커가 표시될 위치입니다
-				var markerPosition = new kakao.maps.LatLng(latlng.getLat(), latlng.getLng());
-				// 이미지 지도에 표시할 마커입니다
-				var staticMarker = { position: markerPosition };
-
-				staticMapOption = {
-					center: new kakao.maps.LatLng(Number(latlng.getLat()) + (Math.random() / 300), Number(latlng.getLng()) + (Math.random() / 300)), // 이미지 지도의 중심좌표
-					level: 5, // 이미지 지도의 확대 레벨
-					//marker: staticMarker // 이미지 지도에 표시할 마커
-				};
-				// 이미지 지도를 표시할 div와 옵션으로 이미지 지도를 생성합니다
-				var staticMap = new kakao.maps.StaticMap(staticMapContainer, staticMapOption);
-			}
-			
-			function minimapShow(latlng) {
-				let minimap_container = document.getElementById('minimap_container'), // 지도와 로드뷰를 감싸고 있는 div 입니다
-				minimap_mapWrapper = document.getElementById('minimap_mapWrapper'), // 지도를 감싸고 있는 div 입니다
-				minimap_btnRoadview = document.getElementById('minimap_btnRoadview'), // 지도 위의 로드뷰 버튼, 클릭하면 지도는 감춰지고 로드뷰가 보입니다 
-				minimap_btnMap = document.getElementById('minimap_btnMap'), // 로드뷰 위의 지도 버튼, 클릭하면 로드뷰는 감춰지고 지도가 보입니다 
-				minimap_rvContainer = document.getElementById('minimap_roadview'); // 로드뷰를 표시할 div 입니다
 					
-				// 지도와 로드뷰 위에 마커로 표시할 특정 장소의 좌표입니다 
-				let minimap_placePosition = new kakao.maps.LatLng(latlng.getLat(), latlng.getLng());
-			    
-				let marker = {
-				    position: minimap_placePosition
-				};
-				
-				// 지도 옵션입니다 
-				let minimap_mapOption = {
-				    center: minimap_placePosition, // 지도의 중심좌표 
-				    level: 5, // 지도의 확대 레벨
-				    marker: marker
-				};
-				
-				$('#minimap_map').empty();	//기존 내용 지우기.
-				let minimap_mapContainer = document.getElementById('minimap_map'); // 지도를 표시할 div 입니다
-				
-				// 지도를 표시할 div와 지도 옵션으로 지도를 생성합니다
-				let minimap_map = new kakao.maps.StaticMap(minimap_mapContainer, minimap_mapOption);
-				
-				// 로드뷰 객체를 생성합니다 
-				let minimap_roadview = new kakao.maps.Roadview(minimap_rvContainer);				
-		
-				let roadviewClient = new kakao.maps.RoadviewClient(); //좌표로부터 로드뷰 파노ID를 가져올 로드뷰 helper객체
-			    // 특정 위치의 좌표와 가까운 로드뷰의 panoId를 추출하여 로드뷰를 띄운다.
-			    roadviewClient.getNearestPanoId(minimap_placePosition, 100, function(panoId) {
-			    	minimap_roadview.setPanoId(panoId, minimap_placePosition); //panoId와 중심좌표를 통해 로드뷰 실행
-			    });
-				
-				// 특정 장소가 잘보이도록 로드뷰의 적절한 시점(ViewPoint)을 설정합니다 
-				// Wizard를 사용하면 적절한 로드뷰 시점(ViewPoint)값을 쉽게 확인할 수 있습니다
-				minimap_roadview.setViewpoint({
-				    pan: 321,
-				    tilt: 0,
-				    zoom: 0
-				});
-		
-				// 지도 중심을 표시할 마커를 생성하고 특정 장소 위에 표시합니다 
-				let minimap_mapMarker = new kakao.maps.Marker({
-				    position: minimap_placePosition,
-				    map: minimap_map
-				});
-		
-				// 로드뷰 초기화가 완료되면 
-				kakao.maps.event.addListener(minimap_roadview, 'init', function() {
-		
-				    // 로드뷰에 특정 장소를 표시할 마커를 생성하고 로드뷰 위에 표시합니다 
-				    let rvMarker = new kakao.maps.Marker({
-				        position: minimap_placePosition,
-				        map: minimap_roadview
-				    });
-				});				
-			}
-			
 		});
-				
-		// 지도와 로드뷰를 감싸고 있는 div의 class를 변경하여 지도를 숨기거나 보이게 하는 함수입니다 
-		function toggleMap2(active) {
-		    if (active) {
-
-		        // 지도가 보이도록 지도와 로드뷰를 감싸고 있는 div의 class를 변경합니다
-		        minimap_container.className = "view_map"
-		    } else {
-
-		        // 지도가 숨겨지도록 지도와 로드뷰를 감싸고 있는 div의 class를 변경합니다
-		        minimap_container.className = "view_roadview"   
-		    }
-		}
+		
+		
+		
 
 			
 	</script>
@@ -5855,12 +5198,20 @@
 
 		<!--detail_wrap-->
 		<div class="detail_wrap">
-			<div id="saleNum" class="saleNum">
-				<p id="saleNumSub">매물번호<span data-field="saleNo"></span></p>
-				<p id="saleNumAddress"></p>
-				<a href="#">닫기</a>
-			</div>
 			
+			<div class="saleDetail">
+				<div id="saleNum" class="saleNum">
+					<p>매물번호<span data-field="saleNo"></span></p>					
+					<a href="#">닫기</a>
+				</div>
+			</div>
+			<div class="jibunDetail">
+				<div class="saleNum">					
+					<p id="jibunAddress"></p>
+					<a href="#">닫기</a>
+				</div>
+			</div>
+				
 			<div class="detail_info_navi">
 				<div class="detail_info_navi_cell cell_hidden">
 					<a href="#saleNum">매물정보</a>
@@ -5875,100 +5226,95 @@
 					<a href="#dp_arch_prefix">건물정보</a>
 				</div>
 			</div>
-
-			<div class="btn_wrap">
-				<div class="left">
-					<a href="#" class="gislp_open getoffer" data-lp="broker" data-rid=""
-						th:unless="${USER_TYPE=='AA' || USER_TYPE=='RA'}">알선받기</a>
-					<a href="#" class="dooffer" data-rid="" th:if="${USER_TYPE=='AA' || USER_TYPE=='RA'}">알선하기</a>
-					<a href="#" class="edit" data-rid="">편집</a>
-					<a href="#" class="lp_open advertising" data-rid="" data-lp="02la02p01">광고</a>
-				</div>
-				<div class="right">
-					<a class="report gislp_open" data-lp="report" data-rid="" href="#"
-						th:if="${USER_TYPE=='NM' || USER_TYPE=='BM' || USER_TYPE=='AA' || USER_TYPE=='RA'}">신고하기</a>
-					<div class="share">
-						<a href="#" class="share" data-rid="">공유하기</a>
-						<!--
-                        <div class="sns">
-                            <a class="n1" href="#" data-rid="">페이스북</a>
-                            <a class="n2" href="#" data-rid="">인스타그램</a>
-                            <a class="n3" href="#" data-rid="">카카오톡</a>
-                        </div>
-                    -->
+	
+			<div class="saleDetail">
+				<div class="btn_wrap">
+					<div class="left">
+						<a href="#" class="gislp_open getoffer" data-lp="broker" data-rid=""
+							th:unless="${USER_TYPE=='AA' || USER_TYPE=='RA'}">알선받기</a>
+						<a href="#" class="dooffer" data-rid="" th:if="${USER_TYPE=='AA' || USER_TYPE=='RA'}">알선하기</a>
+						<a href="#" class="edit" data-rid="">편집</a>
+						<a href="#" class="lp_open advertising" data-rid="" data-lp="02la02p01">광고</a>
+					</div>
+					<div class="right">
+						<a class="report gislp_open" data-lp="report" data-rid="" href="#"
+							th:if="${USER_TYPE=='NM' || USER_TYPE=='BM' || USER_TYPE=='AA' || USER_TYPE=='RA'}">신고하기</a>
+						<div class="share">
+							<a href="#" class="share" data-rid="">공유하기</a>
+							<!--
+	                        <div class="sns">
+	                            <a class="n1" href="#" data-rid="">페이스북</a>
+	                            <a class="n2" href="#" data-rid="">인스타그램</a>
+	                            <a class="n3" href="#" data-rid="">카카오톡</a>
+	                        </div>
+	                    	-->
+						</div>
 					</div>
 				</div>
-			</div>
-			<div id="slide_detail" class="slide_wrap">
-				<div class="sliderBox">
-					<ul class="photoList">
-						<!--
-                        <li class="thumb"><img src="/img/sub/visual_img_2.png" /></li>
-                        <li class="thumb"><img src="/img/sub/visual_img_2.png" /></li>
-                        <li class="thumb"><img src="/img/sub/visual_img_2.png" /></li>
-                        -->
-					</ul>
+				<div id="slide_detail" class="slide_wrap">
+					<div class="sliderBox">
+						<ul class="photoList">
+							<!--
+	                        <li class="thumb"><img src="/img/sub/visual_img_2.png" /></li>
+	                        <li class="thumb"><img src="/img/sub/visual_img_2.png" /></li>
+	                        <li class="thumb"><img src="/img/sub/visual_img_2.png" /></li>
+	                        -->
+						</ul>
+					</div>
+					<div class="controlBox">
+						<button type="button" class="btn_prev">이전</button>
+						<button type="button" class="btn_next">다음</button>
+					</div>
 				</div>
-				<div class="controlBox">
-					<button type="button" class="btn_prev">이전</button>
-					<button type="button" class="btn_next">다음</button>
+				<div class="tag_wrap hashtag">
+					<!--
+	                <p>#반려동물</p>
+	                <p>#단기가능</p>
+	                <p>#1년가능</p>
+	                -->
 				</div>
-			</div>
-			<div class="tag_wrap hashtag">
-				<!--
-                <p>#반려동물</p>
-                <p>#단기가능</p>
-                <p>#1년가능</p>
-                -->
-			</div>
-			<div class="info_wrap">
-				<dl>
-					<dt data-field="tradeTypeAndPrice"><!-- 월세 보200 / 월35 --></dt>
-					<dd data-field="dongAddr"><!-- 서울시 강남구 삼성동 --></dd>
-					<dd data-field="info1"><!-- 원룸 | 면적 33㎡ | 2층 | 남동향 | 공용주차 --></dd>
-					<dd data-field="info2"><!-- 엘리베이터 있음 | 준공 2020년 | 입주협의 --></dd>
-					<dd data-field="info3"><!-- 반려동물 가능 | 단기 월 55만원 (2개월 이상) --></dd>
-					<dd data-field="info4"><!-- 매물정보 항목 --></dd>
-
-				</dl>
-				<dl>
-					<dt data-field="maintenanceFeeWon">관리비</dt>
-					<dd data-field="includeItems"></dd>
-				</dl>
-				<dl>
-					<dt>옵션</dt>
-					<dd data-field="optionItems"></dd>
-				</dl>
-				<dl>
-					<dt>위치정보</dt>
-					<dd data-field="dongAddr"></dd>
-					<!-- <dd class="map"><img src="/img/sub/map.PNG" /></dd> -->
-					<dd class="map">
-						<div id="staticMap" style="width:100%;height:280px;"></div>
-					</dd>
-				</dl>
+				<div class="info_wrap">
+					<dl>
+						<dt data-field="tradeTypeAndPrice"><!-- 월세 보200 / 월35 --></dt>
+						<dd data-field="dongAddr"><!-- 서울시 강남구 삼성동 --></dd>
+						<dd data-field="info1"><!-- 원룸 | 면적 33㎡ | 2층 | 남동향 | 공용주차 --></dd>
+						<dd data-field="info2"><!-- 엘리베이터 있음 | 준공 2020년 | 입주협의 --></dd>
+						<dd data-field="info3"><!-- 반려동물 가능 | 단기 월 55만원 (2개월 이상) --></dd>
+						<dd data-field="info4"><!-- 매물정보 항목 --></dd>
+	
+					</dl>
+					<dl>
+						<dt data-field="maintenanceFeeWon">관리비</dt>
+						<dd data-field="includeItems"></dd>
+					</dl>
+					<dl>
+						<dt>옵션</dt>
+						<dd data-field="optionItems"></dd>
+					</dl>
+					<dl>
+						<dt>위치정보</dt>
+						<dd data-field="dongAddr"></dd>
+						<!-- <dd class="map"><img src="/img/sub/map.PNG" /></dd> -->
+						<dd class="map">
+							<div id="staticMap" style="width:100%;height:280px;"></div>
+						</dd>
+					</dl>
+				</div>
 			</div>
 			
-			<div class="detail_info_divider"></div>
-			
-			<!-- 
-			<div style="position: relative;">
-				<div style="position: absolute;top: 10px;right: 10px;z-index: 1;">
-					<button type="button" id="roadViewBtn" style="width: 60px;height: 30px;border-radius: 5px;border: 1px solid #bcbcbc;background: #454480;color: #fff;">로드뷰</button>
+			<div class="jibunDetail">
+				<div class="detail_info_divider"></div>
+							  
+				<div id="minimap_container" class="view_map">
+				    <div id="minimap_mapWrapper" style="width:100%;height:300px;position:relative;">
+				        <div id="minimap_map" style="width:100%;height:100%"></div> 
+				        <input type="button" id="minimap_btnRoadview" onclick="minimapToggle(false)" title="로드뷰 보기" value="로드뷰">
+				    </div>
+				    <div id="minimap_rvWrapper" style="width:100%;height:300px;position:absolute;top:0;left:0;">
+				        <div id="minimap_roadview" style="height:100%"></div> 
+				        <input type="button" id="minimap_btnMap" onclick="minimapToggle(true)" title="지도 보기" value="지도">
+				    </div>
 				</div>
-				<div id="staticMap2" style="width:100%;height:280px;"></div>
-			</div>
-			 -->
-			  
-			<div id="minimap_container" class="view_map">
-			    <div id="minimap_mapWrapper" style="width:100%;height:300px;position:relative;">
-			        <div id="minimap_map" style="width:100%;height:100%"></div> 
-			        <input type="button" id="minimap_btnRoadview" onclick="toggleMap2(false)" title="로드뷰 보기" value="로드뷰">
-			    </div>
-			    <div id="minimap_rvWrapper" style="width:100%;height:300px;position:absolute;top:0;left:0;">
-			        <div id="minimap_roadview" style="height:100%"></div> 
-			        <input type="button" id="minimap_btnMap" onclick="toggleMap2(true)" title="지도 보기" value="지도">
-			    </div>
 			</div>
  			
 			<div class="detail_info_divider"></div>

@@ -59,6 +59,8 @@ public interface ForsaleService {
 	List<SaleDTO> getRealTradingsOfficetelListFromPnu(SaleDTO form);
 	List<SaleDTO> getRealTradingsOfficetel2ListFromPnu(SaleDTO form);
 	List<SaleDTO> getRealTradingsPresaleListFromPnu(SaleDTO form);
+	List<SaleDTO> getRealTradingsSinglehouseListFromPnu(SaleDTO form);
+	List<SaleDTO> getRealTradingsSinglehouse2ListFromPnu(SaleDTO form);
 	List<SaleDTO> getRealTradingsMultihouseListFromPnu(SaleDTO form);
 	List<SaleDTO> getRealTradingsMultihouse2ListFromPnu(SaleDTO form);
 	

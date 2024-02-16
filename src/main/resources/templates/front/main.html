@@ -19,10 +19,14 @@
 				}
 				
 				if ($('#wt').val() == '1') {
-					location.href = '/02la01?t=r&init=jibun&keyword=' + $('#wy').val();
+					location.href = '/02la01?t=a&init=jibun&keyword=' + $('#wy').val();
 				} else {
-					location.href = '/02la01?t=r&init=none&keyword=' + $('#wy').val();
+					location.href = '/02la01?t=a&init=none&keyword=' + $('#wy').val();
 				}								
+			});
+			
+			$('#wy').keyup(function () {
+				if (event.keyCode == 13) $('a.search_lp').trigger('click');
 			});
 
 			$('a.search').click(function () {								
@@ -30,7 +34,8 @@
 					alert('시·도를 선택해주세요.');
 					return;
 				}
-				location.href = '/02la01?t=r&keyword=' + ($('#sido').val() != 0 ? $('#sido').find(':selected').text() : '') + ($('#sigungu').val() != 0 ? $('#sigungu').find(':selected').text() : '') + ($('#emd').val() != 0 ? $('#emd').find(':selected').text() : '');				
+				location.href = '/02la01?t=a&keyword=' + ($('#sido').val() != 0 ? $('#sido').find(':selected').text() : '') + ($('#sigungu').val() != 0 ? $('#sigungu').find(':selected').text() : '') + ($('#emd').val() != 0 ? $('#emd').find(':selected').text() : '') 
+							+ '&sido=' + ($('#sido').val() != 0 ? $('#sido').find(':selected').text() : '') + '&sigungu=' + ($('#sigungu').val() != 0 ? $('#sigungu').find(':selected').text() : '') + '&emd=' + ($('#emd').val() != 0 ? $('#emd').find(':selected').text() : '');				
 			});	//End-of-search.
 
 			$( "#sido" ).selectmenu({

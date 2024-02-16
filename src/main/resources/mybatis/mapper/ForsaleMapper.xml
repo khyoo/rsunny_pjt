@@ -839,11 +839,18 @@
     </select>
     
     <update id="updateRealTradings" parameterType="com.regroup.rsunny.common.model.SaleDTO">
+		update real_tradings_temp
+		set 
+			  pnu = #{pnu}
+			, jibun = #{jibun}
+		WHERE rid = #{rid}		
+		<!--
 		UPDATE real_tradings_jeollanamdo
 		SET 
 			  pos_x = #{posX}
 			, pos_y = #{posY}
 		WHERE rid = #{rid}
+		-->
     </update>
     
      <delete id="deleteRealTradings" parameterType="com.regroup.rsunny.common.model.SaleDTO">
@@ -867,6 +874,20 @@
 	
 	<select id="getRealTradingsApt2ListFromPnu" parameterType="com.regroup.rsunny.common.model.SaleDTO" resultType="com.regroup.rsunny.common.model.SaleDTO">
 		SELECT * FROM real_tradings_apt2_temp 
+		WHERE pnu = #{pnu}
+		ORDER BY CONCAT(deal_month, lpad(deal_day, 2, 0)) DESC
+		limit 5
+	</select>
+	
+	<select id="getRealTradingsSinglehouseListFromPnu" parameterType="com.regroup.rsunny.common.model.SaleDTO" resultType="com.regroup.rsunny.common.model.SaleDTO">
+		SELECT * FROM real_tradings_singlehouse_temp 
+		WHERE pnu = #{pnu}
+		ORDER BY CONCAT(deal_month, lpad(deal_day, 2, 0)) DESC
+		limit 5
+	</select>
+	
+	<select id="getRealTradingsSinglehouse2ListFromPnu" parameterType="com.regroup.rsunny.common.model.SaleDTO" resultType="com.regroup.rsunny.common.model.SaleDTO">
+		SELECT * FROM real_tradings_singlehouse2_temp 
 		WHERE pnu = #{pnu}
 		ORDER BY CONCAT(deal_month, lpad(deal_day, 2, 0)) DESC
 		limit 5
@@ -1671,11 +1692,17 @@
 	<select id="getCollectCoords" parameterType="com.regroup.rsunny.common.model.SaleDTO" resultType="com.regroup.rsunny.common.model.SaleDTO">
 		SELECT 
 			* 
+		FROM real_tradings_temp	
+		WHERE pos_x is not null and sale_detail_type = 'h1'
+		<!--
+		SELECT 
+			* 
 		FROM real_tradings_jeollanamdo		
 		WHERE 1=1		
 		  AND LEFT(deal_month, 4) = #{dealYearStart}	
 		  and (pos_x is null or pos_y is null)
 			limit 100
+			-->
 	</select>
 	
 </mapper>

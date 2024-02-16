@@ -101,7 +101,8 @@
 }
 
 .category_top li.on {
-	background: #eee;
+	color: #fff;
+	background: #1263df;
 }
 
 .category_top li:hover {
@@ -173,11 +174,13 @@
 	width: 50px;
 	border-right: 1px solid #acacac;
 	padding: 6px 0;
+	color: #000;
 	text-align: center;
 	cursor: pointer;
 }
 
 .category_bottom li.on {
+	color: #fff;
 	background: #FF8080;
 }
 

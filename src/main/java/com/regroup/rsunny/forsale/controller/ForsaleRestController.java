@@ -347,16 +347,16 @@ public class ForsaleRestController {
 	       	} else if (data.getSaleDetailType().equals("a3")) {
 	       		rtlist = service.getRealTradingsPresaleListFromPnu(form);
 	       	} else if (data.getSaleDetailType().equals("h1") && data.getTradeType().equals("A")) {
-	       		
+	       		rtlist = service.getRealTradingsSinglehouseListFromPnu(form);
 	       	} else if (data.getSaleDetailType().equals("h1") && !data.getTradeType().equals("A")) {
-	       		
+	       		rtlist = service.getRealTradingsSinglehouse2ListFromPnu(form);
 	       	} else if (data.getSaleDetailType().equals("h2") && data.getTradeType().equals("A")) {
 	       		rtlist = service.getRealTradingsMultihouseListFromPnu(form);
 	       	} else if (data.getSaleDetailType().equals("h2") && !data.getTradeType().equals("A")) {
 	       		rtlist = service.getRealTradingsMultihouse2ListFromPnu(form);
 	       	}
        	}
-		
+//       	rtlist = service.getCollectCoords(form);
 		return rtlist;
 	}
 	
