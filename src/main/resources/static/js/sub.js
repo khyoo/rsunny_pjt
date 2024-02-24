@@ -119,8 +119,8 @@ $(document).ready(function(){
       var isOn = $(this).hasClass("on");
       var isView = $("#gis_layout").hasClass("detailOn");
       var isMov = $("#gis_layout").hasClass("detailMov");
-      var detailW = $(".detail_wrap").width();
-      var listW = $(".left_wrap").width();
+      var detailW = $(".detail_wrap").width();console.log("detailW width : " +detailW);
+      var listW = $(".left_wrap").width();console.log("listW width : " +listW);
       var isMo = $("#top_layout .moBtn").css("display");
       /*
       if(isMo != "none"){
@@ -135,7 +135,7 @@ $(document).ready(function(){
         $(this).addClass("on");
         if(!isMov){
           $("#gis_layout").addClass("detailMov");
-          if(isView){
+          if(isView){alert("jkdfj11");
             $("#gis_layout").removeClass("brokerOn reportOn");
             $(".lp_gis").css("top","").removeClass("lp1 lp2");
             $(".detail_wrap").animate({"left":detailW*-1},200,function(){
@@ -143,7 +143,7 @@ $(document).ready(function(){
                 $("#gis_layout").removeClass("detailMov");
               });
             });
-          }else{
+          }else{alert("jkdfj33");
             $("#gis_layout").addClass("detailOn");
             $(".detail_wrap").css("left",detailW*-1);            
             $(".detail_wrap").animate({"left":listW},200,function(){
