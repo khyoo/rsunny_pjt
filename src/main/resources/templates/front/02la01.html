@@ -264,11 +264,11 @@
 				let saleTrdType = 'A';
 			
 				$.get('https://polygon.disco.re/get_pnu_by_latlng2/?lat=' + latlng.getLat() + '&lng=' + latlng.getLng() + '&spec=goon', {}, function (pnu) {
-					console.log(pnu);
+					//console.log(pnu);
 					
 						// 토지대장
 						$.get('https://data.disco.re/home/land_by_pnu/?pnu=' + pnu.pnu, {}, function (data) {
-							console.log(data);
+							//console.log(data);
 							$('#land_forest_info_area').text(data.area);
 							$('#land_forest_info_purpose').text(data.purpose);
 							$('#p6').text(data.p6);
@@ -308,7 +308,7 @@
 						});
 
 						$.get('https://data.disco.re/home/arch_by_pnu/?pnu=' + pnu.pnu, {}, function (data) {
-							console.log(data);
+							//console.log(data);
 							let html = '';
 							if (data.overall_title_section.length > 0) {
 								let build_info = data.overall_title_section[0];
@@ -356,7 +356,7 @@
 								$('#dpad_value3').text(build_info.b50 != null ? temp_b50 : "-");
 
 							} else {
-								console.log(data.title_section)
+								//console.log(data.title_section)
 								let build_info = data.title_section[0];
 
 								$('#dpa_overall_b1').text(build_info.a23 != null ? build_info.a23 : "-");
@@ -410,7 +410,7 @@
 								$('#dpad_value3').text(build_info.a61 != null ? temp_a61 : "-");
 
 								$.get('https://data.disco.re/home/arch_floor_list/?key=' + build_info.a1, {}, function (subData) {
-									console.log(subData);
+									//console.log(subData);
 									let subHtml = '';
 									if (subData.length > 0) {
 										subData.forEach(item => {
@@ -446,7 +446,7 @@
 						});
 
 						$.get('https://data.disco.re/home/get_land_history/?pnu=' + pnu.pnu, {}, function (data) {
-							console.log(data);
+							//console.log(data);
 
 							let html = '';
 							data.reverse().forEach(item => {
@@ -464,8 +464,8 @@
 								
 						// 실거래가 목록
 						$.get('/forsale/rest/tradings/getListFromPnu?pnu=' + pnu.pnu + '&saleDetailType=' + saledtltype + '&tradeType=' + saleTrdType, {}, function (data) {
-							console.log("실거래가목록2-1");
-							console.log(data);
+							//console.log("실거래가목록2-1");
+							//console.log(data);
 
 							$('#trp-detail-period-cnt').text('(' + data.length + '건)');
 
@@ -483,7 +483,11 @@
 									html += '			</span>';
 									html += '		</div>';
 									html += '		<div class="detail_tradings_table_cell2" style="width: auto;">';
-									html += item.floor + '층 ' + item.floor + '**호';
+									if (saledtltype == 'h1') {
+										html += '-';	
+									} else {
+										html += item.floor + '층 ' + item.floor + '**호';
+									}									
 									html += '		</div>';
 									html += '		<div class="detail_tradings_table_cell2" style="width: 90px;"></div>';
 									html += '	</div>';
@@ -503,7 +507,7 @@
 
 
 						$.get('https://data.disco.re/home/land_price/?pnu=' + pnu.pnu, {}, function (data) {
-							console.log(data);
+							//console.log(data);
 							xLabels.length = 0;
 							datapoints.length = 0;
 
@@ -524,7 +528,7 @@
 				});
 
 				$.get('https://polygon.disco.re/get_land_by_latlng/?lat=' + latlng.getLat() + '&lng=' + latlng.getLng(), {}, function (result) {
-					console.log(result.address);
+					//console.log(result.address);
 					
 					$('#jibunAddress').text(result.address);
 					
@@ -549,15 +553,18 @@
 				});	
 			}
 
+			let overlayStatus = false;
+			
 			// 마커 레이어
 			let isOverlayClick = false;			
 				
 			let jibunClickHandler = function (mouseEvent) {				
-				if (polygon != null)
+				if (polygon != null) {
 					polygon.setMap(null);
+				}
 				
 				// 클릭한 위도, 경도 정보를 가져옵니다 
-				var latlng = mouseEvent.latLng;
+				let latlng = mouseEvent.latLng;
 					
 				// 매물 상세 화면 영역 ------
 				$('.cell_hidden').hide();
@@ -577,10 +584,9 @@
 				if (!gisSubWrap) {
 					gisSubWrap = !gisSubWrap;
 					$('#map').children().eq(0).children().eq(0).children().eq(4).addClass('gis_sub_wrap');	
-				}
-				
-				getJibunDetailApi(latlng);
-					
+				}				
+				getJibunDetailApi(latlng);	
+								
 				let detailW = $(".detail_wrap").width();
 				let listW = $(".left_wrap").width();
 						
@@ -599,6 +605,68 @@
 				realTradingOverlayClick = [false, false, false, false, false];
 							
 				minimapShow(latlng);						
+			}
+			
+			let overlayClickHandler = function (evt) {				
+				if (polygon != null) {
+					polygon.setMap(null);
+				}
+									
+				// 매물 상세 화면 영역 ------
+				$('.cell_hidden').hide();
+				$('.btn_wrap').hide();
+				$('#slide_detail').hide();
+				$('.tag_wrap').hide();
+				$('.info_wrap').hide();
+				// -------------------------
+				
+				// 지번 상세 화면 상단 매물번호 영역
+				$('.saleDetail').hide();
+				// 지번 상세 화면 상단 주소 영역
+				$('.jibunDetail').show();
+				
+				let gisSubWrap = $('#map').children().eq(0).children().eq(0).children().eq(4).hasClass('gis_sub_wrap'); 
+				
+				if (!gisSubWrap) {
+					gisSubWrap = !gisSubWrap;
+					$('#map').children().eq(0).children().eq(0).children().eq(4).addClass('gis_sub_wrap');	
+				}
+								
+				let idx = $('.overlay_wrap').index(this);
+				$('.overlay_wrap').eq(idx).parent().css('z-index', zIdx++);
+					
+				realTradingOverlayClick.forEach((item, index) => {
+					if (idx === index)
+						realTradingOverlayClick[index] = !realTradingOverlayClick[index];
+					else 
+						realTradingOverlayClick[index] = false;
+				});					
+				
+				let posX = $('.overlay_wrap').eq(idx).find('.overlay_metaX').text();
+				let posY = $('.overlay_wrap').eq(idx).find('.overlay_metaY').text();
+				
+				let coords = new kakao.maps.LatLng(posY, posX);
+					
+				getJibunDetailApi(coords);				
+				
+				let detailW = $(".detail_wrap").width();
+				let listW = $(".left_wrap").width();
+						
+				let isMini = $(".detail_wrap").hasClass("mini");
+		
+				if (isMini) {
+					$('.left_wrap').hide();
+					$('.detail_wrap').css("left", "0px");
+				} else {						
+					$("#gis_layout").addClass("detailOn");
+				    $(".detail_wrap").css("left",detailW*-1);            
+				    $(".detail_wrap").animate({"left":listW},200,function(){
+					    $("#gis_layout").removeClass("detailMov");
+					});		
+				}			
+				realTradingOverlayClick = [false, false, false, false, false];
+							
+				minimapShow(coords);						
 			}
 			
 			let jibunClickHandler22 = function (mouseEvent) {							
@@ -2422,7 +2490,7 @@
 
 					// 마커가 지도 위에 표시되도록 설정합니다
 					circle.setMap(map);
-					kakao.maps.event.addListener(circle, 'click', function () {console.log("dfk");
+					kakao.maps.event.addListener(circle, 'click', function () {
 						isOverlayClick = true;
 					
 						if (isOverlayClick) {							
@@ -2466,6 +2534,7 @@
 					let customOverlay = new kakao.maps.CustomOverlay({
 						position: circle.getPosition(),
 						content: content,
+						clickable: true
 					});
 
 					realTradingOverArr.push(customOverlay);
@@ -2493,8 +2562,7 @@
 				}
 
 				let customOverlaySub = null;
-								
-
+				
 				function makeOverListener() {
 					return function () {
 						//console.log(item);`
@@ -2523,12 +2591,7 @@
 						customOverlaySub = new kakao.maps.CustomOverlay({
 							position: circle.getPosition(),
 							content: content,
-						});
-						
-						$('.overlay_wrap').on('click', function (e) {
-							console.log("3333");
-						});
-
+						});						
 						// 커스텀 오버레이를 지도에 표시합니다
 						customOverlaySub.setMap(map);
 					};
@@ -2695,7 +2758,7 @@
 												}
 												//console.log(item.posY);
 												if (!boolPoi) {
-													showRealTradingsMarker(item, itemIdx);
+													showRealTradingsMarker(item, itemIdx);													
 												}
 											} else {
 												console.log("좌표 없음");
@@ -3084,7 +3147,9 @@
 													});
 												}
 											}
-										});
+										});		
+										// overlay Event Setting
+										$('.overlay_wrap').on('click', overlayClickHandler);	
 									},
 									error: function (json) {
 										console.log("error");
@@ -3252,21 +3317,13 @@
 			
 			
 
-			let lineDistanceArr = [];
-
-			let polygonArr = [];
-			let areaOverlayArr = [];
-			let areaAddressArr = [];
-
-
 			
-			
+
+			let evtStatus = null;
 			$('#cat_map').click(function () {				
 				clearCategory('cat_map');
 				
-				if (isMap) {
-					
-				} else {
+				if (!isMap) {
 					$('.category_top li').removeClass("on");
 					$('#cat_map').addClass("on");
 					
@@ -3278,32 +3335,27 @@
 				isMap = !isMap;
 			});			
 			$('#cat_measure').click(function () {
-				clearCategory('cat_measure');
-				
-				if (isMeasure) {
-					kakao.maps.event.addListener(map, 'click', jibunClickHandler);
-					kakao.maps.event.removeListener(map, 'click', measuerAreaClickHandler);
-					kakao.maps.event.removeListener(map, 'click', measuerLengthClickHandler);
+				if (!isMeasure) {
+					kakao.maps.event.removeListener(map, 'click', jibunClickHandler);
 					
-					$('div.tab1').addClass('on');
-					$('div.tab5').removeClass('on');
-				} else {
 					$('.category_top li').removeClass("on");
 					$('#cat_measure').addClass("on");
 
 					$('.category_bottom').hide();
 					$('#cat_measure_sub').show();
 					
-					initCategory();
+					initCategory();					
+				} else {
+					kakao.maps.event.addListener(map, 'click', jibunClickHandler);
+					
+					clearCategory('cat_measure');					
 				}
 				isMeasure = !isMeasure; 
 			});			
 			$('#cat_around').click(function () {
 				clearCategory('cat_around');
 				
-				if (isAround) {
-					
-				} else {
+				if (!isAround) {					
 					$('.category_top li').removeClass("on");
 					$('#cat_around').addClass("on");
 
@@ -3379,7 +3431,7 @@
 					// 지도 위에 선이 표시되고 있다면 지도에서 제거합니다
 					deleteClickLine();
 					// 지도 위에 커스텀오버레이가 표시되고 있다면 지도에서 제거합니다
-					deleteDistnce();
+					deleteDistance();
 					// 지도 위에 선을 그리기 위해 클릭한 지점과 해당 지점의 거리정보가 표시되고 있다면 지도에서 제거합니다
 					deleteCircleDot();
 	
@@ -3399,17 +3451,12 @@
 					kakao.maps.event.removeListener(map, 'click', measuerAreaClickHandler);
 //				}
 				$('div.tab1').addClass('on');
-				$('div.tab5').removeClass('on');
-				
-				kakao.maps.event.addListener(map, 'click', jibunClickHandler);
+				$('div.tab5').removeClass('on');				
 			}					
 
 			
 			function initMeasure(mType) {
-				kakao.maps.event.removeListener(map, 'click', jibunClickHandler);
-				
-				$('.category_bottom li').removeClass("on");
-				
+				//$('.category_bottom li').removeClass("on");				
 				if (mType == 'length') {
 					measureSet('거리');	
 					$('#lengthMeasure').addClass("on");
@@ -3433,8 +3480,12 @@
 				clearCategorySub();
 				
 				if (isLength) {					
-					clearMeasure('length');
+					kakao.maps.event.addListener(map, 'click', jibunClickHandler);
+					
+					clearMeasure('length');					
 				} else {		
+					kakao.maps.event.removeListener(map, 'click', jibunClickHandler);
+					
 					initCategorySub();
 					
 					clearMeasure('area');
@@ -3448,8 +3499,12 @@
 				clearCategorySub();
 				
 				if (isArea) {
-					clearMeasure('area');
+					kakao.maps.event.addListener(map, 'click', jibunClickHandler);
+					
+					clearMeasure('area');					
 				} else {		
+					kakao.maps.event.removeListener(map, 'click', jibunClickHandler);
+					
 					initCategorySub();
 					
 					clearMeasure('length');
@@ -3504,14 +3559,13 @@
 			let clickLine // 마우스로 클릭한 좌표로 그려질 선 객체입니다
 			let distanceOverlay; // 선의 거리정보를 표시할 커스텀오버레이 입니다
 			let dots = {}; // 선이 그려지고 있을때 클릭할 때마다 클릭 지점과 거리를 표시하는 커스텀 오버레이 배열입니다.
-					
 
 			let measuerLengthClickHandler = function(mouseEvent) {
 				// 마우스로 클릭한 위치입니다 
 				let clickPosition = mouseEvent.latLng;
 
 				let subHtml = '';
-				subHtml += '<div class="rbc-cerulean" style="height: 120px;" id="mt_total_area_view">';
+				subHtml += '<div class="rbc-cerulean" style="height: 120px;">';
 				//subHtml += '	<div class="rfc-cerulean" style="background: #fff;width: 144px;display: inline-block;border-radius: 22px;height: 40px;position: relative;top:7px;line-height:40px;cursor:pointer;pointer-events:auto;" id="mt_last_btn">';
 				//subHtml += '		<span style="display: inline-block;"><img src="https://aurora.disco.re/static/common/img/ico_close_b.png?ver=1688364125" style="width:16px;"></span>';
 				//subHtml += '		<span style="display: inline-block;">마지막 지점 삭제</span>';
@@ -3569,7 +3623,7 @@
 					// 지도 위에 선이 표시되고 있다면 지도에서 제거합니다
 					deleteClickLine();
 					// 지도 위에 커스텀오버레이가 표시되고 있다면 지도에서 제거합니다
-					deleteDistnce();
+					deleteDistance();
 					// 지도 위에 선을 그리기 위해 클릭한 지점과 해당 지점의 거리정보가 표시되고 있다면 지도에서 제거합니다
 					deleteCircleDot();
 					
@@ -3600,11 +3654,44 @@
 
 					$('.dotOverlay').eq(0).html('시작 <span class="number">0</span>m');
 					$('.dotOverlay').eq(0).parent().append(temp_html);
+					/*
+					$('.temp_add_close').off('mouseover');
+					$('.temp_add_close').off('mouseout');
+					$('.temp_add_close').off('click');
+					
+					$('.temp_add_close').on('mouseover', function (e) {											
+						//kakao.maps.event.removeListener(map, 'click', jibunClickHandler);						
+					});
+					$('.temp_add_close').on('mouseout', function (e) {
+						//kakao.maps.event.addListener(map, 'click', jibunClickHandler);																	
+					});
+					$('.temp_add_close').on('click', function (e) {
+						// 그려지고 있는 선의 좌표 배열을 얻어옵니다
+						let path = clickLine.getPath();
+						// 좌표 배열에 마지막 요소 제거
+						path.pop();
+						// 다시 선에 좌표 배열을 설정하여 클릭 위치까지 선을 그리도록 설정합니다
+						clickLine.setPath(path);
+						// 마지막 지점 지도에서 제거
+						deleteLastCircleDot();
 
+						if (lengthListCnt > 0) {
+							lineDistanceArr.pop();
+							lengthDisSum = lineDistanceArr[lineDistanceArr.length - 1];
+
+							$('#mt_count').text((--lengthListCnt) + 1);
+							$('#mt_total_length').text(lengthDisSum + 'm');
+						} else {
+							$('#mt_count').text(0);
+							drawingFlag = false;
+						}					
+					});
+					*/
+					
 					$('.temp_add_close').off('contextmenu');
 					$('.temp_add_close').on('contextmenu', function() {
 						// 그려지고 있는 선의 좌표 배열을 얻어옵니다
-						var path = clickLine.getPath();
+						let path = clickLine.getPath();
 						// 좌표 배열에 마지막 요소 제거
 						path.pop();
 						// 다시 선에 좌표 배열을 설정하여 클릭 위치까지 선을 그리도록 설정합니다
@@ -3631,7 +3718,7 @@
 					// 다시 선에 좌표 배열을 설정하여 클릭 위치까지 선을 그리도록 설정합니다
 					clickLine.setPath(path);
 
-					var distance = Math.round(clickLine.getLength());
+					let distance = Math.round(clickLine.getLength());
 					displayCircleDot(clickPosition, distance);
 
 					lengthListCnt++;
@@ -3644,11 +3731,45 @@
 
 					$('.temp_add_close').hide();
 					$('.dotOverlay').eq($('.dotOverlay').length - 1).parent().append(temp_html);
+					/*
+					$('.temp_add_close').off('mouseover');
+					$('.temp_add_close').off('mouseout');
+					$('.temp_add_close').off('click');
+					
+					$('.temp_add_close').on('mouseover', function (e) {											
+						//kakao.maps.event.removeListener(map, 'click', jibunClickHandler);						
+					});
+					$('.temp_add_close').on('mouseout', function (e) {
+						//kakao.maps.event.addListener(map, 'click', jibunClickHandler);																	
+					});
+					$('.temp_add_close').on('click', function (e) {
+						// 그려지고 있는 선의 좌표 배열을 얻어옵니다
+						let path = clickLine.getPath();
+						// 좌표 배열에 마지막 요소 제거
+						path.pop();
+						// 다시 선에 좌표 배열을 설정하여 클릭 위치까지 선을 그리도록 설정합니다
+						clickLine.setPath(path);
+						// 마지막 지점 지도에서 제거
+						deleteLastCircleDot();
 
+						if (lengthListCnt > 0) {
+							lineDistanceArr.pop();
+							lengthDisSum = lineDistanceArr[lineDistanceArr.length - 1];
+
+							$('#mt_count').text((--lengthListCnt) + 1);
+							$('#mt_total_length').text(lengthDisSum + 'm');
+						} else {
+							$('#mt_count').text(0);
+							drawingFlag = false;
+						}
+						$('.temp_add_close').eq($('.dotOverlay').length - 1).show();					
+					});
+					*/
+					
 					$('.temp_add_close').off('contextmenu');
 					$('.temp_add_close').on('contextmenu', function() {
 						// 그려지고 있는 선의 좌표 배열을 얻어옵니다
-						var path = clickLine.getPath();
+						let path = clickLine.getPath();
 						// 좌표 배열에 마지막 요소 제거
 						path.pop();
 						// 다시 선에 좌표 배열을 설정하여 클릭 위치까지 선을 그리도록 설정합니다
@@ -3669,291 +3790,23 @@
 						$('.temp_add_close').eq($('.dotOverlay').length - 1).show();
 					});
 				}
-			};
-
-
-
-			var measuerLengthMouseMoveHandler = function(mouseEvent) {
-
-				// 지도 마우스무브 이벤트가 발생했는데 선을 그리고있는 상태이면
-				if (drawingFlag) {
-
-					// 마우스 커서의 현재 위치를 얻어옵니다 
-					var mousePosition = mouseEvent.latLng;
-
-					// 마우스 클릭으로 그려진 선의 좌표 배열을 얻어옵니다
-					var path = clickLine.getPath();
-
-					// 마우스 클릭으로 그려진 마지막 좌표와 마우스 커서 위치의 좌표로 선을 표시합니다
-					var movepath = [path[path.length - 1], mousePosition];
-					moveLine.setPath(movepath);
-					moveLine.setMap(map);
-
-					var distance = Math.round(clickLine.getLength() + moveLine.getLength()), // 선의 총 거리를 계산합니다
-						content = '<div class="dotOverlay distanceInfo">총거리 <span class="number">' + distance + '</span>m</div>'; // 커스텀오버레이에 추가될 내용입니다
-
-					// 거리정보를 지도에 표시합니다
-					showDistance(content, mousePosition);
-				}
-			};
-
-
-			var measuerLengthRightClickHandler = function(mouseEvent) {
-
-				// 지도 오른쪽 클릭 이벤트가 발생했는데 선을 그리고있는 상태이면
-				if (drawingFlag) {
-
-					// 마우스무브로 그려진 선은 지도에서 제거합니다
-					moveLine.setMap(null);
-					moveLine = null;
-
-					// 마우스 클릭으로 그린 선의 좌표 배열을 얻어옵니다
-					var path = clickLine.getPath();
-
-					// 선을 구성하는 좌표의 개수가 2개 이상이면
-					if (path.length > 1) {
-
-						// 마지막 클릭 지점에 대한 거리 정보 커스텀 오버레이를 지웁니다
-						if (dots[dots.length - 1].distance) {
-							dots[dots.length - 1].distance.setMap(null);
-							dots[dots.length - 1].distance = null;
-						}
-
-						var distance = Math.round(clickLine.getLength()), // 선의 총 거리를 계산합니다
-							content = getTimeHTML(distance); // 커스텀오버레이에 추가될 내용입니다
-
-						// 그려진 선의 거리정보를 지도에 표시합니다
-						showDistance(content, path[path.length - 1]);
-
-					} else {
-
-						// 선을 구성하는 좌표의 개수가 1개 이하이면 
-						// 지도에 표시되고 있는 선과 정보들을 지도에서 제거합니다.
-						deleteClickLine();
-						deleteCircleDot();
-						deleteDistnce();
-
-					}
-
-					// 상태를 false로, 그리지 않고 있는 상태로 변경합니다
-					drawingFlag = false;
-				}
-			};
-
-			// 클릭으로 그려진 선을 지도에서 제거하는 함수입니다
-			function deleteClickLine() {
-				if (clickLine) {
-					clickLine.setMap(null);
-					clickLine = null;
-				}
-			}
-
-			// 마우스 드래그로 그려지고 있는 선의 총거리 정보를 표시하거
-			// 마우스 오른쪽 클릭으로 선 그리가 종료됐을 때 선의 정보를 표시하는 커스텀 오버레이를 생성하고 지도에 표시하는 함수입니다
-			function showDistance(content, position) {
-
-				if (distanceOverlay) { // 커스텀오버레이가 생성된 상태이면
-
-					// 커스텀 오버레이의 위치와 표시할 내용을 설정합니다
-					distanceOverlay.setPosition(position);
-					distanceOverlay.setContent(content);
-
-				} else { // 커스텀 오버레이가 생성되지 않은 상태이면
-
-					// 커스텀 오버레이를 생성하고 지도에 표시합니다
-					distanceOverlay = new kakao.maps.CustomOverlay({
-						map: map, // 커스텀오버레이를 표시할 지도입니다
-						content: content,  // 커스텀오버레이에 표시할 내용입니다
-						position: position, // 커스텀오버레이를 표시할 위치입니다.
-						xAnchor: 0,
-						yAnchor: 0,
-						zIndex: 3
-					});
-				}
-			}
-
-			// 그려지고 있는 선의 총거리 정보와 
-			// 선 그리가 종료됐을 때 선의 정보를 표시하는 커스텀 오버레이를 삭제하는 함수입니다
-			function deleteDistnce() {
-				if (distanceOverlay) {
-					distanceOverlay.setMap(null);
-					distanceOverlay = null;
-				}
-			}
-
-			// 선이 그려지고 있는 상태일 때 지도를 클릭하면 호출하여 
-			// 클릭 지점에 대한 정보 (동그라미와 클릭 지점까지의 총거리)를 표출하는 함수입니다
-			function displayCircleDot(position, distance) {
-
-				// 클릭 지점을 표시할 빨간 동그라미 커스텀오버레이를 생성합니다
-				var circleOverlay = new kakao.maps.CustomOverlay({
-					content: '<span class="dot"></span>',
-					position: position,
-					zIndex: 1
-				});
-
-				// 지도에 표시합니다
-				circleOverlay.setMap(map);
-
-				if (distance > 0) {
-					// 클릭한 지점까지의 그려진 선의 총 거리를 표시할 커스텀 오버레이를 생성합니다
-					var distanceOverlay = new kakao.maps.CustomOverlay({
-						content: '<div class="dotOverlay">거리 <span class="number">' + distance + '</span>m</div>',
-						position: position,
-						yAnchor: 1,
-						zIndex: 2
-					});
-
-					// 지도에 표시합니다
-					distanceOverlay.setMap(map);
-				} else {
-					var distanceOverlay = new kakao.maps.CustomOverlay({
-						content: '<div class="dotOverlay">시작</div>',
-						position: position,
-						yAnchor: 1,
-						zIndex: 2
-					});
-
-					// 지도에 표시합니다
-					distanceOverlay.setMap(map);
-				}
-
-				lineDistanceArr.push(distance);
-				// 배열에 추가합니다
-				dots.push({ circle: circleOverlay, distance: distanceOverlay });
-			}
-
-			// 마지막 지점 지도에서 제거하는 함수입니다
-			function deleteLastCircleDot() {
-				if (dots[dots.length - 1].circle) {
-					dots[dots.length - 1].circle.setMap(null);
-				}
-				if (dots[dots.length - 1].distance) {
-					dots[dots.length - 1].distance.setMap(null);
-				}
-				// 마지막 제거
-				dots.pop();
-			}
-
-			// 전체 지점 지도에서 제거하는 함수입니다
-			function deleteAllCircleDot() {
-				// 그려지고 있는 선의 좌표 배열을 얻어옵니다
-				var path = clickLine.getPath();
-
-				// 좌표 배열 모든 요소 제거
-				path = [];
-
-				// 다시 선에 좌표 배열을 설정하여 클릭 위치까지 선을 그리도록 설정합니다
-				clickLine.setPath(path);
-
-				for (let i = 0; i < dots.length; i++) {
-					dots[i].circle.setMap(null);
-					dots[i].distance.setMap(null);
-				}
-
-				$('#mt_count').text(0);
-				$('#mt_total_length').text('0m');
-			}
-
-			// 클릭 지점에 대한 정보 (동그라미와 클릭 지점까지의 총거리)를 지도에서 모두 제거하는 함수입니다
-			function deleteCircleDot() {
-				var i;
-
-				for (i = 0; i < dots.length; i++) {
-					if (dots[i].circle) {
-						dots[i].circle.setMap(null);
-					}
-
-					if (dots[i].distance) {
-						dots[i].distance.setMap(null);
-					}
-				}
-				dots = [];
-			}
-
-			// 마우스 우클릭 하여 선 그리기가 종료됐을 때 호출하여 
-			// 그려진 선의 총거리 정보와 거리에 대한 도보, 자전거 시간을 계산하여
-			// HTML Content를 만들어 리턴하는 함수입니다
-			function getTimeHTML(distance) {
-
-				// 도보의 시속은 평균 4km/h 이고 도보의 분속은 67m/min입니다
-				var walkkTime = distance / 67 | 0;
-				var walkHour = '', walkMin = '';
-
-				// 계산한 도보 시간이 60분 보다 크면 시간으로 표시합니다
-				if (walkkTime > 60) {
-					walkHour = '<span class="number">' + Math.floor(walkkTime / 60) + '</span>시간 '
-				}
-				walkMin = '<span class="number">' + walkkTime % 60 + '</span>분'
-
-				// 자전거의 평균 시속은 16km/h 이고 이것을 기준으로 자전거의 분속은 267m/min입니다
-				var bycicleTime = distance / 227 | 0;
-				var bycicleHour = '', bycicleMin = '';
-
-				// 계산한 자전거 시간이 60분 보다 크면 시간으로 표출합니다
-				if (bycicleTime > 60) {
-					bycicleHour = '<span class="number">' + Math.floor(bycicleTime / 60) + '</span>시간 '
-				}
-				bycicleMin = '<span class="number">' + bycicleTime % 60 + '</span>분'
-
-				// 거리와 도보 시간, 자전거 시간을 가지고 HTML Content를 만들어 리턴합니다
-				var content = '<ul class="dotOverlay distanceInfo">';
-				content += '    <li>';
-				content += '        <span class="label">총거리</span><span class="number">' + distance + '</span>m';
-				content += '    </li>';
-				content += '    <li>';
-				content += '        <span class="label">도보</span>' + walkHour + walkMin;
-				content += '    </li>';
-				content += '    <li>';
-				content += '        <span class="label">자전거</span>' + bycicleHour + bycicleMin;
-				content += '    </li>';
-				content += '</ul>'
-
-				return content;
-			}
-			
-			function measureSet(measureType) {
-				let subHtml = '';
-				subHtml += '<div class="mfs-list-div-view3 dsc-main-frame" id="map_tool_div_view" style="text-align: center; background: rgb(255, 255, 255); box-shadow: rgba(0, 0, 0, 0.15) 1px 0px 2px 0px;">';
-				subHtml += '	<div style="background: #fff;pointer-events:auto;">';
-				subHtml += '		<div class="map-tool-title-bar-div">';
-				subHtml += '			<div class="map-tool-name-title" id="map_tool_name_title">' + measureType + ' 측정</div>';				
-				subHtml += '			<div class="map-tool-before-btn"><span class="map-tool-btns mearsure-close" style="padding-left:20px;" id="mt_close_btn"><img src="/img/sub/ico_btn_close.png" style="width:20px;height:19px;"></span></div>';
-				subHtml += '		</div>';
-				subHtml += '	</div>';
-				subHtml += '	<div id="map_tool_msg" style="color: rgb(115, 120, 140); height: 100%; line-height: 91px; background: rgb(255, 255, 255); position: relative;">측정하고자 하는 위치를 선택하세요.</div>';
-				subHtml += '	<div id="map_tool_field" style="position: relative; pointer-events: auto; top: 0px;"></div>';
-				subHtml += '</div>';
-
-				$('div.tab5').html(subHtml);				
 				
-				let isTag = $("#mt_close_btn").hasClass("mearsure-close");
 				
-				if (isTag) {
-					$('#mt_close_btn').click(function () {
-						clearCategorySub();
-						initCategorySub();						
-					});
-				}
-			}
+			};
 			
-			let areaListCnt = 0;
-			let areaListSum = 0.0;
-			let areaListPriceSum = 0.0;
-			var measuerAreaClickHandler = function (mouseEvent) {
+			let measuerAreaClickHandler = function (mouseEvent) {
 				// 클릭한 위도, 경도 정보를 가져옵니다 
-				var latlng = mouseEvent.latLng;
+				let latlng = mouseEvent.latLng;
 
 				let subHtml = '';
-
-				subHtml += '<div class="rbc-cerulean" style="height: 80px;" id="mt_total_area_view">';
+				subHtml += '<div class="rbc-cerulean" style="height: 80px;">';
 				subHtml += '	<div style="height: 40px;line-height: 46px;font-size: 16px;color: #fff;display: inline-block;">총 <span id="mt_count" style="display: inline-block;"></span>개 필지가 선택됨</div>';
-				subHtml += '	<div class="map-tool-reset-btn"><span class="map-tool-btns" style="pointer-events: auto; padding-right: 20px; position: absolute; top: -18px; left: 10px;" id="mt_length_reset_btn"><img src="/img/sub/ico_reset_a.png" style="width:24px;"></span></div>';
+				subHtml += '	<div class="map-tool-reset-btn"><span class="map-tool-btns" style="pointer-events: auto; padding-right: 20px; position: absolute; top: -18px; left: 10px;" id="mt_area_reset_btn"><img src="/img/sub/ico_reset_a.png" style="width:24px;"></span></div>';
 				subHtml += '	<div style="height: 56px;position: relative;">';
 				subHtml += '		<div style="display: inline-block;width: 39%;padding-left: 16px;color: #fff;">';
 				subHtml += '			<span style="display: inline-block;font-size: 14px;color: #7eb6e7;margin-right: 10px;">면적 합계 </span>';
 				subHtml += '			<span style="display: inline-block;font-size: 20px;" class="areaListInfo" id="mt_total_area"></span>';
-				subHtml += '			<span style="display: none;font-size: 20px;" class="areaListInfo2" id="mt_total_area2"></span>';
+				subHtml += '			<span style="display: inline-block;font-size: 20px;" class="areaListInfo2" id="mt_total_area2"></span>';
 				subHtml += '			<span class="area_unit"></span>';
 				subHtml += '		</div>';
 				subHtml += '		<div class="btn_meter_pyeong">';
@@ -3981,28 +3834,11 @@
 					$('#map_tool_msg').hide();
 					$('#map_tool_field').append(subHtml);
 					
-					$('#mt_length_reset_btn').click(function () {
-						drawingFlag = false;
-
-						lengthListCnt = 0;
-						lengthDisSum = 0;
-
-						if (clickLine != null && typeof (clickLine) != 'undefined') {
-							deleteAllCircleDot();
-						}
-
-						areaListCnt = 0;
-						areaListSum = 0;
-
+					$('#mt_area_reset_btn').click(function () {
 						for (let i = 0; i < $('.areaListCnt').length; i++) {
 							polygonArr[i].setMap(null);
 							areaOverlayArr[i].setMap(null);
 						}
-
-						polygonArr = [];
-						areaOverlayArr = [];
-						areaAddressArr = [];
-
 						for (let i = $('.areaListCnt').length - 1; i >= 0; i--) {
 							$('.area-list').eq(i).remove();
 						}
@@ -4016,11 +3852,9 @@
 
 					$('.btn_meter_pyeong').on('click', function () {
 						if (!isAreaExtent) {
-							isAreaExtent = true;
-
-							$('.area_pyeong').css('display', 'inline-block');
 							$('.area_meter').css('display', 'none');
-
+							$('.area_pyeong').css('display', 'inline-block');
+							
 							$('.areaInfo').css('display', 'none');
 							$('.areaInfo2').css('display', 'inline-block');
 
@@ -4040,14 +3874,12 @@
 							$('#mo-catAreaSub2').css("background", "#F5F5FC");
 							$('#mo-catAreaSub2').css("color", "#000");
 						} else {
-							isAreaExtent = false;
-
 							$('.area_meter').css('display', 'inline-block');
 							$('.area_pyeong').css('display', 'none');
 
-							$('.areaInfo2').css('display', 'none');
 							$('.areaInfo').css('display', 'inline-block');
-
+							$('.areaInfo2').css('display', 'none');
+							
 							$('.areaListInfo').css('display', 'inline-block');
 							$('.areaListInfo2').css('display', 'none');
 
@@ -4064,6 +3896,7 @@
 							$('#mo-catAreaSub1').css("background", "#F5F5FC");
 							$('#mo-catAreaSub1').css("color", "#000");
 						}
+						isAreaExtent = !isAreaExtent;
 					});
 				}
 
@@ -4073,30 +3906,13 @@
 					dataType: "json",
 					async: false,
 					cache: false,
-					success: function (result) {
-						console.log(result);
-
-						let isAddr = false;
+					success: function (result) {						
+						//console.log(result);
+						let includeAddr = false;
 						areaAddressArr.forEach((item, idx) => {
 							if (item === result.address) {
-								isAddr = true;
-
-								console.log("xx");
-								let tempPoly = null;
-								tempPoly = parse_land_polygon_value(result.polygon); //console.log(tempPoly);
-
-								// 지도에 표시할 다각형을 생성합니다
-								let polygon = new kakao.maps.Polygon({
-									path: tempPoly[0],//polygonPath, // 그려질 다각형의 좌표 배열입니다
-									strokeWeight: 2, // 선의 두께입니다 
-									strokeColor: '#75B8FA', // 선의 색깔입니다
-									strokeOpacity: 1, // 선의 불투명도 입니다 1에서 0 사이의 값이며 0에 가까울수록 투명합니다
-									strokeStyle: 'shortdash', // 선의 스타일 입니다
-									fillColor: '#CFE7FF', // 채우기 색깔입니다
-									fillOpacity: 0.7  // 채우기 불투명도 입니다  
-
-								});
-
+								includeAddr = true;
+								console.log("yy");
 								polygonArr[idx].setMap(null);
 								polygonArr.splice(idx, 1);
 
@@ -4131,7 +3947,7 @@
 							}
 						});
 
-						if (!isAddr) {
+						if (!includeAddr) {
 							areaAddressArr.push(result.address);
 							console.log("xx");
 							let tempPoly = null;
@@ -4145,8 +3961,7 @@
 								strokeOpacity: 1, // 선의 불투명도 입니다 1에서 0 사이의 값이며 0에 가까울수록 투명합니다
 								strokeStyle: 'shortdash', // 선의 스타일 입니다
 								fillColor: '#CFE7FF', // 채우기 색깔입니다
-								fillOpacity: 0.7  // 채우기 불투명도 입니다  
-
+								fillOpacity: 0.7  // 채우기 불투명도 입니다
 							});
 							polygonArr.push(polygon);
 
@@ -4174,14 +3989,6 @@
 							let temp_area2 = 0.0;
 							temp_area1 = polygon.getArea().toFixed(1);
 							temp_area2 = Number(polygon.getArea() / 3.3058).toFixed(0);
-
-							if (!isAreaExtent) {
-								$('.areaInfo').css('display', 'inline-block');
-								$('.areaInfo2').css('display', 'none');
-							} else {
-								$('.areaInfo2').css('display', 'inline-block');
-								$('.areaInfo').css('display', 'none');
-							}
 
 							let subHtml = '';
 							subHtml += '<div class="area-list">';
@@ -4225,16 +4032,18 @@
 							if (!isAreaExtent) {
 								$('.area_unit').text('㎡');
 
-								$('.areaListInfo').css('display', 'inline-block');
-								$('.areaListInfo2').css('display', 'none');
+								$('.areaInfo').show();
+								$('.areaInfo2').hide();
+								$('.areaListInfo').show();
+								$('.areaListInfo2').hide();
 							} else {
 								$('.area_unit').text('평');
 
-								$('.areaListInfo2').css('display', 'inline-block');
-								$('.areaListInfo').css('display', 'none');
+								$('.areaInfo').hide();
+								$('.areaInfo2').show();
+								$('.areaListInfo').hide();
+								$('.areaListInfo2').show();								
 							}
-						} else {
-
 						}
 					},
 					error: function (json) {
@@ -4243,8 +4052,134 @@
 				});
 			};
 
+			// 선이 그려지고 있는 상태일 때 지도를 클릭하면 호출하여 
+			// 클릭 지점에 대한 정보 (동그라미와 클릭 지점까지의 총거리)를 표출하는 함수입니다
+			function displayCircleDot(position, distance) {
 
+				// 클릭 지점을 표시할 빨간 동그라미 커스텀오버레이를 생성합니다
+				var circleOverlay = new kakao.maps.CustomOverlay({
+					content: '<span class="dot"></span>',
+					position: position,
+					zIndex: 1
+				});
 
+				// 지도에 표시합니다
+				circleOverlay.setMap(map);
+
+				if (distance > 0) {
+					// 클릭한 지점까지의 그려진 선의 총 거리를 표시할 커스텀 오버레이를 생성합니다
+					var distanceOverlay = new kakao.maps.CustomOverlay({
+						content: '<div class="dotOverlay">거리 <span class="number">' + distance + '</span>m</div>',
+						position: position,
+						yAnchor: 1,
+						zIndex: 2
+					});
+
+					// 지도에 표시합니다
+					distanceOverlay.setMap(map);
+				} else {
+					var distanceOverlay = new kakao.maps.CustomOverlay({
+						content: '<div class="dotOverlay">시작</div>',
+						position: position,
+						yAnchor: 1,
+						zIndex: 2
+					});
+
+					// 지도에 표시합니다
+					distanceOverlay.setMap(map);
+				}
+
+				lineDistanceArr.push(distance);
+				// 배열에 추가합니다
+				dots.push({ circle: circleOverlay, distance: distanceOverlay });
+			}
+			
+			// 클릭으로 그려진 선을 지도에서 제거하는 함수입니다
+			function deleteClickLine() {
+				if (clickLine) {
+					clickLine.setMap(null);
+					clickLine = null;
+				}
+			}
+			
+			// 그려지고 있는 선의 총거리 정보와 
+			// 선 그리기가 종료됐을 때 선의 정보를 표시하는 커스텀 오버레이를 삭제하는 함수입니다
+			function deleteDistance() {
+				if (distanceOverlay) {
+					distanceOverlay.setMap(null);
+					distanceOverlay = null;
+				}
+			}
+
+			// 마지막 지점 지도에서 제거하는 함수입니다
+			function deleteLastCircleDot() {
+				if (dots[dots.length - 1].circle) {
+					dots[dots.length - 1].circle.setMap(null);
+				}
+				if (dots[dots.length - 1].distance) {
+					dots[dots.length - 1].distance.setMap(null);
+				}
+				// 마지막 제거
+				dots.pop();
+			}
+
+			// 전체 지점 지도에서 제거하는 함수입니다
+			function deleteAllCircleDot() {
+				// 그려지고 있는 선의 좌표 배열을 얻어옵니다
+				let path = clickLine.getPath();
+				// 좌표 배열 모든 요소 제거
+				path = [];
+				// 다시 선에 좌표 배열을 설정하여 클릭 위치까지 선을 그리도록 설정합니다
+				clickLine.setPath(path);
+
+				for (let i = 0; i < dots.length; i++) {
+					dots[i].circle.setMap(null);
+					dots[i].distance.setMap(null);
+				}
+
+				$('#mt_count').text(0);
+				$('#mt_total_length').text('0m');
+			}
+
+			// 클릭 지점에 대한 정보 (동그라미와 클릭 지점까지의 총거리)를 지도에서 모두 제거하는 함수입니다
+			function deleteCircleDot() {				
+				for (let i = 0; i < dots.length; i++) {
+					if (dots[i].circle) {
+						dots[i].circle.setMap(null);
+					}
+					if (dots[i].distance) {
+						dots[i].distance.setMap(null);
+					}
+				}
+				dots = [];
+			}
+						
+			function measureSet(measureType) {
+				let subHtml = '';
+				subHtml += '<div class="mfs-list-div-view3 dsc-main-frame" id="map_tool_div_view" style="text-align: center; background: rgb(255, 255, 255); box-shadow: rgba(0, 0, 0, 0.15) 1px 0px 2px 0px;">';
+				subHtml += '	<div style="background: #fff;pointer-events:auto;">';
+				subHtml += '		<div class="map-tool-title-bar-div">';
+				subHtml += '			<div class="map-tool-name-title" id="map_tool_name_title">' + measureType + ' 측정</div>';				
+				subHtml += '			<div class="map-tool-before-btn"><span class="map-tool-btns mearsure-close" style="padding-left:20px;" id="mt_close_btn"><img src="/img/sub/ico_btn_close.png" style="width:20px;height:19px;"></span></div>';
+				subHtml += '		</div>';
+				subHtml += '	</div>';
+				subHtml += '	<div id="map_tool_msg" style="color: rgb(115, 120, 140); height: 100%; line-height: 91px; background: rgb(255, 255, 255); position: relative;">측정하고자 하는 위치를 선택하세요.</div>';
+				subHtml += '	<div id="map_tool_field" style="position: relative; pointer-events: auto; top: 0px;"></div>';
+				subHtml += '</div>';
+
+				$('div.tab5').html(subHtml);				
+				
+				let isTag = $("#mt_close_btn").hasClass("mearsure-close");
+				
+				if (isTag) {
+					$('#mt_close_btn').click(function () {
+						clearCategorySub();
+						initCategorySub();						
+					});
+				}
+			}
+			
+			
 
 
 			
@@ -4393,7 +4328,18 @@
 					el.className = 'on';
 				}
 			}
-
+			
+			function displayMarker(place) {			overlay_wrap  
+			    // 마커에 클릭이벤트를 등록합니다
+			    kakao.maps.event.addListener(marker, 'click', function() {
+			        // 마커를 클릭하면 장소명이 인포윈도우에 표출됩니다
+			        infowindow.setContent('<div style="padding:5px;font-size:12px;">' + place.place_name + '</div>');
+			        infowindow.open(map, marker);
+			    });
+			}
+			
+			
+			
 			$('#mo-catAreaSub1').click(function () {
 				isAreaExtent = true;
 
@@ -4567,7 +4513,7 @@
 			
 
 
-			function parse_land_polygon_value(e, r) {console.log('e, r/////////');console.log(e);console.log(r);
+			function parse_land_polygon_value(e, r) {
 				var t = [19e-6, 0];//get_rev_xy(r, "l");				
 				var a = new RegExp(/\(\(.+?\)\)/g);
 				var i = new RegExp(/\(.+?\)/g);
@@ -4975,7 +4921,7 @@
 						areaListCnt = 0;
 						areaListSum = 0;
 
-						kakao.maps.event.addListener(map, 'click', jibunClickHandler);
+						//kakao.maps.event.addListener(map, 'click', jibunClickHandler);
 						kakao.maps.event.removeListener(map, 'click', measuerAreaClickHandler);
 
 						$('div.tab1').addClass('on');
@@ -5001,15 +4947,12 @@
 						// 지도 위에 선이 표시되고 있다면 지도에서 제거합니다
 						deleteClickLine();
 						// 지도 위에 커스텀오버레이가 표시되고 있다면 지도에서 제거합니다
-						deleteDistnce();
+						deleteDistance();
 						// 지도 위에 선을 그리기 위해 클릭한 지점과 해당 지점의 거리정보가 표시되고 있다면 지도에서 제거합니다
 						deleteCircleDot();
 
 						kakao.maps.event.removeListener(map, 'click', measuerLengthClickHandler);
-						//kakao.maps.event.removeListener(map, 'mousemove', measuerLengthMouseMoveHandler);
-						//kakao.maps.event.removeListener(map, 'rightclick', measuerLengthRightClickHandler);
-
-
+						
 						// 지도에 클릭 이벤트를 등록합니다
 						// 지도를 클릭하면 마지막 파라미터로 넘어온 함수를 호출합니다
 						if (polygon != null)
@@ -5074,15 +5017,13 @@
 						// 지도 위에 선이 표시되고 있다면 지도에서 제거합니다
 						deleteClickLine();
 						// 지도 위에 커스텀오버레이가 표시되고 있다면 지도에서 제거합니다
-						deleteDistnce();
+						deleteDistance();
 						// 지도 위에 선을 그리기 위해 클릭한 지점과 해당 지점의 거리정보가 표시되고 있다면 지도에서 제거합니다
 						deleteCircleDot();
 
-						kakao.maps.event.addListener(map, 'click', jibunClickHandler);
+						//kakao.maps.event.addListener(map, 'click', jibunClickHandler);
 						kakao.maps.event.removeListener(map, 'click', measuerLengthClickHandler);
-						//kakao.maps.event.removeListener(map, 'mousemove', measuerLengthMouseMoveHandler);
-						//kakao.maps.event.removeListener(map, 'rightclick', measuerLengthRightClickHandler);
-
+						
 						$('div.tab1').addClass('on');
 						$('div.tab5').removeClass('on');
 
@@ -5351,16 +5292,14 @@
 				// 지도 위에 선이 표시되고 있다면 지도에서 제거합니다
 				deleteClickLine();
 				// 지도 위에 커스텀오버레이가 표시되고 있다면 지도에서 제거합니다
-				deleteDistnce();
+				deleteDistance();
 				// 지도 위에 선을 그리기 위해 클릭한 지점과 해당 지점의 거리정보가 표시되고 있다면 지도에서 제거합니다
 				deleteCircleDot();
 
-				kakao.maps.event.addListener(map, 'click', jibunClickHandler);
+				//kakao.maps.event.addListener(map, 'click', jibunClickHandler);
 				kakao.maps.event.removeListener(map, 'click', measuerLengthClickHandler);
 				kakao.maps.event.removeListener(map, 'click', measuerAreaClickHandler);
-				//kakao.maps.event.removeListener(map, 'mousemove', measuerLengthMouseMoveHandler);
-				//kakao.maps.event.removeListener(map, 'rightclick', measuerLengthRightClickHandler);
-
+				
 				$('.left_wrap.mini').css("display", "block");
 
 				isLength = false;

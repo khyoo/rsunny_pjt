@@ -36,6 +36,16 @@ let drawingFlag = false; // 선이 그려지고 있는 상태를 가지고 있�
 let lengthListCnt = 0;
 let lengthDisSum = 0;
 			
+let areaListCnt = 0;
+let areaListSum = 0.0;
+let areaListPriceSum = 0.0;
+
+let lineDistanceArr = [];
+
+let polygonArr = [];
+let areaOverlayArr = [];
+let areaAddressArr = [];
+			
 let _map = null;
 
 function _initMap(map) {
@@ -110,6 +120,13 @@ function initCategorySub() {
 	
 	lengthListCnt = 0;
 	lengthDisSum = 0;
+	
+	areaListCnt = 0;
+	areaListSum = 0.0;
+	
+	polygonArr = [];
+	areaOverlayArr = [];
+	areaAddressArr = [];
 }
 
 

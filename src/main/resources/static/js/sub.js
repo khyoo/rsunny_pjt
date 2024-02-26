@@ -135,7 +135,7 @@ $(document).ready(function(){
         $(this).addClass("on");
         if(!isMov){
           $("#gis_layout").addClass("detailMov");
-          if(isView){alert("jkdfj11");
+          if(isView){
             $("#gis_layout").removeClass("brokerOn reportOn");
             $(".lp_gis").css("top","").removeClass("lp1 lp2");
             $(".detail_wrap").animate({"left":detailW*-1},200,function(){
@@ -143,7 +143,7 @@ $(document).ready(function(){
                 $("#gis_layout").removeClass("detailMov");
               });
             });
-          }else{alert("jkdfj33");
+          }else{
             $("#gis_layout").addClass("detailOn");
             $(".detail_wrap").css("left",detailW*-1);            
             $(".detail_wrap").animate({"left":listW},200,function(){

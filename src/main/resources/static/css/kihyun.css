@@ -432,7 +432,6 @@
 	width: 6px;
 }
 
-
 .overlay_wrap {
 	position: absolute;
 	left: 0;
@@ -444,6 +443,7 @@
 	font-size: 12px;
 	font-family: 'Malgun Gothic', dotum, '돋움', sans-serif;
 	line-height: 1.5;
+	cursor: pointer;
 }
 
 .overlay_wrap * {
