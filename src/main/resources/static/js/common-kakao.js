@@ -14,6 +14,9 @@ $(document).ready(function() {
 	});
 });
 
+let polygon = null;
+let realTradingOverlayClick = [false, false, false, false, false]; 	//실거래가 오버레이 팝업 클릭 배열
+		
 let isMap = false;
 let isMeasure = false;
 let isAround = false;
@@ -45,6 +48,8 @@ let lineDistanceArr = [];
 let polygonArr = [];
 let areaOverlayArr = [];
 let areaAddressArr = [];
+
+let around_markers = [];
 			
 let _map = null;
 
@@ -56,6 +61,8 @@ function setOverlayMapTypeId(maptype) {
 	if (maptype === 'skyview') {
 		if (isSkyview) {
 			$('#mapTypeChange1').removeClass("on");
+			
+			$('.map-layer-icon2').css("border", "none");
 			_map.setMapTypeId(kakao.maps.MapTypeId.ROADMAP);
 		} else {
 			$('#mapTypeChange1').addClass("on");
@@ -68,6 +75,8 @@ function setOverlayMapTypeId(maptype) {
 	} else if (maptype === 'use_district') {
 		if (isUseDistrict) {
 			$('#mapTypeChange2').removeClass("on");
+			
+			$('.map-layer-icon4').css("border", "none");
 			_map.removeOverlayMapTypeId(kakao.maps.MapTypeId.USE_DISTRICT);
 		} else {
 			$('#mapTypeChange2').addClass("on");
@@ -80,6 +89,8 @@ function setOverlayMapTypeId(maptype) {
 	} else if (maptype === 'terrain') {
 		if (isTerrain) {
 			$('#mapTypeChange3').removeClass("on");
+			
+			$('.map-layer-icon3').css("border", "none");
 			_map.removeOverlayMapTypeId(kakao.maps.MapTypeId.TERRAIN);
 		} else {
 			$('#mapTypeChange3').addClass("on");
@@ -105,8 +116,8 @@ function initCategory() {
 	isMap = false;
 	isMeasure = false;
 	isAround = false;
-	isAreaExtent = false;
-	isPrice = false;
+	//isAreaExtent = false;
+	//isPrice = false;
 }
 
 function initCategorySub() {

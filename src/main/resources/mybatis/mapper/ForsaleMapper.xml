@@ -839,18 +839,25 @@
     </select>
     
     <update id="updateRealTradings" parameterType="com.regroup.rsunny.common.model.SaleDTO">
+		<!--
 		update real_tradings_temp
 		set 
 			  pnu = #{pnu}
 			, jibun = #{jibun}
 		WHERE rid = #{rid}		
-		<!--
-		UPDATE real_tradings_jeollanamdo
+		
+		UPDATE real_tradings_temp22
 		SET 
 			  pos_x = #{posX}
 			, pos_y = #{posY}
 		WHERE rid = #{rid}
 		-->
+		UPDATE real_tradings_temp22
+		SET 
+			  pos_x = #{posX}
+			, pos_y = #{posY}
+		WHERE sigungu = #{sigungu} and jibun = #{jibun}
+		
     </update>
     
      <delete id="deleteRealTradings" parameterType="com.regroup.rsunny.common.model.SaleDTO">
@@ -923,6 +930,27 @@
 	
 	<select id="getRealTradingsPresaleListFromPnu" parameterType="com.regroup.rsunny.common.model.SaleDTO" resultType="com.regroup.rsunny.common.model.SaleDTO">
 		SELECT * FROM real_tradings_presale_temp 
+		WHERE pnu = #{pnu}
+		ORDER BY CONCAT(deal_month, lpad(deal_day, 2, 0)) DESC
+		limit 5
+	</select>
+	
+	<select id="getRealTradingsMallListFromPnu" parameterType="com.regroup.rsunny.common.model.SaleDTO" resultType="com.regroup.rsunny.common.model.SaleDTO">
+		SELECT * FROM real_tradings_mall_temp 
+		WHERE pnu = #{pnu}
+		ORDER BY CONCAT(deal_month, lpad(deal_day, 2, 0)) DESC
+		limit 5
+	</select>
+	
+	<select id="getRealTradingsLandListFromPnu" parameterType="com.regroup.rsunny.common.model.SaleDTO" resultType="com.regroup.rsunny.common.model.SaleDTO">
+		SELECT * FROM real_tradings_land_temp 
+		WHERE pnu = #{pnu}
+		ORDER BY CONCAT(deal_month, lpad(deal_day, 2, 0)) DESC
+		limit 5
+	</select>
+	
+	<select id="getRealTradingsFactoryListFromPnu" parameterType="com.regroup.rsunny.common.model.SaleDTO" resultType="com.regroup.rsunny.common.model.SaleDTO">
+		SELECT * FROM real_tradings_factory_temp 
 		WHERE pnu = #{pnu}
 		ORDER BY CONCAT(deal_month, lpad(deal_day, 2, 0)) DESC
 		limit 5
@@ -1686,14 +1714,30 @@
 	</select>
 	
 	
+	 <update id="updatePNU" parameterType="com.regroup.rsunny.common.model.SaleDTO">
+		update real_tradings_land_temp
+		set 
+			  pnu = concat(pnu, '1', #{jibun1}, #{jibun2}) 
+			, jibun = #{jibun}
+			, jibun1 = #{jibun1}
+			, jibun2 = #{jibun2}
+		WHERE pos_x = #{posX} and pos_y = #{posY} 
+    </update>
 	
+	
+	<select id="getListUpdatePNU" parameterType="com.regroup.rsunny.common.model.SaleDTO" resultType="com.regroup.rsunny.common.model.SaleDTO">
+		SELECT x.* FROM real_tradings_land_temp x
+		WHERE pos_x is not NULL 
+	</select>
 	
 	
 	<select id="getCollectCoords" parameterType="com.regroup.rsunny.common.model.SaleDTO" resultType="com.regroup.rsunny.common.model.SaleDTO">
 		SELECT 
-			* 
-		FROM real_tradings_temp	
-		WHERE pos_x is not null and sale_detail_type = 'h1'
+			rid, sigungu, jibun
+		FROM real_tradings_seoul	
+		WHERE sale_detail_type = 'l1' 
+		and jibun is not null
+		and pos_x is null		
 		<!--
 		SELECT 
 			* 

@@ -736,6 +736,15 @@ public class ForsaleServiceImpl implements ForsaleService {
 	
 	@Override
 	@Transactional
+	public ResultDTO updatePNU(SaleDTO form) {
+	
+		mapper.updatePNU(form);
+		
+		return ResultDTO.of(0, "저장되었습니다.");
+	}
+	
+	@Override
+	@Transactional
 	public ResultDTO updateRealTradings(SaleDTO form) {
 	
 		mapper.updateRealTradings(form);
@@ -813,7 +822,29 @@ public class ForsaleServiceImpl implements ForsaleService {
 		List<SaleDTO> rtlist = mapper.getRealTradingsMultihouse2ListFromPnu(form);
 		
 		return rtlist;
+	}	
+	@Override
+	public List<SaleDTO> getRealTradingsMallListFromPnu(SaleDTO form) {
+	
+		List<SaleDTO> rtlist = mapper.getRealTradingsMallListFromPnu(form);
+		
+		return rtlist;
 	}
+	@Override
+	public List<SaleDTO> getRealTradingsLandListFromPnu(SaleDTO form) {
+	
+		List<SaleDTO> rtlist = mapper.getRealTradingsLandListFromPnu(form);
+		
+		return rtlist;
+	}
+	@Override
+	public List<SaleDTO> getRealTradingsFactoryListFromPnu(SaleDTO form) {
+	
+		List<SaleDTO> rtlist = mapper.getRealTradingsFactoryListFromPnu(form);
+		
+		return rtlist;
+	}
+	
 	
 	@Override
 	public List<SaleDTO> getRealTradingsListFromApt1(SaleDTO form) {
@@ -1019,6 +1050,13 @@ public class ForsaleServiceImpl implements ForsaleService {
 	}
 	
 	
+	@Override
+	public List<SaleDTO> getListUpdatePNU(SaleDTO form) {
+	
+		List<SaleDTO> rtlist = mapper.getListUpdatePNU(form);
+		
+		return rtlist;
+	}
 	
 	@Override
 	public List<SaleDTO> getCollectCoords(SaleDTO form) {

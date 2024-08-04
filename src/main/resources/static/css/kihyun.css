@@ -36,6 +36,7 @@
 }
 
 .category_rtOn {
+	display: none;
 	position: absolute;
 	top: 1px;
 	left: 60px;
@@ -50,8 +51,7 @@
 	z-index: 3;
 }
 
-.category_rtOff {
-	display: none;
+.category_rtOff {	
 	position: absolute;
 	top: 1px;
 	left: 60px;
@@ -121,6 +121,15 @@
 	margin: 0 auto 3px;
 	width: 27px;
 	height: 28px;
+}
+
+.category_top li div {
+	background: #fff;
+}
+
+.category_top li div.on {
+	color: #fff;
+	background: #1263df;
 }
 
 .category_top li .category_bg {

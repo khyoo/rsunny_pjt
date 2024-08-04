@@ -319,7 +319,33 @@ public class ForsaleRestController {
 
 		return rtlist;
 	}
+	
+	
+	@GetMapping("/tradings/getListUpdatePNU")
+	public List<SaleDTO> getListUpdatePNU(SaleDTO form, Model model) throws Exception {
+		log.info("/tradings/getListUpdatePNU");
 
+		List<SaleDTO> rtlist = service.getListUpdatePNU(form);
+
+		return rtlist;
+	}
+	
+	/**
+	 * 실거래 데이터 좌표(posX, posY) 업데이트
+	 * 
+	 * @param SaleDTO
+	 * @return ResultDTO
+	 * @throws Exception
+	 */
+	@PostMapping("/tradings/updatePNU")
+	public ResultDTO updatePNU(SaleDTO form, Model model) throws Exception {
+		log.info("/rest/tradings/updatePNU");
+
+		System.out.println("----------------------");
+
+		return service.updatePNU(form);
+	}
+	
 	/**
 	 * 실거래 데이터 좌표(posX, posY) 업데이트
 	 * 
@@ -367,7 +393,14 @@ public class ForsaleRestController {
 			rtlist = service.getRealTradingsMultihouseListFromPnu(form);
 		} else if (form.getSaleDetailType().equals("h2") && !form.getTradeType().equals("A")) {
 			rtlist = service.getRealTradingsMultihouse2ListFromPnu(form);
+		} else if (form.getSaleDetailType().equals("s1") && form.getTradeType().equals("A")) {
+			rtlist = service.getRealTradingsMallListFromPnu(form);
+		} else if (form.getSaleDetailType().equals("l1") && form.getTradeType().equals("A")) {
+			rtlist = service.getRealTradingsLandListFromPnu(form);
+		} else if (form.getSaleDetailType().equals("l3") && form.getTradeType().equals("A")) {
+			rtlist = service.getRealTradingsFactoryListFromPnu(form);
 		}
+		
 
 //      rtlist = service.getCollectCoords(form);
 

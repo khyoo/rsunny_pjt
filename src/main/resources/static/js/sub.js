@@ -119,8 +119,8 @@ $(document).ready(function(){
       var isOn = $(this).hasClass("on");
       var isView = $("#gis_layout").hasClass("detailOn");
       var isMov = $("#gis_layout").hasClass("detailMov");
-      var detailW = $(".detail_wrap").width();console.log("detailW width : " +detailW);
-      var listW = $(".left_wrap").width();console.log("listW width : " +listW);
+      var detailW = $(".detail_wrap").width();
+      var listW = $(".left_wrap").width();
       var isMo = $("#top_layout .moBtn").css("display");
       /*
       if(isMo != "none"){
