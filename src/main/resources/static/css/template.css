@@ -419,16 +419,24 @@ html,body,#gis_layout{ height: 100%;}
 .gis_wrap .location .search a{ width: 50px; height: 50px; background: url(../img/main/search_ico_btn.png) no-repeat center center #454480; text-indent: -9999px; display: inline-block; float: left; border-radius: 3px;}
 .gis_wrap .location .tools{ position: relative; line-height: 42px; display: block; width: 44px; height: 44px; font-size: 12px; border-radius: 4px; box-shadow: 0 1px 2px 0 rgba(0,0,0,0.15); border: solid 1px rgba(0,0,0,0.3); background-color: #fff; cursor: pointer; text-align: center; }
 .gis_wrap .gis{ width: 100%; height: 100%; background-color: #000; color: #000; text-align: center;}
+.gis_wrap .search{ position: absolute; top: 10px; left: 400px; width: 500px; background-color: #fff; display: inline-block; z-index: 2;}
+.gis_wrap .search_wrap .searchBox{ background-color: #fff; padding: 10px 10px; display: flex; border: 1px solid #b3b3b3; border-radius: 8px;}
+.gis_wrap .search_wrap .searchBox .selectBox{ width: 120px;}
+.gis_wrap .search_wrap .searchBox .ui-selectmenu-button.ui-button{ width: 100%; height: 50px; background-color: #fff; padding: 0; margin: 0; border: 0;}
+.gis_wrap .search_wrap .searchBox .ui-selectmenu-text{ font-size: 1em; color: #000; line-height: 50px; padding: 0 0 0 5px;}
+.gis_wrap .search_wrap .searchBox .ui-button .ui-icon{ width: 14px; height: 14px; background: url(../img/main/search_ico_select.png) no-repeat center center; margin: 3px 0 0 0;}
+
+
+.gis_wrap .search input{ width: calc(100% - 50px); height: 50px; font-family: nts; font-weight: 300; font-size: 16px; color: #000; line-height: 50px; padding: 0 0 0 12px; box-sizing: border-box; float: left;}
+.gis_wrap .search input::placeholder{ color: #999;}
+.gis_wrap .search a{ width: 50px; height: 50px; background: url(../img/main/search_ico_btn.png) no-repeat center center #454480; text-indent: -9999px; display: inline-block; float: left; border-radius: 3px;}
+
 
 
 .left_wrap{ width: 523px; background-color: #fff; display: flex; flex-direction: column; position: absolute; top: 72px; left: 0; bottom: 0; z-index: 999;}
-.left_wrap .headBox{ background-color: #f5f5f5; padding: 20px;}
-.left_wrap .banner_wrap{ background-color: #adadad;}
+.left_wrap .headBox{ background-color: #f5f5f5; padding: 10px;}
+.left_wrap .banner_wrap{ background-color: #adadad; height: 90px;}
 .left_wrap .banner_wrap a{ width: 100%; height: 100%; display: inline-block; border-radius: 3px;}
-.left_wrap .banner_wrap .search{ width: 100%; background-color: #fff; padding: 8px; margin-right: 10px; display: inline-block; border: 1px solid #b3b3b3; border-radius: 3px;}
-.left_wrap .banner_wrap .search input{ width: calc(100% - 50px); height: 50px; font-family: nts; font-weight: 300; font-size: 16px; color: #000; line-height: 50px; padding: 0 0 0 12px; box-sizing: border-box; float: left;}
-.left_wrap .banner_wrap .search input::placeholder{ color: #999;}
-.left_wrap .banner_wrap .search a{ width: 50px; height: 50px; background: url(../img/main/search_ico_btn.png) no-repeat center center #454480; text-indent: -9999px; display: inline-block; float: left; border-radius: 3px;}
 .left_wrap .foot_wrap{ background-color: #f1f1f3; padding: 30px 20px 20px 20px;}
 .left_wrap .tabCon_wrap.tab1 .foot_wrap{ flex: 1;}
 .left_wrap .foot_wrap .util{ display: inline-block;}
@@ -554,9 +562,9 @@ html,body,#gis_layout{ height: 100%;}
 #buyList.on{ display: block;}
 
 
-.filter_wrap{ width: 333px; position: absolute; bottom: 50px; right: 43px; z-index: 99;}
-.filter_wrap > a{ width: 100%; background-color: #3a15ae; font-weight: 700; font-size: 16px; color: #fff; line-height: 24px; padding: 22px 30px; display: inline-block; border-radius: 3px; position: relative;}
-.filter_wrap > a::after{ width: 20px; height: 20px; background: url(../img/sub/ico_filter_open.png) no-repeat center center; content: ""; margin: -10px 0 0 0; position: absolute; top: 50%; right: 30px;}
+.filter_wrap{ width: 333px; position: absolute; top: 82px; right: 43px; z-index: 99;}
+.filter_wrap > a{ width: 100%; background-color: #fff; font-weight: 700; font-size: 16px; color: #000; line-height: 24px; padding: 22px 30px; display: inline-block; border: 1px solid #000; border-radius: 3px; position: relative;}
+.filter_wrap > a > span{ display: inline-block; }
 .filter_wrap .filterBox{ background-color: #fff; display: none;}
 .filter_wrap .checkBox{ padding: 20px 22px; display: flex; flex-wrap: wrap; justify-content: space-between; border-bottom: 1px solid #ddd;}
 .filter_wrap .checkBox .txtRadio{ width: 84px;}
@@ -574,12 +582,13 @@ html,body,#gis_layout{ height: 100%;}
 .filter_wrap .selectBox .ui-button .ui-icon{ top: 11px; right: 12px;}
 .filter_wrap .ui-selectmenu-text{ font-size: 14px; text-align: center; color: #999; line-height: 32px;}
 .filter_wrap .btn_wrap{ padding: 30px 22px 51px 22px; margin: 0;}
-.filter_wrap .btn_wrap a{ width: 100%; height: 34px; font-weight: 400; font-size: 14px; color: #351ea7; text-align: center; line-height: 32px; border: 1px solid #351ea7; border-radius: 3px;}
+.filter_wrap .btn_wrap a{ width: 100%; height: 34px; font-weight: 400; font-size: 14px; color: #fff; background-color: #454480; text-align: center; line-height: 32px; border: 1px solid #454480; border-radius: 3px;}
 .filter_wrap.on .filterBox{ display: block;}
 
 
 .detailOn .detail_wrap{ display: inline-block;}
-.detail_wrap{ width: 532px; background-color: #fff; padding: 30px; display: none; overflow-y: auto; border-right: 1px solid #ddd; border-left: 1px solid #ddd; position: absolute; top: 72px; bottom: 0; left: 523px; z-index: 99;}
+.detail_wrap{ width: 532px; background-color: #fff; padding: 30px; display: none; border-right: 1px solid #ddd; border-left: 1px solid #ddd; position: absolute; top: 72px; bottom: 0; left: 523px; z-index: 99;}
+.detail_wrap .detail_content{ overflow: auto; height: 90%; }
 .detail_wrap .saleNum{ display: flex; justify-content: space-between; margin-bottom: 15px;}
 .detail_wrap .saleNum p{ font-weight: 400; font-size: 14px; color: #8a8a8a; line-height: 24px; display: flex;}
 .detail_wrap .saleNum p span{ font-weight: 700; font-size: 14px; color: #351ea7; line-height: 24px; margin: 0 0 0 10px;}
@@ -612,6 +621,7 @@ html,body,#gis_layout{ height: 100%;}
 .detail_wrap .info_wrap dt{ font-weight: 700; font-size: 16px; color: #000; line-height: 24px;}
 .detail_wrap .info_wrap dt + dd{ margin-top: 4px;}
 .detail_wrap .info_wrap dd{ font-weight: 400; font-size: 14px; color: #a5a5a5; line-height: 24px;}
+.detail_wrap .info_wrap dd[data-field=info4]{margin-top: 24px;}
 .detail_wrap .info_wrap .map{ margin: 13px 0 0 0;}
 .detail_wrap .info_wrap .map img{ width: 100%;}
 
@@ -700,11 +710,6 @@ html,body,#gis_layout{ height: 100%;}
 		}
 		
 
-.search_wrap .searchBox{ background-color: #fff; padding: 10px 10px; display: flex; border: 1px solid #b3b3b3; border-radius: 3px;}
-.search_wrap .searchBox .selectBox{ width: 120px;}
-.search_wrap .searchBox .ui-selectmenu-button.ui-button{ width: 100%; height: 50px; background-color: #fff; padding: 0; margin: 0; border: 0;}
-.search_wrap .searchBox .ui-selectmenu-text{ font-size: 1em; color: #000; line-height: 50px; padding: 0 0 0 5px;}
-.search_wrap .searchBox .ui-button .ui-icon{ width: 14px; height: 14px; background: url(../img/main/search_ico_select.png) no-repeat center center; margin: 3px 0 0 0;}
 
 .search_lp_wrap .searchBox input{ width: 230px; font-size: 1em; color: #000; line-height: 50px; padding: 0 15px; flex: 1; border: 0;}
 .search_lp_wrap .searchBox{ background-color: #fff; padding: 10px 10px; display: flex; border: 1px solid #b3b3b3; border-radius: 4px;}

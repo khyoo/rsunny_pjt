@@ -263,6 +263,9 @@ function setRoadviewRoad() {
 		// 클락한 위치를 기준으로 로드뷰를 설정합니다
 		toggleRoadview(position);
 	});
+	
+	//let html = '<a href="#">x</a>';
+	
 }
 
 //로드뷰를 지도 뒤로 숨기는 함수입니다

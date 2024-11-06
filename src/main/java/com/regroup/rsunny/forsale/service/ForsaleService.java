@@ -46,11 +46,7 @@ public interface ForsaleService {
 	List<SaleDTO> getAddrSido(SaleDTO form);
 	List<SaleDTO> getAddrSigungu(SaleDTO form);
 	List<SaleDTO> getAddrEmd(SaleDTO form);
-	
-	
-	
-	List<SaleDTO> getRealTradingsList(SaleDTO form);	
-	List<SaleDTO> getRealTradingsAllList(SaleDTO form);	
+		
 	ResultDTO updatePNU(SaleDTO form);
 	ResultDTO updateRealTradings(SaleDTO form);	
 	SaleDTO getRealTradingsListFromPnu(SaleDTO form);

@@ -167,20 +167,10 @@ public class FrontPageController {
        	model.addAttribute("form", form);
        	model.addAttribute("list", list);
        	
-       	SaleDTO sale = new SaleDTO();
-       	sale.setTradeType("A");
-       	List<SaleDTO> rtlist = saleService.getRealTradingsList(sale);
-       	model.addAttribute("rtlist", rtlist);
-       	
-       	sale.setTradeType("B");
-       	List<SaleDTO> rtlist2 = saleService.getRealTradingsList(sale);
-       	model.addAttribute("rtlist2", rtlist2);
-       	
-       	sale.setTradeType("C");
-       	List<SaleDTO> rtlist3 = saleService.getRealTradingsList(sale);
-       	model.addAttribute("rtlist3", rtlist3);
-       	
-       	//System.out.println(rtlist);
+//       	SaleDTO sale = new SaleDTO();
+//       	sale.setTradeType("A");              	
+//       	sale.setTradeType("B");       	
+//       	sale.setTradeType("C");
        	
         return "front/02la01";
     }

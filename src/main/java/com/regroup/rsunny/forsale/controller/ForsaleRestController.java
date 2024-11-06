@@ -541,7 +541,7 @@ public class ForsaleRestController {
 	 */
 	@GetMapping("/tradings/getListOfficetel2")
 	public List<SaleDTO> getRealTradingsListFromOfficetel2(SaleDTO form, Model model) throws Exception {
-		log.info("/rest/{}/tradings/getListOfficetel2/{}");
+		log.info("/rest/{}/tradings/getListOfficetel2/{}11");
 		System.out.println(form.getSidoCode());
 		List<SaleDTO> rtlist = service.getRealTradingsListFromOfficetel2(form);
 

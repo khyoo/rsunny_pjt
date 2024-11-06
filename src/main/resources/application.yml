@@ -9,9 +9,12 @@ spring:
   datasource:
     sql-script-encoding: utf-8
     driver-class-name: org.mariadb.jdbc.Driver
-    url: jdbc:mariadb://222.239.250.245:23306/rsunny_db
-    username: rsunny
-    password: rsunny!09
+    #url: jdbc:mariadb://222.239.250.245:23306/rsunny_db
+    #username: rsunny
+    #password: rsunny!09
+    url: jdbc:mariadb://localhost/rsunny_db
+    username: root
+    password: mcalab3408
     #url: jdbc:mariadb://202.31.147.195:13306/rsunny_db2    
     #username: root
     #password: mcalab3408

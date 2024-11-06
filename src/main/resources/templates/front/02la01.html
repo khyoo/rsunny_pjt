@@ -136,10 +136,7 @@
 					$("#tradeYearEnd").text(ui.values[1]);
 
 					dealYearStart = ui.values[0];
-					dealYearEnd = ui.values[1];
-
-					removeRealTrading();
-					getRealTrading();
+					dealYearEnd = ui.values[1];				
 				}
 			});
 			
@@ -508,50 +505,7 @@
 							});
 							$('#land_history').html(html);
 						});
-								
-						// 실거래가 목록
-						$.get('/forsale/rest/tradings/getListFromPnu?pnu=' + pnuOrg + '&saleDetailType=' + saledtltype + '&tradeType=' + saleTrdType, {}, function (data) {
-							//console.log("실거래가목록2-1");
-							//console.log(data);
-
-							$('#trp-detail-period-cnt').text('(' + data.length + '건)');
-
-							let html = '';
-							if (data.length > 0) {
-								data.forEach(item => {
-									html += '<div class="detail_tradings_table2">';
-									html += '	<div class="detail_tradings_table_row">';
-									html += '		<div class="detail_tradings_table_cell2" style="width: 22%;">';
-									html += '`' + item.dealMonth.substr(2, 2) + '.' + item.dealMonth.substr(4, 2) + '.' + item.dealDay;
-									html += '		</div>';
-									html += '		<div class="detail_tradings_table_cell2" style="width: 20%;">';
-									html += '			<span data-area="total" style="display: inline;">';
-									html += numComma(item.dealAmount) + "만";
-									html += '			</span>';
-									html += '		</div>';
-									html += '		<div class="detail_tradings_table_cell2" style="width: auto;">';
-									if (saledtltype == 'h1' || saledtltype == 'l1') {
-										html += '-';	
-									} else {
-										html += item.floor + '층 ' + item.floor + '**호';
-									}									
-									html += '		</div>';
-									html += '		<div class="detail_tradings_table_cell2" style="width: 90px;"></div>';
-									html += '	</div>';
-									html += '</div>';
-								});
-							} else {
-								html += '<div class="detail_tradings_table2">';
-								html += '	<div class="detail_tradings_table_row">';
-								html += '	<span>';
-								html += '		실거래가 내역이 없습니다.';
-								html += '	</span>';
-								html += '	</div>';
-								html += '</div>';
-							}
-							$('#detail_tradings_table_conts').html(html);
-						});
-
+					
 
 						$.get('https://data.disco.re/home/land_price/?pnu=' + pnuOrg, {}, function (data) {
 							//console.log(data);
@@ -736,7 +690,7 @@
 						
 						// 지도 확대 축소를 제어할 수 있는  줌 컨트롤을 생성합니다
 						var zoomControl = new kakao.maps.ZoomControl();
-						map.addControl(zoomControl, kakao.maps.ControlPosition.RIGHT);
+						map.addControl(zoomControl, kakao.maps.ControlPosition.BOTTOMRIGHT);
 						
 						let boundbox = map.getBounds().toString().replace('((', '').replace('))', '').replace('(', '').replace(')', '').replaceAll(' ', '');
 						//getRealTrading(boundbox);
@@ -745,22 +699,12 @@
 						kakao.maps.event.addListener(map, 'dragend', function () {
 							let level = map.getLevel();
 
-							if (isRealTradings) {		
-								removeRealTrading();
+							if (true) {		
 								realTradingOverlayClick = [false, false, false, false, false];
 								
 								if (level >= 6) {
 									realTransCluster(map);
 									//console.log(clusterer2);
-								} else {
-									/*
-									if (clusterer2 != null) {console.log(clusterer2);
-										clusterer2.removeMarkers(realTradingOverArr);
-									}
-									clusterer2.removeMarkers(realTradingOverArr);
-									console.log(clusterer2);
-									*/
-									getRealTrading();
 								}
 							}
 
@@ -786,17 +730,14 @@
 						kakao.maps.event.addListener(map, 'zoom_changed', function () {
 							let level = map.getLevel();
 console.log('zoom_changed : ' + level);
-							if (isRealTradings) {
-								removeRealTrading();
+							if (true) {
 								realTradingOverlayClick = [false, false, false, false, false];
 								
 								if (level >= 6) {
 									realTransCluster(map);
 									addEmdBoundary();
 								} else {
-									removeEmdBoundary();
-									//removeClusterer();									
-									getRealTrading();
+									removeEmdBoundary();									
 								}
 							}
 
@@ -852,8 +793,15 @@ console.log('zoom_changed : ' + level);
 
 							//클러스터 클릭 이벤트 처리.
 							kakao.maps.event.addListener(clusterer, 'clusterclick', function (cluster) {
-								var bound = cluster.getBounds();
-								//alert( JSON.stringify(bound) );
+								
+								let level = map.getLevel()-1;
+
+							    // 지도를 클릭된 클러스터의 마커의 위치를 기준으로 확대합니다
+							    map.setLevel(level, {anchor: cluster.getCenter()});
+							    							        
+								let bound = cluster.getBounds();
+								map.setBounds(bound);
+								
 								var swX = bound.ha;
 								var swY = bound.qa;
 								var neX = bound.oa;
@@ -866,6 +814,8 @@ console.log('zoom_changed : ' + level);
 								frm.find('input[name=neY]').val(neY);
 								frm.find('input[name=page]').val(1);
 								movePageTab1(1);
+								
+								
 							});
 						});
 					}
@@ -879,7 +829,7 @@ console.log('zoom_changed : ' + level);
 
 				geocoder.addressSearch('쌍봉동', callback);
 
-			} else {
+			} else {alert("xx");
 				var options = { //지도를 생성할 때 필요한 기본 옵션
 					center: new kakao.maps.LatLng(37.566826, 126.9786567), // 지도의 중심좌표
 					scrollwheel: true,
@@ -899,16 +849,13 @@ console.log('zoom_changed : ' + level);
 				kakao.maps.event.addListener(map, 'dragend', function () {
 					let level = map.getLevel();
 
-					if (isRealTradings) {
-						removeRealTrading();
+					if (true) {
 						realTradingOverlayClick = [false, false, false, false, false];
 
 						//console.log(level);
 						//console.log(boundbox);
 						if (level >= 6) {
 							realTransCluster(map);
-						} else {
-							getRealTrading();
 						}
 					}
 
@@ -928,16 +875,13 @@ console.log('zoom_changed : ' + level);
 					// 지도의 현재 레벨을 얻어옵니다
 					var level = map.getLevel();
 
-					if (isRealTradings) {
-						removeRealTrading();
+					if (true) {
 						realTradingOverlayClick = [false, false, false, false, false];
 
 						//console.log(level);
 						//console.log(boundbox);
 						if (level >= 6) {
 							realTransCluster(map);
-						} else {
-							getRealTrading();
 						}
 					}
 
@@ -1054,9 +998,7 @@ console.log('zoom_changed : ' + level);
 							
 							jibunDetails(coords);
 					        minimapShow(coords);		
-					        
-					        //getRealTrading();
-					        
+					        					        
 							/*
 							// 주소-좌표 변환 객체를 생성합니다
 							let geocoder = new kakao.maps.services.Geocoder();
@@ -1203,16 +1145,7 @@ console.log('zoom_changed : ' + level);
 			
 			
 			function jibunDetails(latlng) {
-				let initHtml = '';
-				initHtml += '<div class="detail_tradings_table2">';
-				initHtml += '	<div class="detail_tradings_table_row">';
-				initHtml += '	<span>';
-				initHtml += '		실거래가 내역을 불러오고 있습니다....';
-				initHtml += '	</span>';
-				initHtml += '	</div>';
-				initHtml += '</div>';			
-				$('#detail_tradings_table_conts').html(initHtml);
-				
+						
 				$.get('https://polygon.disco.re/get_pnu_by_latlng2/?lat=' + latlng.getLat() + '&lng=' + latlng.getLng() + '&spec=goon', {}, function (pnu) {
 					console.log(pnu);
 					
@@ -1411,46 +1344,6 @@ console.log('zoom_changed : ' + level);
 							});
 							$('#land_history').html(html);
 						});
-
-						// 실거래가 목록
-						$.get('/forsale/rest/tradings/getListFromPnu?pnu=' + pnu.pnu, {}, function (data) {
-							console.log("실거래가목록2-1");
-							console.log(data);
-
-							$('#trp-detail-period-cnt').text('(' + data.length + '건)');
-
-							let html = '';
-							if (data.length > 0) {
-								data.forEach(item => {
-									html += '<div class="detail_tradings_table2">';
-									html += '	<div class="detail_tradings_table_row">';
-									html += '		<div class="detail_tradings_table_cell2" style="width: 22%;">';
-									html += '`' + item.dealMonth.substr(2, 2) + '.' + item.dealMonth.substr(4, 2) + '.' + item.dealDay;
-									html += '		</div>';
-									html += '		<div class="detail_tradings_table_cell2" style="width: 20%;">';
-									html += '			<span data-area="total" style="display: inline;">';
-									html += numComma(item.dealAmount) + "만";
-									html += '			</span>';
-									html += '		</div>';
-									html += '		<div class="detail_tradings_table_cell2" style="width: auto;">';
-									html += item.floor + '층 ' + item.floor + '**호';
-									html += '		</div>';
-									html += '		<div class="detail_tradings_table_cell2" style="width: 90px;"></div>';
-									html += '	</div>';
-									html += '</div>';
-								});
-							} else {
-								html += '<div class="detail_tradings_table2">';
-								html += '	<div class="detail_tradings_table_row">';
-								html += '	<span>';
-								//html += '		실거래가 내역이 없습니다.';
-								html += '	</span>';
-								html += '	</div>';
-								html += '</div>';
-							}
-							$('#detail_tradings_table_conts').html(html);
-						});
-
 
 						$.get('https://data.disco.re/home/land_price/?pnu=' + pnu.pnu, {}, function (data) {
 							console.log(data);
@@ -2004,67 +1897,6 @@ console.log('zoom_changed : ' + level);
 				}				
 			}
 
-			$("#selSaleDetailType").on("change", function () {
-				if ($("#selSaleDetailType").val() != '') {
-					if ($("#selSaleDetailType").val() != 'all') {
-						selSaleDetailType = $("#selSaleDetailType").val();
-						
-						if (selSaleDetailType == 'a3' || selSaleDetailType == 's1' || selSaleDetailType == 'l1' || selSaleDetailType == 'l3') {
-							$('#selTradeType option[value="A"]').prop('selected', true);						
-							$('#selTradeType option[value!="A"]').prop('disabled', true);
-							
-							selTradeType = 'A';
-						} else {
-							$('#selTradeType option[value!="A"]').prop('disabled', false);
-						}
-					} else {
-						selSaleDetailType = 'a1';
-					}
-
-					removeRealTrading();
-					getRealTrading();
-				}
-			});
-
-			$("#selTradeType").on("change", function () {
-				if ($("#selTradeType").val() != '') {
-					if ($("#selTradeType").val() != 'all') {
-						selTradeType = $("#selTradeType").val();
-					} else {
-						selTradeType = 'A';
-					}
-
-					removeRealTrading();
-					getRealTrading();
-				}
-			});
-
-			function removeRealTrading() {
-				if (realTradingPoiArr.length > 0) {
-					realTradingPoiArr.forEach(function (realTradingPoi) {
-						realTradingPoi.setMap(null);
-					});
-				}
-				if (realTradingPoiTopArr.length > 0) {
-					realTradingPoiTopArr.forEach(function (realTradingPoi) {
-						realTradingPoi.setMap(null);
-					});
-				}
-				if (realTradingOverArr.length > 0) {
-					realTradingOverArr.forEach(function (realTradingOver) {
-						realTradingOver.setMap(null);
-					});
-				}
-			}
-			
-			function removeRealTrading2() {				console.log(realTradingOverArr.length);
-				if (realTradingOverArr.length > 0) {
-					realTradingOverArr.forEach(function (realTradingOver) {
-						realTradingOver.setMap(null);
-					});
-				}
-			}
-
 			let dealYear = '2023';
 			let dealYearStart = '2022';
 			let dealYearEnd = '2023';
@@ -2171,538 +2003,11 @@ console.log('zoom_changed : ' + level);
 				});	
 			}
 			
-			let realTradingPoiRemoveArr = [];
-			// 실거래가 팝업
-			function getRealTrading() {console.log("///////23232");
-				//getCoordsFromAddress();
-				//getAddressFromCoords();
-			
-				let boundbox = map.getBounds().toString().replace('((', '').replace('))', '').replace('(', '').replace(')', '').replaceAll(' ', '');
-				let boxArr = boundbox.split(',');	//console.log(boxArr);				
-				let tempBox = 'BOX(' + boxArr[1] + ',' + boxArr[0] + ',' + boxArr[3] + ',' + boxArr[2] + ')';
-
-				$.ajax({
-					type: "GET",
-					url: "http://api.vworld.kr/req/data",
-					dataType: "jsonp",
-					data: {
-						request: "GetFeature",						
-						data: "LT_C_ADSIDO_INFO",	//광역시도 검색
-						key: vworld_key,
-						geomFilter: tempBox,
-						crs: "EPSG:4326",
-						size: 100,
-						geometry: false
-					},
-					async: false,
-					cache: false,
-					success: function (result) {
-						console.log("test:::getRealTrading()"); console.log(result);
-						if (result.response.status === 'OK' && result.response.record.total > 0) {
-							//console.log(result.response.result.featureCollection);
-
-							let level = map.getLevel();
-							/*
-							let emdArr = result.response.result.featureCollection.features;
-							let cond = "(";
-							emdArr.forEach((item, idx) => {
-								console.log(item.properties.emd_cd);
-								
-								cond += "'";
-								cond += item.properties.emd_cd;
-								cond += "'";
-								
-								if (idx < emdArr.length-1) {
-									cond += ",";	
-								}
-							});
-							cond += ")";
-							//console.log(cond);
-							*/
-
-							let sidoArr = result.response.result.featureCollection.features;
-
-							let rtDTO = new Object();
-							//rtDTO.emdCond = cond;
-
-							rtDTO.selSaleDetailType = selSaleDetailType;
-							rtDTO.selTradeType = selTradeType;
-							rtDTO.dealYearStart = dealYearStart;
-							rtDTO.dealYearEnd = dealYearEnd;
-							rtDTO.posMinX = boxArr[1];
-							rtDTO.posMinY = boxArr[0];
-							rtDTO.posMaxX = boxArr[3];
-							rtDTO.posMaxY = boxArr[2];
-							console.log(realTradingPoiArr.length);
-							if (realTradingPoiArr.length > 0) {
-								realTradingPoiArr.forEach(function (realTradingPoi, idx) {//console.log("realTradingPoi");console.log(realTradingPoi.getPosition().Ma);
-									//realTradingPoi.setMap(null);
-									if (boxArr[1] > realTradingPoi.getPosition().La || realTradingPoi.getPosition().La > boxArr[3] || boxArr[0] > realTradingPoi.getPosition().Ma || boxArr[2] < realTradingPoi.getPosition().Ma) {
-										realTradingPoiArr.splice(idx, 1);
-									}
-								});
-							}
-							console.log(realTradingPoiArr.length);
-							sidoArr.forEach((item, idx) => {
-								rtDTO.sidoCode = item.properties.ctprvn_cd;
-
-								$.ajax({
-									url: '/forsale/rest/tradings/getListOfficetel1',
-									type: 'GET',
-									data: rtDTO,
-									dataType: "json",
-									async: true,
-									cache: false,
-									success: function (result) {
-										console.log(result);
-										result.forEach((item, itemIdx) => { //console.log("itemIdx : " + itemIdx);
-											if (item.posX != null && item.posY != null) {
-												let boolPoi = false;
-												if (realTradingPoiArr.length > 0) {
-													realTradingPoiArr.forEach(function (realTradingPoi) {//console.log("realTradingPoi");console.log(realTradingPoi.getPosition().Ma);
-														//realTradingPoi.setMap(null);
-														if (realTradingPoi.getPosition().La == item.posX && realTradingPoi.getPosition().Ma == item.posY) {
-															boolPoi = true;
-														}
-													});
-												}
-												//console.log(item.posY);
-												if (!boolPoi) {
-													showRealTradingsMarker(item, itemIdx);													
-												}
-											} else {
-												console.log("좌표 없음");
-												console.log(item.buildType);
-												//console.log(item.saleDetailType);
-
-												if (item.saleDetailType === 'l1') {
-													let paramData = {
-														serviceKey: data_go_key,
-														pnu: item.pnu0,
-														//startDt: item.dealMonth,
-														stdrYear: item.dealMonth.substr(0, 4),
-														//endDt: "209909",
-														format: "json",
-														numOfRows: "10000",
-														pageNo: "1"
-													};
-													$.get('https://apis.data.go.kr/1611000/nsdi/LandCharacteristicsService/attr/getLandCharacteristics', paramData, function (data) {
-														//console.log(data);
-														//console.log(item.useArea);
-														if (data.landCharacteristicss != 'undefined') {
-															let temp = data.landCharacteristicss.field.filter(subItem => {
-																//console.log(subItem);
-																return Number(subItem.lndpclAr) === Number(item.useArea) && subItem.lndcgrCodeNm === item.buildType;
-															});
-															console.log(temp);
-															if (temp.length > 0) {
-																$.ajax({
-																	type: "GET",
-																	url: "http://api.vworld.kr/req/address",
-																	dataType: "jsonp",
-																	data: {
-																		service: "address",
-																		request: "getCoord",
-																		format: "json",
-																		crs: "EPSG:4326",
-																		key: vworld_key,
-																		type: "parcel",
-																		address: item.sigungu + " " + temp[0].mnnmSlno
-																	},
-																	async: false,
-																	cache: false,
-																	success: function (result2) {//console.log(result2);	
-																		if (result2.response.status === 'OK') {
-																			rtDTO.rid = item.rid;
-																			rtDTO.posX = result2.response.result.point.x;
-																			rtDTO.posY = result2.response.result.point.y;
-
-																			$.post("/forsale/rest/tradings/updateCoords", rtDTO, function (data, status) {
-																				console.log("Data: " + data + "\nStatus: " + status);
-																			});
-
-
-																			let tFillColor = '#15C4B2';
-																			let tStrokeColor = '#15C4B2';
-
-																			var circle = new kakao.maps.Circle({
-																				center: new kakao.maps.LatLng(result2.response.result.point.y, result2.response.result.point.x),  // 원의 중심좌표 입니다 
-																				radius: 5, // 미터 단위의 원의 반지름입니다 
-																				strokeWeight: 2, // 선의 두께입니다 
-																				strokeColor: tStrokeColor, // 선의 색깔입니다
-																				strokeOpacity: 1, // 선의 불투명도 입니다 1에서 0 사이의 값이며 0에 가까울수록 투명합니다    
-																				fillColor: tFillColor, // 채우기 색깔입니다
-																				fillOpacity: 1  // 채우기 불투명도 입니다   
-																			});
-
-																			realTradingPoiArr.push(circle);
-
-																			// 마커가 지도 위에 표시되도록 설정합니다
-																			circle.setMap(map);
-
-																			if (itemIdx < 5) {
-																				let content = '<div class="overlay_wrap">' +
-																					'    <div class="overlay_info">' +
-																					'        <div class="overlay_titleA">' +
-																					'            매매 | 토지' +
-																					'        </div>' +
-																					'        <div class="overlay_body">' +
-																					'            <div class="overlay_desc">' +
-																					'                <div>`' + item.dealMonth.substr(2, 2) + '.' + item.dealMonth.substr(4, 2) + '/' + '<span class="area1">' + Number(item.useArea).toFixed(2) + '㎡</span>' + '<span class="area2">' + Number(item.useArea / 3.3058).toFixed(0) + '평</span></div>' +
-																					'                <div>' + item.dealAmount + '</div>' +
-																					'            </div>' +
-																					'        </div>' +
-																					'    </div>' +
-																					'</div>';
-
-																				// 커스텀 오버레이를 생성합니다
-																				let customOverlay = new kakao.maps.CustomOverlay({
-																					position: circle.getPosition(),
-																					content: content,
-
-																				});
-
-																				realTradingOverArr.push(customOverlay);
-
-																				// 커스텀 오버레이를 지도에 표시합니다
-																				customOverlay.setMap(map);
-																			}
-																		}
-																	}
-																});
-															}
-														}
-													});
-												} else if (item.saleDetailType === 'l3' || item.saleDetailType === 's1') {
-													let paramData = {
-														serviceKey: data_go_key,
-														pnu: item.pnu0,
-														//startDt: item.dealMonth,
-														stdrYear: item.dealMonth.substr(0, 4),
-														//endDt: "209909",
-														format: "json",
-														numOfRows: "10000",
-														pageNo: "1"
-													};
-													$.get('https://apis.data.go.kr/1611000/nsdi/LandCharacteristicsService/attr/getLandCharacteristics', paramData, function (data) {
-														console.log(data);
-														//console.log(item.useArea);
-														if (data.landCharacteristicss != 'undefined') {
-															let temp = data.landCharacteristicss.field.filter(subItem => {
-																//console.log(subItem);
-																return Number(subItem.lndpclAr) === Number(item.groundArea);
-															});
-															console.log(temp);
-															if (temp.length > 0) {
-																$.ajax({
-																	type: "GET",
-																	url: "http://api.vworld.kr/req/address",
-																	dataType: "jsonp",
-																	data: {
-																		service: "address",
-																		request: "getCoord",
-																		format: "json",
-																		crs: "EPSG:4326",
-																		key: vworld_key,
-																		type: "parcel",
-																		address: item.sigungu + " " + temp[0].mnnmSlno
-																	},
-																	async: false,
-																	cache: false,
-																	success: function (result2) {//console.log(result2);	
-																		if (result2.response.status === 'OK') {
-																			rtDTO.rid = item.rid;
-																			rtDTO.posX = result2.response.result.point.x;
-																			rtDTO.posY = result2.response.result.point.y;
-
-																			$.post("/forsale/rest/tradings/updateCoords", rtDTO, function (data, status) {
-																				console.log("Data: " + data + "\nStatus: " + status);
-																			});
-
-
-																			let tFillColor = '#15C4B2';
-																			let tStrokeColor = '#15C4B2';
-
-																			var circle = new kakao.maps.Circle({
-																				center: new kakao.maps.LatLng(result2.response.result.point.y, result2.response.result.point.x),  // 원의 중심좌표 입니다 
-																				radius: 5, // 미터 단위의 원의 반지름입니다 
-																				strokeWeight: 2, // 선의 두께입니다 
-																				strokeColor: tStrokeColor, // 선의 색깔입니다
-																				strokeOpacity: 1, // 선의 불투명도 입니다 1에서 0 사이의 값이며 0에 가까울수록 투명합니다    
-																				fillColor: tFillColor, // 채우기 색깔입니다
-																				fillOpacity: 1  // 채우기 불투명도 입니다   
-																			});
-
-																			realTradingPoiArr.push(circle);
-
-																			// 마커가 지도 위에 표시되도록 설정합니다
-																			circle.setMap(map);
-
-																			if (itemIdx < 5) {
-																				let content = '<div class="overlay_wrap">' +
-																					'    <div class="overlay_info">' +
-																					'        <div class="overlay_titleA">' +
-																					'            매매 | 상가' +
-																					'        </div>' +
-																					'        <div class="overlay_body">' +
-																					'            <div class="overlay_desc">' +
-																					'                <div>`' + item.dealMonth.substr(2, 2) + '.' + item.dealMonth.substr(4, 2) + '/' + '<span class="area1">' + Number(item.useArea).toFixed(2) + '㎡</span>' + '<span class="area2">' + Number(item.useArea / 3.3058).toFixed(0) + '평</span></div>' +
-																					'                <div>' + item.dealAmount + '</div>' +
-																					'            </div>' +
-																					'        </div>' +
-																					'    </div>' +
-																					'</div>';
-
-																				// 커스텀 오버레이를 생성합니다
-																				let customOverlay = new kakao.maps.CustomOverlay({
-																					position: circle.getPosition(),
-																					content: content,
-
-																				});
-
-																				realTradingOverArr.push(customOverlay);
-
-																				// 커스텀 오버레이를 지도에 표시합니다
-																				customOverlay.setMap(map);
-																			}
-																		}
-																	}
-																});
-															}
-														}
-													});
-												} else if (item.saleDetailType === 'h1') {
-
-													let mainPrposCode = '01000';
-													let detailPrposCode = '';
-													if (item.buildType === '단독') {
-														detailPrposCode = '01001';
-													} else if (item.buildType === '다가구') {
-														detailPrposCode = '01003';
-													}
-													let paramData = {
-														serviceKey: data_go_key,
-														pnu: item.pnu0,
-														//startDt: item.dealMonth,
-														//stdrYear: item.dealMonth.substr(0, 4),
-														//endDt: "209909",
-														mainPrposCode: mainPrposCode,
-														detailPrposCode: detailPrposCode,
-														format: "json",
-														numOfRows: "10000",
-														pageNo: "1"
-													};
-													$.get('https://apis.data.go.kr/1611000/nsdi/BuildingUseService/attr/getBuildingUse', paramData, function (data) {
-														console.log(data);
-														//console.log(item.useArea);
-														if (data.buildingUses != 'undefined') {
-															let temp = data.buildingUses.field.filter(subItem => {
-																//console.log(subItem);
-																return Number(subItem.buldTotar) === Number(item.useArea);
-															});
-															console.log(temp);
-															if (temp.length > 0) {
-																$.ajax({
-																	type: "GET",
-																	url: "http://api.vworld.kr/req/address",
-																	dataType: "jsonp",
-																	data: {
-																		service: "address",
-																		request: "getCoord",
-																		format: "json",
-																		crs: "EPSG:4326",
-																		key: vworld_key,
-																		type: "parcel",
-																		address: item.sigungu + " " + temp[0].mnnmSlno
-																	},
-																	async: false,
-																	cache: false,
-																	success: function (result2) {//console.log(result2);	
-																		if (result2.response.status === 'OK') {
-																			rtDTO.rid = item.rid;
-																			rtDTO.posX = result2.response.result.point.x;
-																			rtDTO.posY = result2.response.result.point.y;
-
-																			$.post("/forsale/rest/tradings/updateCoords", rtDTO, function (data, status) {
-																				console.log("Data: " + data + "\nStatus: " + status);
-																			});
-
-
-																			let tFillColor = '#15C4B2';
-																			let tStrokeColor = '#15C4B2';
-
-																			var circle = new kakao.maps.Circle({
-																				center: new kakao.maps.LatLng(result2.response.result.point.y, result2.response.result.point.x),  // 원의 중심좌표 입니다 
-																				radius: 5, // 미터 단위의 원의 반지름입니다 
-																				strokeWeight: 2, // 선의 두께입니다 
-																				strokeColor: tStrokeColor, // 선의 색깔입니다
-																				strokeOpacity: 1, // 선의 불투명도 입니다 1에서 0 사이의 값이며 0에 가까울수록 투명합니다    
-																				fillColor: tFillColor, // 채우기 색깔입니다
-																				fillOpacity: 1  // 채우기 불투명도 입니다   
-																			});
-
-																			realTradingPoiArr.push(circle);
-
-																			// 마커가 지도 위에 표시되도록 설정합니다
-																			circle.setMap(map);
-
-																			if (itemIdx < 5) {
-																				let content = '<div class="overlay_wrap">' +
-																					'    <div class="overlay_info">' +
-																					'        <div class="overlay_titleA">' +
-																					'            매매 | 단독·다가구' +
-																					'        </div>' +
-																					'        <div class="overlay_body">' +
-																					'            <div class="overlay_desc">' +
-																					'                <div>`' + item.dealMonth.substr(2, 2) + '.' + item.dealMonth.substr(4, 2) + '/' + '<span class="area1">' + Number(item.useArea).toFixed(2) + '㎡</span>' + '<span class="area2">' + Number(item.useArea / 3.3058).toFixed(0) + '평</span></div>' +
-																					'                <div>' + item.dealAmount + '</div>' +
-																					'            </div>' +
-																					'        </div>' +
-																					'    </div>' +
-																					'</div>';
-
-																				// 커스텀 오버레이를 생성합니다
-																				let customOverlay = new kakao.maps.CustomOverlay({
-																					position: circle.getPosition(),
-																					content: content,
-
-																				});
-
-																				realTradingOverArr.push(customOverlay);
-
-																				// 커스텀 오버레이를 지도에 표시합니다
-																				customOverlay.setMap(map);
-																			}
-																		}
-																	}
-																});
-															}
-														}
-
-													});
-												} else {
-													$.ajax({
-														type: "GET",
-														url: "http://api.vworld.kr/req/address",
-														dataType: "jsonp",
-														data: {
-															service: "address",
-															request: "getCoord",
-															format: "json",
-															crs: "EPSG:4326",
-															key: vworld_key,
-															type: "parcel",
-															address: item.sigungu + " " + item.jibun
-														},
-														async: false,
-														cache: false,
-														success: function (result2) {//console.log(result2);	
-															if (result2.response.status === 'OK') {
-																rtDTO.rid = item.rid;
-																rtDTO.posX = result2.response.result.point.x;
-																rtDTO.posY = result2.response.result.point.y;
-
-																$.post("/forsale/rest/tradings/updateCoords", rtDTO, function (data, status) {
-																	console.log("Data: " + data + "\nStatus: " + status);
-																});
-
-
-																let tFillColor = '#15C4B2';
-																let tStrokeColor = '#15C4B2';
-
-																var circle = new kakao.maps.Circle({
-																	center: new kakao.maps.LatLng(result2.response.result.point.y, result2.response.result.point.x),  // 원의 중심좌표 입니다 
-																	radius: 5, // 미터 단위의 원의 반지름입니다 
-																	strokeWeight: 2, // 선의 두께입니다 
-																	strokeColor: tStrokeColor, // 선의 색깔입니다
-																	strokeOpacity: 1, // 선의 불투명도 입니다 1에서 0 사이의 값이며 0에 가까울수록 투명합니다    
-																	fillColor: tFillColor, // 채우기 색깔입니다
-																	fillOpacity: 1  // 채우기 불투명도 입니다   
-																});
-
-																realTradingPoiArr.push(circle);
-
-																// 마커가 지도 위에 표시되도록 설정합니다
-																circle.setMap(map);
-
-																if (itemIdx < 5) {
-																	let content = '<div class="overlay_wrap">' +
-																		'    <div class="overlay_info">' +
-																		'        <div class="overlay_titleA">' +
-																		'            매매 | 오피스텔' +
-																		'        </div>' +
-																		'        <div class="overlay_body">' +
-																		'            <div class="overlay_desc">' +
-																		'                <div>`' + item.dealMonth.substr(2, 2) + '.' + item.dealMonth.substr(4, 2) + '/' + '<span class="area1">' + Number(item.useArea).toFixed(2) + '㎡</span>' + '<span class="area2">' + Number(item.useArea / 3.3058).toFixed(0) + '평</span></div>' +
-																		'                <div>' + item.dealAmount + '</div>' +
-																		'            </div>' +
-																		'        </div>' +
-																		'    </div>' +
-																		'</div>';
-
-																	// 커스텀 오버레이를 생성합니다
-																	let customOverlay = new kakao.maps.CustomOverlay({
-																		position: circle.getPosition(),
-																		content: content,
-
-																	});
-
-																	realTradingOverArr.push(customOverlay);
-
-																	// 커스텀 오버레이를 지도에 표시합니다
-																	customOverlay.setMap(map);
-																}
-															}
-														}
-													});
-												}
-											}
-										});		
-										// overlay Event Setting
-										$('.overlay_wrap').on('click', overlayClickHandler);	
-									},
-									error: function (json) {
-										console.log("error");
-									}
-								});
-							});
-						} else {
-							alert("OpenAPI(읍면동) 연결이 실패하였습니다.");
-						}
-					}
-				});
-			}
-
 			// 실거래가 표출
 			let realTradingPoiArr = [];		//실거래가 point 배열
 			let realTradingPoiTopArr = [];		//실거래가 상위 5개 point 배열
 			let realTradingOverArr = new Array(5);	//실거래가 오버레이 팝업 배열
 			
-			// 실거래가 On/Off 클릭 이벤트
-			let isRealTradings = false;
-			$('#realTrans').click(function () {
-				isRealTradings = !isRealTradings;
-
-				if (isRealTradings) {
-					$('.category_rtOn').css('display', 'block');
-					$('.category_rtOff').css('display', 'none');
-					
-					$('#selSaleDetailType').css('display', 'inline-block');
-					$('#selTradeType').css('display', 'inline-block');
-
-					let boundbox = map.getBounds().toString().replace('((', '').replace('))', '').replace('(', '').replace(')', '').replaceAll(' ', '');
-					getRealTrading(boundbox);
-				} else {
-					$('.category_rtOn').css('display', 'none');
-					$('.category_rtOff').css('display', 'block');
-
-					$('#selSaleDetailType').css('display', 'none');
-					$('#selTradeType').css('display', 'none');
-					
-					removeRealTrading();
-				}
-			});
-
 			
 			let clusterer2 = null;
 			
@@ -2871,24 +2176,7 @@ console.log('zoom_changed : ' + level);
 				}				
 				isMap = !isMap;
 			});			
-			$('#cat_measure').click(function () {
-				if (!isMeasure) {
-					kakao.maps.event.removeListener(map, 'click', jibunClickHandler);
 					
-					$('.category_top li').removeClass("on");
-					$('#cat_measure').addClass("on");
-
-					$('.category_bottom').hide();
-					$('#cat_measure_sub').show();
-					
-					initCategory();					
-				} else {
-					kakao.maps.event.addListener(map, 'click', jibunClickHandler);
-					
-					clearCategory('cat_measure');					
-				}
-				isMeasure = !isMeasure; 
-			});			
 			$('#cat_around').click(function () {
 				clearCategory('cat_around');
 				
@@ -3064,817 +2352,18 @@ console.log('zoom_changed : ' + level);
 			});
 			
 			function clearCategory(catType) {
-				$('#cat_map').removeClass("on");
-				$('#cat_measure').removeClass("on");
+				$('#cat_map').removeClass("on");				
 				$('#cat_around').removeClass("on");
 
 				$('.category_bottom').hide();
 
-				clearCategorySub();
 				initCategorySub();
-
-				/*
-					if (isSkyview) {
-						$('#mapTypeChange1').removeClass("on");
-						_map.setMapTypeId(kakao.maps.MapTypeId.ROADMAP);
-					}
-					if (isUseDistrict) {
-						$('#mapTypeChange2').removeClass("on");
-						_map.removeOverlayMapTypeId(kakao.maps.MapTypeId.USE_DISTRICT);
-					}
-					if (isTerrain) {
-						$('#mapTypeChange3').removeClass("on");
-						_map.removeOverlayMapTypeId(kakao.maps.MapTypeId.TERRAIN);
-					}
-					if (isRoadView) {
-						$('#mapTypeChange4').removeClass("on");
-						clearRoadview();
-					}
-				
-					isSkyview = false;
-					isTerrain = false;
-					isUseDistrict = false;
-					isRoadView = false;
-				*/
 
 				$('.map-layer-icon2').css("border", "none");
 				$('.map-layer-icon3').css("border", "none");
 				$('.map-layer-icon4').css("border", "none");
 			}
 
-			function clearCategorySub(catType) {
-				$('#lengthMeasure').removeClass("on");
-				$('#areaMeasure').removeClass("on");
-
-				clearMeasure();
-				//clearMeasure('area');
-			}
-			
-			function clearMeasure(mType) {
-		//		if (mType == 'length') {						
-					// 지도 위에 선이 표시되고 있다면 지도에서 제거합니다
-					deleteClickLine();
-					// 지도 위에 커스텀오버레이가 표시되고 있다면 지도에서 제거합니다
-					deleteDistance();
-					// 지도 위에 선을 그리기 위해 클릭한 지점과 해당 지점의 거리정보가 표시되고 있다면 지도에서 제거합니다
-					deleteCircleDot();
-	
-					// 거리 측정 이벤트 해제
-					kakao.maps.event.removeListener(map, 'click', measuerLengthClickHandler);					
-	//			} else if (mType == 'area') {
-					if (polygonArr.length > 0) {
-						polygonArr.forEach(function (polygon) {
-							polygon.setMap(null);
-						});
-
-						areaOverlayArr.forEach(function (areaOverlay) {
-							areaOverlay.setMap(null);
-						});
-					}
-					
-					kakao.maps.event.removeListener(map, 'click', measuerAreaClickHandler);
-//				}
-				$('div.tab1').addClass('on');
-				$('div.tab5').removeClass('on');				
-			}					
-
-			
-			function initMeasure(mType) {
-				//$('.category_bottom li').removeClass("on");				
-				if (mType == 'length') {
-					measureSet('거리');	
-					$('#lengthMeasure').addClass("on");
-					
-					kakao.maps.event.addListener(map, 'click', measuerLengthClickHandler);
-				} else if (mType == 'area') {
-					measureSet('면적');
-					$('#areaMeasure').addClass("on");
-					
-					kakao.maps.event.addListener(map, 'click', measuerAreaClickHandler);
-					
-					if (polygon != null)
-						polygon.setMap(null);
-				}
-				$('div.tab1').removeClass('on');
-				$('div.tab5').addClass('on');
-			}
-			
-			//PC using
-			$('#lengthMeasure').click(function () {
-				clearCategorySub();
-				
-				if (isLength) {					
-					kakao.maps.event.addListener(map, 'click', jibunClickHandler);
-					
-					clearMeasure('length');					
-				} else {		
-					kakao.maps.event.removeListener(map, 'click', jibunClickHandler);
-					
-					initCategorySub();
-					
-					clearMeasure('area');
-					initMeasure('length');
-				}
-				isLength = !isLength;
-			});
-			
-			// PC using
-			$('#areaMeasure').click(function () {
-				clearCategorySub();
-				
-				if (isArea) {
-					kakao.maps.event.addListener(map, 'click', jibunClickHandler);
-					
-					clearMeasure('area');					
-				} else {		
-					kakao.maps.event.removeListener(map, 'click', jibunClickHandler);
-					
-					initCategorySub();
-					
-					clearMeasure('length');
-					initMeasure('area');
-					
-					$('.gis_sub_wrap').off('click');
-					
-					$(document).on('click', '.mt-slot-btn', function (e) {
-						let idx = $('.mt-slot-btn').index(this);
-						let tempArea = polygonArr[idx].getArea().toFixed(1);
-						//alert(polygonArr[idx].getArea().toFixed(1));
-
-						polygonArr[idx].setMap(null);
-						polygonArr.splice(idx, 1);
-
-						areaOverlayArr[idx].setMap(null);
-						areaOverlayArr.splice(idx, 1);
-
-						areaAddressArr.splice(idx, 1);
-
-
-
-						$('.area-list').eq(idx).remove();
-
-						//console.log($('.areaListCnt').length);
-						for (let i = 0; i < $('.areaListCnt').length; i++) {
-							$('.areaListCnt').eq(i).text(i + 1);
-						}
-
-						areaListCnt = $('.areaListCnt').length;
-
-						$('#mt_count').text(areaListCnt);
-
-
-						areaListSum = areaListSum - tempArea;
-
-
-						if (areaListCnt > 0) {
-							$('#mt_total_area').text(areaListSum.toFixed(1) + 'm²');
-							//$('#mt_total_gong_value').text(areaListSum.toFixed(1) + '억');
-						} else {
-							$('#mt_total_area').text('0 m²');
-							$('#mt_total_gong_value').text('0 원');
-						}
-					});	
-				}
-				isArea = !isArea;
-			});
-
-			
-			let moveLine; // 선이 그려지고 있을때 마우스 움직임에 따라 그려질 선 객체 입니다
-			let clickLine // 마우스로 클릭한 좌표로 그려질 선 객체입니다
-			let distanceOverlay; // 선의 거리정보를 표시할 커스텀오버레이 입니다
-			let dots = {}; // 선이 그려지고 있을때 클릭할 때마다 클릭 지점과 거리를 표시하는 커스텀 오버레이 배열입니다.
-
-			let measuerLengthClickHandler = function(mouseEvent) {
-				// 마우스로 클릭한 위치입니다 
-				let clickPosition = mouseEvent.latLng;
-
-				let subHtml = '';
-				subHtml += '<div class="rbc-cerulean" style="height: 120px;">';
-				//subHtml += '	<div class="rfc-cerulean" style="background: #fff;width: 144px;display: inline-block;border-radius: 22px;height: 40px;position: relative;top:7px;line-height:40px;cursor:pointer;pointer-events:auto;" id="mt_last_btn">';
-				//subHtml += '		<span style="display: inline-block;"><img src="https://aurora.disco.re/static/common/img/ico_close_b.png?ver=1688364125" style="width:16px;"></span>';
-				//subHtml += '		<span style="display: inline-block;">마지막 지점 삭제</span>';
-				//subHtml += '	</div>';
-				subHtml += '	<div style="height: 40px;line-height: 46px;font-size: 16px;color: #fff;">선택된 지점 <span id="mt_count" style="display: inline-block;"></span> 개</div>';
-				subHtml += '	<div style="height: 40px;position: relative;">';
-				subHtml += '		<div style="display: inline-block;width: 49%;padding-left: 16px;color: #fff;">';
-				subHtml += '			<span style="display: inline-block;font-size: 14px;color: #7eb6e7;margin-right: 10px;">거리 합계 </span>';
-				subHtml += '			<span style="display: inline-block;font-size: 20px;color: #fff;" id="mt_total_length"></span> m';
-				subHtml += '		</div>';
-				subHtml += '</div>';
-
-				if (!isLengthList) {
-					isLengthList = true;
-
-					$('#map_tool_msg').hide();
-					$('#map_tool_field').append(subHtml);
-
-					/*
-					$('#mt_last_btn').on('click', function() {
-						// 그려지고 있는 선의 좌표 배열을 얻어옵니다
-						var path = clickLine.getPath();
-
-						// 좌표 배열에 마지막 요소 제거
-						path.pop();
-
-						// 다시 선에 좌표 배열을 설정하여 클릭 위치까지 선을 그리도록 설정합니다
-						clickLine.setPath(path);
-
-						deleteLastCircleDot();
-
-						if (lengthListCnt > 0) {
-							lineDistanceArr.pop();
-							lengthDisSum = lineDistanceArr[lineDistanceArr.length - 1];
-
-
-							$('#mt_count').text((--lengthListCnt) + 1);
-							$('#mt_total_length').text(lengthDisSum + 'm');
-						} else {
-							$('#mt_count').text(0);
-							drawingFlag = false;
-						}
-					});
-					*/
-				}
-
-				let temp_html = '<span class="temp_add_close" style="display: inline-block; position: relative; top: -25px; right: 5px;">';
-				temp_html += '<img src="/img/sub/ico_btn_close.svg" width="20px" height="20px">';
-				temp_html += '</span>';
-
-				// 지도 클릭이벤트가 발생했는데 선을 그리고있는 상태가 아니면
-				if (!drawingFlag) {
-					// 상태를 true로, 선이 그리고있는 상태로 변경합니다
-					drawingFlag = true;
-					// 지도 위에 선이 표시되고 있다면 지도에서 제거합니다
-					deleteClickLine();
-					// 지도 위에 커스텀오버레이가 표시되고 있다면 지도에서 제거합니다
-					deleteDistance();
-					// 지도 위에 선을 그리기 위해 클릭한 지점과 해당 지점의 거리정보가 표시되고 있다면 지도에서 제거합니다
-					deleteCircleDot();
-					
-					lengthListCnt++;
-					$('#mt_count').text(lengthListCnt);
-					$('#mt_total_length').text(lengthDisSum);
-
-					// 클릭한 위치를 기준으로 선을 생성하고 지도위에 표시합니다
-					clickLine = new kakao.maps.Polyline({
-						map: map, // 선을 표시할 지도입니다 
-						path: [clickPosition], // 선을 구성하는 좌표 배열입니다 클릭한 위치를 넣어줍니다
-						strokeWeight: 3, // 선의 두께입니다 
-						strokeColor: '#db4040', // 선의 색깔입니다
-						strokeOpacity: 1, // 선의 불투명도입니다 0에서 1 사이값이며 0에 가까울수록 투명합니다
-						strokeStyle: 'solid' // 선의 스타일입니다
-					});
-
-					// 선이 그려지고 있을 때 마우스 움직임에 따라 선이 그려질 위치를 표시할 선을 생성합니다
-					moveLine = new kakao.maps.Polyline({
-						strokeWeight: 3, // 선의 두께입니다 
-						strokeColor: '#db4040', // 선의 색깔입니다
-						strokeOpacity: 0.5, // 선의 불투명도입니다 0에서 1 사이값이며 0에 가까울수록 투명합니다
-						strokeStyle: 'solid' // 선의 스타일입니다    
-					});
-
-					// 클릭한 지점에 대한 정보를 지도에 표시합니다
-					displayCircleDot(clickPosition, 0);
-
-					$('.dotOverlay').eq(0).html('시작 <span class="number">0</span>m');
-					$('.dotOverlay').eq(0).parent().append(temp_html);
-					/*
-					$('.temp_add_close').off('mouseover');
-					$('.temp_add_close').off('mouseout');
-					$('.temp_add_close').off('click');
-					
-					$('.temp_add_close').on('mouseover', function (e) {											
-						//kakao.maps.event.removeListener(map, 'click', jibunClickHandler);						
-					});
-					$('.temp_add_close').on('mouseout', function (e) {
-						//kakao.maps.event.addListener(map, 'click', jibunClickHandler);																	
-					});
-					$('.temp_add_close').on('click', function (e) {
-						// 그려지고 있는 선의 좌표 배열을 얻어옵니다
-						let path = clickLine.getPath();
-						// 좌표 배열에 마지막 요소 제거
-						path.pop();
-						// 다시 선에 좌표 배열을 설정하여 클릭 위치까지 선을 그리도록 설정합니다
-						clickLine.setPath(path);
-						// 마지막 지점 지도에서 제거
-						deleteLastCircleDot();
-
-						if (lengthListCnt > 0) {
-							lineDistanceArr.pop();
-							lengthDisSum = lineDistanceArr[lineDistanceArr.length - 1];
-
-							$('#mt_count').text((--lengthListCnt) + 1);
-							$('#mt_total_length').text(lengthDisSum + 'm');
-						} else {
-							$('#mt_count').text(0);
-							drawingFlag = false;
-						}					
-					});
-					*/
-					
-					$('.temp_add_close').off('contextmenu');
-					$('.temp_add_close').on('contextmenu', function() {
-						// 그려지고 있는 선의 좌표 배열을 얻어옵니다
-						let path = clickLine.getPath();
-						// 좌표 배열에 마지막 요소 제거
-						path.pop();
-						// 다시 선에 좌표 배열을 설정하여 클릭 위치까지 선을 그리도록 설정합니다
-						clickLine.setPath(path);
-						// 마지막 지점 지도에서 제거
-						deleteLastCircleDot();
-
-						if (lengthListCnt > 0) {
-							lineDistanceArr.pop();
-							lengthDisSum = lineDistanceArr[lineDistanceArr.length - 1];
-
-							$('#mt_count').text((--lengthListCnt) + 1);
-							$('#mt_total_length').text(lengthDisSum + 'm');
-						} else {
-							$('#mt_count').text(0);
-							drawingFlag = false;
-						}
-					});
-				} else { // 선이 그려지고 있는 상태이면
-					// 그려지고 있는 선의 좌표 배열을 얻어옵니다
-					let path = clickLine.getPath();
-					// 좌표 배열에 클릭한 위치를 추가합니다
-					path.push(clickPosition);
-					// 다시 선에 좌표 배열을 설정하여 클릭 위치까지 선을 그리도록 설정합니다
-					clickLine.setPath(path);
-
-					let distance = Math.round(clickLine.getLength());
-					displayCircleDot(clickPosition, distance);
-
-					lengthListCnt++;
-					lengthDisSum = distance;
-
-					$('#mt_count').text(lengthListCnt);
-					$('#mt_total_length').text(lengthDisSum);
-
-					//$('#mt_total_area_view').css('display', 'block');
-
-					$('.temp_add_close').hide();
-					$('.dotOverlay').eq($('.dotOverlay').length - 1).parent().append(temp_html);
-					/*
-					$('.temp_add_close').off('mouseover');
-					$('.temp_add_close').off('mouseout');
-					$('.temp_add_close').off('click');
-					
-					$('.temp_add_close').on('mouseover', function (e) {											
-						//kakao.maps.event.removeListener(map, 'click', jibunClickHandler);						
-					});
-					$('.temp_add_close').on('mouseout', function (e) {
-						//kakao.maps.event.addListener(map, 'click', jibunClickHandler);																	
-					});
-					$('.temp_add_close').on('click', function (e) {
-						// 그려지고 있는 선의 좌표 배열을 얻어옵니다
-						let path = clickLine.getPath();
-						// 좌표 배열에 마지막 요소 제거
-						path.pop();
-						// 다시 선에 좌표 배열을 설정하여 클릭 위치까지 선을 그리도록 설정합니다
-						clickLine.setPath(path);
-						// 마지막 지점 지도에서 제거
-						deleteLastCircleDot();
-
-						if (lengthListCnt > 0) {
-							lineDistanceArr.pop();
-							lengthDisSum = lineDistanceArr[lineDistanceArr.length - 1];
-
-							$('#mt_count').text((--lengthListCnt) + 1);
-							$('#mt_total_length').text(lengthDisSum + 'm');
-						} else {
-							$('#mt_count').text(0);
-							drawingFlag = false;
-						}
-						$('.temp_add_close').eq($('.dotOverlay').length - 1).show();					
-					});
-					*/
-					
-					$('.temp_add_close').off('contextmenu');
-					$('.temp_add_close').on('contextmenu', function() {
-						// 그려지고 있는 선의 좌표 배열을 얻어옵니다
-						let path = clickLine.getPath();
-						// 좌표 배열에 마지막 요소 제거
-						path.pop();
-						// 다시 선에 좌표 배열을 설정하여 클릭 위치까지 선을 그리도록 설정합니다
-						clickLine.setPath(path);
-						// 마지막 지점 지도에서 제거
-						deleteLastCircleDot();
-
-						if (lengthListCnt > 0) {
-							lineDistanceArr.pop();
-							lengthDisSum = lineDistanceArr[lineDistanceArr.length - 1];
-
-							$('#mt_count').text((--lengthListCnt) + 1);
-							$('#mt_total_length').text(lengthDisSum + 'm');
-						} else {
-							$('#mt_count').text(0);
-							drawingFlag = false;
-						}
-						$('.temp_add_close').eq($('.dotOverlay').length - 1).show();
-					});
-				}
-				
-				
-			};
-			
-			let measuerAreaClickHandler = function (mouseEvent) {
-				// 클릭한 위도, 경도 정보를 가져옵니다 
-				let latlng = mouseEvent.latLng;
-
-				let subHtml = '';
-				subHtml += '<div class="rbc-cerulean" style="height: 80px;">';
-				subHtml += '	<div style="height: 40px;line-height: 46px;font-size: 16px;color: #fff;display: inline-block;">총 <span id="mt_count" style="display: inline-block;"></span>개 필지가 선택됨</div>';
-				subHtml += '	<div class="map-tool-reset-btn"><span class="map-tool-btns" style="pointer-events: auto; padding-right: 20px; position: absolute; top: -18px; left: 10px;" id="mt_area_reset_btn"><img src="/img/sub/ico_reset_a.png" style="width:24px;"></span></div>';
-				subHtml += '	<div style="height: 56px;position: relative;">';
-				subHtml += '		<div style="display: inline-block;width: 39%;padding-left: 16px;color: #fff;">';
-				subHtml += '			<span style="display: inline-block;font-size: 14px;color: #7eb6e7;margin-right: 10px;">면적 합계 </span>';
-				subHtml += '			<span style="display: inline-block;font-size: 20px;" class="areaListInfo" id="mt_total_area"></span>';
-				subHtml += '			<span style="display: inline-block;font-size: 20px;" class="areaListInfo2" id="mt_total_area2"></span>';
-				subHtml += '			<span class="area_unit"></span>';
-				subHtml += '		</div>';
-				subHtml += '		<div class="btn_meter_pyeong">';
-				subHtml += '			<button type="button">㎡/평</button>';
-				subHtml += '		</div>';
-				subHtml += '		<div style="display: inline-block;width: 49%;padding-right: 16px;color: #fff;">';
-				subHtml += '			<span style="display: inline-block;font-size: 14px;color: #7eb6e7;margin-right: 10px;">공시지가 합계</span>';
-				subHtml += '			<span style="display: inline-block;font-size: 20px;" id="mt_total_gong_value">-</span>';
-				subHtml += '		</div>';
-				subHtml += '	</div>';
-				subHtml += '</div>';
-
-				subHtml += '<div class="rbc-cerulean" style="height:32px;position:relative;top:-1px;line-height:32px;color:#fff;font-size:12px;" id="mt_list_title">';
-				subHtml += '	<span style="width: 23%;text-align: center;display: inline-block;">번호</span>';
-				subHtml += '	<span style="width: 23%;text-align: center;display: inline-block;">지번</span>';
-				subHtml += '	<span style="width: 52%;text-align: center;display: inline-block;padding-right:32px;">면적 / 공시지가</span>';
-				subHtml += '</div>';
-				//subHtml += '<div id="mt_slot_list" style="overflow-y: scroll; height: 757px;">';
-				subHtml += '<div id="mt_slot_list">';
-				subHtml += '</div>';
-
-				if (!isAreaList) {
-					isAreaList = true;
-
-					$('#map_tool_msg').hide();
-					$('#map_tool_field').append(subHtml);
-					
-					$('#mt_area_reset_btn').click(function () {
-						for (let i = 0; i < $('.areaListCnt').length; i++) {
-							polygonArr[i].setMap(null);
-							areaOverlayArr[i].setMap(null);
-						}
-						for (let i = $('.areaListCnt').length - 1; i >= 0; i--) {
-							$('.area-list').eq(i).remove();
-						}
-
-						$('#mt_count').text('0');
-
-						$('#mt_total_area').text('0');
-						$('#mt_total_area2').text('0');
-						$('#mt_total_gong_value').text('0 원');
-					});
-
-					$('.btn_meter_pyeong').on('click', function () {
-						if (!isAreaExtent) {
-							$('.area_meter').css('display', 'none');
-							$('.area_pyeong').css('display', 'inline-block');
-							
-							$('.areaInfo').css('display', 'none');
-							$('.areaInfo2').css('display', 'inline-block');
-
-							$('.areaListInfo').css('display', 'none');
-							$('.areaListInfo2').css('display', 'inline-block');
-
-							$('.area_unit').text("평");
-
-							if (!isPrice) {
-								$('.unit_meter_price').css('display', 'none');
-								$('.unit_pyeong_price').css('display', 'inline-block');
-							}
-							
-							$('#catAreaSub2').css("color", "#000");
-							$('#catAreaSub2').css("background-color", "#fff");
-
-							$('#catAreaSub1').css("color", "#fff");
-							$('#catAreaSub1').css("background-color", "#1263df");
-
-							$('#mo-catAreaSub1').css("background", "#1263DF");
-							$('#mo-catAreaSub1').css("color", "#fff");
-
-							$('#mo-catAreaSub2').css("background", "#F5F5FC");
-							$('#mo-catAreaSub2').css("color", "#000");
-						} else {
-							$('.area_meter').css('display', 'inline-block');
-							$('.area_pyeong').css('display', 'none');
-
-							$('.areaInfo').css('display', 'inline-block');
-							$('.areaInfo2').css('display', 'none');
-							
-							$('.areaListInfo').css('display', 'inline-block');
-							$('.areaListInfo2').css('display', 'none');
-
-							$('.area_unit').text("㎡");
-
-							if (!isPrice) {
-								$('.unit_meter_price').css('display', 'inline-block');
-								$('.unit_pyeong_price').css('display', 'none');
-							}
-
-							$('#catAreaSub1').css("color", "#000");
-							$('#catAreaSub1').css("background-color", "#fff");
-
-							$('#catAreaSub2').css("color", "#fff");
-							$('#catAreaSub2').css("background-color", "#1263df");
-							
-							$('#mo-catAreaSub2').css("background", "#1263DF");
-							$('#mo-catAreaSub2').css("color", "#fff");
-
-							$('#mo-catAreaSub1').css("background", "#F5F5FC");
-							$('#mo-catAreaSub1').css("color", "#000");
-						}
-						isAreaExtent = !isAreaExtent;
-					});
-				}
-
-				$.ajax({
-					url: 'https://polygon.disco.re/get_land_by_latlng/?lat=' + latlng.getLat() + '&lng=' + latlng.getLng(),
-					type: 'GET',
-					dataType: "json",
-					async: false,
-					cache: false,
-					success: function (result) {						
-						//console.log(result);
-						let includeAddr = false;
-						areaAddressArr.forEach((item, idx) => {
-							if (item === result.address) {
-								includeAddr = true;
-								console.log("yy");
-								polygonArr[idx].setMap(null);
-								polygonArr.splice(idx, 1);
-
-								areaOverlayArr[idx].setMap(null);
-								areaOverlayArr.splice(idx, 1);
-
-								areaAddressArr.splice(idx, 1);
-								let selArea = parseFloat($('.areaListMeter').eq(idx).text()); //console.log(selArea);
-								let selArea2 = parseFloat($('.areaListPyeong').eq(idx).text()); //console.log(selArea);
-
-								$('.area-list').eq(idx).remove();
-
-								//console.log($('.areaListCnt').length);
-								for (let i = 0; i < $('.areaListCnt').length; i++) {
-									$('.areaListCnt').eq(i).text(i + 1);
-								}
-
-								areaListCnt = $('.areaListCnt').length;
-								areaListSum = areaListSum - selArea;
-								let areaListSum2 = Number($('#mt_total_area2').text()) - selArea2;
-
-								$('#mt_count').text(areaListCnt);
-								if (areaListCnt > 0) {
-									$('#mt_total_area').text(areaListSum.toFixed(1));
-									$('#mt_total_area2').text(areaListSum2.toFixed(0));
-									//$('#mt_total_gong_value').text(areaListSum.toFixed(1) + '억');
-								} else {
-									$('#mt_total_area').text('0');
-									$('#mt_total_area2').text('0');
-									$('#mt_total_gong_value').text('0 원');
-								}
-							}
-						});
-
-						if (!includeAddr) {
-							areaAddressArr.push(result.address);
-							console.log("xx");
-							let tempPoly = null;
-							tempPoly = parse_land_polygon_value(result.polygon); //console.log(tempPoly);
-
-							// 지도에 표시할 다각형을 생성합니다
-							let polygon = new kakao.maps.Polygon({
-								path: tempPoly[0],//polygonPath, // 그려질 다각형의 좌표 배열입니다
-								strokeWeight: 2, // 선의 두께입니다 
-								strokeColor: '#75B8FA', // 선의 색깔입니다
-								strokeOpacity: 1, // 선의 불투명도 입니다 1에서 0 사이의 값이며 0에 가까울수록 투명합니다
-								strokeStyle: 'shortdash', // 선의 스타일 입니다
-								fillColor: '#CFE7FF', // 채우기 색깔입니다
-								fillOpacity: 0.7  // 채우기 불투명도 입니다
-							});
-							polygonArr.push(polygon);
-
-							// 지도에 다각형을 표시합니다
-							polygon.setMap(map);
-
-							let area = Math.round(polygon.getArea());	// 다각형의 총면적을 계산합니다
-
-							let temp_html = '<div class="areaInfo">총면적 <span class="areaNumber"> ' + area + '</span> ㎡</div><div class="areaInfo2">총면적 <span class="areaNumber"> ' + Number(area / 3.3058).toFixed(0) + '</span> 평</div>';
-							let content = temp_html; // 커스텀오버레이에 추가될 내용입니다
-
-							var path = polygon.getPath();
-							// console.log(tempPoly[0][0][0]);
-							// 면적정보를 지도에 표시합니다
-							var areaOverlay = new kakao.maps.CustomOverlay({
-								map: map, // 커스텀오버레이를 표시할 지도입니다 
-								content: content,  // 커스텀오버레이에 표시할 내용입니다
-								xAnchor: 0,
-								yAnchor: 0,
-								position: latlng  // 커스텀오버레이를 표시할 위치입니다. 위치는 다각형의 마지막 좌표로 설정합니다
-							});
-							areaOverlayArr.push(areaOverlay);
-
-							let temp_area1 = 0.0;
-							let temp_area2 = 0.0;
-							temp_area1 = polygon.getArea().toFixed(1);
-							temp_area2 = Number(polygon.getArea() / 3.3058).toFixed(0);
-
-							let subHtml = '';
-							subHtml += '<div class="area-list">';
-							subHtml += '	<div class="rfc-dusk" style="height: 64px;position:relative;top:-1px;font-size:15px;">';
-							subHtml += '		<span style="width:18%;text-align:center;display: inline-block;">';
-							subHtml += '			<span class="rbc-cerulean areaListCnt" style="width: 24px;height: 24px;color: #fff;display: inline-block;border-radius: 12px;top: 0px;line-height: 24px;">';
-							subHtml += ++areaListCnt;
-							subHtml += '			</span>';
-							subHtml += '		</span>';
-							subHtml += '		<span style="width:38%;text-align:center;display: inline-block;">';
-							subHtml += result.address;
-							subHtml += '		</span>';
-							subHtml += '		<span style="width:28%;text-align:center;display: inline-block;line-height:16px;">';
-							subHtml += '			<span style="bottom: -10px;position: relative;">';
-							subHtml += '				<span class="areaListMeter areaListInfo" style="display: inline-block;">';
-							subHtml += temp_area1;
-							subHtml += '				</span>';
-							subHtml += '				<span class="areaListPyeong areaListInfo2" style="display: none;">';
-							subHtml += temp_area2;
-							subHtml += '				</span>';
-							subHtml += '				<span class="area_unit"></span>';
-							subHtml += '			</span><br>';
-							subHtml += '			<span style="font-size: 12px;position: relative;top:9px;color:#73788c;">-</span>';
-							subHtml += '		</span>';
-							subHtml += '		<span class="mt-slot-btn" data-num="1" style="width:12%;text-align:center;display: inline-block;cursor:pointer;">';
-							subHtml += '			<img src="https://aurora.disco.re/static/common/img/ico_s_close2_4x.png?ver=1681186936" style="width:16px;">';
-							subHtml += '		</span>';
-							subHtml += '	</div>';
-							subHtml += '	<div style="height:1px;background:#000;opacity:0.05;"></div>';
-							subHtml += '</div>';
-
-							areaListSum += parseFloat(polygon.getArea().toFixed(1));
-
-							//$('#mt_slot_list').prepend(subHtml);
-							$('#mt_slot_list').append(subHtml);
-
-							$('#mt_count').text(areaListCnt);
-							$('#mt_total_area').text(areaListSum.toFixed(1));
-							$('#mt_total_area2').text(Number(areaListSum / 3.3058).toFixed(0));
-
-							if (!isAreaExtent) {
-								$('.area_unit').text('㎡');
-
-								$('.areaInfo').show();
-								$('.areaInfo2').hide();
-								$('.areaListInfo').show();
-								$('.areaListInfo2').hide();
-							} else {
-								$('.area_unit').text('평');
-
-								$('.areaInfo').hide();
-								$('.areaInfo2').show();
-								$('.areaListInfo').hide();
-								$('.areaListInfo2').show();								
-							}
-						}
-					},
-					error: function (json) {
-						console.log("error");
-					}
-				});
-			};
-
-			// 선이 그려지고 있는 상태일 때 지도를 클릭하면 호출하여 
-			// 클릭 지점에 대한 정보 (동그라미와 클릭 지점까지의 총거리)를 표출하는 함수입니다
-			function displayCircleDot(position, distance) {
-
-				// 클릭 지점을 표시할 빨간 동그라미 커스텀오버레이를 생성합니다
-				var circleOverlay = new kakao.maps.CustomOverlay({
-					content: '<span class="dot"></span>',
-					position: position,
-					zIndex: 1
-				});
-
-				// 지도에 표시합니다
-				circleOverlay.setMap(map);
-
-				if (distance > 0) {
-					// 클릭한 지점까지의 그려진 선의 총 거리를 표시할 커스텀 오버레이를 생성합니다
-					var distanceOverlay = new kakao.maps.CustomOverlay({
-						content: '<div class="dotOverlay">거리 <span class="number">' + distance + '</span>m</div>',
-						position: position,
-						yAnchor: 1,
-						zIndex: 2
-					});
-
-					// 지도에 표시합니다
-					distanceOverlay.setMap(map);
-				} else {
-					var distanceOverlay = new kakao.maps.CustomOverlay({
-						content: '<div class="dotOverlay">시작</div>',
-						position: position,
-						yAnchor: 1,
-						zIndex: 2
-					});
-
-					// 지도에 표시합니다
-					distanceOverlay.setMap(map);
-				}
-
-				lineDistanceArr.push(distance);
-				// 배열에 추가합니다
-				dots.push({ circle: circleOverlay, distance: distanceOverlay });
-			}
-			
-			// 클릭으로 그려진 선을 지도에서 제거하는 함수입니다
-			function deleteClickLine() {
-				if (clickLine) {
-					clickLine.setMap(null);
-					clickLine = null;
-				}
-			}
-			
-			// 그려지고 있는 선의 총거리 정보와 
-			// 선 그리기가 종료됐을 때 선의 정보를 표시하는 커스텀 오버레이를 삭제하는 함수입니다
-			function deleteDistance() {
-				if (distanceOverlay) {
-					distanceOverlay.setMap(null);
-					distanceOverlay = null;
-				}
-			}
-
-			// 마지막 지점 지도에서 제거하는 함수입니다
-			function deleteLastCircleDot() {
-				if (dots[dots.length - 1].circle) {
-					dots[dots.length - 1].circle.setMap(null);
-				}
-				if (dots[dots.length - 1].distance) {
-					dots[dots.length - 1].distance.setMap(null);
-				}
-				// 마지막 제거
-				dots.pop();
-			}
-
-			// 전체 지점 지도에서 제거하는 함수입니다
-			function deleteAllCircleDot() {
-				// 그려지고 있는 선의 좌표 배열을 얻어옵니다
-				let path = clickLine.getPath();
-				// 좌표 배열 모든 요소 제거
-				path = [];
-				// 다시 선에 좌표 배열을 설정하여 클릭 위치까지 선을 그리도록 설정합니다
-				clickLine.setPath(path);
-
-				for (let i = 0; i < dots.length; i++) {
-					dots[i].circle.setMap(null);
-					dots[i].distance.setMap(null);
-				}
-
-				$('#mt_count').text(0);
-				$('#mt_total_length').text('0m');
-			}
-
-			// 클릭 지점에 대한 정보 (동그라미와 클릭 지점까지의 총거리)를 지도에서 모두 제거하는 함수입니다
-			function deleteCircleDot() {				
-				for (let i = 0; i < dots.length; i++) {
-					if (dots[i].circle) {
-						dots[i].circle.setMap(null);
-					}
-					if (dots[i].distance) {
-						dots[i].distance.setMap(null);
-					}
-				}
-				dots = [];
-			}
-						
-			function measureSet(measureType) {
-				let subHtml = '';
-				subHtml += '<div class="mfs-list-div-view3 dsc-main-frame" id="map_tool_div_view" style="text-align: center; background: rgb(255, 255, 255); box-shadow: rgba(0, 0, 0, 0.15) 1px 0px 2px 0px;">';
-				subHtml += '	<div style="background: #fff;pointer-events:auto;">';
-				subHtml += '		<div class="map-tool-title-bar-div">';
-				subHtml += '			<div class="map-tool-name-title" id="map_tool_name_title">' + measureType + ' 측정</div>';				
-				subHtml += '			<div class="map-tool-before-btn"><span class="map-tool-btns mearsure-close" style="padding-left:20px;" id="mt_close_btn"><img src="/img/sub/ico_btn_close.png" style="width:20px;height:19px;"></span></div>';
-				subHtml += '		</div>';
-				subHtml += '	</div>';
-				subHtml += '	<div id="map_tool_msg" style="color: rgb(115, 120, 140); height: 100%; line-height: 91px; background: rgb(255, 255, 255); position: relative;">측정하고자 하는 위치를 선택하세요.</div>';
-				subHtml += '	<div id="map_tool_field" style="position: relative; pointer-events: auto; top: 0px;"></div>';
-				subHtml += '</div>';
-
-				$('div.tab5').html(subHtml);				
-				
-				let isTag = $("#mt_close_btn").hasClass("mearsure-close");
-				
-				if (isTag) {
-					$('#mt_close_btn').click(function () {
-						clearCategorySub();
-						initCategorySub();						
-					});
-				}
-			}
-			
 			
 			function displayMarker(place) {		  
 			    // 마커에 클릭이벤트를 등록합니다
@@ -4064,16 +2553,7 @@ console.log('zoom_changed : ' + level);
 			}
 
 			function forsaleDetail(rid) {
-				
-				let initHtml = '';
-				initHtml += '<div class="detail_tradings_table2">';
-				initHtml += '	<div class="detail_tradings_table_row">';
-				initHtml += '	<span>';
-				initHtml += '		실거래가 내역을 불러오고 있습니다....';
-				initHtml += '	</span>';
-				initHtml += '	</div>';
-				initHtml += '</div>';			
-				$('#detail_tradings_table_conts').html(initHtml);
+			
 				
 				$('.cell_hidden').css('display', 'table-cell');			
 				$('.btn_wrap').show();
@@ -4134,11 +2614,12 @@ console.log('zoom_changed : ' + level);
 					$('[data-field=dongAddr]').text(data.dongAddr);
 					$('[data-field=info1]').text(data.info1);
 					$('[data-field=info2]').text(data.info2);
-					$('[data-field=info3]').text(data.info3);
-					$('[data-field=info4]').html((data.forsaleIntroDetail == null) ? '' : '<font color=black><b>매물 정보</b></font>' + data.forsaleIntroDetail.replace(/\n/g, '<br>'));
+					$('[data-field=info3]').text(data.info3);					
+					$('[data-field=info4]').html((data.forsaleIntroDetail == null) ? '' : '<span style="color:black; font-size:16px;"><b>매물 정보</b></span>' + data.forsaleIntroDetail.replace(/\n/g, '<br>'));
 					$('[data-field=includeItems]').text(data.includeItems.replace(/\|/g, ','));
 					$('[data-field=optionItems]').text(data.optionItems.replace(/\|/g, ','));
 
+					$('[data-field=info4]').css('')
 					viewArea.find('div.hashtag').empty().append(data.hashtag);
 					
 					//이미지 지도.
@@ -4168,17 +2649,6 @@ console.log('zoom_changed : ' + level);
 					
 					$('#trp-detail-period-cnt').text('(0 건)');
 					
-					let html = '';
-					html += '<div class="detail_tradings_table2">';
-					html += '	<div class="detail_tradings_table_row">';
-					html += '	<span>';
-					html += '		실거래가 내역이 없습니다.';
-					html += '	</span>';
-					html += '	</div>';
-					html += '</div>';
-					
-					$('#detail_tradings_table_conts').html(html);					
-
 					$.get('https://polygon.disco.re/get_pnu_by_latlng2/?lat=' + data.posY + '&lng=' + data.posX + '&spec=goon', {}, function (pnu) {
 						console.log(pnu);
 						// 토지대장
@@ -4636,16 +3106,38 @@ console.log('zoom_changed : ' + level);
 				}
 				around_markers = [];
 
-				clearMeasure();
 				initCategorySub();
 				
-				//$('.left_wrap.mini').css("display", "flex");
-
-				$('#lengthMeasure').removeClass("on");
-				$('#areaMeasure').removeClass("on");	
-				
 				kakao.maps.event.addListener(map, 'click', jibunClickHandler);
-			});	
+			});
+			
+			
+			
+			$(".category_loc").on("click", function() {
+				// HTML5의 geolocation으로 사용할 수 있는지 확인합니다 
+				if (navigator.geolocation) {				    
+				    // GeoLocation을 이용해서 접속 위치를 얻어옵니다
+				    navigator.geolocation.getCurrentPosition(function(position) {
+				        
+				        var lat = position.coords.latitude, // 위도
+				            lon = position.coords.longitude; // 경도
+				        
+				        var locPosition = new kakao.maps.LatLng(lat, lon);
+				        
+				        map.setCenter(locPosition);         
+				    });
+				    
+				} else {				    
+				    let message = 'geolocation을 사용할수 없어요..'
+				        
+				    alert(message); 
+				}			
+			});
+			
+			
+			$(".category_roadview").on("click", function() {
+				setRoadviewRoad();
+			});
 		});
 		
 		
@@ -4679,16 +3171,16 @@ console.log('zoom_changed : ' + level);
                 <a class="zoom_out" href="#">out</a>                
 			
 			</div>
-				-->
+				
 			<div class="category_rtOnOff" id="realTrans">
 				실거래가
 				<div class="category_rtOn">On</div>
 				<div class="category_rtOff">Off</div>
 			</div>
+			
 			<div class="category_select">
 				<select id="selSaleDetailType" name="selSaleDetailType" style="display: none; border-radius: 5px; height: 30px;">
-					<!-- <option value="">물건종류</option> -->
-					<!-- <option value="00" style="font-weight: bold;">물건종류 전체</option> -->
+				
 					<option value="a1" style="font-weight: bold;" selected>아파트</option>
 					<option value="a2" style="font-weight: bold;">오피스텔</option>
 					<option value="a3" style="font-weight: bold;">분양·입주권</option>
@@ -4698,28 +3190,48 @@ console.log('zoom_changed : ' + level);
 					<option value="l3" style="font-weight: bold;">공장·창고</option>
 					<option value="l1" style="font-weight: bold;">토지</option>
 				</select>
-				<select id="selTradeType" name="selTradeType" style="display: none; border-radius: 5px; height: 30px;">
-					<!-- <option value="">거래종류</option> 
-					<option value="all" selected>거래종류 전체</option>
-					-->
+				<select id="selTradeType" name="selTradeType" style="display: none; border-radius: 5px; height: 30px;">				
 					<option value="A" selected>매매</option>
 					<option value="C">전세</option>
 					<option value="B">월세</option>
 				</select>
 			</div>
+			-->
+			<!-- 
 			<div class="category_tradeYear">				
 				<label for="tradeYear" style="display: inline-block;">거래년도 : </label>
 				<div id="tradeYear" style="display: inline-block;">2022</div>
 				<div id="slider-range" style="display: inline-block; width: 95px; margin-left: 10px; margin-right: 10px;"></div>
 				<div id="tradeYearEnd" style="display: inline-block;">2023</div>				
 			</div>
-			<ul class="category_top">
+			 -->
+			<ul class="category category_loc">
+				<li>
+					<img src="/img/sub/ico_location.png">
+					<span>내위치로</span>
+				</li>
+			</ul>
+			<ul class="category category_layer">
+				<li>
+					<img src="/img/sub/ico_layer.png">
+					<span>지도설정</span>
+				</li>
+			</ul>
+			<ul class="category category_roadview">
+				<li>
+					<img src="/img/sub/ico_layer.png">
+					<span>거리뷰</span>
+				</li>			
+			</ul>
+			<!-- 
 				<li id="cat_map" data-order="0">
 					지도
 				</li>
+				<!-- 
 				<li id="cat_measure" data-order="1">
 					측정
 				</li>
+				 
 				<li id="cat_around" data-order="2">
 					주변
 				</li>
@@ -4739,7 +3251,8 @@ console.log('zoom_changed : ' + level);
 						단가
 					</div>
 				</li>
-			</ul>
+				 -->
+			
 			<ul id="cat_map_sub" class="category_bottom">
 				<li id="mapTypeChange1" data-order="0">
 					위성
@@ -4754,6 +3267,7 @@ console.log('zoom_changed : ' + level);
 					거리뷰
 				</li>
 			</ul>
+			<!-- 
 			<ul id="cat_measure_sub" class="category_bottom">
 				<li id="lengthMeasure" data-order="1">
 					<span class="category_bg_len"></span>
@@ -4767,6 +3281,7 @@ console.log('zoom_changed : ' + level);
 					<a class="gnb_tool_close" href="#">닫기</a>
 				</li>
 			</ul>
+			 -->
 			<ul id="cat_around_sub" class="category_bottom">
 				<li id="BK9" data-order="0">
 					<span class="category_bg bank"></span>
@@ -4797,7 +3312,7 @@ console.log('zoom_changed : ' + level);
 				</li>
 			</ul>
 			<div class="category_tool_mobile">
-				<img src="https://aurora.disco.re/static/common/img/new/ic-main-memu@3x.png?ver=1686201881"
+				<img src="/img/common/ico_layer.png"
 					width="30px">
 			</div>
 
@@ -4806,64 +3321,63 @@ console.log('zoom_changed : ' + level);
 					<div id="roadview" style="width:100%;height:100%;"></div> <!-- 로드뷰를 표시할 div 입니다 -->
 				</div>				
 				<div class="map_wrap">
-					<div id="map" class="gis">
-						GIS
+					<div id="map" class="gis">						
 					</div>
 				</div>				
 			</div>
+			
+			<div class="search">
+				<div class="search_wrap">
+					<div class="searchBox">
+						<div class="selectBox">							
+							<select id="searchSido">
+								<option value="0">시·도</option>
+								<option value="01">강원특별자치도</option>
+								<option value="02">경기도</option>
+								<option value="03">경상남도</option>
+								<option value="04">경상북도</option>
+								<option value="05">광주광역시</option>
+								<option value="06">대구광역시</option>
+								<option value="07">대전광역시</option>
+								<option value="08">부산광역시</option>
+								<option value="09">서울특별시</option>
+								<option value="10">세종특별자치시</option>
+								<option value="11">울산광역시</option>
+								<option value="12">인천광역시</option>
+								<option value="13">전라남도</option>
+								<option value="14">전라북도</option>
+								<option value="15">제주특별자치도</option>
+								<option value="16">충청남도</option>
+								<option value="17">충청북도</option>
+							</select>							
+						</div>						
+						<div class="selectBox">
+							<select id="searchSigungu">
+								<option value="0">시·군·구</option>
+							</select>							
+						</div>
+						<div class="selectBox">
+							<select id="searchEmd">
+								<option value="0">읍·면·동</option>
+							</select>							
+						</div>
+						<div class="selectBox lp_open" style="line-height: 50px;font-size: 1.2em;text-align: center;cursor: pointer;" data-lp="04l00p">
+							직접입력
+						</div>
+						<a href="javascript:void(0);" class="dongSearch">검색</a>
+					</div>
+				</div>
+			</div>
+			
 		</div>
 		<!--//gis_wrap-->
 		<!--left_wrap-->
 		<div class="left_wrap">
 			<div class="headBox">
 				<div class="banner_wrap" th:if="${banner != null}">
-					<div class="search">
-						<div class="search_wrap">
-							<div class="searchBox">
-								<div class="selectBox">							
-									<select id="searchSido">
-										<option value="0">시·도</option>
-										<option value="01">강원특별자치도</option>
-										<option value="02">경기도</option>
-										<option value="03">경상남도</option>
-										<option value="04">경상북도</option>
-										<option value="05">광주광역시</option>
-										<option value="06">대구광역시</option>
-										<option value="07">대전광역시</option>
-										<option value="08">부산광역시</option>
-										<option value="09">서울특별시</option>
-										<option value="10">세종특별자치시</option>
-										<option value="11">울산광역시</option>
-										<option value="12">인천광역시</option>
-										<option value="13">전라남도</option>
-										<option value="14">전라북도</option>
-										<option value="15">제주특별자치도</option>
-										<option value="16">충청남도</option>
-										<option value="17">충청북도</option>
-									</select>							
-								</div>						
-								<div class="selectBox">
-									<select id="searchSigungu">
-										<option value="0">시·군·구</option>
-									</select>							
-								</div>
-								<div class="selectBox">
-									<select id="searchEmd">
-										<option value="0">읍·면·동</option>
-									</select>							
-								</div>
-								<div class="selectBox lp_open" style="line-height: 50px;font-size: 1.2em;text-align: center;cursor: pointer;" data-lp="04l00p">
-									직접입력
-								</div>
-								<a href="javascript:void(0);" class="dongSearch">검색</a>
-							</div>
-						</div>
-					</div>
-					<!--
                     <a class="thumb" th:href="${banner.linkUrl}" target="_blank">
-                        <img th:src="${banner.imagePath}" />
+                        <img th:src="${banner.linkUrl + banner.imagePath}" />
                     </a>
-                    -->
 				</div>
 				<!--로그인시 노출-->
 				<div class="tab_wrap type2" th:if="${IS_AUTHENTICATED}">
@@ -5103,7 +3617,7 @@ console.log('zoom_changed : ' + level);
 
 		<!--filter_wrap-->
 		<div class="filter_wrap on">
-			<a href="#" th:text="${saleTypeNm}">원룸ㆍ투룸+</a>
+			<a href="#"><span>[[${saleTypeNm}]]</span><span style="float:right; color:#454480;">옵션 ▼</span></a>
 			<div class="filterBox">
 				<form id="frmFilter" name="frmFilter" method="get" action="#">
 					<input type="hidden" id="saleType" name="saleType" th:value="${form.saleType}" />
@@ -5184,361 +3698,335 @@ console.log('zoom_changed : ' + level);
 
 		<!--detail_wrap-->
 		<div class="detail_wrap">
-			
-			<div class="saleDetail">
-				<div id="saleNum" class="saleNum">
-					<p>매물번호<span data-field="saleNo"></span></p>					
-					<a href="#">닫기</a>
-				</div>
-			</div>
-			<div class="jibunDetail">
-				<div class="saleNum">					
-					<p id="jibunAddress"></p>
-					<a href="#">닫기</a>
-				</div>
-			</div>
-				
-			<div class="detail_info_navi">
-				<div class="detail_info_navi_cell cell_hidden">
-					<a href="#saleNum">매물정보</a>
-				</div>
-				<div class="detail_info_navi_cell">
-					<a href="#dp_sales_prefix">실거래가</a>
-				</div>
-				<div class="detail_info_navi_cell">
-					<a href="#dp_land_prefix">토지정보</a>
-				</div>
-				<div class="detail_info_navi_cell detail_info_navi_cell_right">
-					<a href="#dp_arch_prefix">건물정보</a>
-				</div>
-			</div>
-	
-			<div class="saleDetail">
-				<div class="btn_wrap">
-					<div class="left">
-						<a href="#" class="gislp_open getoffer" data-lp="broker" data-rid=""
-							th:unless="${USER_TYPE=='AA' || USER_TYPE=='RA'}">알선받기</a>
-						<a href="#" class="dooffer" data-rid="" th:if="${USER_TYPE=='AA' || USER_TYPE=='RA'}">알선하기</a>
-						<a href="#" class="edit" data-rid="">편집</a>
-						<a href="#" class="lp_open advertising" data-rid="" data-lp="02la02p01">광고</a>
-					</div>
-					<div class="right">
-						<a class="report gislp_open" data-lp="report" data-rid="" href="#"
-							th:if="${USER_TYPE=='NM' || USER_TYPE=='BM' || USER_TYPE=='AA' || USER_TYPE=='RA'}">신고하기</a>
-						<div class="share">
-							<a href="#" class="share" data-rid="">공유하기</a>
-							<!--
-	                        <div class="sns">
-	                            <a class="n1" href="#" data-rid="">페이스북</a>
-	                            <a class="n2" href="#" data-rid="">인스타그램</a>
-	                            <a class="n3" href="#" data-rid="">카카오톡</a>
-	                        </div>
-	                    	-->
-						</div>
+			<div class="detail_top">
+				<div class="saleDetail">
+					<div id="saleNum" class="saleNum">
+						<p>매물번호<span data-field="saleNo"></span></p>					
+						<a href="#">닫기</a>
 					</div>
 				</div>
-				<div id="slide_detail" class="slide_wrap">
-					<div class="sliderBox">
-						<ul class="photoList">
-							<!--
-	                        <li class="thumb"><img src="/img/sub/visual_img_2.png" /></li>
-	                        <li class="thumb"><img src="/img/sub/visual_img_2.png" /></li>
-	                        <li class="thumb"><img src="/img/sub/visual_img_2.png" /></li>
-	                        -->
-						</ul>
-					</div>
-					<div class="controlBox">
-						<button type="button" class="btn_prev">이전</button>
-						<button type="button" class="btn_next">다음</button>
+				<div class="jibunDetail">
+					<div class="saleNum">					
+						<p id="jibunAddress"></p>
+						<a href="#">닫기</a>
 					</div>
 				</div>
-				<div class="tag_wrap hashtag">
-					<!--
-	                <p>#반려동물</p>
-	                <p>#단기가능</p>
-	                <p>#1년가능</p>
-	                -->
-				</div>
-				<div class="info_wrap">
-					<dl>
-						<dt data-field="tradeTypeAndPrice"><!-- 월세 보200 / 월35 --></dt>
-						<dd data-field="dongAddr"><!-- 서울시 강남구 삼성동 --></dd>
-						<dd data-field="info1"><!-- 원룸 | 면적 33㎡ | 2층 | 남동향 | 공용주차 --></dd>
-						<dd data-field="info2"><!-- 엘리베이터 있음 | 준공 2020년 | 입주협의 --></dd>
-						<dd data-field="info3"><!-- 반려동물 가능 | 단기 월 55만원 (2개월 이상) --></dd>
-						<dd data-field="info4"><!-- 매물정보 항목 --></dd>
-	
-					</dl>
-					<dl>
-						<dt data-field="maintenanceFeeWon">관리비</dt>
-						<dd data-field="includeItems"></dd>
-					</dl>
-					<dl>
-						<dt>옵션</dt>
-						<dd data-field="optionItems"></dd>
-					</dl>
-					<dl>
-						<dt>위치정보</dt>
-						<dd data-field="dongAddr"></dd>
-						<!-- <dd class="map"><img src="/img/sub/map.PNG" /></dd> -->
-						<dd class="map">
-							<div id="staticMap" style="width:100%;height:280px;"></div>
-						</dd>
-					</dl>
-				</div>
-			</div>
-			
-			<div class="jibunDetail">
-				<div class="detail_info_divider"></div>
-							  
-				<div id="minimap_container" class="view_map">
-				    <div id="minimap_mapWrapper" style="width:100%;height:300px;position:relative;">
-				        <div id="minimap_map" style="width:100%;height:100%"></div> 
-				        <input type="button" id="minimap_btnRoadview" onclick="minimapToggle(false)" title="로드뷰 보기" value="로드뷰">
-				    </div>
-				    <div id="minimap_rvWrapper" style="width:100%;height:300px;position:absolute;top:0;left:0;">
-				        <div id="minimap_roadview" style="height:100%"></div> 
-				        <input type="button" id="minimap_btnMap" onclick="minimapToggle(true)" title="지도 보기" value="지도">
-				    </div>
-				</div>
-			</div>
- 			
-			<div class="detail_info_divider"></div>
-			
-			<div id="dp_sales_prefix" class="detail_info_header_prefix"></div>
-
-			<div class="detail_info_header">
-				<div>
-					<h3>실거래가</h3>
-				</div>				
-			</div>
-
-			<div>				
-				<span class="ddiv-sub-title">
-					<span id="trp-detail-period" style="display:inline;">거래내역</span>
-					<span id="trp-detail-period-cnt" style="display:inline;"></span>
-				</span>
-			</div>
-
-			<div class="detail_tradings_table">
-				<div class="detail_tradings_table_row">					
-					<div class="detail_tradings_table_cell" style="width: 22%;">거래일</div>
-					<div class="detail_tradings_table_cell" style="width: 20%;">거래금액</div>
-					<div class="detail_tradings_table_cell" style="width: auto;">동/층/호</div>
-					<div class="detail_tradings_table_cell" style="width: 90px;"></div>
-				</div>
-			</div>
-
-			<div id="detail_tradings_table_conts">
-
-			</div>
-
-			<div class="detail_info_divider"></div>
-			
-			<div id="dp_land_prefix" class="detail_info_header_prefix"></div>
-			
-			<div class="detail_info_header">
-				<div>
-					<h3>토지 정보</h3>
-				</div>
-			</div>
-			<div class="detail_info_body">
-				<div>
-					<div class="detail_info_body_sub">
-						<div class="detail_info_body_sub_detail">
-							<div class="detail_data_txt detail_data_txt_title">면적</div>
-							<div class="detail_data_txt detail_data_txt_conts">
-								<span id="land_forest_info_area" class="to-area-field"></span>
-							</div>
-						</div>
-						
-						<div class="detail_info_body_sub_detail_divider"></div>
-						
-						<div class="detail_info_body_sub_detail">
-							<div class="detail_data_txt detail_data_txt_title">지목</div>
-							<div class="detail_data_txt detail_data_txt_conts">
-								<span id="land_forest_info_purpose"></span>
-							</div>
-						</div>
-						
-						<div class="detail_info_body_sub_detail_divider"></div>
-						
-						<div class="detail_info_body_sub_detail">
-							<div class="detail_data_txt detail_data_txt_title">용도지역</div>
-							<div class="detail_data_txt detail_data_txt_conts">
-								<span id="p6"></span>
-							</div>
-						</div>
-						
-						<div class="detail_info_body_sub_detail_divider"></div>
-						
-						<div class="detail_info_body_sub_detail">
-							<div class="detail_data_txt detail_data_txt_title">이용상황</div>
-							<div class="detail_data_txt detail_data_txt_conts">
-								<span id="p10"></span>
-							</div>
-						</div>
-					</div>
-					<div class="detail_margin_div"></div>
-					<div class="detail_info_body_sub">
-						<div class="detail_info_body_sub_detail">
-							<div class="detail_data_txt detail_data_txt_title">소유구분</div>
-							<div class="detail_data_txt detail_data_txt_conts">
-								<span id="owner_gbn"></span>
-							</div>
-						</div>
-						
-						<div class="detail_info_body_sub_detail_divider"></div>
-						
-						<div class="detail_info_body_sub_detail">
-							<div class="detail_data_txt detail_data_txt_title">소유권변동일자</div>
-							<div class="detail_data_txt detail_data_txt_conts">
-								<span id="days"></span>
-							</div>
-						</div>
-						
-						<div class="detail_info_body_sub_detail_divider"></div>
-						
-						<div class="detail_info_body_sub_detail">
-							<div class="detail_data_txt detail_data_txt_title">소유권변동원인</div>
-							<div class="detail_data_txt detail_data_txt_conts">
-								<span id="why"></span>
-							</div>
-						</div>
-					</div>
-					<div class="detail_margin_div"></div>
-					<div class="detail_info_body_sub">
-						<div class="detail_info_body_sub_detail">
-							<div class="detail_data_txt detail_data_txt_title">도로접면</div>
-							<div class="detail_data_txt detail_data_txt_conts">
-								<span id="p16"></span>
-							</div>
-						</div>
-						
-						<div class="detail_info_body_sub_detail_divider"></div>
-						
-						<div class="detail_info_body_sub_detail">
-							<div class="detail_data_txt detail_data_txt_title">지형높이</div>
-							<div class="detail_data_txt detail_data_txt_conts">
-								<span id="p12"></span>
-							</div>
-						</div>
-						
-						<div class="detail_info_body_sub_detail_divider"></div>
-						
-						<div class="detail_info_body_sub_detail">
-							<div class="detail_data_txt detail_data_txt_title">지형형상</div>
-							<div class="detail_data_txt detail_data_txt_conts">
-								<span id="p14"></span>
-							</div>
-						</div>
-					</div>
-					<div class="detail_margin_div"></div>
-					<div class="detail_data_txt detail_data_txt_title2">토지이용계획</div>
-					<div class="detail_data_txt detail_data_txt_title2 detail_txt_black">국토의 계획 및 이용에 관한 법률</div>
 					
-					<div class="detail_info_body_sub">
-						<div class="detail_info_body_sub_detail">
-							<div class="detail_data_txt detail_data_txt_title">포함</div>
-							<div class="detail_data_txt detail_data_txt_conts">
-								<span id="info_main_0" class="detail_data_txt_conts_span"></span>
-							</div>
-						</div>
-						
-						<div class="detail_info_body_sub_detail_divider"></div>
-						
-						<div class="detail_info_body_sub_detail">
-							<div class="detail_data_txt detail_data_txt_title">저촉</div>
-							<div class="detail_data_txt detail_data_txt_conts">
-								<span id="info_main_1" class="detail_data_txt_conts_span"></span>
-							</div>
-						</div>
-						
-						<div class="detail_info_body_sub_detail_divider"></div>
-						
-						<div class="detail_info_body_sub_detail">
-							<div class="detail_data_txt detail_data_txt_title">접함</div>
-							<div class="detail_data_txt detail_data_txt_conts">
-								<span id="info_main_2" class="detail_data_txt_conts_span"></span>
-							</div>
-						</div>
+				<div class="detail_info_navi">
+					<div class="detail_info_navi_cell cell_hidden">
+						<a href="#dp_item_prefix">매물정보</a>
 					</div>
-					<div class="detail_margin_div"></div>
-					<div class="detail_data_txt detail_data_txt_title2">기타법률</div>
-					<div class="detail_info_body_sub">
-						<div class="detail_info_body_sub_detail">
-							<div class="detail_data_txt detail_data_txt_title">포함</div>
-							<div class="detail_data_txt detail_data_txt_conts">
-								<span id="arch_info_0" class="detail_data_txt_conts_span"></span>
-							</div>
-						</div>
-						
-						<div class="detail_info_body_sub_detail_divider"></div>
-						
-						<div class="detail_info_body_sub_detail">
-							<div class="detail_data_txt detail_data_txt_title">저촉</div>
-							<div class="detail_data_txt detail_data_txt_conts">
-								<span id="arch_info_1" class="detail_data_txt_conts_span"></span>
-							</div>
-						</div>
-						
-						<div class="detail_info_body_sub_detail_divider"></div>
-						
-						<div class="detail_info_body_sub_detail">
-							<div class="detail_data_txt detail_data_txt_title">접함</div>
-							<div class="detail_data_txt detail_data_txt_conts">
-								<span id="arch_info_2" class="detail_data_txt_conts_span"></span>
-							</div>
-						</div>
+					<!-- 
+					<div class="detail_info_navi_cell">
+						<a href="#dp_sales_prefix">실거래가</a>
 					</div>
-					<div class="detail_margin_div"></div>
-					<div class="detail_data_txt detail_data_txt_title2">토지 이동(변동) 사유</div>
-					<div class="detail_land_history_info">
-						<div class="detail_land_history_info_table">
-							<div class="detail_land_history_info_table_row">
-								<div class="detail_land_history_info_table_cell1">일자</div>
-								<div class="detail_land_history_info_table_cell2">사유</div>
-							</div>
-						</div>
-						
-						<div class="detail_info_body_sub_detail_divider"></div>
-						
-						<div id="land_history" class="detail_land_history_info_table"></div>
+					 -->
+					<div class="detail_info_navi_cell">
+						<a href="#dp_land_prefix">토지정보</a>
 					</div>
-
-					<div class="detail_margin_div"></div>
-					<div>
-						<div class="detail_data_txt detail_data_txt_title2">개별공시지가</div>
-						<div id="mdv_chart_div">
-							<canvas id="mdv_chart_canvas" width="760" height="440" style="width: 380px; height: 220px;"></canvas>
-						</div>							
+					<div class="detail_info_navi_cell detail_info_navi_cell_right">
+						<a href="#dp_arch_prefix">건물정보</a>
 					</div>
 				</div>
-
 			</div>
-
-			<div class="detail_info_divider"></div>
-
-			<div id="dp_arch_prefix" class="detail_info_header_prefix"></div>
-			<div class="detail_info_header">
-				<div>
-					<h3>건물 정보</h3>
-				</div>
-			</div>
+			<div class="detail_content">
+				<div id="dp_item_prefix" class="detail_info_header_prefix"></div>
 				
-			<div class="detail_list_btn">
-				<div class="detail_list_btn_sub">
-					<div class="detail_list_btn_sub_txt">
-						<span>표제부(주1)</span>
-						<span>
-							<img src="https://aurora.disco.re/static/common/img/ico_s_extend3_4x.png?ver=1681968257" width="12px" id="dpa_list_symbol">
-						</span>
+				<div class="saleDetail">
+					<div class="btn_wrap">
+						<div class="left">
+							<a href="#" class="gislp_open getoffer" data-lp="broker" data-rid=""
+								th:unless="${USER_TYPE=='AA' || USER_TYPE=='RA'}">알선받기</a>
+							<a href="#" class="dooffer" data-rid="" th:if="${USER_TYPE=='AA' || USER_TYPE=='RA'}">알선하기</a>
+							<a href="#" class="edit" data-rid="">편집</a>
+							<a href="#" class="lp_open advertising" data-rid="" data-lp="02la02p01">광고</a>
+						</div>
+						<div class="right">
+							<a class="report gislp_open" data-lp="report" data-rid="" href="#"
+								th:if="${USER_TYPE=='NM' || USER_TYPE=='BM' || USER_TYPE=='AA' || USER_TYPE=='RA'}">신고하기</a>
+							<div class="share">
+								<a href="#" class="share" data-rid="">공유하기</a>
+								<!--
+		                        <div class="sns">
+		                            <a class="n1" href="#" data-rid="">페이스북</a>
+		                            <a class="n2" href="#" data-rid="">인스타그램</a>
+		                            <a class="n3" href="#" data-rid="">카카오톡</a>
+		                        </div>
+		                    	-->
+							</div>
+						</div>
 					</div>
-					<div class="detail_expand_txt detail_txt_blue"></div>
+					<div id="slide_detail" class="slide_wrap">
+						<div class="sliderBox">
+							<ul class="photoList">
+								<!--
+		                        <li class="thumb"><img src="/img/sub/visual_img_2.png" /></li>
+		                        <li class="thumb"><img src="/img/sub/visual_img_2.png" /></li>
+		                        <li class="thumb"><img src="/img/sub/visual_img_2.png" /></li>
+		                        -->
+							</ul>
+						</div>
+						<div class="controlBox">
+							<button type="button" class="btn_prev">이전</button>
+							<button type="button" class="btn_next">다음</button>
+						</div>
+					</div>
+					<div class="tag_wrap hashtag">
+						<!--
+		                <p>#반려동물</p>
+		                <p>#단기가능</p>
+		                <p>#1년가능</p>
+		                -->
+					</div>
+					<div class="info_wrap">
+						<dl>
+							<dt data-field="tradeTypeAndPrice"><!-- 월세 보200 / 월35 --></dt>
+							<dd data-field="dongAddr"><!-- 서울시 강남구 삼성동 --></dd>
+							<dd data-field="info1"><!-- 원룸 | 면적 33㎡ | 2층 | 남동향 | 공용주차 --></dd>
+							<dd data-field="info2"><!-- 엘리베이터 있음 | 준공 2020년 | 입주협의 --></dd>
+							<dd data-field="info3"><!-- 반려동물 가능 | 단기 월 55만원 (2개월 이상) --></dd>
+							<dd data-field="info4"><!-- 매물정보 항목 --></dd>
+		
+						</dl>
+						<dl>
+							<dt data-field="maintenanceFeeWon">관리비</dt>
+							<dd data-field="includeItems"></dd>
+						</dl>
+						<dl>
+							<dt>옵션사항</dt>
+							<dd data-field="optionItems"></dd>
+						</dl>
+						<dl>
+							<dt>위치정보</dt>
+							<dd data-field="dongAddr"></dd>
+							<!-- <dd class="map"><img src="/img/sub/map.PNG" /></dd> -->
+							<dd class="map">
+								<div id="staticMap" style="width:100%;height:280px;"></div>
+							</dd>
+						</dl>
+					</div>
 				</div>
-			</div>
+				
+				<div class="jibunDetail">
+					<div class="detail_info_divider"></div>
+								  
+					<div id="minimap_container" class="view_map">
+					    <div id="minimap_mapWrapper" style="width:100%;height:300px;position:relative;">
+					        <div id="minimap_map" style="width:100%;height:100%"></div> 
+					        <input type="button" id="minimap_btnRoadview" onclick="minimapToggle(false)" title="로드뷰 보기" value="로드뷰">
+					    </div>
+					    <div id="minimap_rvWrapper" style="width:100%;height:300px;position:absolute;top:0;left:0;">
+					        <div id="minimap_roadview" style="height:100%"></div> 
+					        <input type="button" id="minimap_btnMap" onclick="minimapToggle(true)" title="지도 보기" value="지도">
+					    </div>
+					</div>
+				</div>
+	 			
+				<div class="detail_info_divider"></div>
+				
+				<div id="dp_land_prefix" class="detail_info_header_prefix"></div>
+				
+				<div class="detail_info_header">
+					<div>
+						<h3>토지 정보</h3>
+					</div>
+				</div>
+				<div class="detail_info_body">
+					<div>
+						<div class="detail_info_body_sub">
+							<div class="detail_info_body_sub_detail">
+								<div class="detail_data_txt detail_data_txt_title">면적</div>
+								<div class="detail_data_txt detail_data_txt_conts">
+									<span id="land_forest_info_area" class="to-area-field"></span>
+								</div>
+							</div>
+							
+							<div class="detail_info_body_sub_detail_divider"></div>
+							
+							<div class="detail_info_body_sub_detail">
+								<div class="detail_data_txt detail_data_txt_title">지목</div>
+								<div class="detail_data_txt detail_data_txt_conts">
+									<span id="land_forest_info_purpose"></span>
+								</div>
+							</div>
+							
+							<div class="detail_info_body_sub_detail_divider"></div>
+							
+							<div class="detail_info_body_sub_detail">
+								<div class="detail_data_txt detail_data_txt_title">용도지역</div>
+								<div class="detail_data_txt detail_data_txt_conts">
+									<span id="p6"></span>
+								</div>
+							</div>
+							
+							<div class="detail_info_body_sub_detail_divider"></div>
+							
+							<div class="detail_info_body_sub_detail">
+								<div class="detail_data_txt detail_data_txt_title">이용상황</div>
+								<div class="detail_data_txt detail_data_txt_conts">
+									<span id="p10"></span>
+								</div>
+							</div>
+						</div>
+						<div class="detail_margin_div"></div>
+						<div class="detail_info_body_sub">
+							<div class="detail_info_body_sub_detail">
+								<div class="detail_data_txt detail_data_txt_title">소유구분</div>
+								<div class="detail_data_txt detail_data_txt_conts">
+									<span id="owner_gbn"></span>
+								</div>
+							</div>
+							
+							<div class="detail_info_body_sub_detail_divider"></div>
+							
+							<div class="detail_info_body_sub_detail">
+								<div class="detail_data_txt detail_data_txt_title">소유권변동일자</div>
+								<div class="detail_data_txt detail_data_txt_conts">
+									<span id="days"></span>
+								</div>
+							</div>
+							
+							<div class="detail_info_body_sub_detail_divider"></div>
+							
+							<div class="detail_info_body_sub_detail">
+								<div class="detail_data_txt detail_data_txt_title">소유권변동원인</div>
+								<div class="detail_data_txt detail_data_txt_conts">
+									<span id="why"></span>
+								</div>
+							</div>
+						</div>
+						<div class="detail_margin_div"></div>
+						<div class="detail_info_body_sub">
+							<div class="detail_info_body_sub_detail">
+								<div class="detail_data_txt detail_data_txt_title">도로접면</div>
+								<div class="detail_data_txt detail_data_txt_conts">
+									<span id="p16"></span>
+								</div>
+							</div>
+							
+							<div class="detail_info_body_sub_detail_divider"></div>
+							
+							<div class="detail_info_body_sub_detail">
+								<div class="detail_data_txt detail_data_txt_title">지형높이</div>
+								<div class="detail_data_txt detail_data_txt_conts">
+									<span id="p12"></span>
+								</div>
+							</div>
+							
+							<div class="detail_info_body_sub_detail_divider"></div>
+							
+							<div class="detail_info_body_sub_detail">
+								<div class="detail_data_txt detail_data_txt_title">지형형상</div>
+								<div class="detail_data_txt detail_data_txt_conts">
+									<span id="p14"></span>
+								</div>
+							</div>
+						</div>
+						<div class="detail_margin_div"></div>
+						<div class="detail_data_txt detail_data_txt_title2">토지이용계획</div>
+						<div class="detail_data_txt detail_data_txt_title2 detail_txt_black">국토의 계획 및 이용에 관한 법률</div>
+						
+						<div class="detail_info_body_sub">
+							<div class="detail_info_body_sub_detail">
+								<div class="detail_data_txt detail_data_txt_title">포함</div>
+								<div class="detail_data_txt detail_data_txt_conts">
+									<span id="info_main_0" class="detail_data_txt_conts_span"></span>
+								</div>
+							</div>
+							
+							<div class="detail_info_body_sub_detail_divider"></div>
+							
+							<div class="detail_info_body_sub_detail">
+								<div class="detail_data_txt detail_data_txt_title">저촉</div>
+								<div class="detail_data_txt detail_data_txt_conts">
+									<span id="info_main_1" class="detail_data_txt_conts_span"></span>
+								</div>
+							</div>
+							
+							<div class="detail_info_body_sub_detail_divider"></div>
+							
+							<div class="detail_info_body_sub_detail">
+								<div class="detail_data_txt detail_data_txt_title">접함</div>
+								<div class="detail_data_txt detail_data_txt_conts">
+									<span id="info_main_2" class="detail_data_txt_conts_span"></span>
+								</div>
+							</div>
+						</div>
+						<div class="detail_margin_div"></div>
+						<div class="detail_data_txt detail_data_txt_title2">기타법률</div>
+						<div class="detail_info_body_sub">
+							<div class="detail_info_body_sub_detail">
+								<div class="detail_data_txt detail_data_txt_title">포함</div>
+								<div class="detail_data_txt detail_data_txt_conts">
+									<span id="arch_info_0" class="detail_data_txt_conts_span"></span>
+								</div>
+							</div>
+							
+							<div class="detail_info_body_sub_detail_divider"></div>
+							
+							<div class="detail_info_body_sub_detail">
+								<div class="detail_data_txt detail_data_txt_title">저촉</div>
+								<div class="detail_data_txt detail_data_txt_conts">
+									<span id="arch_info_1" class="detail_data_txt_conts_span"></span>
+								</div>
+							</div>
+							
+							<div class="detail_info_body_sub_detail_divider"></div>
+							
+							<div class="detail_info_body_sub_detail">
+								<div class="detail_data_txt detail_data_txt_title">접함</div>
+								<div class="detail_data_txt detail_data_txt_conts">
+									<span id="arch_info_2" class="detail_data_txt_conts_span"></span>
+								</div>
+							</div>
+						</div>
+						<div class="detail_margin_div"></div>
+						<div class="detail_data_txt detail_data_txt_title2">토지 이동(변동) 사유</div>
+						<div class="detail_land_history_info">
+							<div class="detail_land_history_info_table">
+								<div class="detail_land_history_info_table_row">
+									<div class="detail_land_history_info_table_cell1">일자</div>
+									<div class="detail_land_history_info_table_cell2">사유</div>
+								</div>
+							</div>
+							
+							<div class="detail_info_body_sub_detail_divider"></div>
+							
+							<div id="land_history" class="detail_land_history_info_table"></div>
+						</div>
+	
+						<div class="detail_margin_div"></div>
+						<div>
+							<div class="detail_data_txt detail_data_txt_title2">개별공시지가</div>
+							<div id="mdv_chart_div">
+								<canvas id="mdv_chart_canvas" width="760" height="440" style="width: 380px; height: 220px;"></canvas>
+							</div>							
+						</div>
+					</div>
+	
+				</div>
+	
+				<div class="detail_info_divider"></div>
+	
+				<div id="dp_arch_prefix" class="detail_info_header_prefix"></div>
+				<div class="detail_info_header">
+					<div>
+						<h3>건물 정보</h3>
+					</div>
+				</div>
+				
+				<div class="detail_list_btn">
+					<div class="detail_list_btn_sub">
+						<div class="detail_list_btn_sub_txt">
+							<span>표제부(주1)</span>
+							<span>
+								<img src="https://aurora.disco.re/static/common/img/ico_s_extend3_4x.png?ver=1681968257" width="12px" id="dpa_list_symbol">
+							</span>
+						</div>
+						<div class="detail_expand_txt detail_txt_blue"></div>
+					</div>
+				</div>
 
-			<div>
 				<div>
 					<div class="detail_info_body_sub">
 						<div class="detail_info_body_sub_detail">
@@ -5705,7 +4193,6 @@ console.log('zoom_changed : ' + level);
 						</div>
 					</div>
 				</div>
-			</div>
 
 				<div class="detail_margin_div"></div>
 				<div class="detail_list_btn">
@@ -5846,7 +4333,8 @@ console.log('zoom_changed : ' + level);
 					</div>
 				</div>
 			
-			<div class="detail_info_divider"></div>
+				<div class="detail_info_divider"></div>
+			</div>
 			
 		</div>
 		<!--//detail_wrap-->

@@ -665,6 +665,17 @@ public class ForsaleServiceImpl implements ForsaleService {
 
 	
 	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
 	@Override
 	public List<SaleDTO> getAddrSido(SaleDTO form) {
 	
@@ -688,51 +699,7 @@ public class ForsaleServiceImpl implements ForsaleService {
 		
 		return rtlist;
 	}
-	
-	
-	@Override
-	public List<SaleDTO> getRealTradingsList(SaleDTO form) {
-	
-		List<SaleDTO> rtlist = mapper.getRealTradingsList(form);
 		
-		for(int i=0; i<rtlist.size(); i++) {
-			rtlist.get(i).setDealAmount(rtlist.get(i).getDealAmount() != null ? NumberUtil.priceToStr(rtlist.get(i).getDealAmount()) : "0");
-			rtlist.get(i).setDeposit(rtlist.get(i).getDeposit() != null ? NumberUtil.priceToStr(rtlist.get(i).getDeposit()) : "0");
-			rtlist.get(i).setMonthlyRent(rtlist.get(i).getMonthlyRent() != null ? NumberUtil.priceToStr(rtlist.get(i).getMonthlyRent()) : "0");
-		}
-		
-		rtlist.forEach(item -> {
-//			//면적종류
-//			item.setAreaKind(ForsaleUtil.getAreaKind(item));
-//			//평형
-//			item.setSupplyAreaPy(NumberUtil.m2ToPy(item.getSupplyArea()));
-//			item.setPrivateAreaPy(NumberUtil.m2ToPy(item.getPrivateArea()));
-//			item.setLandAreaPy(NumberUtil.m2ToPy(item.getLandArea()));
-//			item.setBuildingAreaPy(NumberUtil.m2ToPy(item.getBuildingArea()));
-//			//면적(평형)
-//			item.setSupplyAreaWithPy(NumberUtil.m2WithPy(item.getSupplyArea()));
-//			item.setPrivateAreaWithPy(NumberUtil.m2WithPy(item.getPrivateArea()));
-//			item.setLandAreaWithPy(NumberUtil.m2WithPy(item.getLandArea()));
-//			item.setBuildingAreaWithPy(NumberUtil.m2WithPy(item.getBuildingArea()));
-//
-//			//편집URL
-//			item.setEditUrl(String.format("/register/03f03/%s", item.getRid()));
-			//가격(NumberUtil.priceToStr(item));
-			System.out.println("item");
-			System.out.println(item);
-			//item.setDealAmount(NumberUtil.priceToStr(item));			
-		});
-		
-		return rtlist;
-	}
-	
-	@Override
-	public List<SaleDTO> getRealTradingsAllList(SaleDTO form) {
-	
-		List<SaleDTO> rtlist = mapper.getRealTradingsAllList(form);
-		
-		return rtlist;
-	}
 	
 	@Override
 	@Transactional
